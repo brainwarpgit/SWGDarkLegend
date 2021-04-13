@@ -147,7 +147,7 @@ Core3 = {
 	},
 
 	-- directory of tres with live.cfg
-	TrePath = "/root/git/tre",
+	TrePath = "/home/swgemu/workspace/tre",
 
 	TreFiles = {
 		"mtg_patch_023.tre",
