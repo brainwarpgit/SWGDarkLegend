@@ -18,6 +18,8 @@
 #include "server/zone/objects/tangible/component/lightsaber/LightsaberCrystalComponent.h"
 #include "server/zone/packets/object/WeaponRanges.h"
 #include "server/zone/ZoneProcessServer.h"
+#include "server/zone/managers/player/PlayerMap.h"
+#include "server/chat/ChatManager.h"
 
 
 void WeaponObjectImplementation::initializeTransientMembers() {
@@ -213,12 +215,14 @@ String WeaponObjectImplementation::getWeaponType() const {
 void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	TangibleObjectImplementation::fillAttributeList(alm, object);
 
-	bool res = isCertifiedFor(object);
+	if (object != nullptr) {
+		bool res = isCertifiedFor(object);
 
-	if (res) {
-		alm->insertAttribute("weapon_cert_status", "Yes");
-	} else {
-		alm->insertAttribute("weapon_cert_status", "No");
+		if (res) {
+			alm->insertAttribute("weapon_cert_status", "Yes");
+		} else {
+			alm->insertAttribute("weapon_cert_status", "No");
+		}
 	}
 
 	/*if (usesRemaining > 0)
@@ -443,6 +447,24 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 	if (sliced == 1)
 		alm->insertAttribute("wpn_attr", "@obj_attr_n:hacked1");
 
+	if (isJediWeapon() && getCraftersID() == 0) {
+		ZoneServer* zoneServer = getZoneServer();
+
+		if (zoneServer != nullptr) {
+			ChatManager* chatMan = zoneServer->getChatManager();
+
+			if (chatMan != nullptr) {
+				PlayerMap* playerMap = chatMan->getPlayerMap();
+
+				if (playerMap != nullptr) {
+					CreatureObject* crafterCreo = playerMap->get(getCraftersName());
+
+					if (crafterCreo != nullptr)
+						setCraftersID(crafterCreo->getObjectID());
+				}
+			}
+		}
+	}
 }
 
 int WeaponObjectImplementation::getPointBlankAccuracy(bool withPup) const {
@@ -768,7 +790,7 @@ void WeaponObjectImplementation::applySkillModsTo(CreatureObject* creature) cons
 
 		if (!SkillModManager::instance()->isWearableModDisabled(name)) {
 			creature->addSkillMod(SkillModManager::WEARABLE, name, value, true);
-			creature->updateTerrainNegotiation();
+			creature->updateSpeedAndAccelerationMods();
 		}
 	}
 
@@ -786,7 +808,7 @@ void WeaponObjectImplementation::removeSkillModsFrom(CreatureObject* creature) {
 
 		if (!SkillModManager::instance()->isWearableModDisabled(name)) {
 			creature->removeSkillMod(SkillModManager::WEARABLE, name, value, true);
-			creature->updateTerrainNegotiation();
+			creature->updateSpeedAndAccelerationMods();
 		}
 	}
 

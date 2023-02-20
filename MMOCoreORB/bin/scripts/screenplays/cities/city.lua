@@ -90,9 +90,8 @@ function CityScreenPlay:spawnMob(num, controllingFaction, difficulty)
 			local aiAgent = AiAgent(pNpc)
 			aiAgent:setCreatureBit(SCANNING_FOR_CONTRABAND)
 		end
-	end
 
-	if pNpc ~= nil then
+		AiAgent(pNpc):addCreatureFlag(AI_STATIC)
 		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawn", pNpc)
 		writeData(SceneObject(pNpc):getObjectID(), num)
 	end
@@ -167,10 +166,19 @@ function CityScreenPlay:spawnPatrol(num)
 		end
 
 		local pOid = SceneObject(pMobile):getObjectID()
+		local combatNpc = patrol[9]
 
-		createEvent(3000, self.screenplayName, "setupMobilePatrol", pMobile, num)
-		writeStringData(pOid .. ":patrolPoints", points)
 		writeData(pOid .. ":patrolNumber", num)
+
+		if combatNpc then
+			createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnPatrol", pMobile)
+			return
+		else
+			CreatureObject(pMobile):setPvpStatusBitmask(0)
+		end
+
+		createEvent(10000, self.screenplayName, "setupMobilePatrol", pMobile, num)
+		writeStringData(pOid .. ":patrolPoints", points)
 		writeData(pOid .. ":currentLoc", 1)
 	end
 end
@@ -183,18 +191,13 @@ function CityScreenPlay:setupMobilePatrol(pMobile, num)
 	local spawnNumber = tonumber(num)
 	local combatNpc = self.patrolMobiles[spawnNumber][9]
 
-	if combatNpc then
-		AiAgent(pMobile):setAiTemplate("combatpatrol")
-		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnPatrol", pMobile)
-	else
-		AiAgent(pMobile):setAiTemplate("citypatrol")
+	if combatNpc == false then
 		CreatureObject(pMobile):setPvpStatusBitmask(0)
-		CreatureObject(pMobile):setOptionsBitmask(0)
-	end
+		AiAgent(pMobile):addCreatureFlag(AI_STATIONARY)
 
-	AiAgent(pMobile):setFollowState(4)
-	createEvent(getRandomNumber(20, 40) * 1000, self.screenplayName, "mobilePatrol", pMobile, '')
-	createObserver(DESTINATIONREACHED, self.screenplayName, "mobileDestinationReached", pMobile)
+		createEvent(getRandomNumber(40, 60) * 1000, self.screenplayName, "mobilePatrol", pMobile, '')
+		createObserver(DESTINATIONREACHED, self.screenplayName, "mobileDestinationReached", pMobile)
+	end
 end
 
 function CityScreenPlay:onDespawnPatrol(pMobile)
@@ -208,10 +211,7 @@ function CityScreenPlay:onDespawnPatrol(pMobile)
 
 	createEvent(300 * 1000, self.screenplayName, "patrolRespawn", nil, tostring(spawnNumber))
 
-	dropObserver(DESTINATIONREACHED, self.screenplayName, "mobileDestinationReached", pMobile)
 	deleteData(pOid .. ":patrolNumber")
-	deleteData(pOid .. ":currentLoc")
-	deleteStringData(pOid .. ":patrolPoints")
 
 	return 1
 end
@@ -249,7 +249,7 @@ function CityScreenPlay:mobileDestinationReached(pMobile)
 		createEvent(delayTime * 1000, self.screenplayName, "mobilePatrol", pMobile, "")
 		AiAgent(pMobile):setWait(delayTime)
 	else
-		createEvent(100, self.screenplayName, "mobilePatrol", pMobile, "")
+		createEvent(5000, self.screenplayName, "mobilePatrol", pMobile, "")
 	end
 
 	return 0
@@ -280,10 +280,7 @@ function CityScreenPlay:mobilePatrol(pMobile)
 		nextPoint = pointSet[currentLoc + 1]
 	end
 
-	AiAgent(pMobile):stopWaiting()
-	AiAgent(pMobile):setWait(0)
 	AiAgent(pMobile):setNextPosition(nextPoint[1], nextPoint[2], nextPoint[3], nextPoint[4])
-	AiAgent(pMobile):executeBehavior()
 end
 
 function CityScreenPlay:spawnStationaryMobiles()
@@ -329,5 +326,8 @@ function CityScreenPlay:spawnStationaryMobile(num)
 
 		CreatureObject(pMobile):setPvpStatusBitmask(0)
 
+		if CreatureObject(pMobile):getOptionsBitmask() > 0 then
+			CreatureObject(pMobile):clearOptionBit(AIENABLED)
+		end
 	end
 end

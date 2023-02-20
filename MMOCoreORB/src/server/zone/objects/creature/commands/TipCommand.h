@@ -9,6 +9,9 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/objects/player/sui/callbacks/TipCommandSuiCallback.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
+#include "server/zone/objects/creature/commands/QueueCommand.h"
+#include "server/zone/managers/player/PlayerManager.h"
 
 class TipCommand: public QueueCommand {
 private:
@@ -32,6 +35,14 @@ private:
 			ptnsfc.setTT(targetPlayer->getObjectID());
 			player->sendSystemMessage(ptnsfc);
 			return GENERALERROR;
+		}
+
+		// Player must not be ignored
+		auto target = targetPlayer->getPlayerObject();
+
+		if (target != nullptr) {
+			if (target->isIgnoring(player->getFirstName()))
+				return GENERALERROR;
 		}
 
 		// We have a target, who is on-line, in range, with sufficient funds.
@@ -60,7 +71,7 @@ private:
 	int performBankTip(CreatureObject* player, CreatureObject* targetPlayer,
 			int amount) const {
 
-		ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+		auto ghost = player->getPlayerObject();
 		if (ghost == nullptr) {
 			player->sendSystemMessage("@base_player:tip_error"); // There was an error processing your /tip request. Please try again.
 			return GENERALERROR;
@@ -76,14 +87,30 @@ private:
 			return GENERALERROR;
 		}
 
-		ManagedReference<SuiMessageBox*> confirmbox = new SuiMessageBox(player,
+		// Player must not be ignored
+		auto target = targetPlayer->getPlayerObject();
+		if (target == nullptr || target->isIgnoring(player->getFirstName())) {
+				return GENERALERROR;
+		}
+
+		Reference<SuiMessageBox*> confirmbox = new SuiMessageBox(player,
 				SuiWindowType::BANK_TIP_CONFIRM);
 		confirmbox->setCallback(
 				new TipCommandSuiCallback(server->getZoneServer(),
 						targetPlayer, amount));
 
+		String promptText = "@base_player:tip_wire_prompt"; // A surcharge of 5% will be added to your requested bank-to-bank transfer amount. Would you like to continue?
+
+		if (ConfigManager::instance()->getBool("Core3.SameAccountTipsAreFree", false)) {
+			auto dstGhost = targetPlayer->getPlayerObject();
+
+			if (dstGhost != nullptr && ghost->getAccountID() == dstGhost->getAccountID()) {
+				promptText = "You are transferring credits to another character on your account, there will be no fee for this transaction. Would you like to continue?";
+			}
+		}
+
 		confirmbox->setPromptTitle("@base_player:tip_wire_title"); // Confirm Bank Transfer
-		confirmbox->setPromptText("@base_player:tip_wire_prompt"); // A surcharge of 5% will be added to your requested bank-to-bank transfer amount. Would you like to continue?
+		confirmbox->setPromptText(promptText);
 		confirmbox->setCancelButton(true, "@no");
 		confirmbox->setOkButton(true, "@yes");
 
@@ -158,8 +185,7 @@ public:
 		}
 
 		if (!syntaxError && targetPlayer == nullptr) { // No target argument, check look-at target
-			ManagedReference<SceneObject*> object =
-					server->getZoneServer()->getObject(target);
+			auto object = server->getZoneServer()->getObject(target);
 
 			if (object != nullptr && object->isPlayerCreature()) {
 				targetPlayer = object->asCreatureObject();

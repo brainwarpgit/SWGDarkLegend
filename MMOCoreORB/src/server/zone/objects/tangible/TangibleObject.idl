@@ -26,6 +26,7 @@ include server.zone.objects.scene.variables.StringId;
 include system.thread.atomic.AtomicInteger;
 
 @json
+@mock
 class TangibleObject extends SceneObject {
 	protected boolean targetable;
 
@@ -38,6 +39,7 @@ class TangibleObject extends SceneObject {
 	protected int futureFactionStatus;
 
 	protected boolean invisible;
+	protected transient boolean inNoCombatArea;
 
 	@dereferenced
 	protected VectorMap<string, string> luaStringData;
@@ -45,6 +47,7 @@ class TangibleObject extends SceneObject {
 	@dereferenced
 	protected CustomizationVariables customizationVariables;
 
+	protected int unmitigatedDamage;
 	protected float conditionDamage;
 	protected int maxCondition;
 	protected int useCount;
@@ -64,6 +67,7 @@ class TangibleObject extends SceneObject {
 
 	protected byte objectVisible;
 	protected string craftersName;
+	protected unsigned long craftersID;
 
 	protected int junkDealerNeeded;
 	protected int junkValue;
@@ -120,12 +124,14 @@ class TangibleObject extends SceneObject {
 		complexity = 100.f;
 
 		volume = 1;
+		craftersID = 0;
 
 		objectVisible = 1;
 
 		useCount = 1;
 
 		conditionDamage = 0;
+		unmitigatedDamage = 0;
 
 		sliceable = false;
 		sliced = false;
@@ -365,6 +371,7 @@ class TangibleObject extends SceneObject {
 	 * @post { }
 	 * @return returns true if the creature object can attack this
 	 */
+	@mock
 	@dirty
 	public native abstract boolean isAttackableBy(CreatureObject object);
 
@@ -527,6 +534,16 @@ class TangibleObject extends SceneObject {
 	}
 
 	@read
+	public int getUnmitigatedDamage() {
+		return unmitigatedDamage;
+	}
+
+	@preLocked
+	public native void addUnmitigatedDamage(float damage) {
+		unmitigatedDamage += (int)damage;
+	}
+
+	@read
 	public int getVolume() {
 		return volume;
 	}
@@ -555,8 +572,10 @@ class TangibleObject extends SceneObject {
 			clearOptionBit(OptionBitmask.YELLOW, notifyClient);
 	}
 
+	@mock
+	@dirty
 	@read
-	public int getLevel() {
+	public abstract int getLevel() {
 		return level;
 	}
 
@@ -600,8 +619,9 @@ class TangibleObject extends SceneObject {
 		return null;
 	}
 
+	@mock
 	@read
-	public boolean isDestroyed() {
+	public native abstract boolean isDestroyed() {
 		return conditionDamage >= maxCondition;
 	}
 
@@ -705,9 +725,18 @@ class TangibleObject extends SceneObject {
 		craftersName = name;
 	}
 
+	public void setCraftersID(unsigned long crafterOID) {
+		craftersID = crafterOID;
+	}
+
 	@dirty
 	public abstract string getCraftersName() {
 		return craftersName;
+	}
+
+	@read
+	public unsigned long getCraftersID() {
+		return craftersID;
 	}
 
 	public void setJunkDealerNeeded(int jdNeeded) {
@@ -739,9 +768,10 @@ class TangibleObject extends SceneObject {
 		return objectSerial;
 	}
 
+	@mock
 	@local
 	@preLocked
-	public native ThreatMap getThreatMap();
+	public abstract native ThreatMap getThreatMap();
 
 	/*
 	 * Creates a factory crate for this object, can insert this object or a clone
@@ -797,6 +827,11 @@ class TangibleObject extends SceneObject {
 	public native void addActiveArea(ActiveArea area);
 
 	public void dropActiveArea(ActiveArea area) {
+		if (area.isNoCombatArea()) {
+			inNoCombatArea = false;
+			broadcastPvpStatusBitmask();
+		}
+
 		synchronized (super.getContainerLock()) {
 			activeAreas.drop(area);
 		}
@@ -822,6 +857,16 @@ class TangibleObject extends SceneObject {
 		}
 
 		return false;
+	}
+
+	@read
+	public boolean isInNoCombatArea() {
+		return inNoCombatArea;
+	}
+
+	@preLocked
+	public void setInNoCombatArea(boolean val) {
+		inNoCombatArea = val;
 	}
 
 	@local

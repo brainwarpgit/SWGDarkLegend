@@ -207,6 +207,19 @@ void VehicleControlDeviceImplementation::storeObject(CreatureObject* player, boo
 		(cast<CreatureObject*>(controlledObject.get()))->setCreatureLink(nullptr);
 
 	updateStatus(0);
+
+	ManagedReference<VehicleObject*> vehicle = cast<VehicleObject*>(controlledObject.get());
+
+	if (vehicle != nullptr && vehicle->isRentalVehicle() && vehicle->getRentalUses() <= 0) {
+		destroyObjectFromWorld(true);
+		destroyObjectFromDatabase();
+
+		StringIdChatParameter param;
+		param.setStringId("pet/pet_menu", "uses_complete");
+		player->sendSystemMessage(param.toString());
+
+		return;
+	}
 }
 
 void VehicleControlDeviceImplementation::destroyObjectFromDatabase(bool destroyContainedObjects) {
@@ -230,7 +243,7 @@ void VehicleControlDeviceImplementation::destroyObjectFromDatabase(bool destroyC
 				Zone* zone = getZone();
 
 				if (zone != nullptr)
-					zone->transferObject(object, -1, false);
+					zone->transferObject(object, -1, true);
 			}
 		}
 

@@ -224,7 +224,7 @@ void EntertainingSessionImplementation::activateAction() {
 
 	startTickTask();
 
-	entertainer->info("EntertainerEvent completed.");
+	entertainer->debug("EntertainerEvent completed.");
 }
 
 void EntertainingSessionImplementation::startTickTask() {
@@ -434,7 +434,7 @@ void EntertainingSessionImplementation::doPerformEffect(int effectId, int effect
 
 	PerformanceManager* performanceManager = SkillManager::instance()->getPerformanceManager();
 
-	if (isPerformingEffect()) {
+	if (!entertainer->checkCooldownRecovery("performing_entertainer_effect")) {
 		performanceManager->performanceMessageToSelf(entertainer, nullptr, "performance", "effect_wait_self"); // You must wait before you can perform another special effect.
 		return;
 	}
@@ -483,15 +483,9 @@ void EntertainingSessionImplementation::doPerformEffect(int effectId, int effect
 	performanceManager->performanceMessageToSelf(entertainer, nullptr, "performance", effectMessage);
 
 	entertainer->inflictDamage(entertainer, CreatureAttribute::ACTION, effectCost, true);
-	setPerformingEffect(true);
 
-	float effectDuration = effect->getEffectDuration() * 1000;
-	ManagedReference<EntertainingSession*> strongSess = _this.getReferenceUnsafeStaticCast();
-
-	Core::getTaskManager()->scheduleTask([entertainer, strongSess] {
-		Locker lock(entertainer);
-		strongSess->setPerformingEffect(false);
-	}, "SetPerformingEffectTask", effectDuration);
+	uint64 effectDuration = (uint64)(effect->getEffectDuration() * 1000);
+	entertainer->addCooldown("performing_entertainer_effect", effectDuration);
 }
 
 void EntertainingSessionImplementation::startPlayingMusic(int perfIndex, Instrument* instrument) {
@@ -514,6 +508,19 @@ void EntertainingSessionImplementation::startPlayingMusic(int perfIndex, Instrum
 		return;
 
 	Locker locker(entertainer);
+
+	if (instrument->getInstrumentType() == Instrument::OMNIBOX || instrument->getInstrumentType() == Instrument::NALARGON) {
+		bool isStatic = instrument->getObjectID() < 10000000;
+		bool isOwnedByPlayer = instrument->getSpawnerPlayer() == entertainer;
+
+		if (isOwnedByPlayer) {
+			instrument->initializePosition(entertainer->getPositionX(), entertainer->getPositionZ(), entertainer->getPositionY());
+			instrument->setDirection(*entertainer->getDirection());
+		} else if (isStatic) {
+			entertainer->setDirection(*instrument->getDirection());
+			entertainer->teleport(instrument->getPositionX(), instrument->getPositionZ(), instrument->getPositionY(), instrument->getParentID());
+		}
+	}
 
 	sendEntertainingUpdate(entertainer, performanceIndex, true);
 
@@ -670,7 +677,9 @@ void EntertainingSessionImplementation::doFlourish(int flourishNumber, bool gran
 
 			// Grant Experience
 			float loopDuration = performance->getLoopDuration();
+
 			int flourishCap = (int) (10 / loopDuration); // Cap for how many flourishes count towards xp per pulse. Music loops are 5s, dance are 10s so music has a cap of 2, dance a cap of 1.
+
 			if (grantXp && flourishCount < flourishCap)
 				flourishXp += performance->getFlourishXpMod();
 

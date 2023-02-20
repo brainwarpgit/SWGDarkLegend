@@ -9,6 +9,7 @@
 #include "SpawnGroup.h"
 #include "conf/ConfigManager.h"
 #include "server/zone/managers/name/NameManager.h"
+#include "server/zone/objects/creature/ai/AiAgent.h"
 
 AtomicInteger CreatureTemplateManager::loadedMobileTemplates;
 
@@ -18,7 +19,10 @@ int CreatureTemplateManager::ERROR_CODE = NO_ERROR;
 CreatureTemplateManager::CreatureTemplateManager() : Logger("CreatureTemplateManager") {
 	/*setLogging(false);
 		setGlobalLogging(true);*/
-	//setLoggingName("CreatureTemplateManager");
+
+	setLoggingName("CreatureTemplateManager");
+
+	globalAttackSpeedOverride = 0.0f;
 
 	lua = new Lua();
 	lua->init();
@@ -65,6 +69,8 @@ CreatureTemplateManager::CreatureTemplateManager() : Logger("CreatureTemplateMan
 	lua->setGlobalInt("BABY", CreatureFlag::BABY);
 	lua->setGlobalInt("LAIR", CreatureFlag::LAIR);
 	lua->setGlobalInt("HEALER", CreatureFlag::HEALER);
+	lua->setGlobalInt("NOINTIMIDATE", CreatureFlag::NOINTIMIDATE);
+	lua->setGlobalInt("NODOT", CreatureFlag::NODOT);
 
 	lua->setGlobalInt("CARNIVORE", CreatureFlag::CARNIVORE);
 	lua->setGlobalInt("HERBIVORE", CreatureFlag::HERBIVORE);
@@ -86,11 +92,20 @@ CreatureTemplateManager::CreatureTemplateManager() : Logger("CreatureTemplateMan
 	lua->setGlobalInt("NAME_DARKTROOPER", NameManagerType::DARKTROOPER);
 	lua->setGlobalInt("NAME_SWAMPTROOPER", NameManagerType::SWAMPTROOPER);
 
+	lua->setGlobalInt("MOB_HERBIVORE", AiAgent::MOB_HERBIVORE);
+	lua->setGlobalInt("MOB_CARNIVORE", AiAgent::MOB_CARNIVORE);
+	lua->setGlobalInt("MOB_NPC", AiAgent::MOB_NPC);
+	lua->setGlobalInt("MOB_DROID", AiAgent::MOB_DROID);
+	lua->setGlobalInt("MOB_ANDROID", AiAgent::MOB_ANDROID);
+	lua->setGlobalInt("MOB_VEHICLE", AiAgent::MOB_VEHICLE);
+
 	loadLuaConfig();
 }
 
 void CreatureTemplateManager::loadLuaConfig() {
 	lua->runFile("scripts/managers/creature_manager.lua");
+
+	globalAttackSpeedOverride = lua->getGlobalFloat("globalAttackSpeedOverride");
 
 	LuaObject luaObject = lua->getGlobalObject("aiSpeciesData");
 
@@ -263,9 +278,19 @@ int CreatureTemplateManager::addWeapon(lua_State* L) {
 
 	LuaObject obj(L);
 	if (obj.isValidTable()) {
+		TemplateManager* templateManager = TemplateManager::instance();
+
 		Vector<String> weps;
-		for (int i = 1; i <= obj.getTableSize(); ++i)
-			weps.add(obj.getStringAt(i));
+		for (int i = 1; i <= obj.getTableSize(); ++i) {
+			String tempName = obj.getStringAt(i);
+			SharedObjectTemplate* templateData = templateManager->getTemplate(tempName.hashCode());
+			if (templateData == nullptr && tempName != "unarmed") {
+				instance()->error() << "Weapon group " << ascii << " has invalid weapon configured: " << tempName;
+				continue;
+			}
+
+			weps.add(tempName);
+		}
 
 		CreatureTemplateManager::instance()->weaponMap.put(crc, weps);
 	}
@@ -282,6 +307,10 @@ int CreatureTemplateManager::addSpawnGroup(lua_State* L) {
 
 	String ascii = lua_tostring(L, -2);
 	uint32 crc = (uint32) ascii.hashCode();
+
+#ifdef DEBUG_REGIONS
+	Logger::console.info(true) << "Adding spawn group: " << ascii;
+#endif // DEBUG_REGIONS
 
 	LuaObject obj(L);
 	CreatureTemplateManager::instance()->spawnGroupMap.put(crc, new SpawnGroup(ascii, obj));

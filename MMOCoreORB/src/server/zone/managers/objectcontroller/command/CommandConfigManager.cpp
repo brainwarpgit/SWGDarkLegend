@@ -41,6 +41,7 @@
 #include "server/zone/objects/creature/commands/pet/PetEmoteCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetFeedCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetFollowCommand.h"
+#include "server/zone/objects/creature/commands/pet/PetFormationCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetFriendCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetGroupCommand.h"
 #include "server/zone/objects/creature/commands/pet/PetGuardCommand.h"
@@ -104,6 +105,8 @@ void CommandConfigManager::loadCommandData(const String& filename) {
 	tablesToLoad.readObject(metatable);
 
 	delete metatable;
+
+	auto dumpAdminCommands = ConfigManager::instance()->getBool("Core3.CommandConfigManager.DumpAdminCommands", false);
 
 	for (int j = 0; j < tablesToLoad.getTotalRows(); ++j) {
 		DataTableRow* tableRow = tablesToLoad.getRow(j);
@@ -293,6 +296,10 @@ void CommandConfigManager::loadCommandData(const String& filename) {
 			slashCommand->setCommandGroup(group);
 
 			num++;
+
+			if (dumpAdminCommands && slashCommand->requiresAdmin()) {
+				info(true) << "Loaded " << *slashCommand;
+			}
 		}
 	}
 
@@ -345,6 +352,7 @@ void CommandConfigManager::registerSpecialCommands(CommandList* sCommands) {
 	createCommand(String("petEmote").toLowerCase())->setCommandGroup(0xe1c9a54a);
 	createCommand(String("petFeed").toLowerCase())->setCommandGroup(0xe1c9a54a);
 	createCommand(String("petFollow").toLowerCase())->setCommandGroup(0xe1c9a54a);
+	createCommand(String("petFormation").toLowerCase())->setCommandGroup(0xe1c9a54a);
 	createCommand(String("petFriend").toLowerCase())->setCommandGroup(0xe1c9a54a);
 	createCommand(String("petGroup").toLowerCase())->setCommandGroup(0xe1c9a54a);
 	createCommand(String("petGuard").toLowerCase())->setCommandGroup(0xe1c9a54a);
@@ -559,6 +567,10 @@ void CommandConfigManager::parseVariableData(String varName, LuaObject &command,
 	// overwrite data from command_table
 	if (varName == "name") // just ignore name, it's only used to grab the object from the table
 		command.pop();
+	else if (varName == "cooldown")
+		slashCommand->setCooldown(Lua::getIntParameter(L));
+	else if (varName == "cooldownString")
+		slashCommand->setCooldownString(Lua::getStringParameter(L));
 	else if (varName == "invalidStateMask")
 		slashCommand->setStateMask(Lua::getUnsignedLongParameter(L));
 	else if (varName == "invalidLocomotions")
@@ -832,6 +844,7 @@ void CommandConfigManager::registerCommands() {
 	commandFactory.registerCommand<PetEmoteCommand>(String("petEmote").toLowerCase());
 	commandFactory.registerCommand<PetFeedCommand>(String("petFeed").toLowerCase());
 	commandFactory.registerCommand<PetFollowCommand>(String("petFollow").toLowerCase());
+	commandFactory.registerCommand<PetFormationCommand>(String("petFormation").toLowerCase());
 	commandFactory.registerCommand<PetFriendCommand>(String("petFriend").toLowerCase());
 	commandFactory.registerCommand<PetGroupCommand>(String("petGroup").toLowerCase());
 	commandFactory.registerCommand<PetGuardCommand>(String("petGuard").toLowerCase());

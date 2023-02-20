@@ -87,6 +87,11 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
 
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+	message(STATUS "Compiling with AI debug enabled")
+	add_definitions(-DDEBUG_AI)
+endif()
+
 if (ENABLE_SESSION_API)
     message(STATUS "Compiling with session API support")
     add_definitions(-DWITH_SESSION_API)
@@ -214,12 +219,10 @@ if (ENABLE_ODB_REFERENCES)
 endif()
 
 if (ENABLE_LOCKFREE_BCLIENT_BUFFERS)
-	find_package(Boost REQUIRED COMPONENTS thread)
-
 	add_definitions(-DLOCKFREE_BCLIENT_BUFFERS)
-else()
-	find_package(Boost QUIET OPTIONAL_COMPONENTS thread)
 endif()
+
+find_package(Boost REQUIRED COMPONENTS thread)
 
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS})

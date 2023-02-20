@@ -186,7 +186,6 @@ void SuiManager::handleFishingAction(CreatureObject* player, SuiBox* suiBox, uin
 		newBoxID = manager->createWindow(player, suiBox->getBoxID());
 		break;
 	case FishingManager::STOPFISHING:
-		player->sendSystemMessage("@fishing:stop_fishing"); //You reel-in your line and stop fishing...
 		manager->stopFishing(player, suiBox->getBoxID(), true);
 		return;
 		break;
@@ -462,7 +461,7 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 
 				LootManager* lootManager = zserv->getLootManager();
 				TransactionLog trx(TrxCode::CHARACTERBUILDER, player);
-				if (lootManager->createLoot(trx, inventory, templatePath, 300, true)) {
+				if (lootManager->createLoot(trx, inventory, templatePath, 300, true) > 0) {
 					trx.commit(true);
 				} else {
 					trx.abort() << "createLoot " << templatePath << " failed.";

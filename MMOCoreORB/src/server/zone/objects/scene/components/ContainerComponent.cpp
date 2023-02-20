@@ -170,7 +170,7 @@ bool ContainerComponent::checkContainerPermission(SceneObject* sceneObject, Crea
 	if (ghost == nullptr)
 		return false;
 
-	if (permission == ContainerPermissions::OPEN && ghost->isPrivileged())
+	if ((permission == ContainerPermissions::OPEN || permission == ContainerPermissions::WALKIN) && ghost->isPrivileged())
 		return true;
 
 	ManagedReference<SceneObject*> parent = sceneObject->getParent().get();
@@ -204,6 +204,9 @@ bool ContainerComponent::transferObject(SceneObject* sceneObject, SceneObject* o
 	if (sceneObject == object) {
 		return false;
 	}
+
+	if (!object->canBeTransferred(sceneObject))
+		return false;
 
 	ManagedReference<SceneObject*> objParent = object->getParent().get();
 	ManagedReference<Zone*> objZone = object->getLocalZone();
@@ -283,7 +286,23 @@ bool ContainerComponent::transferObject(SceneObject* sceneObject, SceneObject* o
 		ManagedReference<Zone*> newRootZone = object->getZone();
 
 		if (newRootZone != nullptr && newRootZone != oldRootZone) {
-			newRootZone->registerObjectWithPlanetaryMap(object);
+			bool shouldRegister = true;
+
+			// Prevent GCW PvE Base Terminals Registering when inserted in cell container
+			if (object->isTerminal() && sceneObject->getParent().get() != nullptr) {
+				SceneObject* containerParent = sceneObject->getParent().get();
+
+				if (containerParent != nullptr && containerParent->isBuildingObject()) {
+					BuildingObject* building = containerParent->asBuildingObject();
+
+					if (building != nullptr && building->isGCWBase() && !(building->getPvpStatusBitmask() & CreatureFlag::OVERT)) {
+						shouldRegister = false;
+					}
+				}
+			}
+
+			if (shouldRegister)
+				newRootZone->registerObjectWithPlanetaryMap(object);
 		}
 	} else {
 		sceneObject->error("unknown containment type " + String::valueOf(containmentType));

@@ -6,6 +6,7 @@
 #include "server/zone/objects/creature/ai/AiAgent.h"
 #include "server/zone/objects/creature/ai/Creature.h"
 #include "server/zone/objects/creature/ai/DroidObject.h"
+#include "server/zone/objects/creature/ai/HelperDroidObject.h"
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
@@ -26,11 +27,23 @@
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/managers/frs/FrsManager.h"
+#include "server/zone/objects/creature/commands/QueueCommand.h"
 
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	if (player->isInCombat() || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
 		player->sendSystemMessage("@pet/pet_menu:cant_call"); // You cannot call this pet right now.
 		return;
+	}
+
+	SortedVector<ManagedReference<ActiveArea*> >* areas = player->getActiveAreas();
+
+	for (int i = 0; i < areas->size(); i++) {
+		ActiveArea* area = areas->get(i);
+
+		if (area != nullptr && area->isNoPetArea()) {
+			player->sendSystemMessage("@pet/pet_menu:cant_call"); // You cannot call this pet right now.
+			return;
+		}
 	}
 
 	if (player->isRidingMount()) {
@@ -61,6 +74,9 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 
 	ManagedReference<AiAgent*> pet = cast<AiAgent*>(controlledObject.get());
 	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+
+	if (ghost == nullptr)
+		return;
 
 	if (ghost->hasActivePet(pet))
 		return;
@@ -97,12 +113,22 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 			return;
 		}
 
-		if (player->getFaction() != petFaction || player->getFactionStatus() == FactionStatus::ONLEAVE) {
-			StringIdChatParameter message("@faction_perk:prose_be_declared_faction"); // You must be a declared %TO to use %TT.
-			message.setTO(pet->getFactionString());
-			message.setTT(pet->getDisplayedName());
-			player->sendSystemMessage(message);
-			return;
+		if (ConfigManager::instance()->useCovertOvertSystem()) {
+			if (player->getFaction() != petFaction || player->getFactionStatus() != FactionStatus::OVERT) {
+				StringIdChatParameter message("@faction_perk:prose_be_declared_faction"); // You must be a declared %TO to use %TT.
+				message.setTO(pet->getFactionString());
+				message.setTT(pet->getDisplayedName());
+				player->sendSystemMessage(message);
+				return;
+			}
+		} else {
+			if (player->getFaction() != petFaction || player->getFactionStatus() == FactionStatus::ONLEAVE) {
+				StringIdChatParameter message("@faction_perk:prose_be_declared_faction"); // You must be a declared %TO to use %TT.
+				message.setTO(pet->getFactionString());
+				message.setTT(pet->getDisplayedName());
+				player->sendSystemMessage(message);
+				return;
+			}
 		}
 	}
 
@@ -129,7 +155,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 		box->setCancelButton(true,"@bio_engineer:pet_sui_abort");
 		box->setOtherButton(true,"@bio_engineer:pet_sui_fix_level");
 		box->setUsingObject(_this.getReferenceUnsafeStaticCast());
-		player->getPlayerObject()->addSuiBox(box);
+		ghost->addSuiBox(box);
 		player->sendMessage(box->generateMessage());
 		return;
 	}
@@ -224,7 +250,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 		server->getZoneServer()->getPlayerManager()->handleAbortTradeMessage(player);
 	}
 
-	if (player->getCurrentCamp() == nullptr && player->getCityRegion() == nullptr) {
+	if (player->getCurrentCamp() == nullptr && player->getCityRegion() == nullptr && !ghost->isPrivileged()) {
 
 		Reference<CallPetTask*> callPet = new CallPetTask(_this.getReferenceUnsafeStaticCast(), player, "call_pet");
 
@@ -258,8 +284,8 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 		player->getCooldownTimerMap()->updateToCurrentAndAddMili("petCallOrStoreCooldown", 1000); // 1 sec
 	}
 
-	EnqueuePetCommand* enqueueCommand = new EnqueuePetCommand(pet, String("petFollow").toLowerCase().hashCode(), String::valueOf(player->getObjectID()), player->getObjectID(), 1);
-	enqueueCommand->execute();
+	EnqueuePetCommand* enqueueCommand = new EnqueuePetCommand(pet, String("petFollow").toLowerCase().hashCode(), String::valueOf(player->getObjectID()), player->getObjectID(), QueueCommand::NORMAL);
+	enqueueCommand->schedule(50);
 }
 
 int PetControlDeviceImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
@@ -352,7 +378,7 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		server->getZoneServer()->getPlayerManager()->handleAbortTradeMessage(player);
 	}
 
-	controlledObject->initializePosition(player->getPositionX(), player->getPositionZ(), player->getPositionY());
+	controlledObject->initializePosition(player->getPositionX() + System::random(5) - 2, player->getPositionZ(), player->getPositionY() + System::random(5) - 2);
 	ManagedReference<CreatureObject*> creature = nullptr;
 
 	if (controlledObject->isCreatureObject()) {
@@ -365,10 +391,15 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		if (creature->getHueValue() >= 0)
 			creature->setHue(creature->getHueValue());
 
-		if (player->getPvpStatusBitmask() & CreatureFlag::PLAYER)
-			creature->setPvpStatusBitmask(player->getPvpStatusBitmask() - CreatureFlag::PLAYER, true);
-		else
-			creature->setPvpStatusBitmask(player->getPvpStatusBitmask(), true);
+		uint32 playerPvpStatusBitmask = player->getPvpStatusBitmask();
+
+		if (playerPvpStatusBitmask & CreatureFlag::PLAYER) {
+			playerPvpStatusBitmask &= ~CreatureFlag::PLAYER;
+
+			creature->setPvpStatusBitmask(playerPvpStatusBitmask);
+		} else {
+			creature->setPvpStatusBitmask(playerPvpStatusBitmask);
+		}
 
 		if (trainedAsMount && (creature->getOptionsBitmask() ^ 0x1000)) {
 			creature->setOptionBit(0x1000);
@@ -421,13 +452,28 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		droid->addPendingTask("droid_skill_mod", droidSkillModTask, 3000); // 3 sec
 	}
 
-	pet->setHomeLocation(player->getPositionX(), player->getPositionZ(), player->getPositionY(), parent);
-	pet->setNextStepPosition(player->getPositionX(), player->getPositionZ(), player->getPositionY(), parent);
+	if (pet->isHelperDroidObject()) {
+		HelperDroidObject* helperDroid = cast<HelperDroidObject*>(pet);
+
+		if (helperDroid == nullptr )
+			return;
+
+		helperDroid->onCall();
+	}
+
+	// This will clear the points set by the BT and any stored points on the PCD
 	pet->clearPatrolPoints();
+	clearPatrolPoints();
+
+	pet->setHomeLocation(player->getPositionX(), player->getPositionZ(), player->getPositionY(), player->getParent().get().castTo<CellObject*>());
+	pet->setNextPosition(player->getPositionX(), player->getPositionZ(), player->getPositionY(), player->getParent().get().castTo<CellObject*>());
+
+	pet->setFollowObject(player);
+
 	if (petType == PetManager::CREATUREPET) {
 		pet->setCreatureBitmask(CreatureFlag::PET);
 	}
-	if (petType == PetManager::DROIDPET) {
+	if (petType == PetManager::DROIDPET || petType == PetManager::HELPERDROIDPET) {
 		pet->setCreatureBitmask(CreatureFlag::DROID_PET);
 	}
 	if (petType == PetManager::FACTIONPET) {
@@ -437,11 +483,17 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 			pet->setOptionBit(OptionBitmask::CONVERSE,true);
 		**/
 	}
-	pet->activateLoad("");
+
+	pet->setAITemplate();
 	pet->activateRecovery();
 	// Not training any commands
 	trainingCommand = 0;
-	clearPatrolPoints();
+
+	pet->faceObject(player, true);
+
+	setLastCommander(player);
+	setLastCommandTarget(nullptr);
+	setLastCommand(PetManager::FOLLOW);
 }
 
 void PetControlDeviceImplementation::cancelSpawnObject(CreatureObject* player) {
@@ -682,7 +734,7 @@ void PetControlDeviceImplementation::destroyObjectFromDatabase(bool destroyConta
 				Zone* zone = getZone();
 
 				if (zone != nullptr)
-					zone->transferObject(object, -1, false);
+					zone->transferObject(object, -1, true);
 			}
 		}
 
@@ -908,7 +960,7 @@ void PetControlDeviceImplementation::fillAttributeList(AttributeListMessage* alm
 			alm->insertAttribute("creature_damage", String::valueOf(pet->getDamageMin()) + " - " + String::valueOf(pet->getDamageMax()));
 
 			if (petType == PetManager::CREATUREPET) {
-				const CreatureAttackMap* attMap = pet->getAttackMap();
+				const CreatureAttackMap* attMap = pet->getPrimaryAttackMap();
 
 				if (attMap != nullptr && attMap->size() > 0) {
 					String cmd = attMap->getCommand(0);
@@ -934,7 +986,6 @@ void PetControlDeviceImplementation::fillAttributeList(AttributeListMessage* alm
 					alm->insertAttribute("spec_atk_2", " ---");
 				}
 
-				// TODO set this up to check for the actual ranged weapon
 				if (pet->hasRangedWeapon())
 					alm->insertAttribute("dna_comp_ranged_attack", "Yes");
 				else

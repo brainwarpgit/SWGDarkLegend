@@ -12,6 +12,7 @@
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/managers/combat/CombatManager.h"
 #include "server/zone/objects/player/PlayerObject.h"
+#include "server/zone/objects/creature/ai/AiAgent.h"
 #include "server/zone/objects/cell/CellObject.h"
 #include "server/zone/managers/combat/CreatureAttackData.h"
 #include "server/zone/managers/collision/CollisionManager.h"
@@ -181,33 +182,37 @@ public:
 				if (ghost->isAFK())
 					return GENERALERROR;
 
-				ManagedReference<TangibleObject*> targetTano = targetObject.castTo<TangibleObject*>();
+				bool covertOvert = ConfigManager::instance()->useCovertOvertSystem();
 
-				if (targetTano != nullptr && creature->getFaction() != 0 && targetTano->getFaction() != 0 && targetTano->getFaction() != creature->getFaction() && creature->getFactionStatus() != FactionStatus::OVERT && !ghost->hasCrackdownTef()) {
-					if (targetTano->isCreatureObject()) {
-						ManagedReference<CreatureObject*> targetCreature = targetObject.castTo<CreatureObject*>();
+				if (!covertOvert) {
+					ManagedReference<TangibleObject*> targetTano = targetObject.castTo<TangibleObject*>();
 
-						if (targetCreature != nullptr) {
-							if (targetCreature->isPlayerCreature()) {
+					if (targetTano != nullptr && creature->getFaction() != 0 && targetTano->getFaction() != 0 && targetTano->getFaction() != creature->getFaction() && creature->getFactionStatus() != FactionStatus::OVERT && !ghost->hasCrackdownTef()) {
+						if (targetTano->isCreatureObject()) {
+							ManagedReference<CreatureObject*> targetCreature = targetObject.castTo<CreatureObject*>();
 
-								if (!CombatManager::instance()->areInDuel(creature, targetCreature) && !targetCreature->hasBountyMissionFor(creature) && !creature->hasBountyMissionFor(targetCreature) && targetCreature->getFactionStatus() == FactionStatus::OVERT)
-									ghost->doFieldFactionChange(FactionStatus::OVERT);
-							} else if (targetCreature->isPet()) {
-								ManagedReference<CreatureObject*> targetOwner = targetCreature->getLinkedCreature().get();
+							if (targetCreature != nullptr) {
+								if (targetCreature->isPlayerCreature()) {
 
-								if (targetOwner != nullptr && !creature->hasBountyMissionFor(targetOwner) && !targetOwner->hasBountyMissionFor(creature) && !CombatManager::instance()->areInDuel(creature, targetOwner) && targetOwner->getFactionStatus() == FactionStatus::OVERT) {
+									if (!CombatManager::instance()->areInDuel(creature, targetCreature) && !targetCreature->hasBountyMissionFor(creature) && !creature->hasBountyMissionFor(targetCreature) && targetCreature->getFactionStatus() == FactionStatus::OVERT)
 										ghost->doFieldFactionChange(FactionStatus::OVERT);
+								} else if (targetCreature->isPet()) {
+									ManagedReference<CreatureObject*> targetOwner = targetCreature->getLinkedCreature().get();
+
+									if (targetOwner != nullptr && !creature->hasBountyMissionFor(targetOwner) && !targetOwner->hasBountyMissionFor(creature) && !CombatManager::instance()->areInDuel(creature, targetOwner) && targetOwner->getFactionStatus() == FactionStatus::OVERT) {
+											ghost->doFieldFactionChange(FactionStatus::OVERT);
+									}
+								} else {
+									if (creature->getFactionStatus() == FactionStatus::ONLEAVE)
+										ghost->doFieldFactionChange(FactionStatus::COVERT);
 								}
-							} else {
-								if (creature->getFactionStatus() == FactionStatus::ONLEAVE)
-									ghost->doFieldFactionChange(FactionStatus::COVERT);
 							}
+						} else {
+							if (creature->getFactionStatus() == FactionStatus::ONLEAVE && !(targetTano->getPvpStatusBitmask() & CreatureFlag::OVERT))
+								ghost->doFieldFactionChange(FactionStatus::COVERT);
+							else if ((targetTano->getPvpStatusBitmask() & CreatureFlag::OVERT))
+								ghost->doFieldFactionChange(FactionStatus::OVERT);
 						}
-					} else {
-						if (creature->getFactionStatus() == FactionStatus::ONLEAVE && !(targetTano->getPvpStatusBitmask() & CreatureFlag::OVERT))
-							ghost->doFieldFactionChange(FactionStatus::COVERT);
-						else if ((targetTano->getPvpStatusBitmask() & CreatureFlag::OVERT))
-							ghost->doFieldFactionChange(FactionStatus::OVERT);
 					}
 				}
 			}
@@ -632,9 +637,17 @@ public:
 		case CommandEffect::DIZZY:
 			defender->setDizziedState(duration);
 			break;
-		case CommandEffect::INTIMIDATE:
+		case CommandEffect::INTIMIDATE: {
+			if (defender->isAiAgent()) {
+				AiAgent* defenderAgent = defender->asAiAgent();
+
+				if (defenderAgent != nullptr && (defenderAgent->getCreatureBitmask() & CreatureFlag::NOINTIMIDATE))
+					break;
+			}
+
 			defender->setIntimidatedState(duration);
 			break;
+		}
 		case CommandEffect::STUN:
 			defender->setStunnedState(duration);
 			break;
@@ -654,7 +667,7 @@ public:
 				defender->setPosture(CreaturePosture::KNOCKEDDOWN, false, false);
 
 			defender->updateKnockdownRecovery();
-			defender->updatePostureChangeDelay(5000);
+			defender->setPostureChangeDelay(5000);
 			defender->removeBuff(STRING_HASHCODE("burstrun"));
 			defender->removeBuff(STRING_HASHCODE("retreat"));
 			defender->sendSystemMessage("@cbt_spam:posture_knocked_down");
@@ -683,7 +696,7 @@ public:
 			}
 
 			defender->updatePostureUpRecovery();
-			defender->updatePostureChangeDelay(2500);
+			defender->setPostureChangeDelay(2500);
 			defender->removeBuff(STRING_HASHCODE("burstrun"));
 			defender->removeBuff(STRING_HASHCODE("retreat"));
 			break;
@@ -710,12 +723,12 @@ public:
 			}
 
 			defender->updatePostureDownRecovery();
-			defender->updatePostureChangeDelay(2500);
+			defender->setPostureChangeDelay(2500);
 			defender->removeBuff(STRING_HASHCODE("burstrun"));
 			defender->removeBuff(STRING_HASHCODE("retreat"));
 			break;
 		case CommandEffect::NEXTATTACKDELAY:
-			defender->setNextAttackDelay(mod, duration);
+			defender->setNextAttackDelay(attacker, name, mod, duration);
 			break;
 		case CommandEffect::HEALTHDEGRADE:
 			buff = new Buff(defender, STRING_HASHCODE("healthdegrade"), duration, BuffType::STATE);
@@ -739,7 +752,7 @@ public:
 			if (defender->hasState(CreatureState::COVER)) {
 				defender->clearState(CreatureState::COVER);
 				defender->sendSystemMessage("@combat_effects:strafe_system");
-				defender->setNextAttackDelay(mod, duration);
+				defender->setNextAttackDelay(attacker, name, mod, duration);
 			}
 			break;
 		case CommandEffect::ATTACKER_FORCE_STAND:

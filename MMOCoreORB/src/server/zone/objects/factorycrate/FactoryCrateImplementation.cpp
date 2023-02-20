@@ -48,7 +48,9 @@ void FactoryCrateImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 	Reference<TangibleObject*> prototype = getPrototype();
 
 	if(prototype == nullptr || !prototype->isTangibleObject()) {
-		object->sendSystemMessage("This crate is broken, please contact support if you get this message.");
+		if (object != nullptr) {
+			object->sendSystemMessage("This crate is broken, please contact support if you get this message.");
+		}
 		return;
 	}
 
@@ -296,7 +298,7 @@ void FactoryCrateImplementation::split(int newStackSize) {
 
 	Locker nlocker(newCrate);
 
-	if (!newCrate->transferObject(protoclone, -1, false)) {
+	if (!newCrate->transferObject(protoclone, -1, true)) {
 		protoclone->destroyObjectFromDatabase(true);
 		newCrate->destroyObjectFromDatabase(true);
 		return;
@@ -307,7 +309,7 @@ void FactoryCrateImplementation::split(int newStackSize) {
 
 	ManagedReference<SceneObject*> strongParent = getParent().get();
 	if (strongParent != nullptr) {
-		if(	strongParent->transferObject(newCrate, -1, false)) {
+		if(	strongParent->transferObject(newCrate, -1, true)) {
 			strongParent->broadcastObject(newCrate, true);
 			setUseCount(getUseCount() - newStackSize, true);
 		} else {

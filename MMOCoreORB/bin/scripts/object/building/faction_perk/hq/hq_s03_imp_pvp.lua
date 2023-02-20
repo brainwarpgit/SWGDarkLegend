@@ -98,6 +98,7 @@ object_building_faction_perk_hq_hq_s03_imp_pvp = object_building_faction_perk_hq
 		{ templateFile = "object/installation/faction_perk/turret/tower_lg.iff", x = -12, z = 0, y = -5, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 }, -- back turret left
 		{ templateFile = "object/installation/faction_perk/turret/tower_lg.iff", x = 12, z = 0, y = -5, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 
+		{ templateFile = "object/installation/faction_perk/covert_detector/detector_32m.iff", x = 0, z = 0, y = 46, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 		{ templateFile = "object/installation/faction_perk/minefield/field_1x1.iff", x = 0, z = 0, y = 38.5, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 
 		{ templateFile = "object/tangible/terminal/terminal_hq_turret_control.iff", x = -4.75, z = 0, y = -2.4, ox = 0, oy = 0.707, oz = 0, ow = 0.707, cellid = 2, containmentType = -1 },
@@ -153,6 +154,14 @@ object_building_faction_perk_hq_hq_s03_imp_pvp = object_building_faction_perk_hq
 		{ mobile = "imperial_recruiter", x = -4.9, z = -20.75, y = 31.5, cellid = 10, containmentType = -1, respawn = 60, heading = 1.57},
 	},
 
+	securityPatrols = {
+		{patrol = "imperial_small_3", x = 26.7, z = 0, y = 9.8, heading = 0},
+		{patrol = "imperial_small_3", x = -26.7, z = 0, y = 9.8, heading = 0},
+		{patrol = "imperial_small_3", x = 0, z = 0, y = 22.9, heading = 0},
+
+		{patrol = "imperial_large_3", x = -23.1, z = 0, y = 43.8, heading = 0},
+		{patrol = "imperial_large_3", x = 23.1, z = 0, y = 43.8, heading = 0},
+	},
 }
 
 ObjectTemplates:addTemplate(object_building_faction_perk_hq_hq_s03_imp_pvp, "object/building/faction_perk/hq/hq_s03_imp_pvp.iff")

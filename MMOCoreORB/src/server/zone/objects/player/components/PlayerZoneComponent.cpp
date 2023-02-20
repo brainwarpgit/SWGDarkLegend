@@ -76,9 +76,7 @@ void PlayerZoneComponent::switchZone(SceneObject* sceneObject, const String& new
 			ghost->unloadSpawnedChildren();
 		}
 
-		player->setMovementCounter(0);
-
-		player->notifyObservers(ObserverEventType::ZONESWITCHED);
+		player->notifyObservers(ObserverEventType::ZONESWITCHED, nullptr, newTerrainName.hashCode());
 	}
 
 	ZoneComponent::switchZone(sceneObject, newTerrainName, newPostionX, newPositionZ, newPositionY, parentID, toggleInvisibility);
@@ -110,8 +108,6 @@ void PlayerZoneComponent::teleport(SceneObject* sceneObject, float newPositionX,
 			ghost->updateLastValidatedPosition();
 			ghost->setClientLastMovementStamp(0);
 		}
-
-		player->setMovementCounter(0);
 	}
 }
 

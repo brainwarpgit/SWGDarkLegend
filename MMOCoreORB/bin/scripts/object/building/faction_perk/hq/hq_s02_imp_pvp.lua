@@ -93,6 +93,7 @@ object_building_faction_perk_hq_hq_s02_imp_pvp = object_building_faction_perk_hq
 		{ templateFile = "object/installation/faction_perk/turret/tower_lg.iff", x = -14, z = 0, y = 17, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 }, -- right turret front
 		{ templateFile = "object/installation/faction_perk/turret/tower_lg.iff", x = 0, z = 0, y = -13, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 
+		{ templateFile = "object/installation/faction_perk/covert_detector/detector_32m.iff", x = 0, z = 0, y = 30, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 		{ templateFile = "object/installation/faction_perk/minefield/field_1x1.iff", x = 0, z = 0, y = 26.5, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 
 		{ templateFile = "object/tangible/terminal/terminal_hq_turret_control.iff", x = -2.75, z = 0, y = 1, ox = 0, oy = -0.707, oz = 0, ow = 0.707, cellid = 2, containmentType = -1 },
@@ -147,9 +148,16 @@ object_building_faction_perk_hq_hq_s02_imp_pvp = object_building_faction_perk_hq
 		{ mobile = "fbase_specialist_noncom_hard", x = -7.6, z = -13.75, y = -12.6, cellid = 9, respawn = 300, containmentType = -1, heading = 0 },
 		{ mobile = "fbase_imperial_first_lieutenant_hard", x = -2.5, z = -13.75, y = -14.9, cellid = 9, respawn = 300, containmentType = -1, heading = 0 },
 		{ mobile = "imperial_recruiter", x = 0, z = -13.75, y = -17, cellid = 9, containmentType = -1, respawn = 60, heading = 0 },
-
 	},
 
+	securityPatrols = {
+		{patrol = "imperial_small_2", x = 11.8, z = 0, y = 1, heading = 0},
+		{patrol = "imperial_small_2", x = -11.8, z = 0, y = 1, heading = 0},
+		{patrol = "imperial_small_2", x = 0, z = 0, y = 17.8, heading = 0},
+
+		{patrol = "imperial_large_2", x = 12.8, z = 0, y = 28.9, heading = 0},
+		{patrol = "imperial_large_2", x = -12.8, z = 0, y = 28.9, heading = 0},
+	},
 }
 
 ObjectTemplates:addTemplate(object_building_faction_perk_hq_hq_s02_imp_pvp, "object/building/faction_perk/hq/hq_s02_imp_pvp.iff")

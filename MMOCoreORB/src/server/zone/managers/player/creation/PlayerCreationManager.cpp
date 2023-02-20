@@ -394,8 +394,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	UnicodeString bio;
 	callback->getBiography(bio);
 
-	bool doTutorial = callback->getTutorialFlag();
-	//bool doTutorial = false;
+	bool doTutorial = ConfigManager::instance()->getBool("Core3.PlayerCreationManager.EnableTutorial", callback->getTutorialFlag());
 
 	ManagedReference<CreatureObject*> playerCreature =
 			zoneServer.get()->createObject(
@@ -539,8 +538,10 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 		lastValidatedPosition->update(playerCreature);
 
 		ghost->setBiography(bio);
-
 		ghost->setLanguageID(playerTemplate->getDefaultLanguage());
+
+		Time now;
+		ghost->setBirthDate(now.getTime());
 	}
 
 	ClientCreateCharacterSuccess* msg = new ClientCreateCharacterSuccess(

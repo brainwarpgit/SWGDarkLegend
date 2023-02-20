@@ -78,6 +78,7 @@ object_building_faction_perk_hq_hq_s02_rebel_pvp = object_building_faction_perk_
 		{ templateFile = "object/tangible/terminal/terminal_hq_turret_control.iff", x = -2.75, z = 0, y = 0, ox = 0, oy = -0.707, oz = 0, ow = 0.707, cellid = 2, containmentType = -1 },
 		{ templateFile = "object/tangible/terminal/terminal_hq_turret_control.iff", x = -2.75, z = 0, y = -1, ox = 0, oy = -0.707, oz = 0, ow = 0.707, cellid = 2, containmentType = -1 },
 
+		{ templateFile = "object/installation/faction_perk/covert_detector/detector_32m.iff", x = 0, z = 0, y = 48, ox = 0, oy = 0, oz = 0, ow = 1, cellid = -1, containmentType = -1 },
 		{ templateFile = "object/installation/faction_perk/minefield/field_1x1.iff", x = 0, z = 0, y = 39.5, ox = 0, oy = .7, oz = 0, ow = .7, cellid = -1, containmentType = -1 },
 
 		{ templateFile = "object/tangible/terminal/terminal_hq_rebel.iff", x = 0, z = 0.25, y = 1.86, ox = 0, oy = 0, oz = 0, ow = 1, cellid = 2, containmentType = -1 },
@@ -126,9 +127,18 @@ object_building_faction_perk_hq_hq_s02_rebel_pvp = object_building_faction_perk_
 		{ mobile = "fbase_rebel_master_sergeant_hard", x = -5.5, z = -13.75, y = -7.2, cellid = 9, respawn = 300, containmentType = -1, heading = 0},
 		{ mobile = "fbase_rebel_first_lieutenant_hard", x = -4.1, z = -13.75, y = -17.3, cellid = 9, respawn = 300, containmentType = -1, heading = 0},
 		{ mobile = "rebel_recruiter", x = 0, z = -13.75, y = -17, cellid = 9, respawn = 60, containmentType = -1, heading = 0},
-
 	},
 
+	securityPatrols = {
+		{patrol = "rebel_small_2", x = -19.8, z = 0, y = 32.5, heading = 0},
+		{patrol = "rebel_small_2", x = 23.8, z = 0, y = 32.5, heading = 0},
+		{patrol = "rebel_small_2", x = -23.8, z = 0, y = -9.8, heading = 0},
+		{patrol = "rebel_small_2", x = 19.8, z = 0, y = -9.8, heading = 0},
+
+		{patrol = "rebel_large_2", x = 0, z = 0, y = 18.1, heading = 0},
+		{patrol = "rebel_large_2", x = 0, z = 0, y = 51.2, heading = 0},
+		{patrol = "rebel_large_2", x = 0, z = 0, y = -19.5, heading = 0},
+	},
 }
 
 ObjectTemplates:addTemplate(object_building_faction_perk_hq_hq_s02_rebel_pvp, "object/building/faction_perk/hq/hq_s02_rebel_pvp.iff")

@@ -39,6 +39,7 @@ class ThreatMapEntry : public VectorMap<String, uint32> {
 	uint64 threatBitmask;
 	int healAmount;
 	uint32 nonAggroDamageTotal;
+	Time startTime;
 
 public:
 	ThreatMapEntry() {
@@ -55,6 +56,7 @@ public:
 		threatBitmask = e.threatBitmask;
 		healAmount = e.healAmount;
 		nonAggroDamageTotal = e.nonAggroDamageTotal;
+		startTime = e.startTime;
 	}
 
 	ThreatMapEntry& operator=(const ThreatMapEntry& e) {
@@ -65,6 +67,7 @@ public:
 		threatBitmask = e.threatBitmask;
 		healAmount = e.healAmount;
 		nonAggroDamageTotal = e.nonAggroDamageTotal;
+		startTime = e.startTime;
 
 		VectorMap<String, uint32>::operator=(e);
 
@@ -94,6 +97,21 @@ public:
 		return aggroMod;
 	}
 
+	uint32 getDurationSeconds() {
+		Time now;
+		return startTime.miliDifference(now) / 1000.0;
+	}
+
+	uint32 getDPS() {
+		uint32 duration = getDurationSeconds();
+
+		if (duration > 0) {
+			return getTotalDamage() / getDurationSeconds();
+		}
+
+		return 0;
+	}
+
 	void removeAggro(int value) {
 		aggroMod -= value;
 	}
@@ -107,6 +125,27 @@ public:
 
 		for (int i = 0; i < size(); i++)
 			totalDamage += elementAt(i).getValue();
+
+		return totalDamage;
+	}
+
+	// getLootDamage excludes damage done by DOT's
+	uint32 getLootDamage() {
+		uint32 totalDamage = 0;
+
+		for (int i = 0; i < size(); i++) {
+			String type = elementAt(i).getKey();
+			uint32 damage = elementAt(i).getValue();
+
+			// Logger::console.info("Dam value type " + type + "  #" + String::valueOf(i) + " with a value of " + String::valueOf(damage), true);
+
+			if (type == "dotDMG")
+				continue;
+
+			totalDamage += damage;
+		}
+
+		// Logger::console.info("Combined total damage = " + String::valueOf(totalDamage), true);
 
 		return totalDamage;
 	}

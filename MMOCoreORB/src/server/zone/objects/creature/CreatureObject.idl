@@ -23,7 +23,6 @@ include server.zone.objects.creature.variables.CooldownTimerMap;
 include server.zone.objects.creature.buffs.BuffList;
 include server.zone.objects.creature.damageovertime.DamageOverTimeList;
 include server.zone.objects.scene.variables.DeltaVector;
-include server.zone.objects.creature.variables.CommandQueueActionVector;
 include server.zone.objects.creature.variables.SkillList;
 include server.zone.objects.creature.variables.SkillModList;
 include templates.params.creature.CreaturePosture;
@@ -45,6 +44,7 @@ include server.zone.QuadTreeEntry;
 import system.util.SynchronizedVectorMap;
 import server.zone.managers.auction.AuctionSearchTask;
 import server.zone.objects.tangible.Instrument;
+include server.zone.objects.creature.CommandQueue;
 
 @mock
 @json
@@ -100,7 +100,7 @@ class CreatureObject extends TangibleObject {
 	protected float runSpeed;
 	protected float walkSpeed;
 	protected float currentSpeed;
-	protected float terrainNegotiation;
+	protected float waterModPercent;
 	protected float runAcceleration;
 	protected float walkAcceleration;
 	protected float height;
@@ -148,11 +148,7 @@ class CreatureObject extends TangibleObject {
 	@dereferenced
 	protected transient ReadWriteLock skillModMutex;
 
-	@transactional
-	protected transient CommandQueueActionVector commandQueue;
-
-	@transactional
-	protected transient CommandQueueActionVector immediateQueue;
+	protected transient CommandQueue commandQueue;
 
 	protected transient unsigned int lastActionCounter;
 
@@ -195,6 +191,9 @@ class CreatureObject extends TangibleObject {
 
 	@dereferenced
 	protected transient Time lastCombatActionTime;
+
+	@dereferenced
+	protected transient Time nextAllowedMoveTime;
 
 	@dereferenced
 	protected transient Vector3 lastCombatPosition;
@@ -257,10 +256,7 @@ class CreatureObject extends TangibleObject {
 	public native void initializeTransientMembers();
 
 	@preLocked
-	public abstract void setCountdownTimer(unsigned int newCount, boolean notifyClient = true) {
-		super.setCountdownTimer(newCount, notifyClient);
-		cooldownTimerMap.updateToCurrentAndAddMili("incapTimer", getUseCount()*1000);
-	}
+	public native void setIncapacitationTimer(unsigned int newCount, boolean notifyClient = true);
 
 	/**
 	 * Sends a CommandQueueRemove ObjectControllerMessage to the owner client of this object
@@ -322,7 +318,7 @@ class CreatureObject extends TangibleObject {
 	public native void sendNewbieTutorialEnableHudElement(final string ui, boolean enable = true, float blinkCount = 0.0f);
 
 	@dirty
-	public native void sendOpenHolocronToPageMessage();
+	public native void sendOpenHolocronToPageMessage(final string page);
 
 	/**
 	 * Sends a system message to the client of this object
@@ -427,7 +423,7 @@ class CreatureObject extends TangibleObject {
 	 * @param notifyClient if set true the client will be updated with the changes
 	 */
 	@preLocked
-	public native void setAccelerationMultiplierMod(float newMultiplierMod, boolean notifyClient = true);
+	public native void setAccelerationMultiplierMod(float newMultiplierMod, boolean notifyClient = true, boolean recalculateBuffs = true);
 
 	/**
 	 * Updates the speed multiplier base
@@ -447,7 +443,7 @@ class CreatureObject extends TangibleObject {
 	 * @param notifyClient if set true the client will be updated with the changes
 	 */
 	@preLocked
-	public native abstract void setSpeedMultiplierMod(float newMultiplierMod, boolean notifyClient = true);
+	public native abstract void setSpeedMultiplierMod(float newMultiplierMod, boolean notifyClient = true, boolean recalculateBuffs = true);
 
 	/**
 	 * Updates the turn scale mod
@@ -458,6 +454,26 @@ class CreatureObject extends TangibleObject {
 	 */
 	@preLocked
 	public native abstract void setTurnScale(float newMultiplierMod, boolean notifyClient = true);
+
+	/**
+	 * Updates the walk speed
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param value new value to set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setWalkSpeed(float value, boolean notifyClient = true);
+
+	/**
+	 * Updates the turn scale mod
+	 * @pre { this object is locked }
+	 * @post { this object is locked }
+	 * @param value new value to be set
+	 * @param notifyClient if set true the client will be updated with the changes
+	 */
+	@preLocked
+	public native abstract void setWaterModPercent(float value, boolean notifyClient = true);
 
 	/**
 	 * Updates the run speed
@@ -843,21 +859,22 @@ class CreatureObject extends TangibleObject {
 	}
 
 	/**
-	 * Sets the terrain negotiation variable, and updates it.
+	 * Sets the slope mod percent.
 	 * @pre { this object is locked }
-	 * @post { this object is locked, this object has the specified terrain negotiation }
-	 * @param terrain new terrain negotiation
+	 * @post { this object is locked, this object has the specified slope mod andgle & percent. }
 	 * @param notifyClient if set true the client will be updated with the changes
 	 */
 	@preLocked
-	public native void setTerrainNegotiation(float value, boolean notifyClient = true);
+	public native void updateSlopeMods(boolean notifyClient = true);
 
 	/**
-	 * Updates the client with the players current terrain negotiation.
+	 * Sets the slope mod percent.
 	 * @pre { this object is locked }
-	 * @post { this object is locked, this object has the specified terrain negotiation }
+	 * @post { this object is locked, this object has the specified slope mod andgle & percent. }
+	 * @param notifyClient if set true the client will be updated with the changes
 	 */
-	public native void updateTerrainNegotiation();
+	@preLocked
+	public native void updateWaterMod(boolean notifyClient = true);
 
 	/**
 	 * Adds the specified skillbox to this object
@@ -1073,6 +1090,9 @@ class CreatureObject extends TangibleObject {
 	public native boolean isHealableBy(CreatureObject object);
 
 	@dirty
+	public native boolean healFactionChecks(CreatureObject object, boolean isPlayer);
+
+	@dirty
 	public native boolean isInvulnerable();
 
 	/**
@@ -1206,6 +1226,8 @@ class CreatureObject extends TangibleObject {
 	@read
 	public native string getFirstName();
 
+	public native string setFirstName(final string newFirstName, boolean skipVerify);
+
 	public native string setFirstName(final string newFirstName);
 
 	@read
@@ -1310,7 +1332,7 @@ class CreatureObject extends TangibleObject {
 	@preLocked
 	public native void setRootedState(int durationSeconds = 20);
 
-	public native boolean setNextAttackDelay(unsigned int mod, int del);
+	public native boolean setNextAttackDelay(CreatureObject attacker, final string command, unsigned int mod, int del);
 
 	@preLocked
 	public native void setMeditateState();
@@ -1334,9 +1356,7 @@ class CreatureObject extends TangibleObject {
 		return !cooldownTimerMap.isPast("nextAttackDelay");
 	}
 
-	public void removeAttackDelay() {
-		cooldownTimerMap.updateToCurrentTime("nextAttackDelay");
-	}
+	public native void removeAttackDelay();
 
 	@read
 	public boolean hasIncapTimer() {
@@ -1357,13 +1377,15 @@ class CreatureObject extends TangibleObject {
 		lastSuccessfulCombatAction.updateToCurrentTime();
 	}
 
-	public void updatePostureChangeDelay(unsigned long delay) {
-		cooldownTimerMap.updateToCurrentAndAddMili("postureChangeDelay", delay);
-	}
+	public native void setPostureChangeDelay(unsigned long delay);
 
 	@read
-	public boolean checkPostureChangeDelay() {
-		return cooldownTimerMap.isPast("postureChangeDelay");
+	public boolean hasPostureChangeDelay() {
+		return !cooldownTimerMap.isPast("postureChangeDelay");
+	}
+
+	public void removePostureChangeDelay() {
+		cooldownTimerMap.updateToCurrentTime("postureChangeDelay");
 	}
 
 	public void updatePostureDownRecovery() {
@@ -1393,6 +1415,16 @@ class CreatureObject extends TangibleObject {
 		return cooldownTimerMap.isPast("knockdownRecovery");
 	}
 
+	@preLocked
+	public void setNextAllowedMoveTime(unsigned long time) {
+		nextAllowedMoveTime.updateToCurrentTime();
+		nextAllowedMoveTime.addMiliTime(time);
+	}
+
+	@read
+	public boolean isMovementAllowed() {
+		return nextAllowedMoveTime.isPast();
+	}
 
 	// Updates directional arrows and planet names for group members out of range
 	@dirty
@@ -1471,12 +1503,6 @@ class CreatureObject extends TangibleObject {
 	@dirty
 	public native void doCombatAnimation(unsigned int animationCRC);
 
-	@preLocked
-	public native void activateQueueAction();
-
-	@preLocked
-	public native void activateImmediateAction();
-
 	@read
 	public native unicode getCreatureName();
 
@@ -1544,11 +1570,13 @@ class CreatureObject extends TangibleObject {
 		return encumbrances;
 	}
 
+	@mock
 	@read
-	public byte getPosture() {
+	public abstract byte getPosture() {
 		return posture;
 	}
 
+	@mock
 	@read
 	public byte getLocomotion() {
 		return locomotion;
@@ -1590,8 +1618,9 @@ class CreatureObject extends TangibleObject {
 		return stateBitmask;
 	}
 
+	@mock
 	@read
-	public boolean hasState(unsigned long state) {
+	public abstract boolean hasState(unsigned long state) {
 		return stateBitmask & state;
 	}
 
@@ -1625,8 +1654,9 @@ class CreatureObject extends TangibleObject {
 		return speedMultiplierMod;
 	}
 
+	@mock
 	@read
-	public float getCurrentSpeed() {
+	public abstract float getCurrentSpeed() {
 		return currentSpeed;
 	}
 
@@ -1637,17 +1667,12 @@ class CreatureObject extends TangibleObject {
 		return speedMultiplierModChanges;
 	}
 
-	@preLocked
-	@local
-	@read
-	public final CommandQueueActionVector getCommandQueue() {
-		return commandQueue;
-	}
 
 	@read
 	public int getCommandQueueSize() {
-		return commandQueue.size();
+		return commandQueue.getQueueSize();
 	}
+
 
 	@preLocked
 	public void setLastActionCounter(unsigned int ctr) {
@@ -1669,6 +1694,19 @@ class CreatureObject extends TangibleObject {
 	}
 
 	@read
+	public float getSlopeModAngle() {
+		return slopeModAngle;
+	}
+
+	@read
+	public native float getSlopeModPercent();
+
+	@read
+	public float getWaterModPercent() {
+		return waterModPercent;
+	}
+
+	@read
 	public float getRunSpeed() {
 		return runSpeed;
 	}
@@ -1682,9 +1720,6 @@ class CreatureObject extends TangibleObject {
 	public float getTurnScale() {
 		return turnScale;
 	}
-
-	@read
-	public native float getTerrainNegotiation();
 
 	@read
 	public float getRunAcceleration() {
@@ -1718,6 +1753,10 @@ class CreatureObject extends TangibleObject {
 	@dirty
 	@preLocked
 	public native WeaponObject getWeapon();
+
+	@mock
+	@dirty
+	public abstract native WeaponObject getDefaultWeapon();
 
 	@weakReference
 	@read
@@ -1779,11 +1818,6 @@ class CreatureObject extends TangibleObject {
 	@read
 	public byte getMoodID() {
 		return moodID;
-	}
-
-	@read
-	public float getSlopeModPercent() {
-		return slopeModPercent;
 	}
 
 	@read
@@ -1911,6 +1945,11 @@ class CreatureObject extends TangibleObject {
 	@local
 	public native CreatureObject asCreatureObject();
 
+	@local
+	public Time getNextActionTime() {
+		return nextAction;
+	}
+
 	@read
 	public boolean isNextActionPast() {
 		return nextAction.isPast();
@@ -1936,13 +1975,15 @@ class CreatureObject extends TangibleObject {
 		return swimHeight;
 	}
 
+	@mock
 	@read
-	public boolean isIncapacitated() {
+	public abstract boolean isIncapacitated() {
 		return posture == CreaturePosture.INCAPACITATED;
 	}
 
+	@mock
 	@read
-	public boolean isDead() {
+	public abstract boolean isDead() {
 		return posture == CreaturePosture.DEAD;
 	}
 
@@ -1972,6 +2013,11 @@ class CreatureObject extends TangibleObject {
 	}
 
 	@read
+	public boolean isLyingDown() {
+		return posture == CreaturePosture.LYINGDOWN;
+	}
+
+	@read
 	public boolean isSkillAnimating() {
 		return posture == CreaturePosture.SKILLANIMATING;
 	}
@@ -1981,8 +2027,9 @@ class CreatureObject extends TangibleObject {
 		return stateBitmask & CreatureState.RALLIED;
 	}
 
+	@mock
 	@read
-	public boolean isInCombat() {
+	public abstract boolean isInCombat() {
 		return stateBitmask & CreatureState.COMBAT;
 	}
 
@@ -2087,6 +2134,11 @@ class CreatureObject extends TangibleObject {
 	}
 
 	@read
+	public boolean isWalking() {
+		return currentSpeed <= walkSpeed;
+	}
+
+	@read
 	public boolean isRunning() {
 		return currentSpeed >= runSpeed;
 	}
@@ -2098,6 +2150,11 @@ class CreatureObject extends TangibleObject {
 
 	@dirty
 	public abstract boolean isDroidObject() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isHelperDroidObject() {
 		return false;
 	}
 
@@ -2152,6 +2209,18 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public native float calculateCostAdjustment(byte stat, float baseCost);
+
+	@read
+	public native float getSpeedModifier();
+
+	@read
+	public native float getAccelerationModifier();
+
+	@local
+	public native void sendSpeedAndAccelerationMods(SceneObject player);
+
+	@local
+	public native void broadcastSpeedAndAccelerationMods(boolean sendSelf = true);
 
 	@preLocked
 	public native void updateSpeedAndAccelerationMods();
@@ -2222,7 +2291,7 @@ class CreatureObject extends TangibleObject {
 	public void setAuctionSearchTask(AuctionSearchTask task) {
 		auctionSearch = task;
 	}
-	
+
 	@local
 	public native Instrument getPlayableInstrument();
 }

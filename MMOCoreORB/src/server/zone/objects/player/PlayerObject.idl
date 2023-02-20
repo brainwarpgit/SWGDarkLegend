@@ -45,12 +45,16 @@ include server.zone.objects.player.variables.PlayerQuestData;
 include server.zone.objects.scene.variables.DeltaVector;
 include server.zone.objects.scene.variables.DeltaVectorMap;
 include server.zone.objects.scene.variables.DeltaBitArray;
+include server.zone.objects.transaction.TransactionLog;
+include server.zone.objects.player.PlayerBitmasks;
 
 @json
 class PlayerObject extends IntangibleObject {
 	protected int playerLogLevel;
 
-	protected unsigned int characterBitmask;
+	@dereferenced
+	protected PlayerBitmasks playerBitmask;
+
 	protected string title;
 
 	protected string savedTerrainName;
@@ -58,6 +62,8 @@ class PlayerObject extends IntangibleObject {
 
 	@dereferenced
 	protected Badges badges;
+
+	protected int birthDate;
 
 	protected int forcePower;
 	protected int forcePowerMax;
@@ -187,6 +193,10 @@ class PlayerObject extends IntangibleObject {
 	@dereferenced
 	protected Vector3 trainerCoordinates;
 
+	@local
+	@dereferenced
+	protected Vector3 lastLogoutWorldPosition;
+
 	protected string trainerZoneName;
 
 	@dereferenced
@@ -247,6 +257,9 @@ class PlayerObject extends IntangibleObject {
 	@dereferenced
 	protected Time lastCrackdownGcwCombatActionTimestamp;
 
+	@dereferenced
+	protected Time lastPvpAreaCombatActionTimestamp;
+
 	protected unsigned int crackdownFactionTefCrc;
 
 	@dereferenced
@@ -294,30 +307,19 @@ class PlayerObject extends IntangibleObject {
 	protected transient unsigned long sessionStatsActivityXP;
 	protected transient unsigned long sessionStatsActivityMovement;
 	protected transient unsigned long sessionStatsTotalMovement;
+	protected transient unsigned long sessionStatsTotalCredits;
 	protected transient string sessionStatsIPAddress;
-
-	public static final int LFG = 1;
-	public static final int NEWBIEHELPER = 2;
-	public static final int ROLEPLAYER = 4;
-	public static final int AFK = 0x80;
-	public static final int LD = 0x100;
-	public static final int FACTIONRANK = 0x200;
-	public static final int ANONYMOUS = 0x80000000;
 
 	public static final int ONLINE = 1;
 	public static final int OFFLINE = 2;
 	public static final int LINKDEAD = 3;
-	public static final int LOGGINGIN = 4;
 	public static final int LOGGINGOUT = 5;
-	public static final int LOADING = 6;
 
 	public static final int PVP_RATING_FLOOR = 500;
 	public static final unsigned long PVP_RESET_TIME = 259200000; // 3 days
 
 	public PlayerObject() {
 		playerLogLevel = 4; // INFO
-
-		characterBitmask = 0;
 
 		commandMessageStrings.setNoDuplicateInsertPlan();
 
@@ -345,6 +347,8 @@ class PlayerObject extends IntangibleObject {
 
 		conversatingCreature = 0;
 
+		birthDate = 0;
+
 		forcePower = 0;
 		forcePowerMax = 0;
 
@@ -371,7 +375,7 @@ class PlayerObject extends IntangibleObject {
 
 		languageID = 0;
 
-		setOffline();
+		onlineStatus = OFFLINE;
 
 		performanceBuffTarget = 0;
 
@@ -381,6 +385,7 @@ class PlayerObject extends IntangibleObject {
 		lastBhPvpCombatActionTimestamp.updateToCurrentTime();
 		lastGcwPvpCombatActionTimestamp.updateToCurrentTime();
 		lastCrackdownGcwCombatActionTimestamp.updateToCurrentTime();
+		lastPvpAreaCombatActionTimestamp.updateToCurrentTime();
 		crackdownFactionTefCrc = 0;
 
 		lastDigestion.updateToCurrentTime();
@@ -493,6 +498,8 @@ class PlayerObject extends IntangibleObject {
 	@dirty
 	public native void checkAndShowTOS();
 
+	public native void createHelperDroid();
+
 	@dirty
 	public synchronized int getTotalOwnedStructureCount() {
 		return ownedStructures.size();
@@ -532,7 +539,8 @@ class PlayerObject extends IntangibleObject {
 	 * @param notifyClient Boolean to determing whether the client should receive a delta packet for the experience gain.
 	 * @return returns total experience awarded
 	 */
-	public native int addExperience(final string xpType, int xp, boolean notifyClient = true);
+	@local
+	public native int addExperience(@dereferenced TransactionLog trx, final string xpType, int xp, boolean notifyClient = true);
 
 	 /**
 	 * Removes experience of a type from the player's experience pool.
@@ -541,7 +549,8 @@ class PlayerObject extends IntangibleObject {
 	 * @param xpType The string value for the type of experience to remove.
 	 * @param notifyClient Boolean to determing whether the client should receive a delta packet for the experience loss.
 	 */
-	public native void removeExperience(final string xpType, boolean notifyClient = true);
+	@local
+	public native void removeExperience(@dereferenced TransactionLog trx, final string xpType, boolean notifyClient = true);
 
 	/**
 	 * Checks if the player has capped the experience type.
@@ -745,6 +754,7 @@ class PlayerObject extends IntangibleObject {
 	 * @param amount The float amount of faction points to add.
 	 */
 	public native void increaseFactionStanding(final string factionName, float amount);
+	public native void giveCoaBonus(final string factionName, float amount, float currentStanding);
 	public native void decreaseFactionStanding(final string factionName, float amount);
 	public native void setFactionStanding(final string factionName, float amount);
 
@@ -772,27 +782,37 @@ class PlayerObject extends IntangibleObject {
 
 	public native void doRecovery(int latency);
 
-	private native void checkForNewSpawns();
-
 	public native void disconnect(boolean closeClient, boolean doLock);
 
 	public native void reload(ZoneClientSession client);
 
-	public void setOffline() {
-		if (isLinkDead()) {
-			// clear LD flag
-		}
-
-		onlineStatus = OFFLINE;
-	}
+	public native void setOffline();
 
 	public native void setLinkDead(boolean isSafeLogout = false);
 
 	public native void setOnline();
 
-	public void setLoggingOut() {
-		onlineStatus = LOGGINGOUT;
-	}
+	public native void setLoggingOut();
+
+	public native void activateJournalQuest(unsigned int questCrc, boolean notifyClient = true);
+
+	public native void completeJournalQuest(unsigned int questCrc, boolean notifyClient = true);
+
+	public native void clearJournalQuest(unsigned int questCrc, boolean notifyClient = true);
+
+	public native void activateJournalQuestTask(unsigned int questCrc, int taskNum, boolean notifyClient = true);
+
+	public native void completeJournalQuestTask(unsigned int questCrc, int taskNum, boolean notifyClient = true);
+
+	public native void clearJournalQuestTask(unsigned int questCrc, int taskNum, boolean notifyClient = true);
+
+	public native boolean isJournalQuestActive(unsigned int questCrc);
+
+	public native boolean isJournalQuestComplete(unsigned int questCrc);
+
+	public native boolean isJournalQuestTaskActive(unsigned int questCrc, int taskNum);
+
+	public native boolean isJournalQuestTaskComplete(unsigned int questCrc, int taskNum);
 
 	/**
 	 * Sends a badges response message
@@ -838,16 +858,18 @@ class PlayerObject extends IntangibleObject {
 	@dereferenced
 	@local
 	@read
-	public native PlayerQuestData getQuestData(unsigned int questHashCode);
+	public native PlayerQuestData getQuestData(unsigned int questCrc);
 
 	@read
-	public boolean hasQuestData(unsigned int questHashCode) {
-		return playerQuestsData.contains(questHashCode);
+	public boolean hasQuestData(unsigned int questCrc) {
+		return playerQuestsData.contains(questCrc);
 	}
 
 	@local
-	public native void setPlayerQuestData(unsigned int questHashCode, @dereferenced PlayerQuestData data, boolean notifyClient = true);
+	public native void setPlayerQuestData(unsigned int questCrc, @dereferenced PlayerQuestData data, boolean notifyClient = true);
 
+	@local
+	public native void clearPlayerQuestData(unsigned int questCrc, boolean notifyClient = true);
 	/**
 	 * Gets the faction point list.
 	 */
@@ -1043,6 +1065,10 @@ class PlayerObject extends IntangibleObject {
 		savedTerrainName = name;
 	}
 
+	public void setBirthDate(int date) {
+		birthDate = date;
+	}
+
 	public native void setForcePower(int fp, boolean notifyClient = true);
 
 	public native void setForcePowerMax(int newValue, boolean notifyClient = true);
@@ -1226,6 +1252,10 @@ class PlayerObject extends IntangibleObject {
 		badges.setBadge(badge);
 	}
 
+	public void revokeBadge(unsigned int badge) {
+		badges.unsetBadge(badge);
+	}
+
 	public native void awardBadge(unsigned int badge);
 
 	public void setTeleporting(boolean val) {
@@ -1289,9 +1319,10 @@ class PlayerObject extends IntangibleObject {
 		return commandMessageStrings.contains(actionCRC);
 	}
 
+	@local
 	@read
-	public unsigned int getCharacterBitmask() {
-		return characterBitmask;
+	public final PlayerBitmasks getPlayerBitmasks() {
+		return playerBitmask;
 	}
 
 	@read
@@ -1341,16 +1372,10 @@ class PlayerObject extends IntangibleObject {
 		return (adminLevel == 15 && hasAbility("admin"));
 	}
 
-	public void setCharacterBitmask(unsigned int bitmask) {
-		characterBitmask = bitmask;
-	}
-
-	public native boolean setCharacterBit(unsigned int bit, boolean notifyClient = false);
-	public native boolean clearCharacterBit(unsigned int bit, boolean notifyClient = false);
+	public native boolean setPlayerBit(unsigned int bit, boolean notifyClient = false);
+	public native boolean clearPlayerBit(unsigned int bit, boolean notifyClient = false);
 	public native void toggleCharacterBit(unsigned int bit);
-	/**
-	 * is the player AFK
-	 */
+
 	@read
 	public native boolean isLFG();
 
@@ -1405,6 +1430,14 @@ class PlayerObject extends IntangibleObject {
 	@read
 	public final DeltaBitArray getCompletedQuests() {
 		return completedQuests;
+	}
+
+	// The client tracks time played in 30s intervals
+	@read
+	public int getTotalPlayedTime() {
+		int totalTime = miliSecsPlayed / 1000 / 30;
+
+		return totalTime;
 	}
 
 	@read
@@ -1573,18 +1606,8 @@ class PlayerObject extends IntangibleObject {
 	}
 
 	@read
-	public boolean isLoading() {
-		return onlineStatus == LOADING || onlineStatus == LOGGINGOUT;
-	}
-
-	@read
 	public boolean isLinkDead() {
 		return onlineStatus == LINKDEAD;
-	}
-
-	@read
-	public boolean isLoggingIn() {
-		return onlineStatus == LOGGINGIN;
 	}
 
 	@read
@@ -1615,6 +1638,14 @@ class PlayerObject extends IntangibleObject {
 	public int getSkillPoints() {
 		return skillPoints;
 	}
+
+	@local
+	public native void setLastLogoutWorldPosition(@dereferenced final Vector3 position);
+
+	@local
+	@dereferenced
+	@read
+	public native Vector3 getLastLogoutWorldPosition();
 
 	@local
 	public ValidatedPosition getLastValidatedPosition() {
@@ -1748,17 +1779,27 @@ class PlayerObject extends IntangibleObject {
 	@read
 	public native Time getLastGcwCrackdownCombatActionTimestamp();
 
+	@dereferenced
+	@local
+	@read
+	public native Time getLastPvpAreaCombatActionTimestamp();
+
 	public native void updateLastCombatActionTimestamp(boolean updateGcwCrackdownAction, boolean updateGcwAction, boolean updateBhAction);
 
 	public native void updateLastBhPvpCombatActionTimestamp();
 
 	public native void updateLastGcwPvpCombatActionTimestamp();
 
+	public native void updateLastPvpAreaCombatActionTimestamp();
+
 	@read
 	public native boolean hasTef();
 
 	@read
 	public native boolean hasPvpTef();
+
+	@read
+	public native boolean hasGcwTef();
 
 	@read
 	public native boolean hasBhTef();
@@ -1774,6 +1815,8 @@ class PlayerObject extends IntangibleObject {
 	public native void schedulePvpTefRemovalTask(boolean removeCrackdownGcwTefNow, boolean removeGcwTefNow, boolean removeBhTefNow);
 
 	public native void schedulePvpTefRemovalTask(boolean removeNow = false);
+
+	public native boolean isInPvpArea(boolean checkTime = true);
 
 	public void addVendor(SceneObject vendor) {
 		ownedVendors.add(vendor.getObjectID());
@@ -1912,6 +1955,9 @@ class PlayerObject extends IntangibleObject {
 	@dirty
 	public native int getCharacterAgeInDays();
 
+	@dirty
+	public native int getBirthDate();
+
 	public void addToReactionFines(int fine) {
 		reactionFines = reactionFines + fine;
 	}
@@ -2018,6 +2064,11 @@ class PlayerObject extends IntangibleObject {
 	@read
 	public unsigned long getSessionTotalMovement() {
 		return sessionStatsTotalMovement;
+	}
+
+	@read
+	public long getSessionTotalCredits() {
+	    return sessionStatsTotalCredits;
 	}
 
 	@read

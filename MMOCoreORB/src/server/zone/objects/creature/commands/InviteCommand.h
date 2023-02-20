@@ -27,28 +27,49 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		PlayerObject* playerObject = creature->getPlayerObject();
+		auto playerObject = creature->getPlayerObject();
 		bool godMode = false;
 
-		if (playerObject)
-		{
+		if (playerObject) {
 			if (playerObject->hasGodMode())
 				godMode = true;
 		}
 
-		GroupManager* groupManager = GroupManager::instance();
+		auto object = server->getZoneServer()->getObject(target);
 
-		ManagedReference<SceneObject*> object = server->getZoneServer()->getObject(target);
+		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
 
-		if (object == nullptr)
+		if (galaxyWide && (object == nullptr || !object->isPlayerCreature())) {
+			StringTokenizer args(arguments.toString());
+			String firstName;
+
+			if (args.hasMoreTokens())
+				args.getStringToken(firstName);
+
+			auto zoneServer = server->getZoneServer();
+
+			if (zoneServer == nullptr)
+				return GENERALERROR;
+
+			auto playerMan = zoneServer->getPlayerManager();
+
+			if (playerMan == nullptr)
+				return GENERALERROR;
+
+			object = playerMan->getPlayer(firstName);
+		}
+
+		auto groupManager = GroupManager::instance();
+
+		if (object == nullptr || groupManager == nullptr)
 			return GENERALERROR;
 
 
 		if (object->isPlayerCreature()) {
-			CreatureObject* player = cast<CreatureObject*>( object.get());
+			auto player = cast<CreatureObject*>( object.get());
 
-			if (!player->getPlayerObject()->isIgnoring(creature->getFirstName().toLowerCase()) || godMode)
-				groupManager->inviteToGroup(creature, player);
+		if (player != nullptr && (!player->getPlayerObject()->isIgnoring(creature->getFirstName()) || godMode))
+			groupManager->inviteToGroup(creature, player);
 		}
 
 		return SUCCESS;
@@ -57,4 +78,3 @@ public:
 };
 
 #endif //INVITECOMMAND_H_
-

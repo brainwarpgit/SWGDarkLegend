@@ -57,6 +57,7 @@ include templates.collision.BaseBoundingVolume;
 include server.zone.objects.scene.variables.StdFunction;
 include server.metrics.Metrics;
 include engine.util.JSONSerializationType;
+include server.zone.objects.scene.variables.OrderedTaskExecutioner;
 
 @mock
 @json
@@ -138,6 +139,8 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	protected unsigned long originalObjectID;
 
 	protected boolean forceNoTrade;
+
+	protected transient boolean debuggingRegions;
 
 	/**
 	 * SceneObject constructor, used to initialize the object.
@@ -282,8 +285,9 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	 * @param range range to check
 	 * @return returns true if this object is in range with obj
 	 */
+	@mock
 	@dirty
-	public native boolean isInRange(SceneObject obj, float range);
+	public abstract native boolean isInRange(SceneObject obj, float range);
 	/**
 	 * Evaluates if the object is in range without checking zone
 	 * @pre { this object is locked, obj is locked}
@@ -736,9 +740,10 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	 * @post { this object is locked, objects is a vector map with the contained objects and their occupied slots }
 	 * @param objects the vector map that will contain the objects and their occupied slots
 	 */
+	@mock
 	@local
 	@dirty
-	public native void getSlottedObjects(@dereferenced VectorMap<string, SceneObject> objects);
+	public abstract native void getSlottedObjects(@dereferenced VectorMap<string, SceneObject> objects);
 
 	@local
 	@dirty
@@ -780,9 +785,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	@local
 	@dirty
 	public void executeOrderedTask(Task task) {
-		synchronized (containerLock) {
-			getPendingTasks().putOrdered(task, this);
-		}
+		getPendingTasks().putOrdered(task, this);
 	}
 
 	/**
@@ -914,12 +917,14 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	 */
 	public native abstract int handleObjectMenuSelect(CreatureObject player, byte selectedID);
 
+	@mock
 	@dirty
-	public native float getDistanceTo(SceneObject object);
+	public abstract native float getDistanceTo(SceneObject object);
 
+	@mock
 	@local
 	@dirty
-	public native float getDistanceTo(Coordinate coordinate);
+	public abstract native float getDistanceTo(Coordinate coordinate);
 
 	public abstract native void updateVehiclePosition(boolean sendPackets);
 
@@ -961,11 +966,13 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 		cityRegion = region;
 	}
 
+	@mock
 	@dirty
-	public native Zone getZone();
+	public abstract native Zone getZone();
 
+	@mock
 	@read
-	public native Zone getZoneUnsafe();
+	public abstract native Zone getZoneUnsafe();
 
 	@read
 	public Zone getLocalZone() {
@@ -984,21 +991,21 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 
 	@mock
 	@dirty
-	public native float getWorldPositionX();
+	public abstract native float getWorldPositionX();
 
 	@dirty
 	@mock
-	public native float getWorldPositionY();
+	public abstract native float getWorldPositionY();
 
 	@dirty
 	@mock
-	public native float getWorldPositionZ();
+	public abstract native float getWorldPositionZ();
 
 	@dirty
 	@local
 	@dereferenced
 	@mock
-	public native Vector3 getWorldPosition();
+	public abstract native Vector3 getWorldPosition();
 
 	@read
 	public float getDirectionX() {
@@ -1104,7 +1111,8 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 
 	@dirty
 	@reference
-	public native SceneObject getSlottedObject(final string slot);
+	@mock
+	public abstract native SceneObject getSlottedObject(final string slot);
 
 	@read
 	public int getSlotDescriptorSize() {
@@ -1266,6 +1274,9 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	 */
 	public native void rotate(int degrees);
 
+	public native void rotatePitch(int degrees);
+	public native void rotateRoll(int degrees);
+
 	/**
 	 * Sets this objects direction so that the object is facing the specified object.
 	 * @param obj The object to face.
@@ -1273,8 +1284,9 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	 */
 	public native void faceObject(SceneObject obj, boolean notifyClient = false);
 
+	@mock
 	@read
-	public native boolean isFacingObject(SceneObject obj);
+	public abstract native boolean isFacingObject(SceneObject obj);
 
 	public native abstract void notifySelfPositionUpdate();
 
@@ -1291,6 +1303,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 		return movementCounter;
 	}
 
+	@mock
 	@dirty
 	@weakReference
 	public native SceneObject getParent();
@@ -1394,9 +1407,9 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 
 	@local
 	@read
-	public boolean isDetector() {
+	public boolean isScanner() {
 		return dataObjectComponent.get() != null &&
-		dataObjectComponent.get().isDetectorData();
+		dataObjectComponent.get().isScannerData();
 	}
 
 	@local
@@ -1465,7 +1478,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 
 	@read
 	public boolean isForceNoTrade() {
-		return forceNoTrade;
+		return forceNoTrade || templateObject.isForceNoTrade();
 	}
 
 	@read
@@ -1494,6 +1507,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	@virtualStub
 	public abstract native boolean isCreatureObject();
 
+	@mock
 	@dirty
 	@local
 	@nativeStub
@@ -1506,6 +1520,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	@virtualStub
 	public native abstract boolean isAiAgent();
 
+	@mock
 	@dirty
 	@local
 	@nativeStub
@@ -1530,6 +1545,11 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 
 	@dirty
 	public abstract boolean isDroidObject() {
+		return false;
+	}
+
+	@dirty
+	public abstract boolean isHelperDroidObject() {
 		return false;
 	}
 
@@ -1605,6 +1625,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 		return false;
 	}
 
+	@mock
 	@dirty
 	@local
 	public abstract TangibleObject asTangibleObject() {
@@ -2154,6 +2175,7 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	@read
 	public native boolean isDataPad();
 
+	@mock
 	@dirty
 	public native abstract float getTemplateRadius();
 
@@ -2179,4 +2201,22 @@ class SceneObject extends QuadTreeEntry implements Logger, Metrics {
 	@dirty
 	@local
 	public abstract native void getChildrenRecursive(@dereferenced SortedVector<unsigned long> childrenObjectsFound, int maxDepth = 50, boolean pruneCreo = false, boolean pruneCraftedComponents = false);
+
+	@dirty
+	public abstract boolean canBeTransferred(SceneObject newContainer) {
+		return true;
+	}
+
+	@dirty
+	public native boolean isNearBank();
+
+	@preLocked
+	public void setDebuggingRegions(boolean val) {
+		debuggingRegions = val;
+	}
+
+	@read
+	public boolean isDebuggingRegions() {
+		return debuggingRegions;
+	}
 }

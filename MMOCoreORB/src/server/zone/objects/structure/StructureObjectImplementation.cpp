@@ -186,12 +186,12 @@ void StructureObjectImplementation::notifyInsertToZone(Zone* zone) {
 			structurePermissionList.dropList("VENDOR");
 	}
 
-	if (!staticObject && getBaseMaintenanceRate() != 0 && !isTurret() && !isMinefield()) {
+	if (!staticObject && getBaseMaintenanceRate() != 0 && !isTurret() && !isMinefield() && !isScanner()) {
 		//Decay is 4 weeks.
 		maxCondition = getBaseMaintenanceRate() * 24 * 7 * 4;
 
 		scheduleMaintenanceExpirationEvent();
-	} else if(getOwnerObjectID() != 0 && getCityRegion().get() == nullptr && !isTurret() && !isMinefield()) {
+	} else if(getOwnerObjectID() != 0 && getCityRegion().get() == nullptr && !isTurret() && !isMinefield() && !isScanner()) {
 		auto ssot = dynamic_cast<SharedStructureObjectTemplate*>(templateObject.get());
 
 		if (ssot == nullptr)
@@ -202,6 +202,13 @@ void StructureObjectImplementation::notifyInsertToZone(Zone* zone) {
 
 	if (isGCWBase() && !isClientObject()) {
 		createNavMesh();
+	} else if (isClientObject()) {
+		String configKey = "Core3.StructureManager.CreateNavMesh." + objectName.getFullPath();
+
+		if (ConfigManager::instance()->getBool(configKey, false)) {
+			info() << configKey << " = true; building navArea around this structure.";
+			createNavMesh();
+		}
 	}
 }
 
@@ -319,7 +326,7 @@ void StructureObjectImplementation::scheduleMaintenanceExpirationEvent() {
 		if (getOwnerObjectID() == 0)
 			return;
 
-		if (getCityRegion().get() == nullptr && !isTurret() && !isMinefield())
+		if (getCityRegion().get() == nullptr && !isTurret() && !isMinefield() && !isScanner())
 			error("scheduleMaintenanceExpirationEvent: getMaintenanceRate() <= 0 but not in a city!");
 
 		// No maintenance cost, structure maintenance cannot expire.
@@ -373,7 +380,7 @@ void StructureObjectImplementation::scheduleMaintenanceExpirationEvent() {
 			//any further rescheduling.
 
 			//Randomize maintenance tasks over the first hour after server restart.
-			secondsRemaining = System::random(60 * 60);
+			secondsRemaining = ConfigManager::instance()->getInt("Core3.StructureObject.MaintenanceBootDelay", 600) + System::random(60 * 60);
 		} else if (secondsRemaining > 24 * 60 * 60) {
 			//Run maintenance task at least one time every day but randomized to spread it out.
 			secondsRemaining = 12 * 60 * 60 + System::random(12 * 60 * 60);
@@ -395,7 +402,7 @@ void StructureObjectImplementation::scheduleMaintenanceTask(int secondsFromNow) 
 		if (getOwnerObjectID() == 0)
 			return;
 
-		if (getCityRegion().get() == nullptr && !isTurret() && !isMinefield())
+		if (getCityRegion().get() == nullptr && !isTurret() && !isMinefield() && !isScanner())
 			error("scheduleMaintenanceTask: getMaintenanceRate() <= 0 but not in a city!");
 
 		return;
@@ -482,7 +489,7 @@ void StructureObjectImplementation::updateStructureStatus() {
 	 */
 
 	if(isCivicStructure()) {
-		if (getCityRegion().get() == nullptr && !isTurret() && !isMinefield())
+		if (getCityRegion().get() == nullptr && !isTurret() && !isMinefield() && !isScanner())
 			error("updateStructureStatus: isCivicStructure() but not in a city!");
 
 		return;
@@ -571,7 +578,7 @@ String StructureObjectImplementation::getDebugStructureStatus() const {
 		if (getBaseMaintenanceRate() > 0) {
 			status << "WARNING: No maintenance task running on this structure";
 			error("getDebugStructureStatus: structureMaintenanceTask == nullptr");
-		} else if (getOwnerObjectID() != 0 && getCityRegion().get() == nullptr && !isTurret() && !isMinefield()) {
+		} else if (getOwnerObjectID() != 0 && getCityRegion().get() == nullptr && !isTurret() && !isMinefield() && !isScanner()) {
 			status << "WARNING: City object without a city!";
 			error("getDebugStructureStatus: City structure but not in a city!");
 		}

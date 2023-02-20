@@ -93,8 +93,6 @@ public:
 
 	/**
 	 * Forces clear combat
-	 * @pre { attacker locked }
-	 * @post { attacker locked }
 	 * @param attacker CreatureObject clears combat
 	 */
 	void forcePeace(CreatureObject* attacker) const;
@@ -220,7 +218,7 @@ protected:
 	ArmorObject* getArmorObject(CreatureObject* defender, uint8 hitLocation) const;
 
 	void showHitLocationFlyText(CreatureObject *attacker, CreatureObject *defender, uint8 location) const;
-	void doMiss(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, int damage) const;
+	void doMiss(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, const CreatureAttackData& data, int damage) const;
 	void doCounterAttack(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, int damage) const;
 	void doBlock(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, int damage) const;
 	void doDodge(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, int damage) const;

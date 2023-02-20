@@ -21,6 +21,7 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/auction/AuctionManager.h"
 #include "server/zone/managers/mission/MissionManager.h"
+#include "server/zone/managers/creature/AiMap.h"
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
 #include "server/zone/managers/creature/DnaManager.h"
 #include "server/zone/managers/creature/PetManager.h"
@@ -138,6 +139,8 @@ void ZoneServerImplementation::initialize() {
 
 	creatureTemplateManager = CreatureTemplateManager::instance();
 	creatureTemplateManager->loadTemplates();
+
+	AiMap::instance()->loadTemplates();
 
 	dnaManager = DnaManager::instance();
 	dnaManager->loadSampleData();
@@ -288,8 +291,8 @@ void ZoneServerImplementation::stop() {
 	shutdown();
 }
 
-void ZoneServerImplementation::timedShutdown(int minutes) {
-	Reference<Task*> task = new ShutdownTask(_this.getReferenceUnsafeStaticCast(), minutes);
+void ZoneServerImplementation::timedShutdown(int minutes, int flags) {
+	Reference<Task*> task = new ShutdownTask(_this.getReferenceUnsafeStaticCast(), minutes, flags);
 
 	if (minutes <= 0) {
 		task->execute();
@@ -476,15 +479,20 @@ void ZoneServerImplementation::processMessage(Message* message) {
 
 	auto client = zoneHandler->getClientSession(message->getClient());
 
+	// move generateMessageTask to the client task at some point
 	Task* task = zonePacketHandler->generateMessageTask(client, message);
 
 	if (task != nullptr) {
-		auto taskManager = Core::getTaskManager();
-
-		if (taskManager) {
-			taskManager->executeTask(task);
+		if (client != nullptr) {
+			client->executeOrderedTask(task);
 		} else {
-			delete task;
+			auto taskManager = Core::getTaskManager();
+
+			if (taskManager) {
+				taskManager->executeTask(task);
+			} else {
+				delete task;
+			}
 		}
 	}
 

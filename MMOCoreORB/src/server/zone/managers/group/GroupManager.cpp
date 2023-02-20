@@ -42,6 +42,8 @@ void GroupManager::inviteToGroup(CreatureObject* leader, CreatureObject* target)
 	// Pre: leader locked
 	// Post: player invited to leader's group, leader locked
 
+	bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+
 	Locker clocker(target, leader);
 
 	if (target == leader) {
@@ -72,7 +74,13 @@ void GroupManager::inviteToGroup(CreatureObject* leader, CreatureObject* target)
 	if (target->isGrouped()) {
 		StringIdChatParameter stringId;
 		stringId.setStringId("group", "already_grouped");
-		stringId.setTT(target->getObjectID());
+
+		if (galaxyWide) {
+			stringId.setTT(target->getDisplayedName());
+		} else {
+			stringId.setTT(target->getObjectID());
+		}
+
 		leader->sendSystemMessage(stringId);
 		//leader->sendSystemMessage("group", "already_grouped", player->getObjectID());
 
@@ -82,7 +90,13 @@ void GroupManager::inviteToGroup(CreatureObject* leader, CreatureObject* target)
 	if (target->getGroupInviterID() == leader->getObjectID()) {
 		StringIdChatParameter stringId;
 		stringId.setStringId("group", "considering_your_group");
-		stringId.setTT(target->getObjectID());
+
+		if (galaxyWide) {
+			stringId.setTT(target->getDisplayedName());
+		} else {
+			stringId.setTT(target->getObjectID());
+		}
+
 		leader->sendSystemMessage(stringId);
 		//leader->sendSystemMessage("group", "considering_your_group", player->getObjectID());
 
@@ -90,7 +104,13 @@ void GroupManager::inviteToGroup(CreatureObject* leader, CreatureObject* target)
 	} else if (target->getGroupInviterID() != 0) {
 		StringIdChatParameter stringId;
 		stringId.setStringId("group", "considering_other_group"); // %TT is considering joining another group.
-		stringId.setTT(target->getObjectID());
+
+		if (galaxyWide) {
+			stringId.setTT(target->getDisplayedName());
+		} else {
+			stringId.setTT(target->getObjectID());
+		}
+
 		leader->sendSystemMessage(stringId);
 
 		return;
@@ -189,7 +209,7 @@ void GroupManager::joinGroup(CreatureObject* player) {
 		// clear invitee's LFG setting once a group is joined
 		Reference<PlayerObject*> ghost = player->getSlottedObject("ghost").castTo<PlayerObject*>();
 		if (ghost != nullptr)
-			ghost->clearCharacterBit(PlayerObject::LFG, true);
+			ghost->clearPlayerBit(PlayerBitmasks::LFG, true);
 
 		ManagedReference<ChatRoom*> groupChat = group->getChatRoom();
 		if (groupChat != nullptr) {
@@ -234,7 +254,7 @@ GroupObject* GroupManager::createGroup(CreatureObject* leader) {
 	// clear inviter's LFG setting once a group is created
 	Reference<PlayerObject*> ghost = leader->getSlottedObject("ghost").castTo<PlayerObject*>();
 	if (ghost != nullptr)
-		ghost->clearCharacterBit(PlayerObject::LFG, true);
+		ghost->clearPlayerBit(PlayerBitmasks::LFG, true);
 
 	if (leader->getGroupInviterID() != 0)
 		leader->updateGroupInviterID(0);
@@ -452,9 +472,16 @@ void GroupManager::makeLeader(GroupObject* group, CreatureObject* player, Creatu
 				firstNameLeader= playerLeader->getFirstName();
 		}
 
+		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+
 		StringIdChatParameter message;
 		message.setStringId("group", "new_leader"); // %TU is now the group leader.
-		message.setTU(newLeader->getObjectID());
+
+		if (galaxyWide) {
+			message.setTU(newLeader->getDisplayedName());
+		} else {
+			message.setTU(newLeader->getObjectID());
+		}
 
 		for (int i = 0; i < group->getGroupSize(); i++) {
 			Reference<CreatureObject*> play = group->getGroupMember(i);

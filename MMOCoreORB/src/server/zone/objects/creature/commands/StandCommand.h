@@ -31,25 +31,17 @@ public:
 			}
 		}
 
-		if (creature->hasAttackDelay())
-			return GENERALERROR;
-
 		if (creature->isAiAgent()) {
 			if (creature->isNonPlayerCreatureObject() && creature->isDizzied() && System::random(100) < 85) {
 				creature->queueDizzyFallEvent();
-			} else if (creature->isInCombat()) {
-				creature->setPosture(CreaturePosture::UPRIGHT, false, true);
-				creature->doCombatAnimation(STRING_HASHCODE("change_posture"));
-			} else {
-				creature->setPosture(CreaturePosture::UPRIGHT);
+				return SUCCESS;
 			}
-		} else {
-			if (creature->isDizzied() && System::random(100) < 85) {
-				creature->queueDizzyFallEvent();
-			} else {
-				creature->setPosture(CreaturePosture::UPRIGHT);
-			}
+		} else if (creature->isDizzied() && System::random(100) < 85) {
+			creature->queueDizzyFallEvent();
+			return SUCCESS;
 		}
+
+		creature->setPosture(CreaturePosture::UPRIGHT, true, true);
 
 		return SUCCESS;
 	}

@@ -46,6 +46,8 @@
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/objects/installation/harvester/HarvesterObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "templates/faction/Factions.h"
+#include "server/zone/objects/player/FactionStatus.h"
 
 namespace StorageManagerNamespace {
 	 int indexCallback(DB *secondary, const DBT *key, const DBT *data, DBT *result) {
@@ -119,11 +121,13 @@ void StructureManager::loadPlayerStructures(const String& zoneName) {
 
 	IndexDatabaseIterator iterator(playerStructuresDatabaseIndex, config);
 
-	int i = 0;
+	Time nextReport;
+	nextReport.addMiliTime(5000);
+	int countLoaded = 0;
 
 	uint64 objectID;
 
-	auto loadFunction = [this] (int& i, uint64 objectID, uint64 planet) {
+	auto loadFunction = [this, &nextReport, zoneName] (int& countLoaded, uint64 objectID, uint64 planet) {
 		//debug("loading 0x" + String::hexvalueOf(objectID) + " for planet 0x" + String::hexvalueOf(planet), true);
 
 		try {
@@ -135,7 +139,13 @@ void StructureManager::loadPlayerStructures(const String& zoneName) {
 				return;
 			}
 
-			++i;
+			++countLoaded;
+
+			if (!nextReport.isFuture()) {
+				nextReport.updateToCurrentTime();
+				nextReport.addMiliTime(5000);
+				info(true) << "Loaded " << commas << countLoaded << " structures for zone: " << zoneName;
+			}
 
 			if (object->isGCWBase()) {
 				Zone* zone = object->getZone();
@@ -150,7 +160,7 @@ void StructureManager::loadPlayerStructures(const String& zoneName) {
 			}
 
 			if (ConfigManager::instance()->isProgressMonitorActivated())
-				printf("\r\tLoading player structures [%d] / [?]\t", i);
+				printf("\r\tLoading player structures [%d] / [?]\t", countLoaded);
 		} catch (Exception& e) {
 			error("Database exception in StructureManager::loadPlayerStructures(): " + e.getMessage());
 		}
@@ -167,14 +177,14 @@ void StructureManager::loadPlayerStructures(const String& zoneName) {
 	if (iterator.setKeyAndGetValue(zoneHash, objectID, nullptr)) {
 		initialQueryPerf.stop();
 
-		loadFunction(i, objectID, zoneHash);
+		loadFunction(countLoaded, objectID, zoneHash);
 
 		iteratorPerf.start();
 
 		while (iterator.getNextKeyAndValue(zoneHash, objectID, nullptr)) {
 			iteratorPerf.stop();
 
-			loadFunction(i, objectID, zoneHash);
+			loadFunction(countLoaded, objectID, zoneHash);
 
 			iteratorPerf.start();
 		}
@@ -184,11 +194,10 @@ void StructureManager::loadPlayerStructures(const String& zoneName) {
 
 	auto elapsedMs = loadTimer.stopMs();
 
-	info(i > 0) << i << " player structures loaded for "
-			<< zoneName << " in "
-			<< elapsedMs << "ms "
-			<< "where the initial query took " << initialQueryPerf.getTotalTimeMs() << "ms "
-			<< "and iterator took " << iteratorPerf.getTotalTimeMs() << "ms.";
+	info(countLoaded > 0) << commas << countLoaded << " player structures loaded for " << zoneName
+		<< " in " << msToString(elapsedMs)
+		<< " where the initial query took " << msToString(initialQueryPerf.getTotalTimeMs())
+		<< " and iterator took " << msToString(iteratorPerf.getTotalTimeMs());
 }
 
 int StructureManager::getStructureFootprint(SharedStructureObjectTemplate* objectTemplate, int angle, float& l0, float& w0, float& l1, float& w1) {
@@ -268,14 +277,37 @@ int StructureManager::placeStructureFromDeed(CreatureObject* creature, Structure
 	if (zone == nullptr || creature->containsActiveSession(SessionFacadeType::PLACESTRUCTURE))
 		return 1;
 
-	ManagedReference<PlanetManager*> planetManager = zone->getPlanetManager();
-
 	String serverTemplatePath = deed->getGeneratedObjectTemplate();
 
-	if (deed->getFaction() != 0 && creature->getFaction() != deed->getFaction()) {
-		creature->sendSystemMessage("You are not the correct faction");
-		return 1;
+	//Check deed faction, player faction and status to make sure they are allowed to place a faction deeds (bases)
+	if (deed->getFaction() != Factions::FACTIONNEUTRAL){
+		if (creature->getFaction() == Factions::FACTIONNEUTRAL || creature->getFactionStatus() == FactionStatus::ONLEAVE){
+			StringIdChatParameter message("@faction_perk:prose_not_neutral"); // You cannot use %TT if you are neutral or on leave.
+			message.setTT(deed->getDisplayedName());
+
+			creature->sendSystemMessage(message);
+			return 1;
+		}
+
+		if (deed->getFaction() != creature->getFaction()) {
+			UnicodeString deedFaction = "";
+
+			if (deed->isRebel()) {
+				deedFaction = "Rebel";
+			} else if (deed->isImperial()) {
+				deedFaction = "Imperial";
+			}
+
+			StringIdChatParameter message("@faction_perk:prose_wrong_faction"); // You must be declared to %TO faction to use %TT.
+			message.setTT(deed->getDisplayedName());
+			message.setTO(deedFaction);
+
+			creature->sendSystemMessage(message);
+			return 1;
+		}
 	}
+
+	ManagedReference<PlanetManager*> planetManager = zone->getPlanetManager();
 
 	Reference<SharedStructureObjectTemplate*> serverTemplate =
 			dynamic_cast<SharedStructureObjectTemplate*>(templateManager->getTemplate(serverTemplatePath.hashCode()));
@@ -306,6 +338,11 @@ int StructureManager::placeStructureFromDeed(CreatureObject* creature, Structure
 
 		if (city != nullptr)
 			break;
+	}
+
+	if (city != nullptr && city->isClientRegion()) {
+		creature->sendSystemMessage("@player_structure:not_permitted"); //Building is not permitted here.
+		return 1;
 	}
 
 	SortedVector<ManagedReference<QuadTreeEntry*> > inRangeObjects;
@@ -536,7 +573,7 @@ StructureObject* StructureManager::placeStructure(CreatureObject* creature,
 		ghost->addOwnedStructure(structureObject);
 	}
 
-	if(structureObject->isTurret() || structureObject->isMinefield()){
+	if (structureObject->isTurret() || structureObject->isMinefield() || structureObject->isScanner()){
 		structureObject->setFaction(creature->getFaction());
 	}
 
@@ -735,6 +772,9 @@ int StructureManager::redeedStructure(CreatureObject* creature) {
 
 	TransactionLog trx(creature, TrxCode::STRUCTUREDEED, structureObject);
 
+	trx.addState("subjectIsRedeedable", structureObject->isRedeedable());
+	trx.addState("subjectDeedObjectID", deed != nullptr ? deed->getObjectID() : 0);
+
 	if (deed != nullptr && structureObject->isRedeedable()) {
 		Locker _lock(deed, structureObject);
 
@@ -772,11 +812,13 @@ int StructureManager::redeedStructure(CreatureObject* creature) {
 					return session->cancelSession();
 				}
 
-				TransactionLog trx(TrxCode::STRUCTUREDEED, creature, rewardSceno);
+				TransactionLog trxReward(structureObject, creature, rewardSceno, TrxCode::STRUCTUREDEED, false);
+				trxReward.addState("srcIsSelfPoweredHarvester", isSelfPoweredHarvester);
+				trxReward.groupWith(trx);
 
 				// Transfer to player
 				if( !inventory->transferObject(rewardSceno, -1, false, true) ){ // Allow overflow
-					trx.abort() << "Failed to reclaim deed";
+					trxReward.abort() << "Failed to reclaim deed";
 					creature->sendSystemMessage("@player_structure:deed_reclaimed_failed"); //Structure destroy and deed reclaimed FAILED!
 					rewardSceno->destroyObjectFromDatabase(true);
 					return session->cancelSession();
@@ -1051,6 +1093,7 @@ void StructureManager::promptNameStructure(CreatureObject* creature,
 	}
 	inputBox->setPromptTitle("@base_player:set_name"); //Set Name
 	inputBox->setPromptText("@player_structure:structure_name_prompt"); //Structure Name:
+	inputBox->setDefaultInput(structure->getCustomObjectName().toString());
 	inputBox->setMaxInputSize(128);
 	inputBox->setCallback(new NameStructureSuiCallback(server));
 	inputBox->setForceCloseDistance(32);
@@ -1351,6 +1394,10 @@ void StructureManager::payMaintenance(StructureObject* structure,
 		TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
 		creature->subtractCashCredits(amount);
 		structure->addMaintenance(amount);
+	}
+
+	if (!ConfigManager::instance()->getBool("Core3.StructureMaintenanceTask.AllowBankPayments", true)) {
+		creature->sendSystemMessage("Maintenance will not be pulled from your bank if it runs out.");
 	}
 
 	PlayerObject* ghost = creature->getPlayerObject();

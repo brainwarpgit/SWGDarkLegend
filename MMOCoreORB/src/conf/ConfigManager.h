@@ -183,7 +183,7 @@ namespace conf {
 		ReadWriteLock mutex;
 
 	private:
-		ConfigDataItem* findItem(const String& name) const;
+		ConfigDataItem* findItem(const String& name, unsigned int accountID = 0) const;
 		bool updateItem(const String& name, ConfigDataItem* newItem);
 
 		bool parseConfigData(const String& prefix, bool isGlobal = false, int maxDepth = 5);
@@ -193,6 +193,17 @@ namespace conf {
 
 		void incrementConfigVersion() {
 			configVersion.increment();
+		}
+
+		String withAccount(const String& name, unsigned int accountID) const {
+			if (accountID == 0) {
+				return name;
+			}
+
+			StringBuffer acctFlag;
+			acctFlag << "Core3.AccountFlags." << accountID << "." << name;
+
+			return acctFlag.toString();
 		}
 
 	public:
@@ -216,16 +227,20 @@ namespace conf {
 		}
 
 		// General config functions
-		bool contains(const String& name) const;
+		bool contains(const String& name, unsigned int accountID = 0) const;
 		int getUsageCounter(const String& name) const;
-		int getInt(const String& name, int defaultValue);
-		bool getBool(const String& name, bool defaultValue);
-		float getFloat(const String& name, float defaultValue);
-		const String& getString(const String& name, const String& defaultValue);
-		const Vector<String>& getStringVector(const String& name);
-		const SortedVector<String>& getSortedStringVector(const String& name);
-		const Vector<int>& getIntVector(const String& name);
+		int getInt(const String& name, int defaultValue, unsigned int accountID = 0);
+		bool getBool(const String& name, bool defaultValue, unsigned int accountID = 0);
+		float getFloat(const String& name, float defaultValue, unsigned int accountID = 0);
+		const String& getString(const String& name, const String& defaultValue, unsigned int accountID = 0);
+		const Vector<String>& getStringVector(const String& name, unsigned int accountID = 0);
+		const SortedVector<String>& getSortedStringVector(const String& name, unsigned int accountID = 0);
+		const Vector<int>& getIntVector(const String& name, unsigned int accountID = 0);
 		bool getAsJSON(const String& target, JSONSerializationType& jsonData);
+
+		Logger::LogLevel getLogLevel(const String& name, Logger::LogLevel defaultValue, unsigned int accountID = 0) {
+			return static_cast<Logger::LogLevel>(getInt(name, (int)defaultValue, accountID));
+		}
 
 		bool setNumber(const String& name, lua_Number newValue);
 		bool setInt(const String& name, int newValue);
@@ -327,6 +342,20 @@ namespace conf {
 			}
 
 			return cachedProgressMonitors;
+		}
+
+		inline bool includeFactionPetsForMissionDifficulty() {
+			// Use cached value as this a hot item called in lots of loops
+			static uint32 cachedVersion = 0;
+			static bool cachedValue;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedValue = getBool("Core3.MissionManager.IncludeFactionPets", true);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedValue;
 		}
 
 		inline int getDBPort() {
@@ -612,6 +641,68 @@ namespace conf {
 			}
 
 			return cachedForceNoTradeADKMessage;
+		}
+
+		inline uint32 getAiAgentConsoleThrottle() {
+			static uint32 cachedVersion = 0;
+			static uint32 cachedValue;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+#ifdef DEBUG_AI
+				cachedValue = getInt("Core3.AiAgent.ConsoleThrottle", 1);
+#else // !DEBUG_AI
+				cachedValue = getInt("Core3.AiAgent.ConsoleThrottle", 100);
+#endif // DEBUG_AI
+				if (cachedVersion <= 0) {
+					cachedVersion = 1;
+				}
+
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedValue;
+		}
+
+#ifdef DEBUG_AI
+		inline bool getAiAgentLoadTesting() {
+			static uint32 cachedVersion = 0;
+			static bool cachedAiAgentLoadTesting;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedAiAgentLoadTesting = getBool("Core3.AiAgent.AiAgentLoadTesting", false);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedAiAgentLoadTesting;
+		}
+#endif // DEBUG_AI
+
+		inline bool isPvpBroadcastChannelEnabled() {
+			static uint32 cachedVersion = 0;
+			static bool cachedPvpBroadcastChannel;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedPvpBroadcastChannel = getBool("Core3.ChatManager.PvpBroadcastChannel", false);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedPvpBroadcastChannel;
+		}
+
+		inline bool useCovertOvertSystem() {
+			static uint32 cachedVersion = 0;
+			static bool cachedCovertOvertSystem;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedCovertOvertSystem = getBool("Core3.GCWManager.useCovertOvertSystem", false);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedCovertOvertSystem;
 		}
 	};
 }

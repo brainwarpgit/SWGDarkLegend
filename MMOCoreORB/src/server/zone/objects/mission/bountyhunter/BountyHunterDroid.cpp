@@ -64,9 +64,16 @@ Reference<FindTargetTask*> BountyHunterDroid::findTarget(SceneObject* droidObjec
 	}
 
 	ManagedReference<AiAgent*> droid = cast<AiAgent*>(player->getZone()->getCreatureManager()->spawnCreature(STRING_HASHCODE("seeker"), 0, player->getPositionX(), player->getPositionZ(), player->getPositionY(), 0));
-	droid->activateLoad("stationary");
+
+	Locker lock(droid);
+
+	droid->addCreatureFlag(CreatureFlag::STATIC);
+	droid->setAITemplate();
+
+	lock.release();
 
 	Reference<FindTargetTask*> findTargetTask = new FindTargetTask(droid, player, objective, track, false);
+
 	findTargetTask->schedule(2000);
 
 	Locker locker(droidObject);
@@ -107,7 +114,7 @@ Reference<CallArakydTask*> BountyHunterDroid::callArakydDroid(SceneObject* droid
 
 	SortedVector<ManagedReference<ActiveArea*> >* areas = player->getActiveAreas();
 	for (int i = 0; i < areas->size(); i++) {
-		if (areas->get(i)->isMunicipalZone()) {
+		if (areas->get(i)->isCityRegion()) {
 			player->sendSystemMessage("@mission/mission_generic:probe_droid_bad_location"); // You must move to a different area to call down a probe droid from orbit.
 			return nullptr;
 		}

@@ -343,7 +343,6 @@ void BuffImplementation::applySkillModifiers() {
 	// if there was a speed or acceleration mod change, this will take care of immediately setting them.
 	// the checks for if they haven't changed are in these methods
 	creo->updateSpeedAndAccelerationMods();
-	creo->updateTerrainNegotiation();
 }
 
 void BuffImplementation::applyStates() {
@@ -382,17 +381,27 @@ void BuffImplementation::removeAttributeModifiers() {
 
 		try {
 
-			int attributemax = creo->getMaxHAM(attribute) - value;
+			int attributeMax = creo->getMaxHAM(attribute) - value;
+
+			if (attributeMax < 1) {
+				attributeMax = 1;
+			}
 
 			int currentVal = creo->getHAM(attribute);
 
-			creo->setMaxHAM(attribute, attributemax);
+			// info(true) << "removeAttributeModifiers - setting max HAM for attribute " << attribute << " to a value of " << attributeMax;
 
-			if (currentVal >= attributemax) {
-				//creature.get()->inflictDamage(creature.get(), attribute, currentVal - attributemax, isSpiceBuff());
+			creo->setMaxHAM(attribute, attributeMax);
+
+			if (currentVal >= attributeMax) {
+				//creature.get()->inflictDamage(creature.get(), attribute, currentVal - attributeMax, isSpiceBuff());
 
 				if (attribute % 3 == 0) {
-					creo->inflictDamage(creo, attribute, currentVal - attributemax, false);
+					int newValue = currentVal - attributeMax;
+
+					// info(true) << "removeAttributeModifiers - inflict damage: " << newValue;
+
+					creo->inflictDamage(creo, attribute, newValue, false);
 				} // else setMaxHam sets secondaries to max
 			}
 
@@ -430,7 +439,6 @@ void BuffImplementation::removeSkillModifiers() {
 	// if there was a speed or acceleration mod change, this will take care of immediately setting them.
 	// the checks for if they haven't changed are in these methods
 	creo->updateSpeedAndAccelerationMods();
-	creo->updateTerrainNegotiation();
 }
 
 void BuffImplementation::removeStates() {

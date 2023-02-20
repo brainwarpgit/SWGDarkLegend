@@ -68,8 +68,7 @@ bool ObjectControllerImplementation::transferObject(SceneObject* objectToTransfe
 	return true;
 }
 
-float ObjectControllerImplementation::activateCommand(CreatureObject* object, unsigned int actionCRC,
-		unsigned int actionCount, uint64 targetID, const UnicodeString& arguments) const {
+float ObjectControllerImplementation::activateCommand(CreatureObject* object, unsigned int actionCRC, unsigned int actionCount, uint64 targetID, const UnicodeString& arguments) const {
 	// Pre: object is wlocked
 	// Post: object is wlocked
 
@@ -140,7 +139,7 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 	}
 
 	/// Add Skillmods if any
-	for(int i = 0; i < queueCommand->getSkillModSize(); ++i) {
+	for (int i = 0; i < queueCommand->getSkillModSize(); ++i) {
 		String skillMod;
 		int value = queueCommand->getSkillMod(i, skillMod);
 		object->addSkillMod(SkillModManager::ABILITYBONUS, skillMod, value, false);
@@ -149,21 +148,27 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 	int errorNumber = queueCommand->doQueueCommand(object, targetID, arguments);
 
 	/// Remove Skillmods if any
-	for(int i = 0; i < queueCommand->getSkillModSize(); ++i) {
+	for (int i = 0; i < queueCommand->getSkillModSize(); ++i) {
 		String skillMod;
 		int value = queueCommand->getSkillMod(i, skillMod);
 		object->addSkillMod(SkillModManager::ABILITYBONUS, skillMod, -value, false);
 	}
 
 	//onFail onComplete must clear the action from client queue
-	if (errorNumber != QueueCommand::SUCCESS)
+	if (errorNumber != QueueCommand::SUCCESS) {
 		queueCommand->onFail(actionCount, object, errorNumber);
-	else {
-		if (queueCommand->getDefaultPriority() != QueueCommand::IMMEDIATE)
+		return 0;
+	} else {
+		if (queueCommand->getDefaultPriority() != QueueCommand::IMMEDIATE) {
 			durationTime = queueCommand->getCommandDuration(object, arguments);
+		}
 
 		queueCommand->onComplete(actionCount, object, durationTime);
 	}
+
+	/*StringBuffer dTime;
+	dTime << "  Final Time = " << durationTime;
+	object->sendSystemMessage(dTime.toString());*/
 
 	return durationTime;
 }

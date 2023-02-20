@@ -20,6 +20,8 @@ ZoneClientSessionImplementation::ZoneClientSessionImplementation(BaseClientProxy
 
 	player = nullptr;
 
+	pendingTasks = new PendingTasksMap();
+
 	accountID = 0;
 
 	disconnecting = false;
@@ -32,10 +34,62 @@ ZoneClientSessionImplementation::ZoneClientSessionImplementation(BaseClientProxy
 	bannedCharacters.setNullValue(0);
 	bannedCharacters.setAllowDuplicateInsertPlan();
 
+	setupLogging();
+
 	//session->setDebugLogLevel();
 }
 
+void ZoneClientSessionImplementation::setupLogging() {
+	static AtomicInteger sequence;
+
+	auto clientLogLevel = ConfigManager::instance()->getInt("Core3.ZoneServer.ClientLogLevel", -1, accountID);
+
+	if (clientLogLevel < 0) {
+		return;
+	}
+
+	if (session == nullptr) {
+		error() << "setupLogging failed: session == nullptr";
+		return;
+	}
+
+	// Files should end up in: log/clients/YYYY-MM-DD/HH/{ip}/BaseClientProxy-{timeSecs}-{ip}-{port}.log
+	auto addr = session->ServiceClient::getAddress();
+	Time now;
+	StringBuffer logFilename;
+	logFilename << "log/clients/"
+		<< now.getFormattedTime("%Y-%m-%d/%H")
+		<< "/" << session->getIPAddress()
+	    << "/BaseClientProxy-" << now.getTime() << "-" << addr.getIPAddress() << "-" << addr.getPort()
+		<< "-" << sequence.increment() << ".log";
+
+	session->setFileLogger(logFilename.toString(), true, ConfigManager::instance()->getRotateLogAtStart());
+	session->setLogSynchronized(true);
+	session->setLogToConsole(false);
+	session->setGlobalLogging(false);
+	session->setLogLevel(static_cast<Logger::LogLevel>(clientLogLevel));
+
+	if (accountID == 0) {
+		session->reportStats("Client connected");
+	} else {
+		session->info() << "AccountID=" << accountID << "; ClientLogLevel=" << clientLogLevel;
+		session->reportStats("account_id=" + String::valueOf(accountID));
+	}
+}
+
+void ZoneClientSessionImplementation::setAccountID(unsigned int newAccountID) {
+	accountID = newAccountID;
+
+	if (session == nullptr) {
+		error() << "setAccountID(" << newAccountID << ") session == nullptr";
+		return;
+	}
+
+	setupLogging();
+}
+
 void ZoneClientSessionImplementation::disconnect() {
+	session->reportStats("ZoneClientSessionImplementation::disconnect()");
 	session->disconnect();
 }
 
@@ -123,6 +177,19 @@ void ZoneClientSessionImplementation::setPlayer(CreatureObject* playerCreature) 
 			if (zoneServer != nullptr) {
 				zoneServer->increaseOnlinePlayers();
 			}
+		}
+	}
+
+	if (session != nullptr) {
+		if (playerCreature != nullptr) {
+			session->info() << "Player " << playerCreature->getObjectID() << " logged in.";
+			session->reportStats("login character_oid=" + String::valueOf(playerCreature->getObjectID()));
+		} else if (player != nullptr) {
+			session->info() << "Player " << player->getObjectID() << " logged out.";
+			session->reportStats("logout character_oid=" + String::valueOf(player->getObjectID()));
+		} else {
+			session->info() << "Cleared player from session.";
+			session->reportStats("Player cleared from session");
 		}
 	}
 

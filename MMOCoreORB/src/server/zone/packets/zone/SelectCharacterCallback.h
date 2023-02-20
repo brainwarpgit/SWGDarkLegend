@@ -18,6 +18,7 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/player/events/DisconnectClientEvent.h"
+#include "server/zone/managers/collision/CollisionManager.h"
 #ifdef WITH_SESSION_API
 #include "server/login/SessionAPIClient.h"
 #endif // WITH_SESSION_API
@@ -41,6 +42,8 @@ public:
 		if (ghost == nullptr) {
 			return;
 		}
+
+		ghost->unloadSpawnedChildren();
 
 		if (ghost->getAdminLevel() == 0 && (zoneServer->getConnectionCount() >= zoneServer->getServerCap())) {
 			client->sendMessage(new ErrorMessage("Login Error", "Server cap reached, please try again later", 0));
@@ -107,7 +110,14 @@ public:
 		}
 
 		if (!zoneServer->getPlayerManager()->increaseOnlineCharCountIfPossible(client)) {
-			ErrorMessage* errMsg = new ErrorMessage("Login Error", "You reached the max online character count.", 0x0);
+			auto maxOnline = zoneServer->getPlayerManager()->getOnlineCharactersPerAccount();
+			StringBuffer msg;
+			String plural = maxOnline > 1 ? "s" : "";
+
+			msg << "\\#ffff00You have reached this server's limit of " <<  maxOnline << " character" << plural << " online per account.\\#." << endl << endl
+				<< "\\#ffffffPlease logout your other character" << plural << " and try again.\\#.";
+
+			ErrorMessage* errMsg = new ErrorMessage("Login Error", msg.toString(), 0x0);
 			client->sendMessage(errMsg);
 
 			return;
@@ -122,6 +132,7 @@ public:
 		}
 
 		uint64 savedParentID = ghost->getSavedParentID();
+
 		ManagedReference<SceneObject*> playerParent = zoneServer->getObject(savedParentID, true);
 		ManagedReference<SceneObject*> currentParent = player->getParent().get();
 
@@ -142,14 +153,14 @@ public:
 				playerParent = nullptr;
 			} else {
 				if (!(playerParent->isCellObject() && playerParent == root)) {
-					playerParent->transferObject(player, -1, false);
+					playerParent->transferObject(player, -1, true);
 				}
 
 				if (player->getParent() == nullptr) {
-					zone->transferObject(player, -1, false);
+					zone->transferObject(player, -1, true);
 				} else if (root->getZone() == nullptr) {
 					Locker clocker(root, player);
-					zone->transferObject(root, -1, false);
+					zone->transferObject(root, -1, true);
 				}
 
 				player->sendToOwner(true);
@@ -157,6 +168,17 @@ public:
 
 		} else if (currentParent == nullptr) {
 			player->removeAllSkillModsOfType(SkillModManager::STRUCTURE);
+
+			Vector3 worldPos = ghost->getLastLogoutWorldPosition();
+			float x = worldPos.getX();
+			float y = worldPos.getY();
+
+			if (savedParentID != 0 && (x != 0 || y != 0)) {
+				float z = CollisionManager::getWorldFloorCollision(x, y, zone, false);
+
+				player->initializePosition(x, z, y);
+			}
+
 			zone->transferObject(player, -1, true);
 		} else {
 			if (player->getZone() == nullptr) {
@@ -166,7 +188,7 @@ public:
 					objectToInsert = player;
 
 				Locker clocker(objectToInsert, player);
-				zone->transferObject(objectToInsert, -1, false);
+				zone->transferObject(objectToInsert, -1, true);
 			}
 
 			player->sendToOwner(true);

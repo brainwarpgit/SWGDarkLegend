@@ -77,7 +77,7 @@ int CreatureImplementation::handleObjectMenuSelect(CreatureObject* player, byte 
 void CreatureImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* player) {
 	AiAgentImplementation::fillAttributeList(alm, player);
 
-	int creaKnowledge = player->getSkillMod("creature_knowledge");
+	int creaKnowledge = player != nullptr ?  player->getSkillMod("creature_knowledge") : 100;
 
 	if (getHideType().isEmpty() && getBoneType().isEmpty() && getMeatType().isEmpty()) {
 		if(!isPet()) // we do want to show this for pets
@@ -85,7 +85,7 @@ void CreatureImplementation::fillAttributeList(AttributeListMessage* alm, Creatu
 	}
 
 	if (creaKnowledge >= 5) {
-		if (isAggressiveTo(player))
+		if (player != nullptr && isAggressiveTo(player))
 			alm->insertAttribute("aggro", "yes");
 		else
 			alm->insertAttribute("aggro", "no");
@@ -351,14 +351,20 @@ bool CreatureImplementation::isVicious() {
 }
 
 bool CreatureImplementation::canMilkMe(CreatureObject* player) {
+	if (player == nullptr)
+		return false;
 
 	if (!hasMilk() || milkState != CreatureManager::NOTMILKED  || _this.getReferenceUnsafeStaticCast()->isInCombat() || _this.getReferenceUnsafeStaticCast()->isDead() || isPet())
 		return false;
 
-	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), 5.0f) || player->isInCombat() || player->isDead() || player->isIncapacitated() || !(player->hasState(CreatureState::MASKSCENT)))
+	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), 7.0f) || player->isInCombat() || player->isDead() || player->isIncapacitated() || !(player->hasState(CreatureState::MASKSCENT)))
 		return false;
 
 	return true;
+}
+
+bool CreatureImplementation::hasBeenMilked() const {
+	return milkState == CreatureManager::ALREADYMILKED;
 }
 
 bool CreatureImplementation::hasSkillToSampleMe(CreatureObject* player) {
@@ -437,17 +443,17 @@ void CreatureImplementation::setPetLevel(int newLevel) {
 	float minDmg = calculateAttackMinDamage(baseLevel);
 	float maxDmg = calculateAttackMaxDamage(baseLevel);
 
-	Reference<WeaponObject*> defaultWeapon = getSlottedObject("default_weapon").castTo<WeaponObject*>();
+	Reference<WeaponObject*> defaultWeapon = asAiAgent()->getDefaultWeapon();
 
 	float ratio = ((float)newLevel) / (float)baseLevel;
 	minDmg *= ratio;
 	maxDmg *= ratio;
 
-	if (readyWeapon != nullptr) {
-		float mod = 1.f - 0.1f*float(readyWeapon->getArmorPiercing());
+	if (primaryWeapon != nullptr && primaryWeapon != defaultWeapon) {
+		float mod = 1.f - 0.1f*float(primaryWeapon->getArmorPiercing());
 
-		readyWeapon->setMinDamage(minDmg * mod);
-		readyWeapon->setMaxDamage(maxDmg * mod);
+		primaryWeapon->setMinDamage(minDmg * mod);
+		primaryWeapon->setMaxDamage(maxDmg * mod);
 	}
 
 	if (defaultWeapon != nullptr) {

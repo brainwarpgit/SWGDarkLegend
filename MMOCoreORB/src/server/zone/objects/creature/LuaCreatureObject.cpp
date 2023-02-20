@@ -18,6 +18,7 @@
 #include "server/zone/managers/skill/SkillManager.h"
 #include "server/zone/objects/tangible/threat/ThreatMap.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/zone/Zone.h"
 
 const char LuaCreatureObject::className[] = "LuaCreatureObject";
 
@@ -43,6 +44,7 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "setBaseHAM", &LuaCreatureObject::setBaseHAM },
 		{ "setMaxHAM", &LuaCreatureObject::setMaxHAM },
 		{ "getHAM", &LuaCreatureObject::getHAM },
+		{ "getBaseHAM", &LuaCreatureObject::getBaseHAM },
 		{ "getMaxHAM", &LuaCreatureObject::getMaxHAM },
 		{ "getTargetID", &LuaCreatureObject::getTargetID },
 		{ "clearCombatState", &LuaCreatureObject::clearCombatState },
@@ -67,6 +69,7 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "getPosture", &LuaCreatureObject::getPosture},
 		{ "setPosture", &LuaCreatureObject::setPosture},
 		{ "setMoodString", &LuaCreatureObject::setMoodString},
+		{ "getMoodString", &LuaCreatureObject::getMoodString},
 		{ "hasSkill", &LuaCreatureObject::hasSkill},
 		{ "removeSkill", &LuaCreatureObject::removeSkill},
 		{ "surrenderSkill", &LuaCreatureObject::surrenderSkill},
@@ -98,12 +101,15 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "isGroupedWith", &LuaCreatureObject::isGroupedWith},
 		{ "getGroupSize", &LuaCreatureObject::getGroupSize},
 		{ "getGroupMember", &LuaCreatureObject::getGroupMember},
+		{ "getOptionsBitmask", &LuaTangibleObject::getOptionsBitmask},
 		{ "setOptionsBitmask", &LuaCreatureObject::setOptionsBitmask},
 		{ "setOptionBit", &LuaTangibleObject::setOptionBit},
 		{ "clearOptionBit", &LuaTangibleObject::clearOptionBit},
+		{ "getPvpStatusBitmask", &LuaTangibleObject::getPvpStatusBitmask},
 		{ "setPvpStatusBitmask", &LuaTangibleObject::setPvpStatusBitmask},
 		{ "setPvpStatusBit", &LuaTangibleObject::setPvpStatusBit},
 		{ "isChangingFactionStatus", &LuaTangibleObject::isChangingFactionStatus },
+		{ "getFactionStatus", &LuaTangibleObject::getFactionStatus },
 		{ "setFutureFactionStatus", &LuaTangibleObject::setFutureFactionStatus },
 		{ "addDotState", &LuaCreatureObject::addDotState},
 		{ "getSlottedObject", &LuaSceneObject::getSlottedObject},
@@ -139,10 +145,15 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "setFactionStatus", &LuaTangibleObject::setFactionStatus },
 		{ "getDamageDealerList", &LuaCreatureObject::getDamageDealerList },
 		{ "getHealingThreatList", &LuaCreatureObject::getHealingThreatList },
+		{ "getAllThreatsList", &LuaCreatureObject::getAllThreatsList },
+		{ "dropFromThreatMap", &LuaCreatureObject::dropFromThreatMap },
 		{ "getSkillMod", &LuaCreatureObject::getSkillMod },
 		{ "getGender", &LuaCreatureObject::getGender },
 		{ "isRidingMount", &LuaCreatureObject::isRidingMount },
 		{ "dismount", &LuaCreatureObject::dismount },
+		{ "setAppearance", &LuaCreatureObject::setAppearance },
+		{ "getMainDefender", &LuaTangibleObject::getMainDefender },
+		{ "getWeaponType", &LuaCreatureObject::getWeaponType },
 		{ 0, 0 }
 };
 
@@ -285,8 +296,18 @@ int LuaCreatureObject::setMoodString(lua_State* L) {
 	return 0;
 }
 
+int LuaCreatureObject::getMoodString(lua_State* L) {
+	String mood = realObject->getMoodString();
+
+	lua_pushstring(L, mood.toCharArray());
+
+	return 1;
+}
+
 int LuaCreatureObject::sendOpenHolocronToPageMessage(lua_State* L) {
-	realObject->sendOpenHolocronToPageMessage();
+	String value = lua_tostring(L, -1);
+
+	realObject->sendOpenHolocronToPageMessage(value);
 
 	return 0;
 }
@@ -529,6 +550,16 @@ int LuaCreatureObject::getHAM(lua_State* L) {
 	int type = lua_tonumber(L, -1);
 
 	int value = realObject->getHAM(type);
+
+	lua_pushnumber(L, value);
+
+	return 1;
+}
+
+int LuaCreatureObject::getBaseHAM(lua_State* L) {
+	int type = lua_tonumber(L, -1);
+
+	int value = realObject->getBaseHAM(type);
 
 	lua_pushnumber(L, value);
 
@@ -1111,6 +1142,58 @@ int LuaCreatureObject::getHealingThreatList(lua_State* L) {
 	return 1;
 }
 
+int LuaCreatureObject::getAllThreatsList(lua_State* L) {
+	ThreatMap* threatMap = realObject->getThreatMap();
+	ThreatMap copyThreatMap(*threatMap);
+
+	lua_newtable(L);
+	int count = 0;
+
+	for (int i = 0; i < copyThreatMap.size(); ++i) {
+		TangibleObject* attacker = copyThreatMap.elementAt(i).getKey();
+
+		if (attacker == nullptr || !attacker->isCreatureObject()) {
+			continue;
+		}
+
+		CreatureObject* creoAttacker = attacker->asCreatureObject();
+
+		count++;
+		lua_pushlightuserdata(L, creoAttacker);
+		lua_rawseti(L, -2, count);
+	}
+
+	return 1;
+}
+
+int LuaCreatureObject::dropFromThreatMap(lua_State* L) {
+	TangibleObject* attackerTano = (TangibleObject*)lua_touserdata(L, -1);
+
+	if (attackerTano == nullptr)
+		return 0;
+
+	Locker lock(realObject);
+
+	ThreatMap* threatMap = realObject->getThreatMap();
+
+	if (threatMap == nullptr)
+		return 0;
+
+	for (int i = 0; i < threatMap->size(); i++) {
+		TangibleObject* threatTano = threatMap->elementAt(i).getKey();
+
+		if (threatTano == nullptr)
+			continue;
+
+		if (threatTano == attackerTano) {
+			threatMap->remove(i);
+			return 0;
+		}
+	}
+
+	return 0;
+}
+
 int LuaCreatureObject::getSkillMod(lua_State* L) {
 	String skillMod = lua_tostring(L, -1);
 
@@ -1139,4 +1222,61 @@ int LuaCreatureObject::isRidingMount(lua_State* L) {
 int LuaCreatureObject::dismount(lua_State* L) {
 	realObject->dismount();
 	return 0;
+}
+
+int LuaCreatureObject::setAppearance(lua_State* L){
+	String appearanceString = lua_tostring(L, -1);
+
+	Locker pLocker(realObject);
+
+	// Reset Template - Pass empty string
+	if (appearanceString == "") {
+		Zone* zone = realObject->getZone();
+
+		realObject->setAlternateAppearance(appearanceString , true);
+
+		if (zone != nullptr) {
+			realObject->switchZone(zone->getZoneName(), realObject->getPositionX(), realObject->getPositionZ(), realObject->getPositionY(), realObject->getParentID());
+		}
+		return 0;
+	}
+
+	String templateName = "";
+
+	if (appearanceString.indexOf(".iff") == -1 || appearanceString.indexOf("object/mobile/shared_") == -1) {
+		return 0;
+	} else if (appearanceString != "") {
+		TemplateManager* templateManager = TemplateManager::instance();
+		String templateTest = appearanceString.replaceFirst("shared_", "");
+
+		if (templateManager != nullptr) {
+			SharedObjectTemplate* templateData = templateManager->getTemplate(templateTest.hashCode());
+
+			if (templateData == nullptr) {
+				realObject->sendSystemMessage("Unable to find template.");
+				return 0;
+			}
+			templateName = appearanceString;
+
+			realObject->setAlternateAppearance(templateName, true);
+		}
+	}
+
+	return 0;
+}
+
+int LuaCreatureObject::getWeaponType(lua_State* L) {
+	Locker lock(realObject);
+
+	WeaponObject* weapon = realObject->getWeapon();
+	uint32 weaponType;
+
+	if (weapon == nullptr) {
+		weaponType = SharedWeaponObjectTemplate::UNARMEDWEAPON;
+	} else {
+		weaponType = weapon->getWeaponBitmask();
+	}
+
+	lua_pushinteger(L, weaponType);
+	return 1;
 }

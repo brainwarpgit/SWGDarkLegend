@@ -51,7 +51,7 @@ void AuctionManagerImplementation::initialize() {
 		setLogLevel(static_cast<Logger::LogLevel>(logLevel));
 	}
 
-	Core::getTaskManager()->initializeCustomQueue("AuctionSearchQueue", ConfigManager::instance()->getMaxAuctionSearchJobs(), true);
+	Core::getTaskManager()->initializeCustomQueue("AuctionSearch", ConfigManager::instance()->getMaxAuctionSearchJobs(), true);
 
 	auctionMap = new AuctionsMap();
 
@@ -830,7 +830,7 @@ AuctionItem* AuctionManagerImplementation::createVendorItem(CreatureObject* play
 	String region = "@planet_n:" + planetStr;
 
 	if (cityRegion != nullptr)
-		region = cityRegion->getRegionName();
+		region = cityRegion->getCityRegionName();
 
 	String name = objectToSell->getDisplayedName();
 
@@ -892,8 +892,8 @@ AuctionItem* AuctionManagerImplementation::createVendorItem(CreatureObject* play
 		item->setExpireTime(commodityExpire);
 	}
 
-	updateAuctionOwner(item, player);
 	ObjectManager::instance()->persistObject(item, 0, "auctionitems");
+	updateAuctionOwner(item, player);
 
 	return item;
 }
@@ -929,7 +929,7 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 
 	if( city != nullptr) {
 		tax = item->getPrice() - ( item->getPrice() / ( 1.0f + (city->getSalesTax() / 100.f)));
-		vendorRegionName = city->getRegionName();
+		vendorRegionName = city->getCityRegionName();
 	}
 
 	String playername = player->getFirstName().toLowerCase();
@@ -1340,12 +1340,12 @@ int AuctionManagerImplementation::checkRetrieve(CreatureObject* player, uint64 o
 
 
 	if (vendor->isBazaarTerminal()) {
-		ManagedReference<CityRegion*> region = vendor->getCityRegion().get();
+		ManagedReference<CityRegion*> cityRegion = vendor->getCityRegion().get();
 
 		String location = vendor->getZone()->getZoneName() + ".";
 
-		if (region != nullptr) {
-			location += region->getRegionName();
+		if (cityRegion != nullptr) {
+			location += cityRegion->getCityRegionName();
 			//String region = terminal->getBazaarRegion();
 
 			if (!item->getVendorUID().beginsWith(location)) {
@@ -1454,6 +1454,7 @@ void AuctionManagerImplementation::retrieveItem(CreatureObject* player, uint64 o
 		item->setStatus(AuctionItem::RETRIEVED);
 
 		auctionMap->deleteItem(vendor, item);
+		auctionMap->removeFromCommodityLimit(item);
 
 		item->setAuctionedItemObjectID(0);
 
@@ -1735,7 +1736,7 @@ void AuctionManagerImplementation::getData(CreatureObject* player, int locationT
 	case LT_REGION:
 		city = player->getCityRegion().get();
 		if (city != nullptr)
-			region = city->getRegionName();
+			region = city->getCityRegionName();
 		else {
 			region = "@planet_n:" + player->getZone()->getZoneName();
 			vendor = vendorInUse;
@@ -2033,7 +2034,7 @@ void AuctionManagerImplementation::expireAuction(AuctionItem* item) {
 
 	ManagedReference<CityRegion*> city = vendor->getCityRegion().get();
 	if (city != nullptr) {
-		vendorRegionName = city->getRegionName();
+		vendorRegionName = city->getCityRegionName();
 	}
 
 	Time expireTime;

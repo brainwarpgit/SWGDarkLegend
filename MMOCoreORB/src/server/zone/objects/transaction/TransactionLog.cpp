@@ -24,6 +24,8 @@
 #include "server/zone/objects/tangible/eventperk/LotteryDroid.h"
 #include "server/zone/objects/tangible/components/vendor/VendorDataComponent.h"
 
+#define TRXLOG_FORMAT_VERSION 2
+
 AtomicInteger TransactionLog::exportBacklog;
 
 TransactionLog::TransactionLog(SceneObject* src, SceneObject* dst, SceneObject* subject, TrxCode code, bool exportSubject, CAPTURE_CALLER_ARGS) {
@@ -31,9 +33,9 @@ TransactionLog::TransactionLog(SceneObject* src, SceneObject* dst, SceneObject* 
 		return;
 	}
 
-	initializeCommon(src, dst, code, file, function, line);
-
 	setType("transfer");
+
+	initializeCommon(src, dst, code, file, function, line);
 
 	setSubject(subject, exportSubject);
 }
@@ -43,6 +45,8 @@ TransactionLog::TransactionLog(SceneObject* src, SceneObject* dst, TrxCode code,
 		return;
 	}
 
+	setType("credits");
+
 	initializeCommon(src, dst, code, file, function, line);
 	initializeCreditsCommon(src, dst, code, amount, isCash);
 }
@@ -51,6 +55,8 @@ TransactionLog::TransactionLog(uint64 srcObjectID, TrxCode code, uint amount, bo
 	if (!isEnabled()) {
 		return;
 	}
+
+	setType("credits");
 
 	auto server = ServerCore::getZoneServer();
 
@@ -77,6 +83,8 @@ TransactionLog::TransactionLog(CreditObject* creditObject, SceneObject* dst, Trx
 		return;
 	}
 
+	setType("credits");
+
 	initializeCommon(nullptr, dst, code, file, function, line);
 	initializeCreditsCommon(nullptr, dst, code, amount, isCash);
 
@@ -90,12 +98,12 @@ TransactionLog::~TransactionLog() {
 		return;
 	}
 
-	if (mAborted) {
-		writeLog();
-		return;
-	}
-
 	if (!mCommitted) {
+		if (mAborted) {
+			writeLog();
+			return;
+		}
+
 		if (mAutoCommit) {
 			commit();
 		} else {
@@ -154,7 +162,7 @@ void TransactionLog::commit(bool discardEmpty) {
 						trx.mTransaction["exportBacklog"] = exportBacklog.get() - 1;
 						trx.writeLog();
 					} catch (...) {
-						Logger::console.error() << "unexpected exception in export task: " << trx;
+						getLogger().error() << "unexpected exception in export task: " << trx;
 					}
 
 					exportBacklog.decrement();
@@ -181,6 +189,18 @@ void TransactionLog::setSubject(SceneObject* subject, bool exportSubject) {
 	} else {
 		mTransaction["subject"] = 0;
 	}
+}
+
+void TransactionLog::setExperience(const String& xpType, int xpAdd, int xpTotal) {
+	if (mTransaction.contains("xpAdd")) {
+		errorMessage() << "duplicate setExperience call: [" << xpType << "] = [" << xpAdd << "]";
+		getLogger().error() << errorMessage() << " " << *this;
+		return;
+	}
+
+	mTransaction["xpType"] = xpType;
+	mTransaction["xpAdd"] = xpAdd;
+	mTransaction["xpTotal"] = xpTotal;
 }
 
 void TransactionLog::addRelatedObject(uint64 oid, bool trackChildren) {
@@ -212,7 +232,7 @@ void TransactionLog::addRelatedObject(uint64 oid, bool trackChildren) {
 		mChildObjects.setAllowOverwriteInsertPlan();
 	}
 
-	scno->getChildrenRecursive(mChildObjects, 50, true, true);
+	scno->getChildrenRecursive(mChildObjects, mMaxDepth, true, true);
 }
 
 void TransactionLog::addRelatedObject(SceneObject* obj, bool trackChildren) {
@@ -247,7 +267,7 @@ void TransactionLog::exportRelated() {
 	}
 
 	Time exportStartTime;
-	auto logMsg = "TransactionLog trxId: " + getTrxID();
+	auto logMsg = "TransactionLog trxId: " + getTrxID() + "; code: " + String(mTransaction["code"]);
 
 	for (int i = 0; i < mRelatedObjects.size(); ++i) {
 		auto oid = mRelatedObjects.get(i);
@@ -260,7 +280,7 @@ void TransactionLog::exportRelated() {
 
 		auto pruneCreo = getPruneCreatureObjects() && obj->isStructureObject();
 
-		exportMap[String::valueOf(oid)] = obj->exportJSON(logMsg, 50, pruneCreo, getPruneCraftedComponents());
+		exportMap[String::valueOf(oid)] = obj->exportJSON(logMsg, mMaxDepth, pruneCreo, getPruneCraftedComponents());
 	}
 
 	mState["exports"] = exportMap;
@@ -342,35 +362,20 @@ void TransactionLog::catchAndLog(const char* functioName, Function<void()> funct
 #else
 		errorMessage() << __FILE__ << ":" << functioName << " unexpected exception";
 #endif
-		Logger::console.error() << errorMessage() << " " << *this;
+		getLogger().error() << errorMessage() << " " << *this;
 	}
 }
 
 Logger& TransactionLog::getLogger() {
 	auto static customLogger = [] () {
-		auto logLevel = ConfigManager::instance()->getInt("Core3.TransactionLog.LogLevel", (int)Logger::DEBUG);
-
-		Logger log("TransactionLog");
+		Logger log("TransactionLogMessages");
 
 		log.setGlobalLogging(false);
-		log.setFileLogger("log/transaction.log", true, ConfigManager::instance()->getRotateLogAtStart());
+		log.setFileLogger("log/trxlogmsgs.log", true, ConfigManager::instance()->getRotateLogAtStart());
 		log.setLogLevelToFile(false);
 		log.setLogToConsole(false);
 		log.setRotateLogSizeMB(ConfigManager::instance()->getInt("Core3.TransactionLog.RotateLogSizeMB", ConfigManager::instance()->getRotateLogSizeMB()));
-		log.setLogLevel(static_cast<Logger::LogLevel>(logLevel));
-		log.setLoggerCallback([log](Logger::LogLevel level, const char* msg) -> int {
-			static Mutex logWriteMutext;
-			auto logFile = log.getFileLogger();
-			StringBuffer logLine;
-
-			logLine << msg << endl;
-
-			Locker guard(&logWriteMutext);
-			(*logFile) << logLine;
-			logFile->flush();
-
-			return Logger::DONTLOG;
-		});
+		log.setLogLevel(ConfigManager::instance()->getLogLevel("Core3.TransactionLog.LogLevel", Logger::DEBUG));
 
 		return log;
 	} ();
@@ -454,6 +459,12 @@ void TransactionLog::initializeCommonSceneObject(const String& key, SceneObject*
 
 	if (player != nullptr) {
 		mTransaction[key + "AccountId"] = player->getAccountID();
+
+		mState[key + "PlayedSeconds"] = (int)(player->getPlayedMiliSecs() / 1000);
+		mState[key + "SessionSeconds"] = (int)(player->getSessionMiliSecs() / 1000);
+		mState[key + "SessionMovement"] = player->getSessionTotalMovement();
+		mState[key + "SessionCredits"] = player->getSessionTotalCredits();
+
 		return;
 	}
 
@@ -464,6 +475,16 @@ void TransactionLog::initializeCommon(SceneObject* src, SceneObject* dst, TrxCod
 	mTransaction["trxId"] = getNewTrxID();
 
 	mTransaction["code"] = trxCodeToString(code);
+
+	mMaxDepth = 4;
+
+	if (isStat(code)) {
+		mAutoCommit = true;
+		mMaxDepth = 1;
+		setType("stat");
+	} else if (code == TrxCode::HARVESTED) {
+		mMaxDepth = 1;
+	}
 
 	initializeCommonSceneObject("src", src);
 	initializeCommonSceneObject("dst", dst);
@@ -477,6 +498,7 @@ void TransactionLog::initializeCommon(SceneObject* src, SceneObject* dst, TrxCod
 	mContext["function"] = function;
 	mContext["line"] = line;
 	mContext["ref"] = getVersion();
+	mContext["@fmt"] = TRXLOG_FORMAT_VERSION;
 
 	auto currentThread = Thread::getCurrentThread();
 
@@ -489,7 +511,6 @@ void TransactionLog::initializeCommon(SceneObject* src, SceneObject* dst, TrxCod
 }
 
 void TransactionLog::initializeCreditsCommon(SceneObject* src, SceneObject* dst, TrxCode code, int amount, bool isCash) {
-	setType("credits");
 	mTransaction["isCash"] = isCash;
 	mTransaction["amount"] = amount;
 
@@ -506,7 +527,7 @@ void TransactionLog::addStateObjectMetadata(const String& baseKeyName, SceneObje
 	auto stringIdName = obj->getObjectNameStringIdName();
 
 	if (!stringIdFile.isEmpty() || !stringIdName.isEmpty()) {
-		addState(baseKeyName + "ObjectName", stringIdFile + "." + stringIdName);
+		addState(baseKeyName + "ObjectName", stringIdFile + ":" + stringIdName);
 	}
 
 	addState(baseKeyName + "Class", obj->_getClassName());
@@ -681,6 +702,40 @@ const String TransactionLog::composeLogEntry() const {
 }
 
 void TransactionLog::writeLog() {
+	auto static trxLog = [] () {
+		Logger log("TransactionLog");
+
+		log.setGlobalLogging(false);
+		log.setFileLogger("log/transaction.log", true, ConfigManager::instance()->getRotateLogAtStart());
+		log.setLogLevelToFile(false);
+		log.setLogToConsole(false);
+		log.setRotateLogSizeMB(ConfigManager::instance()->getInt("Core3.TransactionLog.RotateLogSizeMB", ConfigManager::instance()->getRotateLogSizeMB()));
+		log.setLogLevel(ConfigManager::instance()->getLogLevel("Core3.TransactionLog.LogLevel", Logger::DEBUG));
+		log.setLoggerCallback([log](Logger::LogLevel level, const char* msg) -> int {
+			static Mutex logWriteMutext;
+			auto logFile = log.getFileLogger();
+			StringBuffer logLine;
+
+			logLine << msg << endl;
+
+			Locker guard(&logWriteMutext);
+			(*logFile) << logLine;
+			logFile->flush();
+
+			return Logger::DONTLOG;
+		});
+
+		return log;
+	} ();
+
+	if (mLogged) {
+		auto trace = StackTrace();
+		getLogger().error() << "Duplicate write for trx " << *this << endl << "STACK: " << trace.toStringData();
+		return;
+	}
+
+	mLogged = true;
+
 	if (mError.length() > 0) {
 		mState["errorMessage"] = mError.toString();
 	}
@@ -690,10 +745,10 @@ void TransactionLog::writeLog() {
 	}
 
 	if (!mWorldPositionContext.isEmpty()) {
-		addState("WorldPositionContext", mWorldPositionContext);
-		addState("WorldPositionX", (int)mWorldPosition.getX());
-		addState("WorldPositionZ", (int)mWorldPosition.getZ());
-		addState("WorldPositionY", (int)mWorldPosition.getY());
+		addState("worldPositionContext", mWorldPositionContext);
+		addState("worldPositionX", (int)mWorldPosition.getX());
+		addState("worldPositionZ", (int)mWorldPosition.getZ());
+		addState("worldPositionY", (int)mWorldPosition.getY());
 		addState("zone", mZoneName);
 	}
 
@@ -719,10 +774,10 @@ void TransactionLog::writeLog() {
 			continue;
 		}
 
-		auto objName = scno->getObjectNameStringIdFile() + "." + scno->getObjectNameStringIdName();
+		auto objName = "@" + scno->getObjectNameStringIdFile() + ":" + scno->getObjectNameStringIdName();
 
-		if (objName == ".") {
-			objName = scno->_getClassName();
+		if (objName == "@:") {
+			objName = "@c:" + scno->_getClassName();
 		}
 
 		children[String::valueOf(oid)] = objName;
@@ -738,7 +793,7 @@ void TransactionLog::writeLog() {
 		mState["verbose"] = true;
 	}
 
-	getLogger().info() << composeLogEntry();
+	trxLog.info() << composeLogEntry();
 }
 
 SceneObject* TransactionLog::getTrxParticipant(SceneObject* obj, SceneObject* defaultValue) {
@@ -854,23 +909,36 @@ const String TransactionLog::trxCodeToString(TrxCode code) {
 	case TrxCode::AUCTIONEXPIRED:           return "auctionexpired";            // Never retrieved and expired
 	case TrxCode::AUCTIONRETRIEVE:          return "auctionretrieve";           // retrieveItem()
 	case TrxCode::CHARACTERBUILDER:         return "characterbuilder";          // Character Builder
+	case TrxCode::CHARACTERDELETE:          return "characterdelete";           // Delete Character
 	case TrxCode::CITYINCOMETAX:            return "cityincometax";             // City income taxes
 	case TrxCode::CITYSALESTAX:             return "citysalestax";              // City Sales taxes
 	case TrxCode::CITYTREASURY:             return "citytreasury";              // City Treasury
+	case TrxCode::COMBATSTATS:              return "combatstats";               // Combat Stats
 	case TrxCode::CRAFTINGSESSION:          return "craftingsession";           // Crafting Session
+	case TrxCode::DATABASECOMMIT:           return "databasecommit";            // Database Commit
+	case TrxCode::DESTROYSTRUCTURE:         return "destroystructure";          // Server destroyed structure (maintenance)
+	case TrxCode::EXPERIENCE:               return "experience";                // Player experience change
 	case TrxCode::EXTRACTCRATE:             return "extractcrate";              // Extract item from crate
 	case TrxCode::FACTORYOPERATION:         return "factoryoperation";          // Factory operations
+	case TrxCode::FISHING:                  return "fishing";                   // Fishing loot
 	case TrxCode::FORAGED:                  return "foraged";                   // Foraged items
 	case TrxCode::HARVESTED:                return "harvested";                 // Harvested items
 	case TrxCode::IMAGEDESIGN:              return "imagedesign";               // Image Design Fees
 	case TrxCode::INSTANTBUY:               return "instantbuy";                // Instant Buy
 	case TrxCode::LOTTERYDROID:             return "lotterydroid";              // Lottery Droid
 	case TrxCode::LUASCRIPT:                return "luascript";                 // LUA Script
+	case TrxCode::MINED:                    return "mined";                     // Resouces mined by installations
+	case TrxCode::MISSIONCOMPLETE:          return "missioncomplete";           // Mission Completed Summary
 	case TrxCode::NPCLOOTCLAIM:             return "npclootclaim";              // NPC Loot Claimed
 	case TrxCode::PERMISSIONLIST:           return "permissionlist";            // Permission List Changes
 	case TrxCode::PLAYERMISCACTION:         return "playermiscaction";          // Misc player action
 	case TrxCode::PLAYERTIP:                return "playertip";                 // sui Tip
 	case TrxCode::PLAYERTRADE:              return "playertrade";               // Player Trade
+	case TrxCode::PLAYERONLINE:             return "playeronline";              // Player Online
+	case TrxCode::PLAYEROFFLINE:            return "playeroffline";             // Player Offline
+	case TrxCode::PLAYERLINKDEAD:           return "playerlinkdead";            // Player Link Dead
+	case TrxCode::PLAYERLOGGINGOUT:         return "playerloggingout";          // Player Logging Out
+	case TrxCode::PLAYERDIED:               return "playerdied";                // Player Died
 	case TrxCode::RECYCLED:                 return "recycled";                  // Recycled Items
 	case TrxCode::SERVERDESTROYOBJECT:      return "serverdestroyobject";       // /serverDestroyObject command
 	case TrxCode::SLICECONTAINER:           return "slicecontainer";            // Slicing session on a container

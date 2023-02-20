@@ -27,7 +27,7 @@ void DroidObjectImplementation::fillAttributeList(AttributeListMessage* msg, Cre
 
 	ManagedReference<ControlDevice*> device = getControlDevice().get();
 
-	if (device != nullptr && device->isASubChildOf(object)) {
+	if (device != nullptr && object != nullptr && device->isASubChildOf(object)) {
 		float percentPower = ((float)power / (float)MAX_POWER) * 100.0;
 		msg->insertAttribute("@obj_attr_n:battery_power", String::valueOf((int)percentPower) + "%");
 
@@ -239,7 +239,7 @@ void DroidObjectImplementation::initDroidModules() {
 
 void DroidObjectImplementation::initDroidWeapons() {
 	//Set weapon stats
-	WeaponObject* weapon = getSlottedObject("default_weapon").castTo<WeaponObject*>();
+	WeaponObject* weapon = asAiAgent()->getDefaultWeapon();
 
 	if (weapon != nullptr) {
 		Locker locker(weapon);
@@ -248,11 +248,11 @@ void DroidObjectImplementation::initDroidWeapons() {
 		weapon->setAttackSpeed(getAttackSpeed());
 	}
 
-	if (readyWeapon != nullptr) {
-		Locker locker(readyWeapon);
-		readyWeapon->setMinDamage(getDamageMin());
-		readyWeapon->setMaxDamage(getDamageMax());
-		readyWeapon->setAttackSpeed(getAttackSpeed());
+	if (primaryWeapon != nullptr && primaryWeapon != weapon) {
+		Locker locker(primaryWeapon);
+		primaryWeapon->setMinDamage(getDamageMin());
+		primaryWeapon->setMaxDamage(getDamageMax());
+		primaryWeapon->setAttackSpeed(getAttackSpeed());
 	}
 }
 

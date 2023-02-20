@@ -42,7 +42,14 @@ void FactoryObjectImplementation::notifyLoadFromDatabase() {
 	setLoggingName("FactoryObject");
 
 	if (operating) {
-		startFactory();
+		Core::getTaskManager()->executeTask([factory = WeakReference<FactoryObject*>(_this.getReferenceUnsafeStaticCast())]() {
+			auto factoryStrong = factory.get();
+
+			if (factoryStrong != nullptr) {
+				Locker lock(factoryStrong);
+				factoryStrong->startFactory();
+			}
+		}, "StartFactoryLambda");
 	}
 
 	hopperObserver = new FactoryHopperObserver(_this.getReferenceUnsafeStaticCast());
@@ -93,7 +100,7 @@ void FactoryObjectImplementation::createChildObjects() {
 void FactoryObjectImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	InstallationObjectImplementation::fillAttributeList(alm, object);
 
-	if (operating && isOnAdminList(object)) {
+	if (operating && object != nullptr && isOnAdminList(object)) {
 		if (getContainerObjectsSize() == 0)
 			return;
 
@@ -681,7 +688,7 @@ FactoryCrate* FactoryObjectImplementation::createNewFactoryCrate(TangibleObject*
 		return nullptr;
 	}
 
-	outputHopper->transferObject(crate, -1, false);
+	outputHopper->transferObject(crate, -1, true);
 
 	for(int i = 0; i < operatorList.size(); ++i) {
 		crate->sendTo(operatorList.get(i), true);
