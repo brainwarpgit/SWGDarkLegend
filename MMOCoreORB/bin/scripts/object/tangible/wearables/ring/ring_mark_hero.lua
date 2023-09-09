@@ -128,6 +128,8 @@ object_tangible_wearables_ring_ring_mark_hero = object_tangible_wearables_ring_s
 	},
 
 	noTrade = 1,
+	maxCondition = 100,
+	insurable = false,
 
 	objectMenuComponent = "HeroRingMenuComponent",
 	attributeListComponent = "HeroRingAttributeListComponent",

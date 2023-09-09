@@ -571,6 +571,7 @@ void DirectorManager::initializeLuaEngine(Lua* luaEngine) {
 	luaEngine->setGlobalInt("OBJECTRADIALOPENED", ObserverEventType::OBJECTRADIALOPENED);
 	luaEngine->setGlobalInt("ENTEREDBUILDING", ObserverEventType::ENTEREDBUILDING);
 	luaEngine->setGlobalInt("EXITEDBUILDING", ObserverEventType::EXITEDBUILDING);
+	luaEngine->setGlobalInt("PLAYERKILLED", ObserverEventType::PLAYERKILLED);
 	luaEngine->setGlobalInt("SPATIALCHATSENT", ObserverEventType::SPATIALCHATSENT);
 	luaEngine->setGlobalInt("ITEMLOOTED", ObserverEventType::ITEMLOOTED);
 	luaEngine->setGlobalInt("MEDPACKUSED", ObserverEventType::MEDPACKUSED);
@@ -596,6 +597,7 @@ void DirectorManager::initializeLuaEngine(Lua* luaEngine) {
 	luaEngine->setGlobalInt("PROTOTYPECREATED", ObserverEventType::PROTOTYPECREATED);
 	luaEngine->setGlobalInt("SLICED", ObserverEventType::SLICED);
 	luaEngine->setGlobalInt("ABILITYUSED", ObserverEventType::ABILITYUSED);
+	luaEngine->setGlobalInt("SPATIALCHAT", ObserverEventType::SPATIALCHAT);
 
 	luaEngine->setGlobalInt("UPRIGHT", CreaturePosture::UPRIGHT);
 	luaEngine->setGlobalInt("PRONE", CreaturePosture::PRONE);
@@ -647,6 +649,7 @@ void DirectorManager::initializeLuaEngine(Lua* luaEngine) {
 	luaEngine->setGlobalInt("SCANNING_FOR_CONTRABAND", CreatureFlag::SCANNING_FOR_CONTRABAND);
 	luaEngine->setGlobalInt("IGNORE_FACTION_STANDING", CreatureFlag::IGNORE_FACTION_STANDING);
 
+	luaEngine->setGlobalInt("INSURED", OptionBitmask::INSURED);
 	luaEngine->setGlobalInt("CONVERSABLE", OptionBitmask::CONVERSE);
 	luaEngine->setGlobalInt("AIENABLED", OptionBitmask::AIENABLED);
 	luaEngine->setGlobalInt("INVULNERABLE", OptionBitmask::INVULNERABLE);
@@ -718,6 +721,7 @@ void DirectorManager::initializeLuaEngine(Lua* luaEngine) {
 	luaEngine->setGlobalInt("AI_CRACKDOWN_SCANNING", AiAgent::CRACKDOWN_SCANNING);
 	luaEngine->setGlobalInt("AI_HARVESTING", AiAgent::HARVESTING);
 	luaEngine->setGlobalInt("AI_RESTING", AiAgent::RESTING);
+	luaEngine->setGlobalInt("AI_CONVERSING", AiAgent::CONVERSING);
 
 	// Badges
 	const auto badges = BadgeList::instance()->getMap();
@@ -1920,7 +1924,14 @@ int DirectorManager::getRegion(lua_State* L) {
 
 	String regionName = lua_tostring(L, -1);
 	String zoneName = lua_tostring(L, -2);
+
 	ZoneServer* zoneServer = ServerCore::getZoneServer();
+
+	if (zoneServer == nullptr) {
+		lua_pushnil(L);
+		return 1;
+	}
+
 	Zone* zone = zoneServer->getZone(zoneName);
 
 	if (zone == nullptr) {
@@ -1928,15 +1939,20 @@ int DirectorManager::getRegion(lua_State* L) {
 		return 1;
 	}
 
-	CreatureManager* creatureManager = zone->getCreatureManager();
+	PlanetManager* planetMan = zone->getPlanetManager();
 
-	SceneObject* spawnArea = creatureManager->getSpawnArea(regionName);
-
-	if (spawnArea == nullptr)
+	if (planetMan == nullptr) {
 		lua_pushnil(L);
-	else {
-		spawnArea->_setUpdated(true); //mark updated so the GC doesnt delete it while in LUA
-		lua_pushlightuserdata(L, spawnArea);
+		return 1;
+	}
+
+	SceneObject* region = planetMan->getRegion(regionName);
+
+	if (region == nullptr) {
+		lua_pushnil(L);
+	} else {
+		region->_setUpdated(true); //mark updated so the GC doesnt delete it while in LUA
+		lua_pushlightuserdata(L, region);
 	}
 
 	return 1;
@@ -3328,7 +3344,7 @@ Vector3 DirectorManager::generateSpawnPoint(String zoneName, float x, float y, f
 
 		float newZ = zone->getHeight(newX, newY);
 
-		position = Vector3(newX, newY, newZ);
+		position.set(newX, newZ, newY);
 
 		found = forceSpawn == true || (zone->getPlanetManager()->isSpawningPermittedAt(position.getX(), position.getY(), extraNoBuildRadius) &&
 				!CollisionManager::checkSphereCollision(position, sphereCollision, zone));
@@ -3337,7 +3353,7 @@ Vector3 DirectorManager::generateSpawnPoint(String zoneName, float x, float y, f
 	}
 
 	if (!found) {
-		position = Vector3(0, 0, 0);
+		position.set(0, 0, 0);
 	}
 
 	return position;
@@ -4192,6 +4208,7 @@ int DirectorManager::getSpawnPointInArea(lua_State* L) {
 
 	String zoneName  = lua_tostring(L, -4);
 	Zone* zone = ServerCore::getZoneServer()->getZone(zoneName);
+
 	if (zone == nullptr) {
 		instance()-> error("Zone == nullptr in DirectorManager::getSpawnPointInArea (" + zoneName + ")");
 		ERROR_CODE = INCORRECT_ARGUMENTS;
@@ -4205,20 +4222,22 @@ int DirectorManager::getSpawnPointInArea(lua_State* L) {
 	Sphere sphere(Vector3(x, y, zone->getHeightNoCache(x, y)), radius);
 	Vector3 result;
 
-	if (PathFinderManager::instance()->getSpawnPointInArea(sphere, zone, result)) {
-		lua_newtable(L);
-		lua_pushnumber(L, result.getX());
-		lua_pushnumber(L, result.getZ());
-		lua_pushnumber(L, result.getY());
-		lua_rawseti(L, -4, 3);
-		lua_rawseti(L, -3, 2);
-		lua_rawseti(L, -2, 1);
-		return 1;
-	} else {
-		String err = "Unable to generate spawn point in DirectorManager::getSpawnPointInArea, x: " + String::valueOf(x) + ", y: " + String::valueOf(y) + ", zone: " + zoneName + ", radius: " + String::valueOf(radius);
-		printTraceError(L, err);
-		return 0;
+	for (int i = 0; i < SPAWNPOINTSEARCHATTEMPTS; i++) {
+		if (PathFinderManager::instance()->getSpawnPointInArea(sphere, zone, result)) {
+			lua_newtable(L);
+			lua_pushnumber(L, result.getX());
+			lua_pushnumber(L, result.getZ());
+			lua_pushnumber(L, result.getY());
+			lua_rawseti(L, -4, 3);
+			lua_rawseti(L, -3, 2);
+			lua_rawseti(L, -2, 1);
+
+			return 1;
+		}
 	}
+
+	instance()->debug() << "Unable to generate spawn point in DirectorManager::getSpawnPointInArea, x: " + String::valueOf(x) + ", y: " + String::valueOf(y) + ", zone: " + zoneName + ", radius: " + String::valueOf(radius);
+	return 0;
 }
 
 int DirectorManager::getPlayerByName(lua_State* L) {

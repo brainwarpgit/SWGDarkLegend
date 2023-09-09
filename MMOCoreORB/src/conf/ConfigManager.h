@@ -704,6 +704,45 @@ namespace conf {
 
 			return cachedCovertOvertSystem;
 		}
+
+		inline bool getLoginEnableSessionId() {
+			static uint32 cachedVersion = 0;
+			static bool cachedEnableSessionId;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedEnableSessionId = getBool("Core3.Login.EnableSessionId", false);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedEnableSessionId;
+		}
+
+		inline int getMinLairSpawnInterval() {
+			static uint32 cachedVersion = 0;
+			static int cachedMinSpawnDelay;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedMinSpawnDelay = getInt("Core3.Regions.minimumLairSpawnInterval", 5000);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedMinSpawnDelay;
+		}
+
+		inline float getSpawnCheckRange() {
+			static uint32 cachedVersion = 0;
+			static float cachedSpawnRange;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedSpawnRange = getFloat("Core3.Regions.spawnCheckRange", 64.f);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedSpawnRange;
+		}
 	};
 }
 
