@@ -27,18 +27,17 @@ end
 
 
 function theTutorial0001ScreenPlay:spawnSceneObjects()
-
 	-- This spawns an active area, gives it a name or pointer (pActiveAreaOne) and then below creates an observer for the area.
 	local pActiveAreaOne = spawnActiveArea("tatooine", "object/active_area.iff", 3863, 5, -4856, 40, 0) -- x, z, y, radius, cellID (0 for outside).
 	if pActiveAreaOne ~= nil then
 
 		-- the ENTEREDAREA observer just fires when anything enters the area. All observers can be found in /src/server/zone/managers/director/director_manager.cpp
 		createObserver(ENTEREDAREA, "theTutorial0001ScreenPlay", "notifyEnteredAreaOne", pActiveAreaOne) -- screenplay name (doesn't have to be the same screenplay), function name, pointer
-		print("theTutorial0001ScreenPlay:Observer created pActiveAreaOne") -- just a debug print statement for checking things are working.
+
+		--print("theTutorial0001ScreenPlay:Observer created pActiveAreaOne") -- just a debug print statement for checking things are working.
 	end
 
 	spawnSceneObject("tatooine", "object/static/vehicle/static_yt_1300.iff", 3863, 5, -4856, 0, math.rad(180) )-- planet, template, x, z, y, cellID, yaw
-	
 end
 
 --******************************************************************************************************************************
