@@ -1,8 +1,8 @@
-
 valarian_blood_vandal = Creature:new {
 	customName = "Valarian's Blood Vandal",
 	socialGroup = "valarian",
 	faction = "valarian",
+	mobType = MOB_NPC,
 	level = 23,
 	chanceHit = 0.75,
 	damageMin = 195,
@@ -11,7 +11,7 @@ valarian_blood_vandal = Creature:new {
 	baseHAM = 2350,
 	baseHAMmax = 3050,
 	armor = 0,
-	resists = {15,15,10,20,10,10,15,10,-1},
+	resists = {15, 15, 10, 20, 10, 10, 15, 10, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -25,6 +25,8 @@ valarian_blood_vandal = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/dressed_criminal_thug_aqualish_male_01.iff",
@@ -42,7 +44,9 @@ valarian_blood_vandal = Creature:new {
 		"object/mobile/dressed_criminal_thug_trandoshan_male_01.iff",
 		"object/mobile/dressed_criminal_thug_trandoshan_female_01.iff",
 		"object/mobile/dressed_criminal_thug_zabrak_male_01.iff",
-		"object/mobile/dressed_criminal_thug_zabrak_female_01.iff"},
+		"object/mobile/dressed_criminal_thug_zabrak_female_01.iff"
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -55,10 +59,18 @@ valarian_blood_vandal = Creature:new {
 			}
 		}
 	},
-	weapons = {"pirate_weapons_medium"},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "pirate_weapons_medium",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermid,marksmanmid),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(brawlermid,marksmanmid)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(valarian_blood_vandal, "valarian_blood_vandal")

@@ -2,6 +2,7 @@ ep3_etyyy_bantha_kashyyyk_greyclimber = Creature:new {
 	customName = "Greyclimber",
 	socialGroup = "etyyybantha",
 	faction = "",
+	mobType = MOB_HERBIVORE,
 	level = 38,
 	chanceHit = 1,
 	damageMin = 380,
@@ -10,7 +11,7 @@ ep3_etyyy_bantha_kashyyyk_greyclimber = Creature:new {
 	baseHAM = 6000,
 	baseHAMmax = 6500,
 	armor = 0,
-	resists = {125,5,140,5,-1,-1,-1,-1,-1},
+	resists = {125, 5, 140, 5, -1, -1, -1, -1, -1},
 	meatType = "meat_herbivore",
 	meatAmount = 350,
 	hideType = "hide_wooly",
@@ -25,14 +26,28 @@ ep3_etyyy_bantha_kashyyyk_greyclimber = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
-
-	templates = {"object/mobile/kashyyyk_bantha.iff"},
 	scale = 1.7,
-	lootGroups = {},
-	weapons = {},
-	attacks = {
-		{"posturedownattack",""}
-	}
+	customAiMap = "",
+
+	templates = {
+		"object/mobile/kashyyyk_bantha.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {
+		{"posturedownattack", ""}
+	},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(ep3_etyyy_bantha_kashyyyk_greyclimber, "ep3_etyyy_bantha_kashyyyk_greyclimber")

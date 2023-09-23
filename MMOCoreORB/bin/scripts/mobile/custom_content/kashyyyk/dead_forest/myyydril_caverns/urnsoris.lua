@@ -1,7 +1,9 @@
 urnsoris = Creature:new {
 	objectName = "@monster_name:urnsoris",
+	customName = "",
 	socialGroup = "urnsoris",
 	faction = "",
+	mobType = MOB_HERBIVORE,
 	level = 75,
 	chanceHit = 1,
 	damageMin = 600,
@@ -10,7 +12,7 @@ urnsoris = Creature:new {
 	baseHAM = 16000,
 	baseHAMmax = 17500,
 	armor = 1,
-	resists = {160,165,160,35,150,20,180,145,-1},
+	resists = {160, 165, 160, 35, 150, 20, 180, 145, -1},
 	meatType = "meat_insect",
 	meatAmount = 25,
 	hideType = "hide_scaley",
@@ -25,15 +27,29 @@ urnsoris = Creature:new {
 	creatureBitmask = PACK + KILLER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/urnsoris.iff"},
-	lootGroups = {},
-	weapons = {},
-	conversationTemplate = "",
-	attacks = {
-		{"strongpoison",""},	
-		{"stunattack",""}
-	}
+	templates = {
+		"object/mobile/urnsoris.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {
+		{"strongpoison", ""},
+		{"stunattack", ""}
+	},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(urnsoris, "urnsoris")

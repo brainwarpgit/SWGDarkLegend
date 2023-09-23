@@ -1,18 +1,17 @@
 outbreak_undead_deathtrooper_02_m = Creature:new {
-	--customName = "@mob/creature_names:outbreak_undead_deathtrooper_02_m",
 	customName = "Deathtrooper",
 	socialGroup = "",
-	pvpFaction = "",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 150,
-	chanceHit = 5.0,
+	chanceHit = 5,
 	damageMin = 400,
 	damageMax = 990,
 	baseXp = 11514,
 	baseHAM = 14000,
 	baseHAMmax = 15500,
 	armor = 1,
-	resists = {25,25,25,25,25,25,25,-1,-1},
+	resists = {25, 25, 25, 25, 25, 25, 25, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -26,11 +25,15 @@ outbreak_undead_deathtrooper_02_m = Creature:new {
 	creatureBitmask = KILLER,
 	optionsBitmask = 128,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/outbreak_undead_deathtrooper_02_m.iff"},
-		
+	templates = {
+		"object/mobile/outbreak_undead_deathtrooper_02_m.iff"
+	},
+
 	lootGroups = {
-	    {
+		{
 			groups = {
 				{group = "clothing_attachments", chance = 4500000},
 				{group = "armor_attachments", chance = 2000000},
@@ -42,10 +45,17 @@ outbreak_undead_deathtrooper_02_m = Creature:new {
 			lootChance = 9000000
 		}
 	},
-	--scale = 1.25,
-	weapons = {},
-	conversationTemplate = "",
-	attacks = merge(pistoleermaster,carbineermaster,marksmanmaster,riflemanmaster)
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(pistoleermaster,carbineermaster,marksmanmaster,riflemanmaster),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(outbreak_undead_deathtrooper_02_m, "outbreak_undead_deathtrooper_02_m")

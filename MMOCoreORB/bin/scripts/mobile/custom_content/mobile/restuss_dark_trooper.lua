@@ -1,9 +1,8 @@
 restuss_dark_trooper = Creature:new {
 	customName = "restuss_dark_trooper",
-	--objectName = "",
-	--randomNameType = NAME_GENERIC_TAG,
 	socialGroup = "townsperson",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 100,
 	chanceHit = 1,
 	damageMin = 645,
@@ -12,7 +11,7 @@ restuss_dark_trooper = Creature:new {
 	baseHAM = 24000,
 	baseHAMmax = 30000,
 	armor = 0,
-	resists = {0,0,0,0,0,0,0,0,-1},
+	resists = {0, 0, 0, 0, 0, 0, 0, 0, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -26,14 +25,26 @@ restuss_dark_trooper = Creature:new {
 	creatureBitmask = NONE,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/restuss_dark_trooper.iff"},
-	lootGroups = {},
-	weapons = {},
-	conversationTemplate = "",
-	attacks = {
-	}
+	templates = {
+		"object/mobile/restuss_dark_trooper.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(restuss_dark_trooper, "restuss_dark_trooper")
-

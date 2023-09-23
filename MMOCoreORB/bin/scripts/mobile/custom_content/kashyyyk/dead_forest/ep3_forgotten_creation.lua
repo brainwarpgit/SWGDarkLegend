@@ -2,6 +2,7 @@ ep3_forgotten_creation = Creature:new {
 	customName = "a forgotten creation",
 	socialGroup = "thug",
 	faction = "thug",
+	mobType = MOB_NPC,
 	level = 7,
 	chanceHit = 0.46,
 	damageMin = 65,
@@ -10,7 +11,7 @@ ep3_forgotten_creation = Creature:new {
 	baseHAM = 290,
 	baseHAMmax = 390,
 	armor = 0,
-	resists = {10,10,10,10,10,10,10,-1,-1},
+	resists = {10, 10, 10, 10, 10, 10, 10, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,6 +25,8 @@ ep3_forgotten_creation = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/battle_droid.iff",
@@ -31,11 +34,21 @@ ep3_forgotten_creation = Creature:new {
 		"object/mobile/blastromech.iff",
 		"object/mobile/le_repair_droid.iff",
 		"object/mobile/dz70_fugitive_tracker_droid.iff"
-		},
-	lootGroups = {},
-	weapons = {"battle_droid_weapons"},
-	conversationTemplate = "",
-	attacks = merge(marksmannovice,brawlernovice)
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "battle_droid_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(marksmannovice,brawlernovice),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(ep3_forgotten_creation, "ep3_forgotten_creation")

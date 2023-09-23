@@ -1,8 +1,8 @@
 ep3_slavemaster_klesk = Creature:new {
 	customName = "Slavemaster Klesk",
-	--randomNameType = NAME_GENERIC_TAG,
 	socialGroup = "trandoshan",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 115,
 	chanceHit = 1.25,
 	damageMin = 1380,
@@ -11,7 +11,7 @@ ep3_slavemaster_klesk = Creature:new {
 	baseHAM = 125000,
 	baseHAMmax = 135500,
 	armor = 3,
-	resists = {80,80,80,60,35,55,75,20,-1},
+	resists = {80, 80, 80, 60, 35, 55, 75, 20, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -25,13 +25,27 @@ ep3_slavemaster_klesk = Creature:new {
 	creatureBitmask = NONE,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/ep3/ep3_slavemaster_klesk.iff"},
-	lootGroups = {},
-	weapons = {"pirate_weapons_heavy"},
+	templates = {
+		"object/mobile/ep3/ep3_slavemaster_klesk.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "pirate_weapons_heavy",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermaster,marksmanmaster),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(brawlermaster,marksmanmaster)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(ep3_slavemaster_klesk, "ep3_slavemaster_klesk")

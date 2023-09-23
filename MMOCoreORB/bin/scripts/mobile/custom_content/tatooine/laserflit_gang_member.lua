@@ -2,6 +2,7 @@ laserflit_gang_member = Creature:new {
 	customName = "a Laserflit gang member",
 	socialGroup = "laserflit",
 	faction = "laserflit",
+	mobType = MOB_NPC,
 	level = 32,
 	chanceHit = 0.39,
 	damageMin = 310,
@@ -10,7 +11,7 @@ laserflit_gang_member = Creature:new {
 	baseHAM = 8400,
 	baseHAMmax = 10200,
 	armor = 0,
-	resists = {15,40,15,-1,-1,60,60,-1,-1},
+	resists = {15, 40, 15, -1, -1, 60, 60, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,6 +25,8 @@ laserflit_gang_member = Creature:new {
 	creatureBitmask = PACK + HERD,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/dressed_tatooine_laserflit_hum_f01.iff",
@@ -32,7 +35,8 @@ laserflit_gang_member = Creature:new {
 		"object/mobile/dressed_tatooine_laserflit_hum_m01.iff",
 		"object/mobile/dressed_tatooine_laserflit_hum_m02.iff",
 		"object/mobile/dressed_tatooine_laserflit_itib_m_01.iff"
-		},
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -46,10 +50,18 @@ laserflit_gang_member = Creature:new {
 			}
 		}
 	},
-	weapons = {"blood_razer_weapons"},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "blood_razer_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(pistoleermaster,pikemanmaster,tkamaster,brawlermaster,marksmanmaster),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(pistoleermaster,pikemanmaster,tkamaster,brawlermaster,marksmanmaster)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(laserflit_gang_member, "laserflit_gang_member")

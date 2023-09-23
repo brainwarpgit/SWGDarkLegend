@@ -2,6 +2,7 @@ clone_relics_sawtooth = Creature:new {
 	customName = "Sawtooth",
 	socialGroup = "uller",
 	faction = "",
+	mobType = MOB_HERBIVORE,
 	level = 65,
 	chanceHit = 1,
 	damageMin = 500,
@@ -10,7 +11,7 @@ clone_relics_sawtooth = Creature:new {
 	baseHAM = 13000,
 	baseHAMmax = 14500,
 	armor = 1,
-	resists = {150,150,135,30,-1,150,20,140,-1},
+	resists = {150, 150, 135, 30, -1, 150, 20, 140, -1},
 	meatType = "meat_herbivore",
 	meatAmount = 350,
 	hideType = "hide_leathery",
@@ -25,15 +26,29 @@ clone_relics_sawtooth = Creature:new {
 	creatureBitmask = HERD,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
-
-	templates = {"object/mobile/uller.iff"},
 	scale = 2.5,
-	lootGroups = {},
-	weapons = {},
-	attacks = {
-		{"stunattack",""},	
-		{"knockdownattack",""}
-	}
+	customAiMap = "",
+
+	templates = {
+		"object/mobile/uller.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {
+		{"stunattack", ""},
+		{"knockdownattack", ""}
+	},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(clone_relics_sawtooth, "clone_relics_sawtooth")

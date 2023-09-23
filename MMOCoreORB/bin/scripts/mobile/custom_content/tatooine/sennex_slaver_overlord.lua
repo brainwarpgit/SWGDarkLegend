@@ -2,6 +2,7 @@ sennex_slaver_overlord = Creature:new {
 	customName = "a Sennex slaver overlord",
 	socialGroup = "sennex",
 	faction = "pirate",
+	mobType = MOB_NPC,
 	level = 41,
 	chanceHit = 0.64,
 	damageMin = 345,
@@ -10,7 +11,7 @@ sennex_slaver_overlord = Creature:new {
 	baseHAM = 9300,
 	baseHAMmax = 11300,
 	armor = 1,
-	resists = {0,60,0,0,-1,0,0,-1,-1},
+	resists = {0, 60, 0, 0, -1, 0, 0, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,6 +25,8 @@ sennex_slaver_overlord = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/dressed_black_sun_thug.iff"
@@ -45,10 +48,18 @@ sennex_slaver_overlord = Creature:new {
 			}
 		}
 	},
-	weapons = {"blood_razer_weapons"},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "blood_razer_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermaster,marksmanmaster),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(brawlermaster,marksmanmaster)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(sennex_slaver_overlord, "sennex_slaver_overlord")

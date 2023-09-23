@@ -2,6 +2,7 @@ ep3_mad_wookiee = Creature:new {
 	customName = "a mad Wookiee",
 	socialGroup = "wookiee",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 105,
 	chanceHit = 1.05,
 	damageMin = 1150,
@@ -10,7 +11,7 @@ ep3_mad_wookiee = Creature:new {
 	baseHAM = 80000,
 	baseHAMmax = 90000,
 	armor = 2,
-	resists = {60,60,60,60,60,60,60,60,-1},
+	resists = {60, 60, 60, 60, 60, 60, 60, 60, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,13 +25,26 @@ ep3_mad_wookiee = Creature:new {
 	creatureBitmask = NONE,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/ep3/ep3_mad_wookiee_01.iff"},
-	lootGroups = {},
-	weapons = {"chewbacca_weapons"},
-	conversationTemplate = "",
-	attacks = merge(brawlermaster,marksmanmaster)
+	templates = {
+		"object/mobile/ep3/ep3_mad_wookiee_01.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "chewbacca_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermaster,marksmanmaster),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(ep3_mad_wookiee, "ep3_mad_wookiee")
-

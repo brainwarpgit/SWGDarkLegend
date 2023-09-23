@@ -2,6 +2,7 @@ white_thranta_guard = Creature:new {
 	customName = "a White Thranta security guard",
 	socialGroup = "thug",
 	faction = "thug",
+	mobType = MOB_NPC,
 	level = 10,
 	chanceHit = 0.64,
 	damageMin = 80,
@@ -10,7 +11,7 @@ white_thranta_guard = Creature:new {
 	baseHAM = 290,
 	baseHAMmax = 390,
 	armor = 0,
-	resists = {0,0,0,0,0,0,0,-1,-1},
+	resists = {0, 0, 0, 0, 0, 0, 0, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,12 +25,26 @@ white_thranta_guard = Creature:new {
 	creatureBitmask = NONE,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/dressed_tatooine_opening_wh_guard.iff"},
-	lootGroups = {},
-	weapons = {"ranged_weapons"},
-	conversationTemplate = "",
-	attacks = merge(marksmannovice,brawlernovice)
+	templates = {
+		"object/mobile/dressed_tatooine_opening_wh_guard.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "ranged_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(marksmannovice,brawlernovice),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(white_thranta_guard, "white_thranta_guard")

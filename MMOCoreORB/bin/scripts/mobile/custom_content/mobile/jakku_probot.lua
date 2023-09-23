@@ -3,6 +3,7 @@ jakku_probot = Creature:new {
 	customName = "a Protocol-77 Probot",
 	socialGroup = "death_watch",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 140,
 	chanceHit = 0.31,
 	damageMin = 1500,
@@ -11,7 +12,7 @@ jakku_probot = Creature:new {
 	baseHAM = 1440,
 	baseHAMmax = 1680,
 	armor = 0,
-	resists = {0,0,0,0,0,0,0,-1,-1},
+	resists = {0, 0, 0, 0, 0, 0, 0, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -21,17 +22,26 @@ jakku_probot = Creature:new {
 	milk = 0,
 	tamingChance = 0,
 	ferocity = 0,
-	pvpBitmask =  AGGRESSIVE + ATTACKABLE + ENEMY,
+	pvpBitmask = AGGRESSIVE + ATTACKABLE + ENEMY,
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/probot.iff"},
-	lootGroups = {},
+	templates = {
+		"object/mobile/probot.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "droid_probot_ranged",
+	secondaryWeapon = "none",
 	conversationTemplate = "",
-	weapons = {"droid_probot_ranged"},
-	defaultAttack = "attack",
-
+	defaultAttack = "attack"
 }
 
 CreatureTemplates:addCreatureTemplate(jakku_probot, "jakku_probot")

@@ -1,6 +1,8 @@
 minstyngar = Creature:new {
 	customName = "Minstyngar",
 	socialGroup = "townsperson",
+	faction = "",
+	mobType = MOB_CARNIVORE,
 	level = 400,
 	chanceHit = 500,
 	damageMin = 1800,
@@ -9,7 +11,7 @@ minstyngar = Creature:new {
 	baseHAM = 2050000,
 	baseHAMmax = 2200000,
 	armor = 3,
-	resists = {45,30,45,50,40,30,35,45,35},
+	resists = {45, 30, 45, 50, 40, 30, 35, 45, 35},
 	meatType = "meat_carnivore",
 	meatAmount = 1000,
 	hideType = "hide_leathery",
@@ -24,17 +26,31 @@ minstyngar = Creature:new {
 	optionsBitmask = 128,
 	diet = CARNIVORE,
 	scale = 1,
-	templates = {"object/mobile/minstyngar.iff"},
-	lootGroups = {},
-	weapons = {},
-	conversationTemplate = "",
-	attacks = {
-	    {"creatureareaknockdown","knockdownChance=90"},
-		{"creatureareadisease","stateAccuracyBonus=100"},
-		{"dizzyattack","stateAccuracyBonus=100"},
-		{"strongpoison","stateAccuracyBonus=100"},
-		{"creatureareapoison","stateAccuracyBonus=100"}
-	}
+	customAiMap = "",
+
+	templates = {
+		"object/mobile/minstyngar.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {
+		{"creatureareaknockdown", "knockdownChance=90"},
+		{"creatureareadisease", "stateAccuracyBonus=100"},
+		{"dizzyattack", "stateAccuracyBonus=100"},
+		{"strongpoison", "stateAccuracyBonus=100"},
+		{"creatureareapoison", "stateAccuracyBonus=100"}
+	},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(minstyngar, "minstyngar")
