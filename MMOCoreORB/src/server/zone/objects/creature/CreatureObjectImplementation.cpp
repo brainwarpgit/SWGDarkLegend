@@ -149,6 +149,7 @@ void CreatureObjectImplementation::initializeMembers() {
 	moodID = 0;
 	performanceStartTime = 0;
 	performanceType = 0;
+	tradeTargetID = 0;
 
 	optionsBitmask = 0x80;
 
@@ -514,7 +515,7 @@ void CreatureObjectImplementation::setLevel(int level, bool randomHam) {
 	if (currentGroup != nullptr) {
 		Locker clocker(currentGroup, asCreatureObject());
 
-		currentGroup->calcGroupLevel();
+		currentGroup->calculateGroupLevel();
 	}
 }
 
@@ -1051,7 +1052,9 @@ int CreatureObjectImplementation::inflictDamage(TangibleObject* attacker, int da
 		return 0;
 
 	int currentValue = hamList.get(damageType);
-	int newValue = currentValue - damage;
+	int newValue = currentValue - (int)damage;
+
+	// info(true) << "Inflict Damage: Type = " << damageType << " Damage Amount = " << damage << " Current Value = " << currentValue;
 
 	if (!destroy && newValue <= 0)
 		newValue = 1;
@@ -1750,31 +1753,34 @@ float CreatureObjectImplementation::calculateSpeed() {
 }
 
 void CreatureObjectImplementation::updateLocomotion() {
-	// 0: stationary, 0-walk: slow, walk-run+; fast
-	// the movement table does not seem to want scaling factors...
+	auto creaturePosture = CreaturePosture::instance();
 
-	// This is a "good enough" hysteresis to allow for more fluid transition
-	// between locomotions. It breaks down on posture changes, but it's not
-	// worth accounting for that for something this simple.
-	uint8 oldSpeed = CreaturePosture::instance()->getSpeed(posture, locomotion);
-	float hysteresis = walkSpeed / 10.f * (oldSpeed == CreatureLocomotion::FAST ? -1.f : 1.f);
+	if (creaturePosture == nullptr) {
+		return;
+	}
 
-	if (currentSpeed <= abs(hysteresis))
-		locomotion = CreaturePosture::instance()->getLocomotion(posture, CreatureLocomotion::STATIONARY);
-	else if (currentSpeed <= walkSpeed + hysteresis)
-		locomotion = CreaturePosture::instance()->getLocomotion(posture, CreatureLocomotion::SLOW);
-	else
-		locomotion = CreaturePosture::instance()->getLocomotion(posture, CreatureLocomotion::FAST);
+	float slow = walkSpeed * 0.5f;
+	float fast = ((runSpeed - walkSpeed) * 0.5f) + walkSpeed;
+
+	if (currentSpeed < slow) {
+		locomotion = creaturePosture->getLocomotion(posture, CreatureLocomotion::STATIONARY);
+	} else if (currentSpeed < fast) {
+		locomotion = creaturePosture->getLocomotion(posture, CreatureLocomotion::SLOW);
+	} else {
+		locomotion = creaturePosture->getLocomotion(posture, CreatureLocomotion::FAST);
+	}
 }
 
 UnicodeString CreatureObjectImplementation::getCreatureName() const {
 	return getCustomObjectName();
 }
 
-void CreatureObjectImplementation::updateGroupInviterID(uint64 id,
-		bool notifyClient) {
+void CreatureObjectImplementation::updateGroupInviterID(uint64 id, bool notifyClient) {
 	groupInviterID = id;
 	++groupInviteCounter;
+
+	if (!notifyClient)
+		return;
 
 	CreatureObjectDeltaMessage6* delta = new CreatureObjectDeltaMessage6(asCreatureObject());
 	delta->updateInviterId();
@@ -1783,9 +1789,11 @@ void CreatureObjectImplementation::updateGroupInviterID(uint64 id,
 	broadcastMessage(delta, true);
 }
 
-void CreatureObjectImplementation::updateGroup(GroupObject* grp,
-		bool notifyClient) {
+void CreatureObjectImplementation::updateGroup(GroupObject* grp, bool notifyClient) {
 	group = grp;
+
+	if (!notifyClient)
+		return;
 
 	CreatureObjectDeltaMessage6* delta = new CreatureObjectDeltaMessage6(asCreatureObject());
 	delta->updateGroupID();
@@ -2770,48 +2778,61 @@ void CreatureObjectImplementation::notifyPostureChange(int newPosture) {
 }
 
 void CreatureObjectImplementation::updateGroupMFDPositions() {
-	Reference<CreatureObject*> creo = asCreatureObject();
+	Reference<CreatureObject*> thisCreo = asCreatureObject();
 	auto group = this->group;
 
-	if (group != nullptr) {
-		GroupList* list = group->getGroupList();
-		if (list != nullptr) {
-			auto zone = getZone();
+	if (group == nullptr)
+		return;
 
-			if (zone == nullptr) {
-				return;
-			}
+	auto zone = getZone();
 
-			ClientMfdStatusUpdateMessage* msg = new ClientMfdStatusUpdateMessage(creo, zone->getZoneName());
+	if (zone == nullptr) {
+		return;
+	}
+
+	GroupList* groupList = group->getGroupList();
+
+	if (groupList == nullptr)
+		return;
+
+	ClientMfdStatusUpdateMessage* msg = new ClientMfdStatusUpdateMessage(thisCreo, zone->getZoneName());
+
+	if (msg == nullptr)
+		return;
 
 #ifdef LOCKFREE_BCLIENT_BUFFERS
-			Reference<BasePacket*> pack = msg;
+	Reference<BasePacket*> pack = msg;
 #endif
 
-			for (int i = 0; i < list->size(); i++) {
+	CloseObjectsVector* creatureCloseObjects = (CloseObjectsVector*) getCloseObjects();
+	SortedVector<QuadTreeEntry*> closeObjectsVector;
 
-				Reference<CreatureObject*> member = list->getSafe(i).get();
+	if (creatureCloseObjects == nullptr)
+		return;
 
-				if (member == nullptr || creo == member || !member->isPlayerCreature())
-					continue;
+	creatureCloseObjects->safeCopyReceiversTo(closeObjectsVector, CloseObjectsVector::CREOTYPE);
 
-				CloseObjectsVector* cev = (CloseObjectsVector*)member->getCloseObjects();
+	uint64 creoID = thisCreo->getObjectID();
 
-				if (cev == nullptr || cev->contains(creo.get()))
-					continue;
+	for (int i = 0; i < groupList->size(); i++) {
+		Reference<CreatureObject*> member = groupList->getSafe(i).get();
+
+		if (member == nullptr || creoID == member->getObjectID())
+			continue;
+
+		if (closeObjectsVector.contains(member))
+			continue;
 
 #ifdef LOCKFREE_BCLIENT_BUFFERS
-				member->sendMessage(pack);
+		member->sendMessage(pack);
 #else
-				member->sendMessage(msg->clone());
+		member->sendMessage(msg->clone());
 #endif
-			}
+	}
 
 #ifndef LOCKFREE_BCLIENT_BUFFERS
-			delete msg;
+	delete msg;
 #endif
-		}
-	}
 }
 
 void CreatureObjectImplementation::notifySelfPositionUpdate() {
@@ -3323,6 +3344,8 @@ bool CreatureObjectImplementation::isAttackableBy(CreatureObject* creature, bool
 		uint32 thisFaction = getFaction();
 		uint32 creatureFaction = creature->getFaction();
 
+		bool covertOvert = ConfigManager::instance()->useCovertOvertSystem();
+
 		if (creature->isAiAgent()) {
 			AiAgent* agentCreo = creature->asAiAgent();
 
@@ -3358,9 +3381,15 @@ bool CreatureObjectImplementation::isAttackableBy(CreatureObject* creature, bool
 				if (thisFaction == creatureFaction)
 					return false;
 
-				// Player & Agent both have a GCW Faction & are different. Fail if the faction status of the player is onleave
-				if (creatureFaction != 0 && thisFaction != creatureFaction && getFactionStatus() <= FactionStatus::ONLEAVE) {
-					return false;
+				if (covertOvert) {
+					if (creatureFaction != 0 && thisFaction != creatureFaction && getFactionStatus() != FactionStatus::OVERT && !ghost->hasGcwTef()) {
+						return false;
+					}
+				} else {
+					// Player & Agent both have a GCW Faction & are different. Fail if the faction status of the player is onleave
+					if (creatureFaction != 0 && thisFaction != creatureFaction && getFactionStatus() <= FactionStatus::ONLEAVE) {
+						return false;
+					}
 				}
 			}
 		}
@@ -3406,7 +3435,6 @@ bool CreatureObjectImplementation::isAttackableBy(CreatureObject* creature, bool
 
 			// PvP - Different Factions. Both must be overt status or we return false
 			if (thisFaction != creatureFaction) {
-				bool covertOvert = ConfigManager::instance()->useCovertOvertSystem();
 
 				if (covertOvert) {
 					int thisFactionStatus = getFactionStatus();
@@ -3576,7 +3604,7 @@ int CreatureObjectImplementation::notifyObjectDestructionObservers(TangibleObjec
 }
 
 int CreatureObjectImplementation::notifyObjectKillObservers(TangibleObject* killer) {
-	notifyObservers(ObserverEventType::PLAYERKILLED, killer, 0);
+	notifyObservers(ObserverEventType::PLAYERKILLED, killer, getObjectID());
 
 	return 0;
 }
@@ -3685,16 +3713,21 @@ float CreatureObjectImplementation::calculateCostAdjustment(uint8 stat, float ba
 }
 
 Reference<WeaponObject*> CreatureObjectImplementation::getWeapon() {
-	Reference<WeaponObject*> retWeap = weapon;
-	if (retWeap == nullptr) {
-		retWeap = asCreatureObject()->getDefaultWeapon();
+	Reference<WeaponObject*> retWeapon = weapon;
+
+	if (isAiAgent()) {
+		retWeapon = asAiAgent()->getCurrentWeapon();
 	}
 
-	if (retWeap == nullptr) {
-		Logger::console.info(true) << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << ": " << *_this.getReferenceUnsafeStaticCast();
+	if (retWeapon == nullptr) {
+		retWeapon = getDefaultWeapon();
 	}
 
-	return retWeap;
+	if (retWeapon == nullptr) {
+		info(true) << getDisplayedName() << " ID: " << getObjectID() << "  returning a null weapon - " << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << ": " << *_this.getReferenceUnsafeStaticCast();
+	}
+
+	return retWeapon;
 }
 
 WeaponObject* CreatureObjectImplementation::getDefaultWeapon() {

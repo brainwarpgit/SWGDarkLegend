@@ -332,6 +332,21 @@ lok = {
 mustafar = {
 	weatherEnabled = 0,
 	gcwEnabled = 0,
+
+	planetTravelPoints = {
+		{name = "Mensix Mining Facility", x = 308, z = 0, y = -1130, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1}
+	},
+
+	--[[
+	badgeAreas = {
+	},
+
+	navAreas = {
+	},
+
+	planetObjects = {
+		--{templateFile = "object/tangible/terminal/terminal_character_builder.iff", ox = 0, oy = 0.715602, oz = 0, ow = -0.698509, x = 4824.53, z = 4.17, y = -4704.9, parentid = 0},
+	}]]
 }
 
 naboo = {
@@ -563,7 +578,8 @@ tatooine = {
 		{name = "Anchorhead Shuttleport", x = 47.565128, z = 52, y = -5338.9072, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1},
 		{name = "Mos Entha Spaceport", x = 1266.0996, z = 7, y = 3065.1392, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1},
 		{name = "Mos Entha Shuttle B", x = 1395.447, z = 7, y = 3467.0117, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1},
-		{name = "Mos Entha Shuttle A", x = 1730.8828, z = 7, y = 3184.6135, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1}
+		{name = "Mos Entha Shuttle A", x = 1730.8828, z = 7, y = 3184.6135, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1},
+		{name = "Wayfar Shuttleport", x = -5089.11, z = 74.9, y = -6593.745, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 1}
 	},
 
 	badgeAreas = {

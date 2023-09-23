@@ -175,19 +175,19 @@ tatooine_regions = {
 
 	-- Cities
 	{"@tatooine_region_names:bestine", -1218, -3688, {CIRCLE, 336}, CITY + NOSPAWNAREA},
-	{"@tatooine_region_names:mos_eisley", 3460, -4768, {CIRCLE, 456}, CITY + NOSPAWNAREA},
+	--{"@tatooine_region_names:mos_eisley", 3460, -4768, {CIRCLE, 456}, CITY + NOSPAWNAREA},
 	{"@tatooine_region_names:mos_entha", 1488, 3256, {CIRCLE, 424}, CITY + NOSPAWNAREA},
 	{"@tatooine_region_names:mos_espa", -2940, 2190, {CIRCLE, 533}, CITY + NOSPAWNAREA},
 	{"@tatooine_region_names:mos_taike", 3832, 2360, {CIRCLE, 264}, CITY + NOSPAWNAREA},
 	{"@tatooine_region_names:wayfar", -5174, -6582, {CIRCLE, 230}, CITY + NOSPAWNAREA},
 	{"@tatooine_region_names:anchorhead", 102, -5360, {CIRCLE, 125}, CITY + NOSPAWNAREA},
-	{"bestine_nobuild_1", -1218, -3688, {CIRCLE, 700},  NOBUILDZONEAREA + NOWORLDSPAWNAREA},
-	{"mos_eisley_nobuild_1", 3460, -4768, {CIRCLE, 900}, NOBUILDZONEAREA + NOWORLDSPAWNAREA},
-	{"mos_entha_nobuild_1", 1488, 3256, {CIRCLE, 900}, NOBUILDZONEAREA + NOWORLDSPAWNAREA},
-	{"mos_espa_nobuild_1", -2712, 2464, {CIRCLE, 1100}, NOBUILDZONEAREA + NOWORLDSPAWNAREA},
-	{"mos_taike_nobuild_1", 3832, 2360, {CIRCLE, 500}, NOBUILDZONEAREA + NOWORLDSPAWNAREA},
-	{"wayfar_nobuild_1", -5174, -6582, {CIRCLE, 500}, NOBUILDZONEAREA + NOWORLDSPAWNAREA},
-	{"anchorhead_nobuild_1", 102, -5360, {CIRCLE, 400}, NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"bestine_nobuild_1", -1218, -3688, {CIRCLE, 700},  CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"mos_eisley_nobuild_1", 3460, -4768, {CIRCLE, 900}, CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"mos_entha_nobuild_1", 1488, 3256, {CIRCLE, 900}, CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"mos_espa_nobuild_1", -2712, 2464, {CIRCLE, 1100}, CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"mos_taike_nobuild_1", 3832, 2360, {CIRCLE, 500}, CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"wayfar_nobuild_1", -5174, -6582, {CIRCLE, 500}, CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
+	{"anchorhead_nobuild_1", 102, -5360, {CIRCLE, 400}, CAMPINGAREA + NOBUILDZONEAREA + NOWORLDSPAWNAREA},
 
 	-- Spawn Areas
 	{"@tatooine_region_names:anchorhead_easy_newbie", 0, -5350, {CIRCLE, 500}, SPAWNAREA, {"tatooine_anchorhead_easy_newbie"}, 64},

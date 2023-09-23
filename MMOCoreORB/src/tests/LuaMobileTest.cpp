@@ -466,8 +466,11 @@ TEST_F(LuaMobileTest, LuaMobileTemplatesTest) {
 		if (convoTemplate != 0) {
 			ConversationTemplate* convoTemp = CreatureTemplateManager::instance()->getConversationTemplate(convoTemplate);
 			EXPECT_TRUE( convoTemp != nullptr ) << "Conversation template from " << templateName << " was not found.";
-			EXPECT_TRUE( optionsBitmask & OptionBitmask::CONVERSE ) << templateName << " has a convo template but not the CONVERSE options bit.";
+
+			// Disabling this test. Certain screenplays set the conversable bit after certain events occur and the template is assigned to the mobile.
+			//EXPECT_TRUE( optionsBitmask & OptionBitmask::CONVERSE ) << templateName << " has a convo template but not the CONVERSE options bit.";
 		}
+
 		// Verify that mobs with converse option bit have a convo template
 		if (optionsBitmask & OptionBitmask::CONVERSE) {
 			EXPECT_TRUE( convoTemplate != 0 ) << templateName << " has the CONVERSE options bit but not a convo template.";
@@ -737,6 +740,20 @@ TEST_F(LuaMobileTest, LuaSpawnManagerTest) {
 	zoneNames.add("talus");
 	zoneNames.add("tatooine");
 	zoneNames.add("yavin4");
+
+	zoneNames.add("kashyyyk");
+	zoneNames.add("kashyyyk_hunting");
+	zoneNames.add("kashyyyk_rryatt_trail");
+	zoneNames.add("kashyyyk_south_dungeons");
+	zoneNames.add("kashyyyk_north_dungeons");
+	zoneNames.add("kashyyyk_pob_dungeons");
+	zoneNames.add("kashyyyk_dead_forest");
+	zoneNames.add("mustafar");
+	zoneNames.add("tanaab");
+	zoneNames.add("chandrila");
+	zoneNames.add("hoth");
+	zoneNames.add("mandalore");
+	zoneNames.add("kaas");
 
 	Lua* lua = new Lua();
 	lua->init();
