@@ -42,6 +42,7 @@
 #include "server/zone/managers/collision/NavMeshManager.h"
 
 //#define DEBUG_REGIONS
+//#define DEBUG_TRAVEL
 
 ClientPoiDataTable PlanetManagerImplementation::clientPoiDataTable;
 Mutex PlanetManagerImplementation::poiMutex;
@@ -194,7 +195,7 @@ void PlanetManagerImplementation::loadLuaConfig() {
 	if ((starportLandingTime = lua->getGlobalInt("starportLandingTime")) <= 0)
 		starportLandingTime = 14;
 
-#if DEBUG_TRAVEL
+#ifdef DEBUG_TRAVEL
 	// Allow override in config-local for testing
 	shuttleportAwayTime = ConfigManager::instance()->getInt("Core3.PlanetManager.ShuttleportAwayTime", shuttleportAwayTime);
 	shuttleportLandedTime = ConfigManager::instance()->getInt("Core3.PlanetManager.ShuttleportLandedTime", shuttleportLandedTime);
@@ -671,7 +672,7 @@ void PlanetManagerImplementation::sendPlanetTravelPointListResponse(CreatureObje
 }
 
 PlanetTravelPoint* PlanetManagerImplementation::getNearestPlanetTravelPoint(SceneObject* object, float searchrange) {
-#if DEBUG_TRAVEL
+#ifdef DEBUG_TRAVEL
 	auto callDesc = info(true);
 
 	callDesc << "\033[45;30m" << __FUNCTION__ << "(object="
@@ -684,7 +685,7 @@ PlanetTravelPoint* PlanetManagerImplementation::getNearestPlanetTravelPoint(Scen
 
 	Reference<PlanetTravelPoint*> planetTravelPoint = getNearestPlanetTravelPoint(object->getWorldPosition(), searchrange);
 
-#if DEBUG_TRAVEL
+#ifdef DEBUG_TRAVEL
 
 	if(planetTravelPoint == nullptr)
 		callDesc << "\033[41;30mDID NOT FIND POINT IN RANGE \n";

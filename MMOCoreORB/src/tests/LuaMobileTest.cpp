@@ -741,6 +741,20 @@ TEST_F(LuaMobileTest, LuaSpawnManagerTest) {
 	zoneNames.add("tatooine");
 	zoneNames.add("yavin4");
 
+	zoneNames.add("kashyyyk");
+	zoneNames.add("kashyyyk_hunting");
+	zoneNames.add("kashyyyk_rryatt_trail");
+	zoneNames.add("kashyyyk_south_dungeons");
+	zoneNames.add("kashyyyk_north_dungeons");
+	zoneNames.add("kashyyyk_pob_dungeons");
+	zoneNames.add("kashyyyk_dead_forest");
+	zoneNames.add("mustafar");
+	zoneNames.add("tanaab");
+	zoneNames.add("chandrila");
+	zoneNames.add("hoth");
+	zoneNames.add("mandalore");
+	zoneNames.add("kaas");
+
 	Lua* lua = new Lua();
 	lua->init();
 
