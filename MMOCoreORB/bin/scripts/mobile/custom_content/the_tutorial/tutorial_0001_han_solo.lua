@@ -1,6 +1,7 @@
 tutorial_0001_han_solo = Creature:new {
 	customName = "Han Solo",
 	randomNameTag = false,
+	mobType = MOB_NPC,
 	socialGroup = "townsperson",
 	faction = "townsperson",
 	level = 300,
