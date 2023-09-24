@@ -13,11 +13,10 @@
 
 require("scripts.managers.planet.regions")
 
-mustafar_regions = {
+kashyyyk_north_dungeons_regions = {
 	-- Named Regions, POIs and Decor
 
 	-- Cities
-	{"@mustafar:mensix", 308, -1130, {CIRCLE, 400}, CITY + NOSPAWNAREA},
 
 	--Spawns
 }

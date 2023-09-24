@@ -130,3 +130,8 @@ includeFile("weapon/groups/tusken_weapons.lua")
 
 -- tutorial
 includeFile("weapon/groups/tutorial_bandit.lua")
+
+-- Custom Groups
+includeFile("weapon/custom_groups/general_grievous_weapons.lua")
+includeFile("weapon/custom_groups/nk3_weapons.lua")
+includeFile("weapon/custom_groups/wookiee_weapons.lua")
