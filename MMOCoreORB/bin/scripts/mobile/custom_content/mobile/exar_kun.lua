@@ -3,6 +3,7 @@ exar_kun = Creature:new {
 	randomNameTag = true,
 	socialGroup = "townsperson",
 	faction = "townsperson",
+	mobType = MOB_NPC,
 	level = 131,
 	chanceHit = 4.75,
 	damageMin = 770,
@@ -11,7 +12,7 @@ exar_kun = Creature:new {
 	baseHAM = 50000,
 	baseHAMmax = 61000,
 	armor = 2,
-	resists = {15,200,15,200,200,200,200,200,-1},
+	resists = {15, 200, 15, 200, 200, 200, 200, 200, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -25,12 +26,26 @@ exar_kun = Creature:new {
 	creatureBitmask = HERD,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/exar_kun.iff"},
-	lootGroups = {},
-	weapons = {"dark_jedi_weapons_gen4"},
-	conversationTemplate = "",
-	attacks = merge(fencermid,forcepowermaster,tkamid,lightsabermaster,brawlermaster,forcewielder)
+	templates = {
+		"object/mobile/exar_kun.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "dark_jedi_weapons_gen4",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(fencermid,forcepowermaster,tkamid,lightsabermaster,brawlermaster,forcewielder),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(exar_kun, "exar_kun")

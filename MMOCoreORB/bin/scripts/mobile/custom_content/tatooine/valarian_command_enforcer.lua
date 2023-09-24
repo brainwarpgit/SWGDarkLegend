@@ -2,6 +2,7 @@ valarian_command_enforcer = Creature:new {
 	customName = "Valarian's Command Enforcer",
 	socialGroup = "valarian",
 	faction = "valarian",
+	mobType = MOB_NPC,
 	level = 22,
 	chanceHit = 0.75,
 	damageMin = 185,
@@ -10,7 +11,7 @@ valarian_command_enforcer = Creature:new {
 	baseHAM = 2250,
 	baseHAMmax = 2950,
 	armor = 0,
-	resists = {15,15,10,20,10,10,15,5,-1},
+	resists = {15, 15, 10, 20, 10, 10, 15, 5, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,6 +25,8 @@ valarian_command_enforcer = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/dressed_criminal_assassin_human_female_01.iff",
@@ -33,7 +36,8 @@ valarian_command_enforcer = Creature:new {
 		"object/mobile/dressed_criminal_thug_aqualish_female_02.iff",
 		"object/mobile/dressed_criminal_thug_aqualish_male_01.iff",
 		"object/mobile/dressed_robber_twk_female_01.iff"
-		},
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -43,13 +47,21 @@ valarian_command_enforcer = Creature:new {
 				{group = "loot_kit_parts", chance = 2000000},
 				{group = "printer_parts", chance = 1500000},
 				{group = "valarian_common", chance = 1500000}
-				}
+			}
 		}
 	},
-	weapons = {"pirate_weapons_medium"},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "pirate_weapons_medium",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermid,marksmanmid),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(brawlermid,marksmanmid)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(valarian_command_enforcer, "valarian_command_enforcer")

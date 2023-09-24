@@ -2,6 +2,7 @@ doane_watki = Creature:new {
 	customName = "Doane Watki (Valarian's pod racer champion)",
 	socialGroup = "valarian",
 	faction = "valarian",
+	mobType = MOB_NPC,
 	level = 25,
 	chanceHit = 0.5,
 	damageMin = 230,
@@ -10,7 +11,7 @@ doane_watki = Creature:new {
 	baseHAM = 3000,
 	baseHAMmax = 3800,
 	armor = 0,
-	resists = {115,115,15,10,10,10,15,5,-1},
+	resists = {115, 115, 15, 10, 10, 10, 15, 5, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,8 +25,13 @@ doane_watki = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
-	
-	templates = {"object/mobile/dressed_criminal_thug_human_male_01.iff"},
+	scale = 1,
+	customAiMap = "",
+
+	templates = {
+		"object/mobile/dressed_criminal_thug_human_male_01.iff"
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -38,10 +44,18 @@ doane_watki = Creature:new {
 			}
 		}
 	},
-	weapons = {"pirate_weapons_medium"},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "pirate_weapons_medium",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermid,marksmanmid),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(brawlermid,marksmanmid)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(doane_watki, "doane_watki")

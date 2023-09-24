@@ -2,6 +2,7 @@ sand_slum_pirate = Creature:new {
 	customName = "a Sand Slum pirate",
 	socialGroup = "thug",
 	faction = "thug",
+	mobType = MOB_NPC,
 	level = 36,
 	chanceHit = 0.41,
 	damageMin = 320,
@@ -10,7 +11,7 @@ sand_slum_pirate = Creature:new {
 	baseHAM = 8800,
 	baseHAMmax = 10800,
 	armor = 0,
-	resists = {25,40,40,-1,60,60,-1,25,-1},
+	resists = {25, 40, 40, -1, 60, 60, -1, 25, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,13 +25,16 @@ sand_slum_pirate = Creature:new {
 	creatureBitmask = PACK + KILLER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/dressed_criminal_smuggler_human_male_01.iff",
 		"object/mobile/dressed_criminal_slicer_human_male_01.iff",
 		"object/mobile/dressed_criminal_pirate_human_male_01.iff",
 		"object/mobile/dressed_criminal_assassin_human_male_01.iff"
-		},
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -42,10 +46,18 @@ sand_slum_pirate = Creature:new {
 			}
 		}
 	},
-	weapons = {"blood_razer_weapons"},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "blood_razer_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(pistoleermaster,pikemanmaster,tkamaster,brawlermaster,marksmanmaster),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(pistoleermaster,pikemanmaster,tkamaster,brawlermaster,marksmanmaster)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(sand_slum_pirate, "sand_slum_pirate")

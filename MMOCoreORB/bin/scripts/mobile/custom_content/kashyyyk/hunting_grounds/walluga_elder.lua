@@ -2,6 +2,7 @@ walluga_elder = Creature:new {
 	customName = "a Walluga elder",
 	socialGroup = "walluga",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 70,
 	chanceHit = 0.7,
 	damageMin = 495,
@@ -10,7 +11,7 @@ walluga_elder = Creature:new {
 	baseHAM = 12000,
 	baseHAMmax = 15000,
 	armor = 2,
-	resists = {25,45,-1,45,45,100,45,-1,-1},
+	resists = {25, 45, -1, 45, 45, 100, 45, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,14 +25,26 @@ walluga_elder = Creature:new {
 	creatureBitmask = PACK + HERD,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
-
-	templates = {"object/mobile/walluga.iff"},
-	lootGroups = {},
 	scale = 1.3,
-	weapons = {},
-	conversationTemplate = "",
-	attacks = {
-	}
+	customAiMap = "",
+
+	templates = {
+		"object/mobile/walluga.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(walluga_elder, "walluga_elder")

@@ -2,6 +2,7 @@ som_kenobi_treasure_hunter_corpse_03 = Creature:new {
 	customName = "som_kenobi_treasure_hunter_corpse_03",
 	socialGroup = "townsperson",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 70,
 	chanceHit = 0.27,
 	damageMin = 550,
@@ -10,7 +11,7 @@ som_kenobi_treasure_hunter_corpse_03 = Creature:new {
 	baseHAM = 16000,
 	baseHAMmax = 19000,
 	armor = 0,
-	resists = {0,0,0,0,0,0,0,-1,-1},
+	resists = {0, 0, 0, 0, 0, 0, 0, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,17 +25,26 @@ som_kenobi_treasure_hunter_corpse_03 = Creature:new {
 	creatureBitmask = PACK + STALKER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/som/som_kenobi_treasure_hunter_corpse_03.iff"},
-	lootGroups = {
-		{
-			groups = {},
-			lootChance = 2100000
-		}
+	templates = {
+		"object/mobile/som/som_kenobi_treasure_hunter_corpse_03.iff"
 	},
-	weapons = {"pirate_weapons_light"},
-	conversationTemplate = "",
-	attacks = merge(marksmannovice,brawlernovice)
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "pirate_weapons_light",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(marksmannovice,brawlernovice),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(som_kenobi_treasure_hunter_corpse_03, "som_kenobi_treasure_hunter_corpse_03")

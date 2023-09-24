@@ -1,18 +1,17 @@
 palpatine_hologram = Creature:new {
-	--objectName = "@mob/creature_names:ep3_palpatine_hologram",
 	customName = "Emperor Palpatine Hologram",
 	socialGroup = "townsperson",
-	pvpFaction = "",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 300,
-	chanceHit = 75.00,
+	chanceHit = 75,
 	damageMin = 1800,
 	damageMax = 3310,
 	baseXp = 278490,
 	baseHAM = 721000,
 	baseHAMmax = 1292000,
 	armor = 3,
-	resists = {90,90,90,90,90,90,90,90,90},
+	resists = {90, 90, 90, 90, 90, 90, 90, 90, 90},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -26,12 +25,26 @@ palpatine_hologram = Creature:new {
 	creatureBitmask = KILLER + STALKER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/ep3/palpatine_hologram.iff"},
-		lootGroups = {},	
-	weapons = {"dark_jedi_weapons_gen4"},
-	conversationTemplate = "",
-	attacks = merge(lightsabermaster)
+	templates = {
+		"object/mobile/ep3/palpatine_hologram.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "dark_jedi_weapons_gen4",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(lightsabermaster),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(palpatine_hologram, "palpatine_hologram")

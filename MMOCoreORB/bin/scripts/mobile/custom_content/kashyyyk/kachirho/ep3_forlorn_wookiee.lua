@@ -2,6 +2,7 @@ ep3_forlorn_wookiee = Creature:new {
 	customName = "a forlorn Wookiee",
 	socialGroup = "wookiee",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 45,
 	chanceHit = 0.45,
 	damageMin = 750,
@@ -10,7 +11,7 @@ ep3_forlorn_wookiee = Creature:new {
 	baseHAM = 20000,
 	baseHAMmax = 30000,
 	armor = 2,
-	resists = {60,60,60,60,60,60,60,60,-1},
+	resists = {60, 60, 60, 60, 60, 60, 60, 60, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,6 +25,8 @@ ep3_forlorn_wookiee = Creature:new {
 	creatureBitmask = NONE,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
 		"object/mobile/ep3/ep3_forlorn_wookiee_01.iff",
@@ -31,11 +34,20 @@ ep3_forlorn_wookiee = Creature:new {
 		"object/mobile/ep3/ep3_forlorn_wookiee_03.iff",
 		"object/mobile/ep3/ep3_forlorn_wookiee_04.iff"
 	},
-	lootGroups = {},
-	weapons = {},
-	conversationTemplate = "",
-	attacks = merge(brawlermaster,marksmanmaster)
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermaster,marksmanmaster),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(ep3_forlorn_wookiee, "ep3_forlorn_wookiee")
-

@@ -2,8 +2,8 @@ port = Creature:new {
 	objectName = "",
 	customName = "corellia Travel Port",
 	socialGroup = "Townsperson",
-	pvpFaction = "Townsperson",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 45,
 	chanceHit = 0.47,
 	damageMin = 395,
@@ -12,7 +12,7 @@ port = Creature:new {
 	baseHAM = 9700,
 	baseHAMmax = 11900,
 	armor = 0,
-	resists = {30,30,30,0,30,-1,30,-1,-1},
+	resists = {30, 30, 30, 0, 30, -1, 30, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -26,10 +26,15 @@ port = Creature:new {
 	creatureBitmask = PACK + HEALER,
 	optionsBitmask = INVULNERABLE + INTERESTING,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/dressed_patron_chiss_m_01.iff"},
+	templates = {
+		"object/mobile/dressed_patron_chiss_m_01.iff"
+	},
+
 	lootGroups = {
-	     {
+		{
 			groups = {
 				{group = "junk", chance = 6500000},
 				{group = "nyms_common", chance = 1000000},
@@ -42,7 +47,7 @@ port = Creature:new {
 	},
 	conversationTemplate = "",
 	defaultWeapon = "object/weapon/ranged/droid/droid_droideka_ranged.iff",
-	defaultAttack = "creaturerangedattack",
+	defaultAttack = "creaturerangedattack"
 }
 
 CreatureTemplates:addCreatureTemplate(port, "port")

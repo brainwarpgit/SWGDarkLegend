@@ -1,7 +1,9 @@
 urnsoris_nurse = Creature:new {
 	objectName = "@monster_name:urnsoris_nurse",
+	customName = "",
 	socialGroup = "urnsoris",
 	faction = "",
+	mobType = MOB_HERBIVORE,
 	level = 75,
 	chanceHit = 1,
 	damageMin = 625,
@@ -10,7 +12,7 @@ urnsoris_nurse = Creature:new {
 	baseHAM = 16500,
 	baseHAMmax = 19000,
 	armor = 1,
-	resists = {160,165,160,35,150,140,190,150,-1},
+	resists = {160, 165, 160, 35, 150, 140, 190, 150, -1},
 	meatType = "meat_insect",
 	meatAmount = 25,
 	hideType = "hide_scaley",
@@ -25,14 +27,29 @@ urnsoris_nurse = Creature:new {
 	creatureBitmask = PACK + KILLER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/urnsoris_nurse.iff"},
-	lootGroups = {},
-	weapons = {},
-	conversationTemplate = "",
-	attacks = {
-		{"strongpoison",""},	
-		{"intimidationattack",""}
-	}
+	templates = {
+		"object/mobile/urnsoris_nurse.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "unarmed",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = {
+		{"strongpoison", ""},
+		{"intimidationattack", ""}
+	},
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
+
 CreatureTemplates:addCreatureTemplate(urnsoris_nurse, "urnsoris_nurse")

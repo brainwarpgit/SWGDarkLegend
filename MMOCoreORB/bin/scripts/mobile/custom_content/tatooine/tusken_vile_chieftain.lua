@@ -2,6 +2,7 @@ tusken_vile_chieftain = Creature:new {
 	customName = "a Tusken vile chieftain",
 	socialGroup = "tusken_raider",
 	faction = "tusken_raider",
+	mobType = MOB_NPC,
 	level = 62,
 	chanceHit = 0.62,
 	damageMin = 455,
@@ -10,7 +11,7 @@ tusken_vile_chieftain = Creature:new {
 	baseHAM = 11000,
 	baseHAMmax = 14000,
 	armor = 1,
-	resists = {45,25,0,80,-1,40,-1,0,-1},
+	resists = {45, 25, 0, 80, -1, 40, -1, 0, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,8 +25,13 @@ tusken_vile_chieftain = Creature:new {
 	creatureBitmask = PACK + KILLER + STALKER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/tusken_raider.iff"},
+	templates = {
+		"object/mobile/tusken_raider.iff"
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -40,9 +46,17 @@ tusken_vile_chieftain = Creature:new {
 			}
 		}
 	},
-	weapons = {"tusken_weapons"},
-	conversationTemplate = "",
-	attacks = merge(marksmanmaster,brawlermaster,tkamaster,fencermaster,riflemanmaster)
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "tusken_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(marksmanmaster,brawlermaster,tkamaster,fencermaster,riflemanmaster),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(tusken_vile_chieftain, "tusken_vile_chieftain")

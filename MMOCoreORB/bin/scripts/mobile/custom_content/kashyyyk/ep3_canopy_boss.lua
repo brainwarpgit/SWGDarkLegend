@@ -2,6 +2,7 @@ ep3_canopy_boss = Creature:new {
 	customName = "Big Nworb Yorel the Bad",
 	socialGroup = "canopy_bandit",
 	faction = "",
+	mobType = MOB_NPC,
 	level = 130,
 	chanceHit = 1.33,
 	damageMin = 1800,
@@ -10,7 +11,7 @@ ep3_canopy_boss = Creature:new {
 	baseHAM = 145000,
 	baseHAMmax = 155000,
 	armor = 3,
-	resists = {80,80,80,60,35,55,75,20,-1},
+	resists = {80, 80, 80, 60, 35, 55, 75, 20, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,13 +25,27 @@ ep3_canopy_boss = Creature:new {
 	creatureBitmask = KILLER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
-	templates = {"object/mobile/ep3/ep3_canopy_boss.iff"},
-	lootGroups = {},
-	weapons = {"pirate_weapons_heavy"},
+	templates = {
+		"object/mobile/ep3/ep3_canopy_boss.iff"
+	},
+
+	lootGroups = {
+	},
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "pirate_weapons_heavy",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(brawlermaster,marksmanmaster,commandomaster,bountyhuntermaster),
+	secondaryAttacks = {},
 	conversationTemplate = "",
-	reactionStf = "@npc_reaction/slang",
-	attacks = merge(brawlermaster,marksmanmaster,commandomaster,bountyhuntermaster)
+	reactionStf = "@npc_reaction/slang"
 }
 
 CreatureTemplates:addCreatureTemplate(ep3_canopy_boss, "ep3_canopy_boss")

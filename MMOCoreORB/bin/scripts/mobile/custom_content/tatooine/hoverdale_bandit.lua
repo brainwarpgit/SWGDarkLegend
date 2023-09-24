@@ -2,6 +2,7 @@ hoverdale_bandit = Creature:new {
 	customName = "a Hoverdale bandit",
 	socialGroup = "hoverdale",
 	faction = "hoverdale",
+	mobType = MOB_NPC,
 	level = 65,
 	chanceHit = 0.6,
 	damageMin = 545,
@@ -10,7 +11,7 @@ hoverdale_bandit = Creature:new {
 	baseHAM = 11000,
 	baseHAMmax = 14000,
 	armor = 1,
-	resists = {40,40,25,25,25,25,25,25,-1},
+	resists = {40, 40, 25, 25, 25, 25, 25, 25, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,11 +25,14 @@ hoverdale_bandit = Creature:new {
 	creatureBitmask = PACK + KILLER,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
-				"object/mobile/peacewar_drennic_hunter_f_02.iff",
-				"object/mobile/peacewar_drennic_hunter_m_02.iff"
+		"object/mobile/peacewar_drennic_hunter_f_02.iff",
+		"object/mobile/peacewar_drennic_hunter_m_02.iff"
 	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -77,9 +81,17 @@ hoverdale_bandit = Creature:new {
 			lootChance = 4300000
 		}
 	},
-	weapons = {"mixed_force_weapons"},
-	conversationTemplate = "",
-	attacks = merge(pikemanmaster,brawlermaster)
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "mixed_force_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(pikemanmaster,brawlermaster),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(hoverdale_bandit, "hoverdale_bandit")

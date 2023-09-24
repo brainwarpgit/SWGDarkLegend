@@ -2,6 +2,7 @@ error_prone_battle_droid = Creature:new {
 	customName = "an error-prone battle droid",
 	socialGroup = "thug",
 	faction = "thug",
+	mobType = MOB_NPC,
 	level = 7,
 	chanceHit = 0.46,
 	damageMin = 65,
@@ -10,7 +11,7 @@ error_prone_battle_droid = Creature:new {
 	baseHAM = 290,
 	baseHAMmax = 390,
 	armor = 0,
-	resists = {10,10,10,10,10,10,10,-1,-1},
+	resists = {10, 10, 10, 10, 10, 10, 10, -1, -1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,12 +25,15 @@ error_prone_battle_droid = Creature:new {
 	creatureBitmask = PACK,
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
+	scale = 1,
+	customAiMap = "",
 
 	templates = {
-				"object/mobile/ep3/ep3_rryatt_abandoned_battle_droid_01.iff",
-				"object/mobile/ep3/ep3_rryatt_abandoned_battle_droid_02.iff",
-				"object/mobile/ep3/ep3_rryatt_abandoned_battle_droid_03.iff"
-				},
+		"object/mobile/ep3/ep3_rryatt_abandoned_battle_droid_01.iff",
+		"object/mobile/ep3/ep3_rryatt_abandoned_battle_droid_02.iff",
+		"object/mobile/ep3/ep3_rryatt_abandoned_battle_droid_03.iff"
+	},
+
 	lootGroups = {
 		{
 			groups = {
@@ -41,9 +45,17 @@ error_prone_battle_droid = Creature:new {
 			}
 		}
 	},
-	weapons = {"battle_droid_weapons"},
-	conversationTemplate = "",
-	attacks = merge(marksmannovice,brawlernovice)
+
+	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
+	-- Unarmed should be put on secondary unless the mobile doesn't use weapons, in which case "unarmed" should be put primary and "none" as secondary
+	primaryWeapon = "battle_droid_weapons",
+	secondaryWeapon = "none",
+
+	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
+	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
+	primaryAttacks = merge(marksmannovice,brawlernovice),
+	secondaryAttacks = {},
+	conversationTemplate = ""
 }
 
 CreatureTemplates:addCreatureTemplate(error_prone_battle_droid, "error_prone_battle_droid")
