@@ -28,6 +28,7 @@
 #include "server/zone/objects/player/sui/SuiBoxPage.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/zone/managers/ship/ShipManager.h"
 
 SuiManager::SuiManager() : Logger("SuiManager") {
 	server = nullptr;
@@ -483,10 +484,8 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 				bluefrog->grantJediInitiate(player);
 
 			// Bio-Engineer Testing
-			} else if (templatePath == "ju6d14qq") {
-				bluefrog->giveDnaTestingSet(player, templatePath);
-			} else if (templatePath == "d5j7caq6") {
-				bluefrog->giveDnaTestingSet(player, templatePath);
+			} else if (templatePath.contains("dna_set:")) {
+				bluefrog->giveDnaTestingSet(player, templatePath.subString(8));
 			} else {
 				if (templatePath.length() > 0) {
 					SkillManager::instance()->awardSkill(templatePath, player, true, true, true);
@@ -504,6 +503,13 @@ void SuiManager::handleCharacterBuilderSelectItem(CreatureObject* player, SuiBox
 			player->sendMessage(cbSui->generateMessage());
 
 		} else { // Items
+			if (templatePath.contains("ship/player/")) {
+				player->sendSystemMessage("Creating player ship: " + node->getDisplayName());
+				ShipManager::instance()->createPlayerShip(player, templatePath, true);
+				ghost->addSuiBox(cbSui);
+				return;
+			}
+
 			ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
 
 			if (inventory == nullptr) {

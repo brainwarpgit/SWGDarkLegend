@@ -20,6 +20,7 @@
 #include "engine/orb/db/UpdateModifiedObjectsThread.h"
 #include "engine/orb/db/CommitMasterTransactionThread.h"
 
+
 using namespace engine::db;
 
 //databaseManager->truncateDatabases();
@@ -102,6 +103,8 @@ void ObjectManager::registerObjectTypes() {
 	objectFactory.registerObject<CampSiteActiveArea>(SceneObjectType::CAMPAREA);
 	objectFactory.registerObject<Region>(SceneObjectType::REGIONAREA);
 	objectFactory.registerObject<NavArea>(SceneObjectType::NAVMESHAREA);
+	objectFactory.registerObject<SpaceActiveArea>(SceneObjectType::SPACEACTIVEAREA);
+	objectFactory.registerObject<NebulaArea>(SceneObjectType::NEBULAAREA);
 	objectFactory.registerObject<StaticObject>(SceneObjectType::STATICOBJECT);
 	objectFactory.registerObject<Creature>(SceneObjectType::CREATURE);
 	objectFactory.registerObject<NonPlayerCreatureObject>(SceneObjectType::NPCCREATURE);
@@ -128,7 +131,6 @@ void ObjectManager::registerObjectTypes() {
 	objectFactory.registerObject<RecycleTool>(SceneObjectType::RECYCLETOOL);
 	objectFactory.registerObject<AntiDecayKit>(SceneObjectType::ANTIDECAYKIT);
 	objectFactory.registerObject<CraftingStation>(SceneObjectType::CRAFTINGSTATION);
-	objectFactory.registerObject<TangibleObject>(SceneObjectType::FURNITURE);
 	objectFactory.registerObject<SignObject>(SceneObjectType::SIGN);
 	objectFactory.registerObject<Instrument>(SceneObjectType::INSTRUMENT);
 	objectFactory.registerObject<Food>(SceneObjectType::FOOD);
@@ -146,6 +148,8 @@ void ObjectManager::registerObjectTypes() {
 	objectFactory.registerObject<FsCsObject>(SceneObjectType::FSCSOBJECT);
 	objectFactory.registerObject<FsBuffItem>(SceneObjectType::FSBUFFITEM);
 	objectFactory.registerObject<DeadEyePrototype>(SceneObjectType::DEADEYEPROTOTYPE);
+	objectFactory.registerObject<FurnitureObject>(SceneObjectType::FURNITURE);
+	objectFactory.registerObject<LightObject>(SceneObjectType::LIGHTOBJECT);
 	objectFactory.registerObject<ContractCrate>(SceneObjectType::CONTRACTCRATE);
 	objectFactory.registerObject<SlicingTool>(SceneObjectType::SLICINGTOOL);
 	objectFactory.registerObject<SlicingTool>(SceneObjectType::FLOWANALYZER);
@@ -208,6 +212,7 @@ void ObjectManager::registerObjectTypes() {
 	objectFactory.registerObject<Terminal>(SceneObjectType::SHIPPINGTERMINAL);
 	objectFactory.registerObject<Terminal>(SceneObjectType::INTERACTIVETERMINAL);
 	objectFactory.registerObject<MissionTerminal>(SceneObjectType::MISSIONTERMINAL);
+	objectFactory.registerObject<Terminal>(SceneObjectType::SHIPPERMISSIONS);
 	objectFactory.registerObject<Terminal>(SceneObjectType::BAZAAR);
 	objectFactory.registerObject<Terminal>(SceneObjectType::BANK);
 	objectFactory.registerObject<StartingLocationTerminal>(SceneObjectType::NEWBIETUTORIALTERMINAL);
@@ -234,6 +239,7 @@ void ObjectManager::registerObjectTypes() {
 	objectFactory.registerObject<ResourceDeed>(SceneObjectType::RESOURCEDEED);
 	objectFactory.registerObject<EventPerkDeed>(SceneObjectType::EVENTPERKDEED);
 	objectFactory.registerObject<VetHarvesterDeed>(SceneObjectType::VETHARVESTERDEED);
+	objectFactory.registerObject<ShipDeed>(SceneObjectType::SHIPDEED);
 	objectFactory.registerObject<GroupObject>(SceneObjectType::GROUPOBJECT);
 	objectFactory.registerObject<GuildObject>(SceneObjectType::GUILDOBJECT);
 	objectFactory.registerObject<StimPack>(SceneObjectType::STIMPACK);
@@ -323,24 +329,35 @@ void ObjectManager::registerObjectTypes() {
 	objectFactory.registerObject<PowerupObject>(SceneObjectType::HEAVYWEAPONPOWERUP);
 	objectFactory.registerObject<PowerupObject>(SceneObjectType::MINEPOWERUP);
 	objectFactory.registerObject<PowerupObject>(SceneObjectType::SPECIALHEAVYWEAPONPOWERUP);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPATTACHMENT);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPREACTOR);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPENGINE);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPSHIELDGENERATOR);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPARMOR);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPWEAPON);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPWEAPONCAPACITOR);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPBOOSTER);
+	objectFactory.registerObject<ShipComponent>(SceneObjectType::SHIPATTACHMENT);
+	objectFactory.registerObject<ShipReactorComponent>(SceneObjectType::SHIPREACTOR);
+	objectFactory.registerObject<ShipEngineComponent>(SceneObjectType::SHIPENGINE);
+	objectFactory.registerObject<ShipShieldComponent>(SceneObjectType::SHIPSHIELDGENERATOR);
+	objectFactory.registerObject<ShipArmorComponent>(SceneObjectType::SHIPARMOR);
+	objectFactory.registerObject<ShipWeaponComponent>(SceneObjectType::SHIPWEAPON);
+	objectFactory.registerObject<ShipCapacitorComponent>(SceneObjectType::SHIPWEAPONCAPACITOR);
+	objectFactory.registerObject<ShipBoosterComponent>(SceneObjectType::SHIPBOOSTER);
 	objectFactory.registerObject<Component>(SceneObjectType::SHIPDRIODINTERFACE);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPCHASSIS);
+	objectFactory.registerObject<ShipChassisComponent>(SceneObjectType::SHIPCHASSIS);
 	objectFactory.registerObject<Component>(SceneObjectType::SHIPMISSILE);
 	objectFactory.registerObject<Component>(SceneObjectType::SHIPCOUNTERMEASURE);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPWEAPONLAUNCHER);
-	objectFactory.registerObject<Component>(SceneObjectType::SHIPCOUNTERMEASURELAUNCHER);
+	objectFactory.registerObject<ShipWeaponComponent>(SceneObjectType::SHIPWEAPONLAUNCHER);
+	objectFactory.registerObject<ShipWeaponComponent>(SceneObjectType::SHIPCOUNTERMEASURELAUNCHER);
+	objectFactory.registerObject<TangibleObject>(SceneObjectType::PILOTCHAIR);
+	objectFactory.registerObject<TangibleObject>(SceneObjectType::OPERATIONSCHAIR);
+	objectFactory.registerObject<TangibleObject>(SceneObjectType::TURRETACCESSLADDER);
+	objectFactory.registerObject<TangibleObject>(SceneObjectType::SHIPCONTAINER);
 	objectFactory.registerObject<FactoryCrate>(SceneObjectType::FACTORYCRATE);
-	objectFactory.registerObject<FighterShipObject>(SceneObjectType::SHIPFIGHTER);
-	objectFactory.registerObject<SpaceStationObject>(SceneObjectType::SHIPSTATION);
 	objectFactory.registerObject<TangibleObject>(SceneObjectType::CRYSTAL);
+	objectFactory.registerObject<ShipObject>(SceneObjectType::SHIP);
+	objectFactory.registerObject<FighterShipObject>(SceneObjectType::SHIPFIGHTER);
+	objectFactory.registerObject<ShipObject>(SceneObjectType::SHIPCAPITAL);
+	objectFactory.registerObject<TangibleObject>(SceneObjectType::SPACEOBJECT);
+	objectFactory.registerObject<ShipObject>(SceneObjectType::SHIPTRANSPORT);
+	objectFactory.registerObject<PobShipObject>(SceneObjectType::SHIPPOB);
+	objectFactory.registerObject<MultiPassengerShipObject>(SceneObjectType::SHIPMULTIPASSENGER);
+	objectFactory.registerObject<ShipAiAgent>(SceneObjectType::SHIPAGENT);
+	objectFactory.registerObject<SpaceStationObject>(SceneObjectType::SPACESTATION);
 }
 
 void ObjectManager::updateObjectVersion() {

@@ -66,6 +66,7 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "isFeigningDeath", &LuaCreatureObject::isFeigningDeath},
 		{ "hasState", &LuaCreatureObject::hasState},
 		{ "setState", &LuaCreatureObject::setState},
+		{ "clearState", &LuaCreatureObject::clearState},
 		{ "setLootRights", &LuaCreatureObject::setLootRights},
 		{ "getPosture", &LuaCreatureObject::getPosture},
 		{ "setPosture", &LuaCreatureObject::setPosture},
@@ -157,6 +158,7 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "getWeaponType", &LuaCreatureObject::getWeaponType },
 		{ "attemptPeace", &LuaCreatureObject::attemptPeace },
 		{ "forcePeace", &LuaCreatureObject::forcePeace },
+		{ "isPilotingShip", &LuaCreatureObject::isPilotingShip },
 		{ 0, 0 }
 };
 
@@ -257,18 +259,28 @@ int LuaCreatureObject::isFeigningDeath(lua_State* L) {
 }
 
 int LuaCreatureObject::hasState(lua_State* L) {
-	uint32 state = (uint32) lua_tonumber(L, -1);
+	uint64 state = (uint64) lua_tonumber(L, -1);
 
 	lua_pushnumber(L, realObject->hasState(state));
 	return 1;
 }
 
 int LuaCreatureObject::setState(lua_State* L) {
-	uint32 state = (uint32) lua_tonumber(L, -1);
+	uint64 state = (uint64) lua_tonumber(L, -1);
 
 	Locker locker(realObject);
 
 	realObject->setState(state, true);
+
+	return 0;
+}
+
+int LuaCreatureObject::clearState(lua_State* L) {
+	uint64 state = (uint64) lua_tonumber(L, -1);
+
+	Locker locker(realObject);
+
+	realObject->clearState(state, true);
 
 	return 0;
 }
@@ -1124,22 +1136,24 @@ int LuaCreatureObject::getHealingThreatList(lua_State* L) {
 	lua_newtable(L);
 
 	int count = 0;
+
 	for (int i = 0; i < copyThreatMap.size(); ++i) {
 		ThreatMapEntry* entry = &copyThreatMap.elementAt(i).getValue();
 
-		if (entry->getHeal() > 0) {
-			TangibleObject* healer = copyThreatMap.elementAt(i).getKey();
+		if (entry == nullptr || entry->getHeal() <= 0)
+			continue;
 
-			if (healer == nullptr || !healer->isCreatureObject()) {
-				continue;
-			}
+		TangibleObject* entryTano = copyThreatMap.elementAt(i).getKey();
 
-			CreatureObject* creoHealer = healer->asCreatureObject();
-
-			count++;
-			lua_pushlightuserdata(L, creoHealer);
-			lua_rawseti(L, -2, count);
+		if (entryTano == nullptr || !entryTano->isCreatureObject()) {
+			continue;
 		}
+
+		CreatureObject* creoHealer = entryTano->asCreatureObject();
+
+		count++;
+		lua_pushlightuserdata(L, creoHealer);
+		lua_rawseti(L, -2, count);
 	}
 
 	return 1;
@@ -1298,4 +1312,12 @@ int LuaCreatureObject::forcePeace(lua_State* L) {
 	CombatManager::instance()->forcePeace(realObject);
 
 	return 0;
+}
+
+int LuaCreatureObject::isPilotingShip(lua_State* L) {
+	bool isPiloting = realObject->isPilotingShip();
+
+	lua_pushboolean(L, isPiloting);
+
+	return 1;
 }

@@ -113,7 +113,7 @@ SceneObject* CreatureManagerImplementation::spawnLair(unsigned int lairTemplate,
  	Locker blocker(building);
 
  	building->setFaction(lairTmpl->getFaction());
- 	building->setPvpStatusBitmask(CreatureFlag::ATTACKABLE);
+ 	building->setPvpStatusBitmask(ObjectFlag::ATTACKABLE);
  	building->setOptionsBitmask(0, false);
  	building->setMaxCondition(difficultyLevel * (900 + System::random(200)));
  	building->setConditionDamage(0, false);
@@ -539,18 +539,25 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 	if (destructedObject->isDead())
 		return 1;
 
+	// Agent weapons must be destroyed and nullified. This prevents them being looted and ensures agent is cleaned up by GC
+	if (!destructedObject->isPet()) {
+		destructedObject->destroyAllWeapons();
+	}
+
 	destructedObject->cancelBehaviorEvent();
+	destructedObject->cancelRecoveryEvent();
+	destructedObject->wipeBlackboard();
+
+	destructedObject->clearRunningChain();
+	destructedObject->clearQueueActions(false);
+
 	destructedObject->clearOptionBit(OptionBitmask::INTERESTING);
 	destructedObject->clearOptionBit(OptionBitmask::JTLINTERESTING);
 
+	destructedObject->updateTimeOfDeath();
 	destructedObject->setPosture(CreaturePosture::DEAD, !isCombatAction, !isCombatAction);
 
-	destructedObject->updateTimeOfDeath();
-	destructedObject->wipeBlackboard();
-
 	ManagedReference<PlayerManager*> playerManager = zoneServer->getPlayerManager();
-
-	// lets unlock destructor so we dont get into complicated deadlocks
 
 	// lets copy the damage map before we remove it all
 	ThreatMap* threatMap = destructedObject->getThreatMap();
@@ -560,6 +567,7 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 	auto destructorObjectID = destructor->getObjectID();
 
+	// lets unlock destructor so we dont get into complicated deadlocks
 	if (destructedObject != destructor)
 		destructor->unlock();
 
@@ -636,34 +644,6 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 		SceneObject* creatureInventory = destructedObject->getSlottedObject("inventory");
 
-		// Make sure weapons are destroyed when the agent dies so they can't be looted
-		if (!destructedObject->isPet()) {
-			destructedObject->unequipWeapons();
-
-			WeaponObject* primaryWeap = destructedObject->getPrimaryWeapon();
-
-			if (primaryWeap != nullptr && primaryWeap != destructedObject->getDefaultWeapon()) {
-				Locker locker(primaryWeap, destructedObject);
-				primaryWeap->destroyObjectFromWorld(true);
-			}
-
-			WeaponObject* secondaryWeap = destructedObject->getSecondaryWeapon();
-
-			if (secondaryWeap != nullptr) {
-				Locker locker(secondaryWeap, destructedObject);
-				secondaryWeap->destroyObjectFromWorld(true);
-			}
-
-			WeaponObject* thrownWeap = destructedObject->getThrownWeapon();
-
-			if (thrownWeap != nullptr) {
-				Locker locker(thrownWeap, destructedObject);
-				thrownWeap->destroyObjectFromWorld(true);
-			}
-
-			destructedObject->nullifyWeapons();
-		}
-
 		// Remove any buffs or debuffs from the agent
 		destructedObject->clearBuffs(false, true);
 
@@ -685,8 +665,8 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 			if (lootManager->createLoot(trx, creatureInventory, destructedObject)) {
 				trx.commit(true);
-			} else {
-				trx.abort() << "createLoot failed for ai object.";
+			} else if (trx.isEnabled() && !trx.isAborted()) {
+				trx.abort() << "createLoot failed for ai object for unknown reason.";
 			}
 		}
 
@@ -1167,7 +1147,7 @@ void CreatureManagerImplementation::tame(Creature* creature, CreatureObject* pla
 	creature->setPvpStatusBitmask(0, true);
 
 	creature->clearPatrolPoints();
-	creature->addCreatureFlag(CreatureFlag::STATIONARY);
+	creature->addObjectFlag(ObjectFlag::STATIONARY);
 	creature->setAITemplate();
 
 	Reference<TameCreatureTask*> task = new TameCreatureTask(creature, player, mask, force, adult);
@@ -1196,7 +1176,7 @@ void CreatureManagerImplementation::milk(Creature* creature, CreatureObject* pla
 	creature->setMilkState(BEINGMILKED);
 
 	creature->clearPatrolPoints();
-	creature->addCreatureFlag(CreatureFlag::STATIONARY);
+	creature->addObjectFlag(ObjectFlag::STATIONARY);
 	creature->setAITemplate();
 
 	Reference<MilkCreatureTask*> task = new MilkCreatureTask(creature, player);

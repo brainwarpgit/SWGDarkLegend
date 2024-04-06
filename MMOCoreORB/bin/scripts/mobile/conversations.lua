@@ -129,6 +129,11 @@ includeFile("conversations/themepark/epic_quests/goru_conv.lua")
 includeFile("conversations/themepark/logic/mission_giver_conv.lua")
 includeFile("conversations/themepark/logic/mission_target_conv.lua")
 
+-- Enough Quest
+includeFile("conversations/tasks/enough/acun_solari_conv.lua")
+includeFile("conversations/tasks/enough/ceth_laike_conv.lua")
+
+
 -- ** DUNGEONS **
 
 -- Corellian Corvette
@@ -291,6 +296,16 @@ includeFile("conversations/racetracks/nashalconversation.lua")
 
 -- Space
 includeFile("conversations/space/chassis_dealer_conv.lua")
+includeFile("conversations/space/spacestation_corellia.lua")
+includeFile("conversations/space/spacestation_dantooine.lua")
+includeFile("conversations/space/spacestation_dathomir.lua")
+includeFile("conversations/space/spacestation_endor.lua")
+includeFile("conversations/space/spacestation_lok.lua")
+includeFile("conversations/space/spacestation_naboo.lua")
+includeFile("conversations/space/spacestation_rori.lua")
+includeFile("conversations/space/spacestation_talus.lua")
+includeFile("conversations/space/spacestation_tatooine.lua")
+includeFile("conversations/space/spacestation_yavin4.lua")
 
 -- Record Keepers
 includeFile("conversations/record_keepers/planet_record_keeper_dantooine_conv.lua")

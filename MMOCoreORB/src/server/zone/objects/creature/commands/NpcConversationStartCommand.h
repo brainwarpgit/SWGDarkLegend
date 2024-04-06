@@ -6,10 +6,10 @@
 #define NPCCONVERSATIONSTARTCOMMAND_H_
 
 #include "server/zone/objects/scene/SceneObject.h"
+#include "server/zone/objects/ship/ai/SpaceStationObject.h"
 
 class NpcConversationStartCommand : public QueueCommand {
 public:
-
 	NpcConversationStartCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
 	}
 
@@ -38,39 +38,82 @@ public:
 
 		ManagedReference<SceneObject*> object = zoneServer->getObject(target);
 
-		if (object != nullptr && object->isCreatureObject()) {
-			CreatureObject* agentCreo = cast<CreatureObject*>(object.get());
+		if (object == nullptr)
+			return GENERALERROR;
+
+		if (object->isAiAgent()) {
+			AiAgent* agent = object->asAiAgent();
+
+			if (agent == nullptr)
+				return INVALIDTARGET;
 
 			try {
-				Locker clocker(agentCreo, creature);
+				Locker clocker(agent, creature);
 
 				ValidatedPosition* validPosition = ghost->getLastValidatedPosition();
-				uint64 parentid = validPosition->getParent();
 
-				if (parentid != agentCreo->getParentID()) {
+				if (validPosition == nullptr)
+					return GENERALERROR;
+
+				Vector3 creaturePos = validPosition->getPosition();
+				uint64 playerPaentID = validPosition->getParent();
+
+				Vector3 agentPos = agent->getPosition();
+				uint64 agentParentID = agent->getParentID();
+
+				// No conversing from different cells
+				if (playerPaentID != agentParentID) {
 					return TOOFAR;
 				}
 
-				if (checkDistance(creature, agentCreo, 5)) {
-					ghost->setConversatingCreature(agentCreo);
+				// If the conversing NPC is outdoors, we will acount for distance based on x, y only. LoS also checked below
+				if (agentParentID == 0) {
+					agentPos -= creaturePos;
 
-					if (agentCreo->sendConversationStartTo(creature)) {
-						agentCreo->notifyObservers(ObserverEventType::STARTCONVERSATION, creature);
+					// Calculate the distance squared without use of the z coordinate. We also check LoS below
+					float distanceSq = (agentPos.getX() * agentPos.getX() + agentPos.getY() * agentPos.getY());
+
+					if (distanceSq > 25) {
+						return TOOFAR;
 					}
-				} else {
+				} else if (creaturePos.squaredDistanceTo(agentPos) > 25) {
 					return TOOFAR;
 				}
 
+				// No conversing without LoS
+				if (!CollisionManager::checkLineOfSight(agent, creature)) {
+					return GENERALERROR;
+				}
+
+				ghost->setConversatingObject(agent);
+
+				if (agent->sendConversationStartTo(creature)) {
+					agent->notifyObservers(ObserverEventType::STARTCONVERSATION, creature);
+				}
 			} catch (Exception& e) {
 				e.printStackTrace();
 				creature->error("unreported ObjectControllerMessage::parseNpcStartConversation(creature* creature, Message* pack) exception");
 			}
-		} else {
-			return INVALIDTARGET;
+		} else if (object->isSpaceStation()) {
+			try {
+				SpaceStationObject* spaceStationObj = cast<SpaceStationObject*>(object.get());
+
+				if (spaceStationObj == nullptr)
+					return INVALIDTARGET;
+
+				Locker lock(spaceStationObj, creature);
+
+				ghost->setConversatingObject(spaceStationObj);
+
+				if (spaceStationObj->sendConversationStartTo(creature))
+					spaceStationObj->notifyObservers(ObserverEventType::STARTCONVERSATION, creature);
+			} catch (Exception& e) {
+				e.printStackTrace();
+			}
 		}
+
 		return SUCCESS;
 	}
-
 };
 
-#endif //NPCCONVERSATIONSTARTCOMMAND_H_
+#endif // NPCCONVERSATIONSTARTCOMMAND_H_
