@@ -105,7 +105,7 @@ Core3 = {
 		"talus",
 		"tatooine",
 		"tutorial",
-		"yavin4"
+		"yavin4",
 		-------- NEW CONTENT ZONES -------
 		"chandrila",
 		"coruscant",
@@ -143,7 +143,6 @@ Core3 = {
 		--"umbra",
 		--"watertabletest",
 	},
-
 	-------- SPACE ZONES -------
 	SpaceZonesEnabled = {
 		"space_corellia",
