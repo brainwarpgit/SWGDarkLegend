@@ -16,15 +16,15 @@ void ObjectControllerImplementation::loadCommands() {
 	configManager = new CommandConfigManager(server);
 	queueCommands = new CommandList();
 
-	info("loading queue commands...", true);
+	info(true) << "Loading Queue Commands...";
+
 	configManager->registerSpecialCommands(queueCommands);
 	configManager->loadSlashCommandsFile();
 
-	StringBuffer infoMsg;
-	infoMsg << "loaded " << queueCommands->size() << " commands";
-	info(infoMsg.toString(), true);
+	info(true) << "Loaded " << queueCommands->size() << " total commands";
 
 	adminLog.setLoggingName("AdminCommands");
+
 	StringBuffer fileName;
 	fileName << "log/admin/admin.log";
 	adminLog.setFileLogger(fileName.toString(), true);
@@ -82,9 +82,9 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 		return 0.f;
 	}
 
-	/*StringBuffer infoMsg;
-	infoMsg << "activating queue command 0x" << hex << actionCRC << " " << queueCommand->getQueueCommandName() << " arguments='" << arguments.toString() << "'";
-	object->info(infoMsg.toString(), true);*/
+	float commandTime = queueCommand->getCommandDuration(object, arguments);
+
+	// object->info(true) << "activating queue command -- Name: " << queueCommand->getQueueCommandName() << " arguments = " << arguments.toString() << " Duration: " << commandTime;
 
 	const String& characterAbility = queueCommand->getCharacterAbility();
 
@@ -116,12 +116,11 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 
 	if (queueCommand->requiresAdmin()) {
 		try {
-			if(object->isPlayerCreature()) {
-				Reference<PlayerObject*> ghost =  object->getSlottedObject("ghost").castTo<PlayerObject*>();
+			if (object->isPlayerCreature()) {
+				Reference<PlayerObject*> ghost = object->getSlottedObject("ghost").castTo<PlayerObject*>();
 
 				if (ghost == nullptr || !ghost->hasGodMode() || !ghost->hasAbility(queueCommand->getQueueCommandName())) {
-					adminLog.warning() << object->getDisplayedName() << " attempted to use the '/" << queueCommand->getQueueCommandName()
-							<< "' command without permissions";
+					adminLog.warning() << object->getDisplayedName() << " attempted to use the '/" << queueCommand->getQueueCommandName() << "' command without permissions";
 
 					object->sendSystemMessage("@error_message:insufficient_permissions");
 					object->clearQueueAction(actionCount, 0, 2);
@@ -160,15 +159,15 @@ float ObjectControllerImplementation::activateCommand(CreatureObject* object, un
 		return 0;
 	} else {
 		if (queueCommand->getDefaultPriority() != QueueCommand::IMMEDIATE) {
-			durationTime = queueCommand->getCommandDuration(object, arguments);
+			durationTime = commandTime;
 		}
+
+		// info(true) << "calling onComplete from activateCommand with actionCount: " << actionCount << " Duration Time: " << durationTime;
 
 		queueCommand->onComplete(actionCount, object, durationTime);
 	}
 
-	/*StringBuffer dTime;
-	dTime << "  Final Time = " << durationTime;
-	object->sendSystemMessage(dTime.toString());*/
+	// info(true) << "activateCommand -- Final Time = " << durationTime;
 
 	return durationTime;
 }
@@ -201,6 +200,5 @@ void ObjectControllerImplementation::logAdminCommand(SceneObject* object, const 
 		name = "(null)";
 	}
 
-	adminLog.info() << object->getDisplayedName() << " used '/" << queueCommand->getQueueCommandName()
-								<< "' on " << name << " with params '" << arguments.toString() << "'";
+	adminLog.info() << object->getDisplayedName() << " used '/" << queueCommand->getQueueCommandName() << "' on " << name << " with params '" << arguments.toString() << "'";
 }

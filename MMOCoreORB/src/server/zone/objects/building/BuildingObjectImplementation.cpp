@@ -80,18 +80,6 @@ void BuildingObjectImplementation::createContainerComponent() {
 }
 
 void BuildingObjectImplementation::notifyInsertToZone(Zone* zone) {
-	StringBuffer newName;
-
-	newName << "BuildingObject"
-		<< " 0x" << String::hexvalueOf((int64)getObjectID())
-		<< " owner: " << String::valueOf(getOwnerObjectID())
-		<< " " << String::valueOf((int)getPositionX()) << " " << String::valueOf((int)getPositionY())
-		<< " " << zone->getZoneName()
-		<< " " << String::valueOf((int)getPositionZ())
-		<< " " << getObjectName()->getFullPath();
-
-	setLoggingName(newName.toString());
-
 	StructureObjectImplementation::notifyInsertToZone(zone);
 
 	Locker locker(zone);
@@ -395,6 +383,10 @@ bool BuildingObjectImplementation::isCityBanned(CreatureObject* player) {
 }
 
 bool BuildingObjectImplementation::isAllowedEntry(CreatureObject* player) {
+	if (player == nullptr) {
+		return false;
+	}
+
 	GCWBaseContainerComponent* conComp = containerComponent.castTo<GCWBaseContainerComponent*>();
 
 	if (conComp != nullptr) {
@@ -434,7 +426,7 @@ void BuildingObjectImplementation::notifyObjectInsertedToZone(SceneObject* objec
 	debug("BuildingObjectImplementation::notifyInsertToZone");
 
 	auto closeObjectsVector = getCloseObjects();
-	Vector<QuadTreeEntry*> closeObjects(closeObjectsVector->size(), 10);
+	Vector<TreeEntry*> closeObjects(closeObjectsVector->size(), 10);
 	closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
 
 	for (int i = 0; i < closeObjects.size(); ++i) {
@@ -477,21 +469,56 @@ void BuildingObjectImplementation::notifyObjectInsertedToZone(SceneObject* objec
 	//this->sendTo(object, true);
 }
 
-void BuildingObjectImplementation::notifyInsert(QuadTreeEntry* obj) {
-#if DEBUG_COV
-	if (getObjectID() == 88) { // Theed Cantina
-		info("BuildingObjectImplementation::notifyInsert(" + String::valueOf(obj->getObjectID()) + ")", true);
+void BuildingObjectImplementation::notifyInsert(TreeEntry* object) {
+	auto sceneO = static_cast<SceneObject*>(object);
+	uint64 scnoID = sceneO->getObjectID();
 
-		auto c = static_cast<CreatureObject*>(obj);
+#ifdef DEBUG_COV
+	info(true) << getObjectName() << " - BuildingObjectImplementation::notifyInsert for Object: " << sceneO->getDisplayedName() << " ID: " << sceneO->getObjectID();
+
+	/*
+	if (getObjectID() == 88) { // Theed Cantina
+		info("BuildingObjectImplementation::notifyInsert(" + String::valueOf(scnoID) + ")", true);
+
+		auto c = static_cast<CreatureObject*>(sceneO);
 
 		if (c != nullptr)
 			c->info("BuildingObjectImplementation::notifyInsert into " + String::valueOf(getObjectID()), true);
-	}
+	}*/
 #endif // DEBUG_COV
 
-	auto scno = static_cast<SceneObject*>(obj);
+	// Prevent players that are mounted from being loaded on their own. When their mount loads it will send the player on its own
+	if (sceneO->isPlayerCreature()) {
+		auto player = sceneO->asCreatureObject();
 
-	bool objectInThisBuilding = scno->getRootParent() == asBuildingObject();
+		if (player != nullptr && player->isRidingMount()) {
+#ifdef DEBUG_COV
+			// Theed Medical Center & Theed Cloning Facility
+			if (((getObjectID() == 1697358) || (getObjectID() == 1697350) || !isClientObject()) && ((sceneO->isPlayerCreature() || sceneO->isVehicleObject())))
+				info(true) << "Blocked the adding of player that is riding mount: " << sceneO->getDisplayedName();
+#endif // DEBUG_COV
+			return;
+		}
+	}
+
+#ifdef DEBUG_COV
+	// Theed Medical Center & Theed Cloning Facility
+	if (((getObjectID() == 1697358) || (getObjectID() == 1697350) || !isClientObject()) && ((sceneO->isPlayerCreature() || sceneO->isVehicleObject())))
+		info(true) << "notifyInsert for Object: " << sceneO->getDisplayedName() << " ID: " << sceneO->getObjectID();
+#endif // DEBUG_COV
+
+	uint64 sceneObjRootID = 0;
+	auto sceneObjRootPar = sceneO->getRootParent();
+
+	if (sceneObjRootPar != nullptr) {
+		sceneObjRootID = sceneObjRootPar->getObjectID();
+	}
+
+	/* Always notify insertion of objects if the building is:
+	*	- Static stucture (NPC Cities) always load their contents
+	*	- Objects that are already in the same building, scene Object Root ID is the same as this building
+	*/
+	bool shouldLoad = isStaticBuilding() || (sceneObjRootID == getObjectID());
 
 	for (int i = 0; i < cells.size(); ++i) {
 		auto& cell = cells.get(i);
@@ -503,26 +530,37 @@ void BuildingObjectImplementation::notifyInsert(QuadTreeEntry* obj) {
 			for (int j = 0; j < cell->getContainerObjectsSize(); ++j) {
 				auto child = cell->getContainerObject(j);
 
-				if (child != obj && child != nullptr) {
-					if ((objectInThisBuilding || (child->isCreatureObject() && isPublicStructure())) || isStaticBuilding()) {
-						if (child->getCloseObjects() != nullptr)
-							child->addInRangeObject(obj, false);
-						else
-							child->notifyInsert(obj);
+				// Don't send child to itself every time a new object is inserted in range
+				if (child == nullptr || child->getObjectID() == scnoID)
+					continue;
 
-						child->sendTo(scno, true, false);
+				if (shouldLoad || (child->isCreatureObject() && isPublicStructure())) {
+#ifdef DEBUG_COV
+					// Theed Medical Center & Theed Cloning Facility
+					if (((getObjectID() == 1697358) || (getObjectID() == 1697350) || !isClientObject()) && child->isPlayerCreature() && (sceneO->isPlayerCreature() || sceneO->isVehicleObject()))
+						info(true) << child->getDisplayedName() << " - adding to inRangeObjects for Entry Object: " << sceneO->getDisplayedName();
+#endif // DEBUG_COV
 
-						if (scno->getCloseObjects() != nullptr)
-							scno->addInRangeObject(child, false);
-						else
-							scno->notifyInsert(child);
-
-						if (scno->getParent() != nullptr)
-							scno->sendTo(child, true, false);
-					} else if (!scno->isCreatureObject() && !child->isCreatureObject()) {
-						child->notifyInsert(obj);
-						obj->notifyInsert(child);
+					if (child->getCloseObjects() != nullptr) {
+						child->addInRangeObject(object, false);
+					} else {
+						child->notifyInsert(object);
 					}
+
+					child->sendTo(sceneO, true, false);
+
+					if (sceneO->getCloseObjects() != nullptr) {
+						sceneO->addInRangeObject(child, false);
+					} else {
+						sceneO->notifyInsert(child);
+					}
+
+					if (sceneO->getParent() != nullptr) {
+						sceneO->sendTo(child, true, false);
+					}
+				} else if (!sceneO->isCreatureObject() && !child->isCreatureObject()) {
+					child->notifyInsert(object);
+					object->notifyInsert(child);
 				}
 			}
 		} catch (Exception& e) {
@@ -532,17 +570,37 @@ void BuildingObjectImplementation::notifyInsert(QuadTreeEntry* obj) {
 	}
 }
 
-void BuildingObjectImplementation::notifyDissapear(QuadTreeEntry* obj) {
-#if DEBUG_COV
-	if (getObjectID() == 88) { // Theed Cantina
-		info("BuildingObjectImplementation::notifyDissapear(" + String::valueOf(obj->getObjectID()) + ")", true);
+void BuildingObjectImplementation::notifyDissapear(TreeEntry* object) {
+	auto sceneO = static_cast<SceneObject*>(object);
+	uint64 scnoID = sceneO->getObjectID();
 
-		auto c = static_cast<CreatureObject*>(obj);
+#ifdef DEBUG_COV
+	info(true) << getObjectName() << " - BuildingObjectImplementation::notifyDissapear for Object: " << sceneO->getDisplayedName() << " ID: " << sceneO->getObjectID();
+
+	/*
+	if (getObjectID() == 88) { // Theed Cantina
+		info("BuildingObjectImplementation::notifyDissapear(" + String::valueOf(scnoID) + ")", true);
+
+		auto c = static_cast<CreatureObject*>(object);
 
 		if (c != nullptr)
 			c->info("BuildingObjectImplementation::notifyDissapear from " + String::valueOf(getObjectID()), true);
-	}
+	}*/
 #endif // DEBUG_COV
+
+	// Prevent players that are mounted from being loaded on their own. When their mount loads it will send the player on its own
+	if (sceneO->isPlayerCreature()) {
+		auto player = sceneO->asCreatureObject();
+
+		if (player != nullptr && player->isRidingMount()) {
+#ifdef DEBUG_COV
+			// Theed Medical Center & Theed Cloning Facility
+			if (((getObjectID() == 1697358) || (getObjectID() == 1697350) || !isClientObject()) && ((sceneO->isPlayerCreature() || sceneO->isVehicleObject())))
+				info(true) << "Blocked the removing of player that is riding mount: " << sceneO->getDisplayedName();
+#endif // DEBUG_COV
+			return;
+		}
+	}
 
 	for (int i = 0; i < cells.size(); ++i) {
 		auto& cell = cells.get(i);
@@ -550,23 +608,31 @@ void BuildingObjectImplementation::notifyDissapear(QuadTreeEntry* obj) {
 		if (!cell->isContainerLoaded())
 			continue;
 
-		try
-		{
+		try {
 			for (int j = 0; j < cell->getContainerObjectsSize(); ++j) {
 				auto child = cell->getContainerObject(j);
 
-				if (child == nullptr)
+				// Child should not remove itself
+				if (child == nullptr || child->getObjectID() == scnoID)
 					continue;
 
-				if (child->getCloseObjects() != nullptr)
-					child->removeInRangeObject(obj);
-				else
-					child->notifyDissapear(obj);
+#ifdef DEBUG_COV
+				// Theed Medical Center & Theed Cloning Facility
+				if (((getObjectID() == 1697358) || (getObjectID() == 1697350) || !isClientObject()) && child->isPlayerCreature() && (sceneO->isPlayerCreature() || sceneO->isVehicleObject()))
+					info(true) << child->getDisplayedName() << " - removing inRangeObject Entry Object: " << sceneO->getDisplayedName();
+#endif // DEBUG_COV
 
-				if (obj->getCloseObjects() != nullptr)
-					obj->removeInRangeObject(child);
-				else
-					obj->notifyDissapear(child);
+				if (child->getCloseObjects() != nullptr) {
+					child->removeInRangeObject(object);
+				} else {
+					child->notifyDissapear(object);
+				}
+
+				if (object->getCloseObjects() != nullptr) {
+					object->removeInRangeObject(child);
+				} else {
+					object->notifyDissapear(child);
+				}
 			}
 		} catch (const Exception& exception) {
 			warning("could not remove all container objects in BuildingObject::notifyDissapear");
@@ -576,7 +642,7 @@ void BuildingObjectImplementation::notifyDissapear(QuadTreeEntry* obj) {
 	}
 }
 
-void BuildingObjectImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
+void BuildingObjectImplementation::notifyPositionUpdate(TreeEntry* entry) {
 #if ! COV_BUILDING_QUAD_RANGE
 	StructureObjectImplementation::notifyPositionUpdate(entry);
 	return;
@@ -591,7 +657,6 @@ void BuildingObjectImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
 			c->info("BuildingObjectImplementation::notifyPositionUpdate to " + String::valueOf(getObjectID()), true);
 	}
 #endif // DEBUG_COV_VERBOSE
-
 	auto scno = static_cast<SceneObject*>(entry);
 
 	bool objectInThisBuilding = scno->getRootParent() == asBuildingObject();
@@ -631,17 +696,17 @@ void BuildingObjectImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
 #endif // COV_BUILDING_QUAD_RANGE
 }
 
-void BuildingObjectImplementation::insert(QuadTreeEntry* entry) {
+void BuildingObjectImplementation::insert(TreeEntry* entry) {
 	//return;
 }
 
-void BuildingObjectImplementation::remove(QuadTreeEntry* entry) {
+void BuildingObjectImplementation::remove(TreeEntry* entry) {
 }
 
-void BuildingObjectImplementation::update(QuadTreeEntry* entry) {
+void BuildingObjectImplementation::update(TreeEntry* entry) {
 }
 
-void BuildingObjectImplementation::inRange(QuadTreeEntry* entry, float range) {
+void BuildingObjectImplementation::inRange(TreeEntry* entry, float range) {
 }
 
 void BuildingObjectImplementation::addCell(CellObject* cell, uint32 cellNumber) {
@@ -746,7 +811,7 @@ void BuildingObjectImplementation::destroyObjectFromDatabase(
 void BuildingObjectImplementation::broadcastCellPermissions() {
 	CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) getCloseObjects();
 
-	SortedVector<QuadTreeEntry*> closeObjects;
+	SortedVector<TreeEntry*> closeObjects;
 	closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
 
 	for (int i = 0; i < closeObjects.size(); ++i) {
@@ -774,7 +839,7 @@ void BuildingObjectImplementation::broadcastCellPermissions(uint64 objectid) {
 
 	CloseObjectsVector* closeObjectsVector = getCloseObjects();
 
-	SortedVector<QuadTreeEntry*> closeObjects;
+	SortedVector<TreeEntry*> closeObjects;
 	closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
 
 	for (int i = 0; i < closeObjects.size(); ++i) {
@@ -832,6 +897,8 @@ void BuildingObjectImplementation::onEnter(CreatureObject* player) {
 	if (player == nullptr || !player->isPlayerCreature())
 		return;
 
+	// info(true) << "BuildingObjectImplementation::onEnter -- Building ID: " << getObjectID() << " Player: " << player->getDisplayedName();
+
 	if (getZone() == nullptr)
 		return;
 
@@ -839,6 +906,7 @@ void BuildingObjectImplementation::onEnter(CreatureObject* player) {
 
 	Locker accessLock(&paidAccessListMutex);
 
+	// Player GCW Bases, check for player entry permissions
 	if (isGCWBase() && factionBaseType != GCWManager::STATICFACTIONBASE) {
 		if (!checkContainerPermission(player, ContainerPermissions::WALKIN)) {
 			ejectObject(player);
@@ -846,6 +914,7 @@ void BuildingObjectImplementation::onEnter(CreatureObject* player) {
 		}
 	}
 
+	// Jedi Enclaves, ensure player has proper permissions to enter
 	EnclaveContainerComponent* encComp = containerComponent.castTo<EnclaveContainerComponent*>();
 
 	if (encComp != nullptr && !encComp->checkContainerPermission(asBuildingObject(), player, ContainerPermissions::WALKIN)) {
@@ -853,6 +922,7 @@ void BuildingObjectImplementation::onEnter(CreatureObject* player) {
 		return;
 	}
 
+	// Handle buildings with access fees
 	if (accessFee > 0 && !isOnEntryList(player)) {
 		//thread safety issues!
 		if (paidAccessList.contains(player->getObjectID())) {
@@ -876,32 +946,79 @@ void BuildingObjectImplementation::onEnter(CreatureObject* player) {
 		}
 	}
 
+	// Trigger building entry observer
 	notifyObservers(ObserverEventType::ENTEREDBUILDING, player, 0);
 
-	//If they are inside, and aren't allowed to be, then kick them out!
-	if (!isClientObject() && (!isAllowedEntry(player) || isCondemned())) {
-		ejectObject(player);
-
-		//TODO: Redo this.
-		if (isCondemned()) {
-			//Handle condemned messages.
-			//CreatureObject* owner = getOwnerCreatureObject();
-			uint64 ownerOid = getOwnerObjectID();
-
-			if (ownerOid == player->getObjectID()) {
-				StructureManager::instance()->promptPayUncondemnMaintenance(player, asBuildingObject());
-			} else {
-				//Other player than the owner trying to enter the building.
-				StringIdChatParameter message("@player_structure:structure_condemned_not_owner");
-				player->sendSystemMessage(message);
-			}
-		}
+	// Handle player & civic structures below
+	if (isClientObject()) {
+		return;
 	}
 
-	if (isCivicStructure() && isCityBanned(player)) {
-		ejectObject(player);
+	if (isCondemned()) {
+		// Handle condemned message
+		uint64 ownerOid = getOwnerObjectID();
 
+		if (ownerOid == player->getObjectID()) {
+			StructureManager::instance()->promptPayUncondemnMaintenance(player, asBuildingObject());
+		} else {
+			//Other player than the owner trying to enter the building.
+			StringIdChatParameter message("@player_structure:structure_condemned_not_owner");
+			player->sendSystemMessage(message);
+		}
+
+		ejectObject(player);
+		return;
+	// Player is not allowed to enter the building
+	} else if (!isAllowedEntry(player)) {
+		ejectObject(player);
+		return;
+	// Player is city banned from the city that this building belongs to
+	} else if (isCivicStructure() && isCityBanned(player)) {
+		ejectObject(player);
 		player->sendSystemMessage("@city/city:youre_city_banned"); // you are banned from this city and may not use any of its public services and structures
+
+		return;
+	}
+
+	// Player has entered the structure. Load objects in the structure for the player
+	Reference<CreatureObject*> playerRef = player;
+
+	for (int i = 0; i < cells.size(); ++i) {
+		auto& cell = cells.get(i);
+
+		if (cell == nullptr)
+			continue;
+
+		Core::getTaskManager()->scheduleTask([playerRef, cell] () {
+			if (playerRef == nullptr || cell == nullptr)
+				return;
+
+			uint64 playerID = playerRef->getObjectID();
+
+			// cell->info(true) << "Loading Cell ID: " << cell->getObjectID() << " for player " << playerRef->getDisplayedName();
+
+			for (int j = 0; j < cell->getContainerObjectsSize(); ++j) {
+				auto child = cell->getContainerObject(j);
+
+				if (child == nullptr || child->getObjectID() == playerID)
+					continue;
+
+				if (child->getCloseObjects() != nullptr)
+					child->addInRangeObject(playerRef, false);
+				else
+					child->notifyInsert(playerRef);
+
+				child->sendTo(playerRef, true, false);
+
+				if (playerRef->getCloseObjects() != nullptr)
+					playerRef->addInRangeObject(child, false);
+				else
+					playerRef->notifyInsert(child);
+
+				if (playerRef->getParent() != nullptr)
+					playerRef->sendTo(child, true, false);
+			}
+		}, "LoadBuildingLambda", i * 200);
 	}
 }
 
@@ -1584,7 +1701,7 @@ void BuildingObjectImplementation::spawnChildCreaturesFromTemplate() {
 				ai->setRespawnTimer(child->getRespawnTimer());
 
 				if (isGCWBase()) {
-					if (getPvpStatusBitmask() & CreatureFlag::OVERT) {
+					if (getPvpStatusBitmask() & ObjectFlag::OVERT) {
 						creature->setFactionStatus(FactionStatus::OVERT);
 					} else {
 						creature->setFactionStatus(FactionStatus::COVERT);

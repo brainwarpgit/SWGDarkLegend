@@ -490,6 +490,10 @@ namespace conf {
 			return getSortedStringVector("Core3.ZonesEnabled");
 		}
 
+		const SortedVector<String>& getEnabledSpaceZones() {
+			return getSortedStringVector("Core3.SpaceZonesEnabled");
+		}
+
 		inline int getPurgeDeletedCharacters() {
 			return getInt("Core3.PurgeDeletedCharacters", 10); // In minutes
 		}
@@ -742,6 +746,19 @@ namespace conf {
 			}
 
 			return cachedSpawnRange;
+		}
+
+		inline bool getLootDebugAttributes() {
+			static uint32 cachedVersion = 0;
+			static bool cachedValue;
+
+			if (configVersion.get() > cachedVersion) {
+				Locker guard(&mutex);
+				cachedValue = getBool("Core3.LootManager.DebugAttributes", false);
+				cachedVersion = configVersion.get();
+			}
+
+			return cachedValue;
 		}
 	};
 }

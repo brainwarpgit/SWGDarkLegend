@@ -23,6 +23,8 @@
 
 #include "server/zone/ZoneClientSession.h"
 #include "server/zone/Zone.h"
+#include "server/zone/GroundZone.h"
+#include "server/zone/SpaceZone.h"
 #include "server/zone/ZoneServer.h"
 
 #include "variables/StringId.h"
@@ -32,12 +34,16 @@
 #include "server/zone/objects/building/BuildingObject.h"
 #include "templates/ChildObject.h"
 #include "templates/appearance/MeshAppearanceTemplate.h"
-#include "server/zone/objects/scene/components/ZoneComponent.h"
+#include "server/zone/objects/scene/components/GroundZoneComponent.h"
+#include "server/zone/objects/scene/components/SpaceZoneComponent.h"
 #include "server/zone/objects/scene/components/ObjectMenuComponent.h"
 #include "server/zone/objects/scene/components/LuaObjectMenuComponent.h"
 #include "server/zone/objects/scene/components/ContainerComponent.h"
 #include "server/zone/objects/scene/components/LuaContainerComponent.h"
 #include "server/zone/objects/scene/SceneObjectType.h"
+#include "server/zone/objects/ship/ShipObject.h"
+#include "server/zone/objects/ship/ai/SpaceStationObject.h"
+#include "server/zone/objects/ship/PobShipObject.h"
 //#include "PositionUpdateTask.h"
 
 #include "variables/ContainerPermissions.h"
@@ -60,12 +66,19 @@ void SceneObjectImplementation::initializeTransientMembers() {
 	if (templateObject != nullptr) {
 		createContainerComponent();
 
-		String zoneComponentClassName = templateObject->getZoneComponent();
-		zoneComponent = ComponentManager::instance()->getComponent<ZoneComponent*>(zoneComponentClassName);
+		String zoneComponentClassName = templateObject->getGroundZoneComponent();
+		String spaceZoneComponentClassName = templateObject->getSpaceZoneComponent();
 
-		if (zoneComponent == nullptr) {
-			zoneComponent = ComponentManager::instance()->getComponent<ZoneComponent*>("ZoneComponent");
-		}
+		//Logger::console.info("zone class name is: " + zoneComponentClassName + " for " + String::valueOf(getObjectName()), true);
+
+		groundZoneComponent = ComponentManager::instance()->getComponent<GroundZoneComponent*>(zoneComponentClassName);
+		spaceZoneComponent = ComponentManager::instance()->getComponent<SpaceZoneComponent*>(spaceZoneComponentClassName);
+
+		if (groundZoneComponent == nullptr)
+			groundZoneComponent = ComponentManager::instance()->getComponent<GroundZoneComponent*>("GroundZoneComponent");
+
+		if (spaceZoneComponent == nullptr)
+			spaceZoneComponent = ComponentManager::instance()->getComponent<SpaceZoneComponent*>("SpaceZoneComponent");
 
 		createObjectMenuComponent();
 	}
@@ -108,6 +121,9 @@ void SceneObjectImplementation::initializePrivateData() {
 
 	planetMapCategory = 0;
 	planetMapSubCategory = 0;
+
+	mapCategoryName = "";
+	mapSubCategoryName = "";
 
 	gameObjectType = 0;
 
@@ -158,11 +174,15 @@ void SceneObjectImplementation::loadTemplateData(SharedObjectTemplate* templateD
 		templateData->getAppearanceTemplate();
 	}
 
-	if (templateData->getPlanetMapCategory() != nullptr)
+	if (templateData->getPlanetMapCategory() != nullptr) {
+		mapCategoryName = templateData->getPlanetMapCategory()->getName();
 		planetMapCategory = templateData->getPlanetMapCategory()->getCrc();
+	}
 
-	if (templateData->getPlanetMapSubCategory() != nullptr)
+	if (templateData->getPlanetMapSubCategory() != nullptr) {
+		mapSubCategoryName = templateData->getPlanetMapSubCategory()->getName();
 		planetMapSubCategory = templateData->getPlanetMapSubCategory()->getCrc();
+	}
 
 	templateObject = templateData;
 
@@ -180,10 +200,17 @@ void SceneObjectImplementation::loadTemplateData(SharedObjectTemplate* templateD
 }
 
 void SceneObjectImplementation::setZoneComponent(const String& name) {
-	if(name.isEmpty())
+	if (name.isEmpty())
 		return;
 
-	zoneComponent = ComponentManager::instance()->getComponent<ZoneComponent*>(name);
+	groundZoneComponent = ComponentManager::instance()->getComponent<GroundZoneComponent*>(name);
+}
+
+void SceneObjectImplementation::setSpaceZoneComponent(const String& name) {
+	if (name.isEmpty())
+		return;
+
+	spaceZoneComponent = ComponentManager::instance()->getComponent<SpaceZoneComponent*>(name);
 }
 
 void SceneObjectImplementation::createContainerComponent() {
@@ -196,13 +223,14 @@ void SceneObjectImplementation::createObjectMenuComponent() {
 
 void SceneObjectImplementation::createComponents() {
 	if (templateObject != nullptr) {
-		String zoneComponentClassName = templateObject->getZoneComponent();
-		zoneComponent = ComponentManager::instance()->getComponent<ZoneComponent*>(zoneComponentClassName);
-		//zoneComponent->initialize(_this.getReferenceUnsafe());
+		String zoneComponentClassName = templateObject->getGroundZoneComponent();
+		groundZoneComponent = ComponentManager::instance()->getComponent<GroundZoneComponent*>(zoneComponentClassName);
 
-		if (zoneComponent == nullptr) {
-			info() << "zone component \'" << zoneComponentClassName << "\' null in " <<
-			       	templateObject->getFullTemplateString();
+		String spaceZoneComponentClassName = templateObject->getSpaceZoneComponent();
+		spaceZoneComponent = ComponentManager::instance()->getComponent<SpaceZoneComponent*>(spaceZoneComponentClassName);
+
+		if (groundZoneComponent == nullptr) {
+			info() << "ground zone component \'" << zoneComponentClassName << "\' null in " << templateObject->getFullTemplateString();
 		}
 
 		createObjectMenuComponent();
@@ -221,9 +249,11 @@ void SceneObjectImplementation::createComponents() {
 	} else
 		error("nullptr TEMPLATE OBJECT");
 
-	if (zoneComponent == nullptr) {
-		zoneComponent = ComponentManager::instance()->getComponent<ZoneComponent*>("ZoneComponent");
-	}
+	if (groundZoneComponent == nullptr)
+		groundZoneComponent = ComponentManager::instance()->getComponent<GroundZoneComponent*>("GroundZoneComponent");
+
+	if (spaceZoneComponent == nullptr)
+		spaceZoneComponent = ComponentManager::instance()->getComponent<SpaceZoneComponent*>("SpaceZoneComponent");
 }
 
 void SceneObjectImplementation::close(SceneObject* client) {
@@ -316,11 +346,15 @@ void SceneObjectImplementation::sendTo(SceneObject* player, bool doClose, bool f
 	if ((isClientObject() && !forceSend) || !sendToClient || player == nullptr || player->getClient() == nullptr)
 		return;
 
-	/*StringBuffer msgInfo;
-	if (parent != nullptr)
-		msgInfo << "with parent " << getParent()->getLoggingName() << " ";
-	msgInfo << "sending 0x" << hex << getClientObjectCRC() << " to " << player->getLoggingName();
-	info(msgInfo.toString(), true);*/
+
+	/*
+	if (isVehicleObject() || isPlayerCreature()) {
+		StringBuffer msgInfo;
+		msgInfo << getDisplayedName() << " sendTo --- Parent: ";
+		msgInfo << (getParent().get() != nullptr ? getParent().get()->getDisplayedName() : "nullptr") << " ";
+		msgInfo << " ID: " << getObjectID() << " to " << player->getDisplayedName();
+		info(true)  << msgInfo.toString();
+	}*/
 
 	BaseMessage* msg = new SceneObjectCreateMessage(asSceneObject());
 	player->sendMessage(msg);
@@ -471,7 +505,7 @@ void SceneObjectImplementation::sendSlottedObjectsTo(SceneObject* player) {
 		SceneObject* object = slotted.get(i);
 
 		if (objects.put(object->getObjectID()) != -1) {
-			if (object->isInQuadTree()) {
+			if (object->isInQuadTree() || object->isInOctree()) {
 				notifyInsert(object);
 			} else {
 				object->sendTo(player, true, false);
@@ -492,7 +526,7 @@ void SceneObjectImplementation::sendContainerObjectsTo(SceneObject* player, bool
 			if (containerObject == nullptr)
 				continue;
 
-			if (containerObject->isInQuadTree()) {
+			if (containerObject->isInQuadTree() || containerObject->isInOctree()) {
 				notifyInsert(containerObject);
 			} else {
 				containerObject->sendTo(player, true, false);
@@ -557,7 +591,7 @@ void SceneObjectImplementation::broadcastObjectPrivate(SceneObject* object, Scen
 	if (zone == nullptr)
 		return;
 
-	SortedVector<QuadTreeEntry*> closeSceneObjects;
+	SortedVector<TreeEntry*> closeSceneObjects;
 
 	int maxInRangeObjectCount = 0;
 
@@ -565,7 +599,7 @@ void SceneObjectImplementation::broadcastObjectPrivate(SceneObject* object, Scen
 #ifdef COV_DEBUG
 		info("Null closeobjects vector in SceneObjectImplementation::broadcastObjectPrivate", true);
 #endif
-		zone->getInRangeObjects(getPositionX(), getPositionY(), getOutOfRangeDistance(), &closeSceneObjects, true);
+		zone->getInRangeObjects(getPositionX(), getPositionZ(), getPositionY(), getOutOfRangeDistance(), &closeSceneObjects, true);
 
 		maxInRangeObjectCount = closeSceneObjects.size();
 	} else {
@@ -606,17 +640,19 @@ void SceneObjectImplementation::broadcastDestroyPrivate(SceneObject* object, Sce
 		}
 	}
 
-	if (zone == nullptr)
+	auto currentZone = getZone();
+
+	if (currentZone == nullptr)
 		return;
 
-	SortedVector<QuadTreeEntry*> closeSceneObjects;
+	SortedVector<TreeEntry*> closeSceneObjects;
 	int maxInRangeObjectCount = 0;
 
 	if (closeobjects == nullptr) {
 #ifdef COV_DEBUG
 		info("Null closeobjects vector in SceneObjectImplementation::broadcastDestroyPrivate", true);
 #endif
-		zone->getInRangeObjects(getPositionX(), getPositionY(), getOutOfRangeDistance() + 64, &closeSceneObjects, true);
+		currentZone->getInRangeObjects(getPositionX(), getPositionZ(), getPositionY(), getOutOfRangeDistance() + 64, &closeSceneObjects, true);
 
 		maxInRangeObjectCount = closeSceneObjects.size();
 	} else {
@@ -683,14 +719,14 @@ void SceneObjectImplementation::broadcastMessagePrivate(BasePacket* message, Sce
 
 #endif
 
-	SortedVector<QuadTreeEntry*> closeNoneReference;
+	SortedVector<TreeEntry*> closeNoneReference;
 
 	try {
 		if (closeobjects == nullptr) {
 #ifdef COV_DEBUG
 			info(String::valueOf(getObjectID()) + " Null closeobjects vector in SceneObjectImplementation::broadcastMessagePrivate", true);
 #endif
-			zone->getInRangeObjects(getPositionX(), getPositionY(), getOutOfRangeDistance(), &closeNoneReference, true);
+			zone->getInRangeObjects(getPositionX(), getPositionZ(), getPositionY(), getOutOfRangeDistance(), &closeNoneReference, true);
 		} else {
 			closeobjects->safeCopyReceiversTo(closeNoneReference, CloseObjectsVector::PLAYERTYPE);
 		}
@@ -770,7 +806,7 @@ void SceneObjectImplementation::broadcastMessagesPrivate(Vector<BasePacket*>* me
 		return;
 	}
 
-	SortedVector<QuadTreeEntry*> closeSceneObjects;
+	SortedVector<TreeEntry*> closeSceneObjects;
 
 	try {
 
@@ -778,7 +814,7 @@ void SceneObjectImplementation::broadcastMessagesPrivate(Vector<BasePacket*>* me
 #ifdef COV_DEBUG
 			info(true) << getObjectID() << " Null closeobjects vector in SceneObjectImplementation::broadcastMessagesPrivate";
 #endif
-			zone->getInRangeObjects(getPositionX(), getPositionY(), getOutOfRangeDistance(), &closeSceneObjects, true);
+			zone->getInRangeObjects(getPositionX(), getPositionZ(), getPositionY(), getOutOfRangeDistance(), &closeSceneObjects, true);
 		} else {
 			closeobjects->safeCopyReceiversTo(closeSceneObjects, CloseObjectsVector::PLAYERTYPE);
 		}
@@ -830,20 +866,20 @@ void SceneObjectImplementation::broadcastMessages(Vector<BasePacket*>* messages,
 }
 
 int SceneObjectImplementation::inRangeObjects(unsigned int gameObjectType, float range) {
-	auto zone = getZoneUnsafe();
+	auto currentZone = getZoneUnsafe();
 
-	if (zone == nullptr)
+	if (currentZone == nullptr)
 		return 0;
 
 	int numberOfObjects = 0;
 
-	SortedVector<QuadTreeEntry*> closeSceneObjects;
+	SortedVector<TreeEntry*> closeSceneObjects;
 
 	if (closeobjects == nullptr) {
 #ifdef COV_DEBUG
 		info("Null closeobjects vector in SceneObjectImplementation::inRangeObjects", true);
 #endif
-		zone->getInRangeObjects(getPositionX(), getPositionY(), range, &closeSceneObjects, true);
+		currentZone->getInRangeObjects(getPositionX(), getPositionZ(), getPositionY(), range, &closeSceneObjects, true);
 	} else {
 		closeobjects->safeCopyTo(closeSceneObjects);
 	}
@@ -886,7 +922,15 @@ void SceneObjectImplementation::updateVehiclePosition(bool sendPackets) {
 }
 
 void SceneObjectImplementation::updateZone(bool lightUpdate, bool sendPackets) {
-	zoneComponent->updateZone(asSceneObject(), lightUpdate, sendPackets);
+	Zone* zone = getZone();
+
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone())
+		spaceZoneComponent->updateZone(asSceneObject(), lightUpdate, sendPackets);
+	else
+		groundZoneComponent->updateZone(asSceneObject(), lightUpdate, sendPackets);
 }
 
 void SceneObjectImplementation::notifySelfPositionUpdate() {
@@ -897,7 +941,7 @@ void SceneObjectImplementation::notifyCloseContainer(CreatureObject* player) {
 	notifyObservers(ObserverEventType::CLOSECONTAINER, player);
 }
 
-void SceneObjectImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
+void SceneObjectImplementation::notifyPositionUpdate(TreeEntry* entry) {
 	if (entry == nullptr || asSceneObject() == entry)
 		return;
 
@@ -908,23 +952,58 @@ void SceneObjectImplementation::notifyPositionUpdate(QuadTreeEntry* entry) {
 	//Core::getTaskManager()->executeTask(new PositionUpdateTask(asSceneObject(), entry));
 	//#endif
 
-	zoneComponent->notifyPositionUpdate(asSceneObject(), entry);
+	Zone* zone = getZone();
+
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone()) {
+		spaceZoneComponent->notifyPositionUpdate(asSceneObject(), entry);
+	} else {
+		groundZoneComponent->notifyPositionUpdate(asSceneObject(), entry);
+	}
 }
 
 void SceneObjectImplementation::updateZoneWithParent(SceneObject* newParent, bool lightUpdate, bool sendPackets) {
-	zoneComponent->updateZoneWithParent(asSceneObject(), newParent, lightUpdate, sendPackets);
+	Zone* zone = getZone();
+
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone())
+		spaceZoneComponent->updateZoneWithParent(asSceneObject(), newParent, lightUpdate, sendPackets);
+	else
+		groundZoneComponent->updateZoneWithParent(asSceneObject(), newParent, lightUpdate, sendPackets);
 }
 
 void SceneObjectImplementation::notifyInsertToZone(Zone* newZone) {
-	zoneComponent->notifyInsertToZone(asSceneObject(), newZone);
+	if (newZone == nullptr)
+		return;
+
+	if (newZone->isSpaceZone())
+		spaceZoneComponent->notifyInsertToZone(asSceneObject(), newZone->asSpaceZone());
+	else
+		groundZoneComponent->notifyInsertToZone(asSceneObject(), newZone);
 }
 
 void SceneObjectImplementation::teleport(float newPositionX, float newPositionZ, float newPositionY, uint64 parentID) {
-	zoneComponent->teleport(asSceneObject(), newPositionX, newPositionZ, newPositionY, parentID);
+	auto zone = getZone();
+
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone()) {
+		spaceZoneComponent->teleport(asSceneObject(), newPositionX, newPositionZ, newPositionY, parentID);
+	} else {
+		groundZoneComponent->teleport(asSceneObject(), newPositionX, newPositionZ, newPositionY, parentID);
+	}
 }
 
-void SceneObjectImplementation::switchZone(const String& newTerrainName, float newPostionX, float newPositionZ, float newPositionY, uint64 parentID, bool toggleInvisibility) {
-	zoneComponent->switchZone(asSceneObject(), newTerrainName, newPostionX, newPositionZ, newPositionY, parentID, toggleInvisibility);
+void SceneObjectImplementation::switchZone(const String& newTerrainName, float newPostionX, float newPositionZ, float newPositionY, uint64 parentID, bool toggleInvisibility, int playerArrangement) {
+	if (newTerrainName.contains("space"))
+		spaceZoneComponent->switchZone(asSceneObject(), newTerrainName, newPostionX, newPositionZ, newPositionY, parentID, toggleInvisibility, playerArrangement);
+	else
+		groundZoneComponent->switchZone(asSceneObject(), newTerrainName, newPostionX, newPositionZ, newPositionY, parentID, toggleInvisibility, playerArrangement);
 }
 
 void SceneObjectImplementation::updateDirection(float fw, float fx, float fy, float fz) {
@@ -955,8 +1034,41 @@ void SceneObjectImplementation::updateDirection(float angleHeadingRadians) {
 	}
 }
 
+void SceneObjectImplementation::notifyInsert(TreeEntry* object) {
+	if (object == nullptr)
+		return;
+
+	auto zone = getZone();
+
+	if (zone != nullptr && zone->isSpaceZone()) {
+		spaceZoneComponent->notifyInsert(asSceneObject(), object);
+	} else {
+		groundZoneComponent->notifyInsert(asSceneObject(), object);
+	}
+}
+
+void SceneObjectImplementation::notifyDissapear(TreeEntry* object) {
+	if (object == nullptr)
+		return;
+
+	auto zone = getZone();
+
+	if (zone != nullptr && zone->isSpaceZone())
+		spaceZoneComponent->notifyDissapear(asSceneObject(), object);
+	else
+		groundZoneComponent->notifyDissapear(asSceneObject(), object);
+}
+
 void SceneObjectImplementation::notifyRemoveFromZone() {
-	zoneComponent->notifyRemoveFromZone(asSceneObject());
+	auto zone = getZone();
+
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone())
+		spaceZoneComponent->notifyRemoveFromZone(asSceneObject());
+	else
+		groundZoneComponent->notifyRemoveFromZone(asSceneObject());
 }
 
 int SceneObjectImplementation::canAddObject(SceneObject* object, int containmentType, String& errorDescription) {
@@ -967,12 +1079,31 @@ bool SceneObjectImplementation::transferObject(SceneObject* object, int containm
 	return containerComponent->transferObject(asSceneObject(), object, containmentType, notifyClient, allowOverflow, notifyRoot);
 }
 
+void SceneObjectImplementation::destroyObjectFromWorld(bool sendSelfDestroy) {
+	auto zone = getZone();
+
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone()) {
+		spaceZoneComponent->destroyObjectFromWorld(asSceneObject(), sendSelfDestroy);
+	} else {
+		groundZoneComponent->destroyObjectFromWorld(asSceneObject(), sendSelfDestroy);
+	}
+}
+
 bool SceneObjectImplementation::removeObject(SceneObject* object, SceneObject* destination, bool notifyClient) {
 	return containerComponent->removeObject(asSceneObject(), object, destination, notifyClient);
 }
 
 void SceneObjectImplementation::removeObjectFromZone(Zone* zone, SceneObject* par) {
-	zoneComponent->removeObjectFromZone(asSceneObject(), zone, par);
+	if (zone == nullptr)
+		return;
+
+	if (zone->isSpaceZone())
+		spaceZoneComponent->removeObjectFromZone(asSceneObject(), zone->asSpaceZone(), par);
+	else
+		groundZoneComponent->removeObjectFromZone(asSceneObject(), zone, par);
 }
 
 void SceneObjectImplementation::openContainerTo(CreatureObject* player) {
@@ -1027,18 +1158,16 @@ SceneObject* SceneObjectImplementation::getRootParentUnsafe() {
 		return savedRootParent;
 	}
 
-	return static_cast<SceneObject*>(QuadTreeEntryImplementation::getRootParentUnsafe());
+	return static_cast<SceneObject*>(TreeEntryImplementation::getRootParentUnsafe());
 }
 
 void SceneObjectImplementation::updateSavedRootParentRecursive(SceneObject* newRoot, int maxDepth) {
 	if (maxDepth <= 0) {
-		StringBuffer msg;
+		error() << "maxDepth reached -- Max Depth: " << maxDepth << " " << __FILE__ << ":" << __LINE__ << ":" <<  __FUNCTION__ <<
+			"() Object: "<< getDisplayedName() << " ID: " << getObjectID() <<
+			" New Root: " << (newRoot == nullptr ? "NO ROOT" : newRoot->getDisplayedName()) << " Root ID: " << (newRoot == nullptr ? 0 : newRoot->getObjectID());
 
-		msg << "maxDepth reached in updateSavedRootParentRecursive("
-			<< getObjectID() << ") newRoot = "
-		    << (newRoot == nullptr ? 0 : newRoot->getObjectID())
-		;
-		throw Exception(msg.toString());
+		throw Exception();
 	}
 
 	Locker locker(&parentLock);
@@ -1066,7 +1195,7 @@ void SceneObjectImplementation::updateSavedRootParentRecursive(SceneObject* newR
 }
 
 uint64 SceneObjectImplementation::getParentID() {
-	return QuadTreeEntryImplementation::parent.getSavedObjectID();
+	return TreeEntryImplementation::parent.getSavedObjectID();
 }
 
 Reference<SceneObject*> SceneObjectImplementation::getParentRecursively(uint32 gameObjectType) {
@@ -1125,7 +1254,7 @@ Zone* SceneObjectImplementation::getZoneUnsafe() const {
 	auto root = const_cast<SceneObjectImplementation*>(this)->getRootParentUnsafe();
 
 	if (root != nullptr) {
-		return root->getZoneUnsafe();
+		return root->getZone();
 	} else {
 		return zone;
 	}
@@ -1146,7 +1275,8 @@ bool SceneObjectImplementation::isInRange(SceneObject* object, float range) {
 
 	return false;
 }
- bool SceneObjectImplementation::isInRangeZoneless(SceneObject* object, float range) {
+
+bool SceneObjectImplementation::isInRangeZoneless(SceneObject* object, float range) {
 	Vector3 worldPos = object->getWorldPosition();
 	worldPos.setZ(0);
 	Vector3 thisPos = getWorldPosition();
@@ -1157,6 +1287,7 @@ bool SceneObjectImplementation::isInRange(SceneObject* object, float range) {
 
 	return false;
 }
+
 bool SceneObjectImplementation::isInRange3d(SceneObject* object, float range) {
 	if (getZoneUnsafe() != object->getZoneUnsafe()) {
 		return false;
@@ -1244,24 +1375,6 @@ void SceneObjectImplementation::setObjectName(const StringId& stringID, bool not
 	objectName = stringID;
 }
 
-Vector3 SceneObjectImplementation::getWorldPosition() {
-	auto root = getRootParentUnsafe();
-
-	if (root == nullptr || !root->isBuildingObject())
-		return getPosition();
-
-	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
-	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
-
-	float posX = root->getPositionX() + (sin(angle) * length);
-	float posY = root->getPositionY() + (cos(angle) * length);
-	float posZ = root->getPositionZ() + getPositionZ();
-
-	Vector3 position(posX, posY, posZ);
-
-	return position;
-}
-
 Vector3 SceneObjectImplementation::getCoordinate(float distance, float angleDegrees, bool includeZ) const {
 	float angleRads = angleDegrees * (M_PI / 180.0f);
 	float newAngle = angleRads + (M_PI / 2) - direction.getRadians();
@@ -1290,11 +1403,35 @@ Vector3 SceneObjectImplementation::getWorldCoordinate(float distance, float angl
 	return Vector3(newX, newY, newZ);
 }
 
+Vector3 SceneObjectImplementation::getWorldPosition() {
+	auto root = getRootParentUnsafe();
+
+	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
+		return getPosition();
+	} else if (root->isPobShip()) {
+		return root->getPosition();
+	}
+
+	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
+	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
+
+	float posX = root->getPositionX() + (sin(angle) * length);
+	float posY = root->getPositionY() + (cos(angle) * length);
+	float posZ = root->getPositionZ() + getPositionZ();
+
+	Vector3 position(posX, posY, posZ);
+
+	return position;
+}
+
 float SceneObjectImplementation::getWorldPositionX() {
 	auto root = getRootParentUnsafe();
 
-	if (root == nullptr || !root->isBuildingObject())
+	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
 		return getPositionX();
+	} else if (root->isPobShip()) {
+		return root->getPositionX();
+	}
 
 	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
 	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
@@ -1305,8 +1442,11 @@ float SceneObjectImplementation::getWorldPositionX() {
 float SceneObjectImplementation::getWorldPositionY() {
 	auto root = getRootParentUnsafe();
 
-	if (root == nullptr || !root->isBuildingObject())
+	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
 		return getPositionY();
+	} else if (root->isPobShip()) {
+		return root->getPositionY();
+	}
 
 	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
 	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
@@ -1317,8 +1457,11 @@ float SceneObjectImplementation::getWorldPositionY() {
 float SceneObjectImplementation::getWorldPositionZ() {
 	auto root = getRootParentUnsafe();
 
-	if (root == nullptr || !root->isBuildingObject())
+	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
 		return getPositionZ();
+	} else if (root->isPobShip()) {
+		return root->getPositionZ();
+	}
 
 	return root->getPositionZ() + getPositionZ();
 }
@@ -1537,6 +1680,14 @@ Reference<SceneObject*> SceneObjectImplementation::getSlottedObject(const String
 	return obj;
 }
 
+Reference<SceneObject*> SceneObjectImplementation::getInventory() {
+	ReadLocker locker(&containerLock);
+
+	Reference<SceneObject*> obj = slottedObjects.get("inventory");
+
+	return obj;
+}
+
 Reference<SceneObject*> SceneObjectImplementation::getSlottedObject(int idx) {
 	Reference<SceneObject*> obj;
 
@@ -1559,8 +1710,8 @@ void SceneObjectImplementation::removeSlottedObject(int index) {
 	slottedObjects.remove(index);
 }
 
-void SceneObjectImplementation::setZone(Zone* zone) {
-	this->zone = zone;
+void SceneObjectImplementation::setZone(Zone* newZone) {
+	zone = newZone;
 
 	if (zone == nullptr)
 		updateSavedRootParentRecursive(nullptr);
@@ -1582,32 +1733,32 @@ void SceneObjectImplementation::showFlyText(const String& file, const String& au
 void SceneObjectImplementation::initializeChildObject(SceneObject* controllerObject) {
 }
 
-void SceneObjectImplementation::setParent(QuadTreeEntry* entry) {
+void SceneObjectImplementation::setParent(TreeEntry* entry) {
 	Locker locker(&parentLock);
 
 	savedRootParent = nullptr;
 
-	QuadTreeEntryImplementation::setParent(entry);
+	TreeEntryImplementation::setParent(entry);
 
 	locker.release();
 
 	updateSavedRootParentRecursive(getRootParent());
 }
 
-void SceneObjectImplementation::setParent(QuadTreeEntry* entry, bool updateRecursively) {
+void SceneObjectImplementation::setParent(TreeEntry* entry, bool updateRecursively) {
 	if (updateRecursively) {
 		setParent(entry);
 	} else {
 		Locker locker(&parentLock);
 
-		QuadTreeEntryImplementation::setParent(entry);
+		TreeEntryImplementation::setParent(entry);
 	}
 }
 
 ManagedWeakReference<SceneObject*> SceneObjectImplementation::getParent() {
 	/*Locker locker(&parentLock);
 
-	ManagedReference<QuadTreeEntry*> parent = this->parent.get();
+	ManagedReference<TreeEntry*> parent = this->parent.get();
 
 	if (parent == nullptr)
 		return nullptr;
@@ -1669,15 +1820,24 @@ bool SceneObjectImplementation::setTransformForCollisionMatrixIfNull(Matrix4* ma
 int SceneObjectImplementation::getCountableObjectsRecursive() {
 	int count = 0;
 
+	// info(true) << getDisplayedName() << "---------- START check ----------";
+
+	// info(true) << getDisplayedName() << " -- Container Size: " << containerObjects.size();
+
 	for (int i = 0; i < containerObjects.size(); ++i) {
 		ManagedReference<SceneObject*> obj = containerObjects.get(i);
 
 		if (obj != nullptr) {
 			++count;
 
-			count += obj->getCountableObjectsRecursive();
+			if (!obj->isCraftingTool())
+				count += obj->getCountableObjectsRecursive();
+
+			// info(true) << "After Object: " << obj->getDisplayedName() << " -- New Total Count: " << count;
 		}
 	}
+
+	// info(true) << getDisplayedName() << "---------- END check ----------";
 
 	return count;
 }
@@ -1843,10 +2003,8 @@ float SceneObjectImplementation::getTemplateRadius() {
 	return app->getBoundingSphere()->getRadius();
 }
 
-void SceneObjectImplementation::playEffect(const String& file,
-		const String& aux) {
-	PlayClientEffectObjectMessage* effect = new PlayClientEffectObjectMessage(
-			asSceneObject(), file, aux);
+void SceneObjectImplementation::playEffect(const String& file, const String& aux) {
+	PlayClientEffectObjectMessage* effect = new PlayClientEffectObjectMessage(asSceneObject(), file, aux);
 
 	broadcastMessage(effect, true);
 }
@@ -1864,6 +2022,14 @@ bool SceneObjectImplementation::isAiAgent() {
 }
 
 bool SceneObject::isAiAgent() {
+	return false;
+}
+
+bool SceneObjectImplementation::isShipAiAgent() {
+	return false;
+}
+
+bool SceneObject::isShipAiAgent() {
 	return false;
 }
 
@@ -1891,11 +2057,67 @@ bool SceneObject::isBuildingObject() {
 	return false;
 }
 
+bool SceneObjectImplementation::isShipObject() {
+	return false;
+}
+
+bool SceneObject::isShipObject() {
+	return false;
+}
+
+bool SceneObjectImplementation::isSpaceStation() {
+	return false;
+}
+
+bool SceneObject::isSpaceStation() {
+	return false;
+}
+
+bool SceneObjectImplementation::isPobShip() {
+	return false;
+}
+
+bool SceneObject::isPobShip() {
+	return false;
+}
+
+bool SceneObjectImplementation::isMultiPassengerShip() {
+	return false;
+}
+
+bool SceneObject::isMultiPassengerShip() {
+	return false;
+}
+
+bool SceneObjectImplementation::isFighterShip() {
+	return false;
+}
+
+bool SceneObject::isFighterShip() {
+	return false;
+}
+
+SpaceZone* SceneObjectImplementation::asSpaceZone() {
+	return nullptr;
+}
+
+SpaceZone* SceneObject::asSpaceZone() {
+	return nullptr;
+}
+
 AiAgent* SceneObjectImplementation::asAiAgent() {
 	return nullptr;
 }
 
 AiAgent* SceneObject::asAiAgent() {
+	return nullptr;
+}
+
+ShipAiAgent* SceneObjectImplementation::asShipAiAgent() {
+	return nullptr;
+}
+
+ShipAiAgent* SceneObject::asShipAiAgent() {
 	return nullptr;
 }
 
@@ -1915,10 +2137,51 @@ CreatureObject* SceneObject::asCreatureObject() {
 	return nullptr;
 }
 
-Vector<Reference<MeshData*> > SceneObjectImplementation::getTransformedMeshData(const Matrix4* parentTransform) const {
-	const AppearanceTemplate *appearance = getObjectTemplate()->getAppearanceTemplate();
-	if(appearance == nullptr) {
-		Vector<Reference<MeshData*> > emptyData;
+ShipObject* SceneObject::asShipObject() {
+	return nullptr;
+}
+
+ShipObject* SceneObjectImplementation::asShipObject() {
+	return nullptr;
+}
+
+SpaceStationObject* SceneObject::asSpaceStationObject() {
+	return nullptr;
+}
+
+SpaceStationObject* SceneObjectImplementation::asSpaceStationObject() {
+	return nullptr;
+}
+
+PobShipObject* SceneObject::asPobShip() {
+	return nullptr;
+}
+
+PobShipObject* SceneObjectImplementation::asPobShip() {
+	return nullptr;
+}
+
+MultiPassengerShipObject* SceneObject::asMultiPassengerShip() {
+	return nullptr;
+}
+
+MultiPassengerShipObject* SceneObjectImplementation::asMultiPassengerShip() {
+	return nullptr;
+}
+
+FighterShipObject* SceneObject::asFighterShip() {
+	return nullptr;
+}
+
+FighterShipObject* SceneObjectImplementation::asFighterShip() {
+	return nullptr;
+}
+
+Vector<Reference<MeshData*>> SceneObjectImplementation::getTransformedMeshData(const Matrix4* parentTransform) const {
+	const AppearanceTemplate* appearance = getObjectTemplate()->getAppearanceTemplate();
+
+	if (appearance == nullptr) {
+		Vector<Reference<MeshData*>> emptyData;
 		return emptyData;
 	}
 
@@ -1932,7 +2195,8 @@ Vector<Reference<MeshData*> > SceneObjectImplementation::getTransformedMeshData(
 
 	Vector<Reference<MeshData*>> data = appearance->getTransformedMeshData(fullTransform);
 
-	FloorMesh *floor = TemplateManager::instance()->getFloorMesh(appearance->getFloorMesh());
+	FloorMesh* floor = TemplateManager::instance()->getFloorMesh(appearance->getFloorMesh());
+
 	if (floor != nullptr)
 		data.addAll(floor->getTransformedMeshData(fullTransform));
 
@@ -2180,30 +2444,55 @@ String SceneObjectImplementation::getGameObjectTypeStringID() {
 }
 
 bool SceneObjectImplementation::isNearBank() {
-	Zone* zone = getZone();
 
-	if (zone != nullptr) {
-		SortedVector<QuadTreeEntry* > closeObjects;
-		zone->getInRangeObjects(getPositionX(), getPositionY(), 15.f, &closeObjects, true, false);
+	SortedVector<ManagedReference<TreeEntry*> > closeObjects;
+	CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) getCloseObjects();
 
-		bool nearBank = false;
-
-		for (int i = 0; i < closeObjects.size(); ++i) {
-			SceneObject* sceneO = cast<SceneObject*>(closeObjects.get(i));
-
-			if (sceneO == nullptr)
-				continue;
-
-			if (sceneO->getGameObjectType() == SceneObjectType::BANK) {
-				nearBank = true;
-				break;
-			}
-		}
-
-		if (nearBank) {
-			return true;
+	if (closeObjectsVector != nullptr) {
+		closeObjectsVector->safeCopyTo(closeObjects);
+	} else {
+		auto zone = getZone();
+		if (zone != nullptr) {
+			zone->getInRangeObjects(getWorldPositionX(), getWorldPositionZ(), getWorldPositionY(), 15.f, &closeObjects, true, true);
+		} else {
+			return false;
 		}
 	}
 
+	uint64 parentID = getParentID();
+	float bankRangeSq = 15.f * 15.f;
+	Vector3 thisWorldPos = getWorldPosition();
+
+	for (int i = 0; i < closeObjects.size(); ++i) {
+
+		ManagedReference<SceneObject*> sceneO = cast<SceneObject*>(closeObjects.get(i).get());
+
+		if (sceneO == nullptr)
+			continue;
+
+		if (sceneO->getParentID() != parentID)
+			continue;
+
+		if (sceneO->getGameObjectType() != SceneObjectType::BANK)
+			continue;
+
+		if (closeObjectsVector != nullptr && thisWorldPos.squaredDistanceTo(sceneO->getWorldPosition()) > bankRangeSq)
+			continue;
+
+		return true;
+
+	}
+
 	return false;
+}
+
+void SceneObjectImplementation::setSyncStamp(uint32 value) {
+	syncTime = System::getMiliTime();
+	syncStamp = value;
+	movementCounter += 1;
+}
+
+uint32 SceneObjectImplementation::getSyncStamp() {
+	long deltaTime = System::getMiliTime() - syncTime;
+	return syncStamp + deltaTime;
 }

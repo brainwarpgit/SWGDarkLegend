@@ -694,7 +694,7 @@ void CombatManager::broadcastCombatAction(CreatureObject* attacker, WeaponObject
 
 	DefenderHitList* hitList = targetDefenders.get(0);
 
-	if (hitList != nullptr) {
+	if (hitList != nullptr && weapon != nullptr) {
 		TangibleObject* defenderObject = hitList->getDefender();
 
 		if (defenderObject != nullptr) {
@@ -832,7 +832,7 @@ void CombatManager::broadcastCombatSpam(TangibleObject* attacker, TangibleObject
 		return;
 
 	CloseObjectsVector* vec = (CloseObjectsVector*)attacker->getCloseObjects();
-	SortedVector<QuadTreeEntry*> closeObjects;
+	SortedVector<TreeEntry*> closeObjects;
 
 	if (vec != nullptr) {
 		closeObjects.removeAll(vec->size(), 10);
@@ -841,7 +841,7 @@ void CombatManager::broadcastCombatSpam(TangibleObject* attacker, TangibleObject
 #ifdef COV_DEBUG
 		info("Null closeobjects vector in CombatManager::broadcastCombatSpam", true);
 #endif
-		zone->getInRangeObjects(attacker->getWorldPositionX(), attacker->getWorldPositionY(), COMBAT_SPAM_RANGE, &closeObjects, true);
+		zone->getInRangeObjects(attacker->getWorldPositionX(), attacker->getWorldPositionZ(), attacker->getWorldPositionY(), COMBAT_SPAM_RANGE, &closeObjects, true);
 	}
 
 	for (int i = 0; i < closeObjects.size(); ++i) {
@@ -950,22 +950,33 @@ Reference<SortedVector<ManagedReference<TangibleObject*>>*> CombatManager::getAr
 		}
 	}
 
-	if (range < 0) {
-		range = weapon->getMaxRange();
+	bool thrownWeapon = false;
+	bool heavyWeapon = false;
+
+	if (weapon != nullptr) {
+		thrownWeapon = weapon->isThrownWeapon();
+		heavyWeapon = weapon->isHeavyWeapon();
+
+		if (range < 0) {
+			range = weapon->getMaxRange();
+		}
+
+		if (data.isSplashDamage())
+			range += data.getRange();
+
+		if (thrownWeapon || heavyWeapon)
+			range = weapon->getMaxRange() + areaRange;
 	}
 
-	if (data.isSplashDamage())
-		range += data.getRange();
-
-	if (weapon->isThrownWeapon() || weapon->isHeavyWeapon())
-		range = weapon->getMaxRange() + areaRange;
+	if (range < 0)
+		return defenders;
 
 	try {
 		// zone->rlock();
 
 		CloseObjectsVector* vec = (CloseObjectsVector*)attacker->getCloseObjects();
 
-		SortedVector<QuadTreeEntry*> closeObjects;
+		SortedVector<TreeEntry*> closeObjects;
 
 		if (vec != nullptr) {
 			closeObjects.removeAll(vec->size(), 10);
@@ -974,7 +985,7 @@ Reference<SortedVector<ManagedReference<TangibleObject*>>*> CombatManager::getAr
 #ifdef COV_DEBUG
 			attacker->info("Null closeobjects vector in CombatManager::getAreaTargets", true);
 #endif
-			zone->getInRangeObjects(attackerPos.getX(), attackerPos.getY(), 128, &closeObjects, true);
+			zone->getInRangeObjects(attackerPos.getX(), 0, attackerPos.getY(), 128, &closeObjects, true);
 		}
 
 		for (int i = 0; i < closeObjects.size(); ++i) {
@@ -1032,10 +1043,8 @@ Reference<SortedVector<ManagedReference<TangibleObject*>>*> CombatManager::getAr
 				continue;
 			}
 
-			if (data.isSplashDamage() || weapon->isThrownWeapon() || weapon->isHeavyWeapon()) {
-				if (defenderObject->getWorldPosition().squaredDistanceTo(tano->getWorldPosition()) - tanoRadiusSq > (areaRange * areaRange))
-					continue;
-			}
+			if ((data.isSplashDamage() || thrownWeapon || heavyWeapon) && (defenderObject->getWorldPosition().squaredDistanceTo(tano->getWorldPosition()) - tanoRadiusSq > (areaRange * areaRange)))
+				continue;
 
 			CreatureObject* creo = tano->asCreatureObject();
 
@@ -1052,7 +1061,7 @@ Reference<SortedVector<ManagedReference<TangibleObject*>>*> CombatManager::getAr
 			// zone->runlock();
 
 			try {
-				if (!(weapon->isThrownWeapon()) && !(data.isSplashDamage()) && !(weapon->isHeavyWeapon())) {
+				if (!thrownWeapon && !data.isSplashDamage() && !heavyWeapon) {
 					if (CollisionManager::checkLineOfSight(object, attacker)) {
 						defenders->put(tano);
 						attacker->addDefender(tano);
@@ -1367,7 +1376,7 @@ int CombatManager::calculatePoolsToDamage(int poolsToDamage) const {
 }
 
 int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, DefenderHitList* defenderHitList, int damage, float damageMultiplier, int poolsToDamage, uint8& hitLocation, const CreatureAttackData& data) const {
-	if (poolsToDamage == 0 || damageMultiplier == 0 || defenderHitList == nullptr) {
+	if (poolsToDamage == 0 || damageMultiplier == 0 || defenderHitList == nullptr || weapon == nullptr) {
 		return 0;
 	}
 
@@ -1577,7 +1586,7 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 		return 0;
 	}
 
-	if (defender->getPvpStatusBitmask() == CreatureFlag::NONE) {
+	if (defender->getPvpStatusBitmask() == ObjectFlag::NONE) {
 		return 0;
 	}
 
@@ -1660,7 +1669,7 @@ void CombatManager::applyDots(CreatureObject* attacker, CreatureObject* defender
 	if (defender->isAiAgent()) {
 		AiAgent* defAgent = defender->asAiAgent();
 
-		if (defAgent != nullptr && (defAgent->getCreatureBitmask() & CreatureFlag::NODOT))
+		if (defAgent != nullptr && (defAgent->getCreatureBitmask() & ObjectFlag::NODOT))
 			return;
 	}
 
@@ -1715,7 +1724,7 @@ void CombatManager::applyWeaponDots(CreatureObject* attacker, CreatureObject* de
 	if (defender->isAiAgent()) {
 		AiAgent* defAgent = defender->asAiAgent();
 
-		if (defAgent != nullptr && (defAgent->getCreatureBitmask() & CreatureFlag::NODOT))
+		if (defAgent != nullptr && (defAgent->getCreatureBitmask() & ObjectFlag::NODOT))
 			return;
 	}
 
@@ -1931,7 +1940,7 @@ int CombatManager::getAttackerAccuracyModifier(TangibleObject* attacker, Creatur
 	if (attackerAccuracy == 0)
 		attackerAccuracy = -15; // unskilled penalty, TODO: this might be -50 or -125, do research
 
-	attackerAccuracy += creoAttacker->getSkillMod("attack_accuracy") + creoAttacker->getSkillMod("dead_eye");
+	attackerAccuracy += creoAttacker->getSkillMod("attack_accuracy");
 
 	// FS skill mods
 	if (weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
@@ -2108,13 +2117,10 @@ int CombatManager::getHitChance(TangibleObject* attacker, CreatureObject* creoDe
 			int attackMask = weapon->getWeaponBitmask();
 			int attackType = weapon->getAttackType();
 
-			if (attackType == SharedWeaponObjectTemplate::RANGEDATTACK && !attacker->isTurret()) {
-				if (attackMask == WeaponType::PISTOLWEAPON || attackMask == WeaponType::CARBINEWEAPON || attackMask == WeaponType::RIFLEWEAPON
-				|| attackMask == WeaponType::LIGHTNINGRIFLEWEAPON || attackMask == WeaponType::HEAVYWEAPON || attackMask == WeaponType::SPECIALHEAVYWEAPON) {
-					evadeTotal = evadeSkill = creoDefender->getSkillMod("saber_block");
-				}
+			if ((!attacker->isTurret() && attackMask != WeaponType::GRENADEWEAPON) && (attackType == SharedWeaponObjectTemplate::RANGEDATTACK || attackMask == WeaponType::HEAVYWEAPON)) {
+				evadeTotal = evadeSkill = creoDefender->getSkillMod("saber_block");
 
-				if (evadeTotal != 0 && System::random(100) <= evadeTotal) {
+				if (evadeTotal > 0 && System::random(100) <= evadeTotal) {
 					hitResult = HitStatus::RICOCHET;
 				}
 			}
@@ -3138,14 +3144,14 @@ void CombatManager::requestDuel(CreatureObject* player, CreatureObject* targetPl
 	ghost->addToDuelList(targetPlayer);
 
 	if (targetGhost->requestedDuelTo(player)) {
-		BaseMessage* pvpstat = new UpdatePVPStatusMessage(targetPlayer, player, targetPlayer->getPvpStatusBitmask() | CreatureFlag::ATTACKABLE | CreatureFlag::AGGRESSIVE);
+		BaseMessage* pvpstat = new UpdatePVPStatusMessage(targetPlayer, player, targetPlayer->getPvpStatusBitmask() | ObjectFlag::ATTACKABLE | ObjectFlag::AGGRESSIVE);
 		player->sendMessage(pvpstat);
 
 		for (int i = 0; i < targetGhost->getActivePetsSize(); i++) {
 			ManagedReference<AiAgent*> pet = targetGhost->getActivePet(i);
 
 			if (pet != nullptr) {
-				BaseMessage* petpvpstat = new UpdatePVPStatusMessage(pet, player, pet->getPvpStatusBitmask() | CreatureFlag::ATTACKABLE | CreatureFlag::AGGRESSIVE);
+				BaseMessage* petpvpstat = new UpdatePVPStatusMessage(pet, player, pet->getPvpStatusBitmask() | ObjectFlag::ATTACKABLE | ObjectFlag::AGGRESSIVE);
 				player->sendMessage(petpvpstat);
 			}
 		}
@@ -3154,14 +3160,14 @@ void CombatManager::requestDuel(CreatureObject* player, CreatureObject* targetPl
 		stringId.setTT(targetPlayer->getObjectID());
 		player->sendSystemMessage(stringId);
 
-		BaseMessage* pvpstat2 = new UpdatePVPStatusMessage(player, targetPlayer, player->getPvpStatusBitmask() | CreatureFlag::ATTACKABLE | CreatureFlag::AGGRESSIVE);
+		BaseMessage* pvpstat2 = new UpdatePVPStatusMessage(player, targetPlayer, player->getPvpStatusBitmask() | ObjectFlag::ATTACKABLE | ObjectFlag::AGGRESSIVE);
 		targetPlayer->sendMessage(pvpstat2);
 
 		for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 
 			if (pet != nullptr) {
-				BaseMessage* petpvpstat = new UpdatePVPStatusMessage(pet, targetPlayer, pet->getPvpStatusBitmask() | CreatureFlag::ATTACKABLE | CreatureFlag::AGGRESSIVE);
+				BaseMessage* petpvpstat = new UpdatePVPStatusMessage(pet, targetPlayer, pet->getPvpStatusBitmask() | ObjectFlag::ATTACKABLE | ObjectFlag::AGGRESSIVE);
 				targetPlayer->sendMessage(petpvpstat);
 			}
 		}
@@ -3372,6 +3378,15 @@ bool CombatManager::areInDuel(CreatureObject* player1, CreatureObject* player2) 
 		if (ghost1->requestedDuelTo(player2) && ghost2->requestedDuelTo(player1))
 			return true;
 	}
+
+	return false;
+}
+
+bool CombatManager::hasActiveDuelChallenge(CreatureObject* challenger, CreatureObject* targetPlayer) const {
+	auto challengerGhost = challenger->getPlayerObject().get();
+
+	if (challengerGhost != nullptr && challengerGhost->requestedDuelTo(targetPlayer))
+		return true;
 
 	return false;
 }
