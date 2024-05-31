@@ -35,6 +35,12 @@ namespace globalVariables {
 	bool playerSamplingMiniGameEnabled = true;
 	bool playerSamplingRadioactiveWarningEnabled = true;
 	int playerMaxLots = 10;
+	bool playerGlobalSafetyDepositEnabled = false;
+	float playerShuttleBoardingDistance = 25.f;
+	std::string playerStatMigrationLocation = "tutorial";
+	bool playerStatMigrationSalonOnlyEnabled = false;
+	bool playerStatMigrationAnyLocationEnabled = false;
+	bool playerStatMigrationClearBuffsEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -99,7 +105,13 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == true || lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == false) playerSamplingMiniGameEnabled = lua->getGlobalBoolean("playerSamplingMiniGameEnabled");
 			if (lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled") == true || lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled") == false) playerSamplingRadioactiveWarningEnabled = lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled");
 			if (lua->getGlobalInt("playerMaxLots") > 0) playerMaxLots = lua->getGlobalInt("playerMaxLots");
-
+			if (lua->getGlobalBoolean("playerGlobalSafetyDepositEnabled") == true || lua->getGlobalBoolean("playerGlobalSafetyDepositEnabled") == false) playerGlobalSafetyDepositEnabled = lua->getGlobalBoolean("playerGlobalSafetyDepositEnabled");
+			if (lua->getGlobalFloat("playerShuttleBoardingDistance") > 0) playerShuttleBoardingDistance = lua->getGlobalFloat("playerShuttleBoardingDistance");
+			if (lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "tutorial" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "dungeon1" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "yavin4" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "dantooine" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "dathomir" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "endor" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase()   == "lok" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "rori" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "talus" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "naboo" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "corellia" || lua->getGlobalString("playerStatMigrationLocation").toLowerCase() == "tatooine") playerStatMigrationLocation = lua->getGlobalString("playerStatMigrationLocation").toLowerCase();
+			if (lua->getGlobalBoolean("playerStatMigrationSalonOnlyEnabled") == true || lua->getGlobalBoolean("playerStatMigrationSalonOnlyEnabled") == false) playerStatMigrationSalonOnlyEnabled = lua->getGlobalBoolean("playerStatMigrationSalonOnlyEnabled");
+			if (lua->getGlobalBoolean("playerStatMigrationAnyLocationEnabled") == true || lua->getGlobalBoolean("playerStatMigrationAnyLocationEnabled") == false) playerStatMigrationAnyLocationEnabled = lua->getGlobalBoolean("playerStatMigrationAnyLocationEnabled");
+			if (lua->getGlobalBoolean("playerStatMigrationClearBuffsEnabled") == true || lua->getGlobalBoolean("playerStatMigrationClearBuffsEnabled") == false) playerStatMigrationClearBuffsEnabled = lua->getGlobalBoolean("playerStatMigrationClearBuffsEnabled");
+			
 			//Resources
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
 			if (lua->getGlobalInt("resourcesMinimumQuality") >= 0 && lua->getGlobalInt("resourcesMinimumQuality") <= lua->getGlobalInt("resourcesMaximumQuality")) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");

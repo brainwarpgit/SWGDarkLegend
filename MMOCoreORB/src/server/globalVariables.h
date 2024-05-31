@@ -37,6 +37,11 @@ namespace globalVariables {
 	extern bool playerSamplingMiniGameEnabled;
 	extern bool playerSamplingRadioactiveWarningEnabled;
 	extern int playerMaxLots;
+	extern bool playerGlobalSafetyDepositEnabled;
+	extern std::string playerStatMigrationLocation;
+	extern bool playerStatMigrationSalonOnlyEnabled;
+	extern bool playerStatMigrationAnyLocationEnabled;
+	extern bool playerStatMigrationClearBuffsEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
@@ -47,6 +52,9 @@ namespace globalVariables {
 	extern int resourcesMinimumQuality;
 	extern int resourcesMaximumQuality;
 	extern int resourcesContainerSize;
+
+//Shuttle
+	extern float playerShuttleBoardingDistance;
 
 //Skills
 	extern bool skillsInstantMasterPoliticianEnabled;

@@ -8,6 +8,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/player/sessions/MigrateStatsSession.h"
 #include "server/zone/managers/player/creation/PlayerCreationManager.h"
+#include "server/globalVariables.h"
 
 class RequestSetStatMigrationDataCommand : public QueueCommand {
 public:
@@ -85,10 +86,23 @@ public:
 		//Player is in the tutorial zone and is allowed to migrate stats.
 		Zone* zone = creature->getZone();
 
-		if (zone != nullptr && zone->getZoneName() == "tutorial")
+		ManagedReference<SceneObject*> obj = creature->getParentRecursively(SceneObjectType::SALONBUILDING);
+
+		if (globalVariables::playerStatMigrationClearBuffsEnabled == true) {
+			player->clearBuffs(true, false);//remove buffs to prevent min/maxxing HAMs
+		}
+		if (zone != nullptr && zone->getZoneName() == globalVariables::playerStatMigrationLocation && globalVariables::playerStatMigrationSalonOnlyEnabled == false && globalVariables::playerStatMigrationAnyLocationEnabled == false) {
 			session->migrateStats();
-
-
+		} else if (zone != nullptr && zone->getZoneName() == globalVariables::playerStatMigrationLocation && globalVariables::playerStatMigrationSalonOnlyEnabled == true && globalVariables::playerStatMigrationAnyLocationEnabled == false && obj != nullptr) {
+			session->migrateStats();
+		} else if (zone != nullptr && globalVariables::playerStatMigrationSalonOnlyEnabled == false && globalVariables::playerStatMigrationAnyLocationEnabled == true) {
+			session->migrateStats();
+		} else if (zone != nullptr && globalVariables::playerStatMigrationSalonOnlyEnabled == true && globalVariables::playerStatMigrationAnyLocationEnabled == true && obj != nullptr) {
+			session->migrateStats();
+		} else {
+			player->sendSystemMessage("You can not Migrate your stats here");
+		}
+		
 		return SUCCESS;
 	}
 

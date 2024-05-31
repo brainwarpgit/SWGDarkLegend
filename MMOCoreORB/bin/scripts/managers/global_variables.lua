@@ -30,6 +30,12 @@ playerSamplingTime = 10 --default 25 in seconds
 playerSamplingMiniGameEnabled = false --default true
 playerSamplingRadioactiveWarningEnabled = false --default true
 playerMaxLots = 20 --default 10
+playerGlobalSafetyDepositEnabled = true --default false
+playerShuttleBoardingDistance = 300 --default 25
+playerStatMigrationLocation = "tutorial" --default "tutorial" -- isn't used when statMigrateAnyLocationEnabled is true
+playerStatMigrationSalonOnlyEnabled = false --default false
+playerStatMigrationAnyLocationEnabled = true --default false
+playerStatMigrationClearBuffsEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
