@@ -13,12 +13,22 @@ namespace globalVariables {
 //Mission
 	extern int missionBountyExpirationTime;
 	extern int missionExpirationTime;
+	extern int missionMaxCount;
+	extern int missionListCount;
+	extern bool missionNameAndLevelEnabled;
+	extern bool missionDirectionSelectionEnabled;
+	extern bool missionLevelSelectionEnabled;
+	extern int missionRewardMultiplier;
 
 //Player
 	extern int playerSamplingMultiplier;
 	extern int playerSamplingTime;
 	extern bool playerSamplingMiniGameEnabled;
 	extern bool playerSamplingRadioactiveWarningEnabled;
+
+//Player Creation
+	extern int playerCreationNewCreationTime;
+	extern bool playerCreationAllLanguagesEnabled;
 
 //Resources
 	extern bool resourcesAddNameEnabled;

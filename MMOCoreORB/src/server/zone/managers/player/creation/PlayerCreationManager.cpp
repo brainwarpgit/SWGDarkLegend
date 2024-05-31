@@ -28,6 +28,7 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/objects/ship/ShipObject.h"
 #include "server/zone/managers/ship/ShipManager.h"
+#include "server/globalVariables.h"
 
 #define JTL_DEBUG
 
@@ -337,7 +338,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	auto maxchars = ConfigManager::instance()->getInt("Core3.PlayerCreationManager.MaxCharactersPerGalaxy", 10);
 
 	if (client->getCharacterCount(zoneServer.get()->getGalaxyID()) >= maxchars) {
-		ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are limited to 10 characters per galaxy.", 0x0);
+		ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are limited to " + std::to_string(maxchars) + " characters per galaxy.", 0x0);
 		client->sendMessage(errMsg);
 
 		return false;
@@ -498,8 +499,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 							Time timeVal(sec);
 
-							if (timeVal.miliDifference() < 3600000) {
-								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per hour. Repeat attempts prior to 1 hour elapsing will reset the timer.", 0x0);
+							if (timeVal.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
+								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
 								client->sendMessage(errMsg);
 
 								playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -515,8 +516,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 					if (lastCreatedCharacter.containsKey(accID)) {
 						Time lastCreatedTime = lastCreatedCharacter.get(accID);
 
-						if (lastCreatedTime.miliDifference() < 3600000) {
-							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per hour. Repeat attempts prior to 1 hour elapsing will reset the timer.", 0x0);
+						if (lastCreatedTime.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
+							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
 							client->sendMessage(errMsg);
 
 							playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -593,7 +594,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(playerCreature, SuiWindowType::NONE);
 	box->setPromptTitle("PLEASE NOTE");
-	box->setPromptText("You are limited to creating one character per hour. Attempting to create another character or deleting your character before the 1 hour timer expires will reset the timer.");
+	box->setPromptText("You are limited to creating one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Attempting to create another character or deleting your character before the " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minute timer expires will reset the timer.");
 
 	ghost->addSuiBox(box);
 	playerCreature->sendMessage(box->generateMessage());
@@ -720,6 +721,31 @@ void PlayerCreationManager::addProfessionStartingItems(CreatureObject* creature,
 	//Starting skill.
 	SkillManager::instance()->awardSkill(startingSkill->getSkillName(),
 			creature, false, true, true);
+
+	if (globalVariables::playerCreationAllLanguagesEnabled == true) {
+		SkillManager::instance()->awardSkill("social_language_basic_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_basic_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_rodian_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_rodian_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_trandoshan_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_trandoshan_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_moncalamari_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_moncalamari_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_wookiee_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_wookiee_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_bothan_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_bothan_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_twilek_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_twilek_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_zabrak_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_zabrak_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_lekku_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_lekku_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_ithorian_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_ithorian_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_sullustan_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_sullustan_comprehend", creature, true, true, true);
+	}
 
 	//Set the hams.
 	for (int i = 0; i < 9; ++i) {

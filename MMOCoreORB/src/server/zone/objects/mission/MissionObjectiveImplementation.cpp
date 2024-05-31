@@ -54,10 +54,10 @@ void MissionObjectiveImplementation::activate() {
 
 		activated = true;
 		int64 timeElapsed = missionStartTime.miliDifference();
-		int64 missionDuration = globalVariables::missionExpirationTime;
+		int64 missionDuration = globalVariables::missionExpirationTime * 60 * 60 * 1000;
 
 		if (mission->getTypeCRC() == MissionTypes::BOUNTY) {
-			missionDuration = globalVariables::missionBountyExpirationTime;
+			missionDuration = globalVariables::missionBountyExpirationTime * 60 * 60 * 1000;
 		}
 
 		int64 timeRemaining = missionDuration - timeElapsed;

@@ -9,14 +9,24 @@ namespace globalVariables {
 	int factionMaxRank = 15;
 
 //Mission
-	int missionBountyExpirationTime = 172800000;
-	int missionExpirationTime = 172800000;
+	int missionBountyExpirationTime = 48;
+	int missionExpirationTime = 48;
+	int missionMaxCount = 2;
+	int missionListCount = 6;
+	bool missionNameAndLevelEnabled = false;
+	bool missionDirectionSelectionEnabled = false;
+	bool missionLevelSelectionEnabled = false;
+	int missionRewardMultiplier = 1;
 
 //Player
 	int playerSamplingMultiplier = 1;
-	int playerSamplingTime = 25000;
+	int playerSamplingTime = 25;
 	bool playerSamplingMiniGameEnabled = true;
 	bool playerSamplingRadioactiveWarningEnabled = true;
+	
+//Player Creation
+	int playerCreationNewCreationTime = 60;
+	bool playerCreationAllLanguagesEnabled = false;
 
 //Resources
 	bool resourcesAddNameEnabled = false;
@@ -37,8 +47,14 @@ namespace globalVariables {
 			if (lua->getGlobalInt("factionMaxRank") > 0 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 
 			//Mission
-			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
-			if (lua->getGlobalInt("playerSamplingTime") > 0) playerSamplingTime = lua->getGlobalInt("playerSamplingTime");
+			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
+			if (lua->getGlobalInt("missionExpirationTime") > 0) missionExpirationTime = lua->getGlobalInt("missionExpirationTime");
+			if (lua->getGlobalInt("missionMaxCount") > 0) missionMaxCount = lua->getGlobalInt("missionMaxCount");
+			if (lua->getGlobalInt("missionListCount") > 0) missionListCount = lua->getGlobalInt("missionListCount");
+			if (lua->getGlobalBoolean("missionNameAndLevelEnabled") == true || lua->getGlobalBoolean("missionNameAndLevelEnabled") == false) missionNameAndLevelEnabled = lua->getGlobalBoolean("missionNameAndLevelEnabled");
+			if (lua->getGlobalBoolean("missionDirectionSelectionEnabled") == true || lua->getGlobalBoolean("missionDirectionSelectionEnabled") == false) missionDirectionSelectionEnabled = lua->getGlobalBoolean("missionDirectionSelectionEnabled");
+			if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
+			if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
 
 			//Player
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
