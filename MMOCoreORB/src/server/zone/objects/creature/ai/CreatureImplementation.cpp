@@ -13,6 +13,7 @@
 #include "server/zone/Zone.h"
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
+#include "server/globalVariables.h"
 
 //#define DEBUG
 
@@ -62,7 +63,45 @@ int CreatureImplementation::handleObjectMenuSelect(CreatureObject* player, byte 
 	} else {
 		if ((selectedID == 112 || selectedID == 234 || selectedID == 235 || selectedID == 236)) {
 			zone->getCreatureManager()->harvest(_this.getReferenceUnsafeStaticCast(), player, selectedID);
+			
+			if (globalVariables::harvestAreaEnabled == true && globalVariables::harvestAreaCommandOnlyEnabled == false) {
+				Zone* zone = _this.getReferenceUnsafeStaticCast()->getZone();
 
+				SortedVector<TreeEntry*> closeObjects;
+				CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) _this.getReferenceUnsafeStaticCast()->getCloseObjects();
+				if (closeObjectsVector == nullptr) {
+					zone->getInRangeObjects(_this.getReferenceUnsafeStaticCast()->getWorldPositionX(), _this.getReferenceUnsafeStaticCast()->getWorldPositionZ(), _this.getReferenceUnsafeStaticCast()->getWorldPositionY(), globalVariables::harvestDistance, &closeObjects, true);
+				} else {
+					closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
+				}
+
+				for (int i = 0; i < closeObjects.size(); ++i) {
+					SceneObject* obj = static_cast<SceneObject*>(closeObjects.get(i));
+
+					if (obj == nullptr)
+						continue;
+
+					if (obj->getObjectID() == _this.getReferenceUnsafeStaticCast()->getObjectID())
+						continue;
+
+					CreatureObject* c = obj->asCreatureObject();
+
+					if (c == nullptr || c->isPlayerCreature() || !c->isDead() || !c->isCreature())
+						continue;
+
+					if (!_this.getReferenceUnsafeStaticCast()->isInRange(c, globalVariables::harvestDistance))//distance
+						continue;
+
+					Creature* cr2 = cast<Creature*>( c);
+					Locker clocker(cr2, player);
+
+					ManagedReference<CreatureManager*> manager2 = cr2->getZone()->getCreatureManager();
+					manager2->harvest(cr2, player, selectedID);
+
+					//break; //only harvests 2 with a break
+
+				}
+			}
 			return 0;
 		}
 	}
@@ -387,7 +426,7 @@ bool CreatureImplementation::canCollectDna(CreatureObject* player) {
 	if (_this.getReferenceUnsafeStaticCast()->isNonPlayerCreatureObject()) {
 		return false;
 	}
-	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), 16.0f) || player->isInCombat() || player->isDead() || player->isIncapacitated() ){
+	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), globalVariables::harvestDNASampleDistance) || player->isInCombat() || player->isDead() || player->isIncapacitated() ){
 		return false;
 	}
 

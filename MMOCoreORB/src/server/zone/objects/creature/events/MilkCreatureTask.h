@@ -8,6 +8,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "engine/engine.h"
+#include "server/globalVariables.h"
 
 class MilkCreatureTask : public Task {
 
@@ -63,7 +64,7 @@ public:
 			} else {
 				currentPhase = ONEFAILURE;
 			}
-			this->reschedule(10000);
+			this->reschedule(globalVariables::harvestMilkTime * 1000);
 			break;
 		case ONESUCCESS:
 			if (success) {
@@ -72,14 +73,14 @@ public:
 			} else {
 					player->sendSystemMessage("@skl_use:milk_continue"); // You continue to milk the creature.
 					currentPhase = FINAL;
-					this->reschedule(10000);
+					this->reschedule(globalVariables::harvestMilkTime * 1000);
 			}
 			break;
 		case ONEFAILURE:
 			if (success) {
 				player->sendSystemMessage("@skl_use:milk_continue"); // You continue to milk the creature.
 				currentPhase = FINAL;
-				this->reschedule(10000);
+				this->reschedule(globalVariables::harvestMilkTime * 1000);
 			} else {
 				updateMilkState(CreatureManager::NOTMILKED);
 				clearStationary();
@@ -129,6 +130,8 @@ public:
 		} else {
 			quantityExtracted = int(quantityExtracted * 0.50f);
 		}
+
+		quantityExtracted *= globalVariables::harvestMultiplier;
 
 		TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 		resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);

@@ -15,6 +15,14 @@ namespace globalVariables {
 //Faction
 	extern int factionMaxRank;
 
+//Harvest
+	extern int harvestDistance;
+	extern bool harvestAreaEnabled;
+	extern bool harvestAreaCommandOnlyEnabled;
+	extern int harvestMultiplier;
+	extern int harvestMilkTime;
+	extern float harvestDNASampleDistance;
+
 //Loot
 	extern int lootDistance;
 	extern bool lootAreaEnabled;
@@ -43,6 +51,7 @@ namespace globalVariables {
 	extern bool playerSamplingRadioactiveWarningEnabled;
 	extern int playerMaxLots;
 	extern bool playerGlobalSafetyDepositEnabled;
+	extern float playerShuttleBoardingDistance;
 	extern std::string playerStatMigrationLocation;
 	extern bool playerStatMigrationSalonOnlyEnabled;
 	extern bool playerStatMigrationAnyLocationEnabled;
@@ -57,9 +66,6 @@ namespace globalVariables {
 	extern int resourcesMinimumQuality;
 	extern int resourcesMaximumQuality;
 	extern int resourcesContainerSize;
-
-//Shuttle
-	extern float playerShuttleBoardingDistance;
 
 //Skills
 	extern bool skillsInstantMasterPoliticianEnabled;

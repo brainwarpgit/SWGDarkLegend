@@ -8,8 +8,16 @@ craftingToolCraftTimeMultiplier = 0 --default 2
 --Faction
 factionMaxRank = 21 --default 15  max 21
 
+--Harvest
+harvestDistance = 64 --default 10 (Distance does not affect menu options.   They are still greyed out past the default..  must use /harvest)
+harvestAreaEnabled = true --default false
+harvestAreaCommandOnlyEnabled = true --default false
+harvestMultiplier = 2 --default 1
+harvestMilkTime = 5 --default 10 in seconds
+harvestDNASampleDistance = 64 --default 16  
+
 --Loot
-lootDistance = 64 --default 16
+lootDistance = 64 --default 16 (Distance does not affect menu options.   They are still greyed out past the default..  must use /loot all)
 lootAreaEnabled = true --default false
 lootCreditMultiplier = 2 --default 1
 

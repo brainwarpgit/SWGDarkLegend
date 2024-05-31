@@ -13,6 +13,14 @@ namespace globalVariables {
 //Faction
 	int factionMaxRank = 15;
 
+//Harvest
+	int harvestDistance = 10;
+	bool harvestAreaEnabled = false;
+	bool harvestAreaCommandOnlyEnabled = false;
+	int harvestMultiplier = 1;
+	int harvestMilkTime = 10;
+	float harvestDNASampleDistance = 16;
+
 //Loot
 	int lootDistance = 16;
 	bool lootAreaEnabled = false;
@@ -85,8 +93,21 @@ namespace globalVariables {
 			return false;
 		}
 		try {
+			//Crafting
+			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
+			if (lua->getGlobalInt("craftingFactoryRunTimeMultiplier") >= 0) craftingFactoryRunTimeMultiplier = lua->getGlobalInt("craftingFactoryRunTimeMultiplier");
+			if (lua->getGlobalInt("craftingToolCraftTimeMultiplier") >= 0) craftingToolCraftTimeMultiplier = lua->getGlobalInt("craftingToolCraftTimeMultiplier");
+			
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") > 0 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
+
+			//Harvest
+			if (lua->getGlobalInt("harvestDistance") > 0) harvestDistance = lua->getGlobalInt("harvestDistance");
+			if (lua->getGlobalBoolean("harvestAreaEnabled") == true || lua->getGlobalBoolean("harvestAreaEnabled") == false) harvestAreaEnabled = lua->getGlobalBoolean("harvestAreaEnabled");
+			if (lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == true || lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == false) harvestAreaCommandOnlyEnabled = lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled");
+			if (lua->getGlobalInt("harvestMultiplier") > 0) harvestMultiplier = lua->getGlobalInt("harvestMultiplier");
+			if (lua->getGlobalInt("harvestMilkTime") > 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
+			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
 
 			//Loot
 			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
