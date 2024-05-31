@@ -17,6 +17,32 @@ namespace globalVariables {
 	int craftingFactoryRunTimeMultiplier = 8;
 	int craftingToolCraftTimeMultiplier = 2;
 
+//Creature
+	int creatureMaxLevel = 336;
+	float creatureKineticMaxResists = 100.0f;
+	float creatureEnergyMaxResists = 100.0f;
+	float creatureBlastMaxResists = 100.0f;
+	float creatureHeatMaxResists = 100.0f;
+	float creatureColdMaxResists = 100.0f;
+	float creatureElectricityMaxResists = 100.0f;
+	float creatureAcidMaxResists = 100.0f;
+	float creatureStunMaxResists = 100.0f;
+	float creatureLightsaberMaxResists = 100.0f;
+	float creatureBaseScaleMultiplier = 1;
+	float creatureBaseXpMultiplier = 1;
+	float creatureBaseMeatAmountMultiplier = 1;
+	float creatureBaseHideAmountMultiplier = 1;
+	float creatureBaseBoneAmountMultiplier = 1;
+	float creatureBaseMilkMultiplier = 1;
+	float creatureBaseLevelMultiplier = 1;
+	float creatureBaseChanceHitMultiplier = 1;
+	float creatureBaseFerocityMultiplier = 1;
+	float creatureBaseDamageMaxMultiplier = 1;
+	float creatureBaseDamageMinMultiplier = 1;
+	float creatureBaseHAMMultiplier = 1;
+	float creatureBaseHAMMaxMultiplier = 1;
+	float creatureBaseResistsMultiplier = 1;
+
 //Faction
 	int factionMaxRank = 15;
 
@@ -96,7 +122,7 @@ namespace globalVariables {
 
 //Initializer
 	bool loadConfigData() {
-	    	Lua* lua = new Lua();
+		Lua* lua = new Lua();
 		lua->init();			
 		if (!lua->runFile("scripts/managers/global_variables.lua")) {
 			delete lua;
@@ -114,7 +140,33 @@ namespace globalVariables {
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
 			if (lua->getGlobalInt("craftingFactoryRunTimeMultiplier") >= 0) craftingFactoryRunTimeMultiplier = lua->getGlobalInt("craftingFactoryRunTimeMultiplier");
 			if (lua->getGlobalInt("craftingToolCraftTimeMultiplier") >= 0) craftingToolCraftTimeMultiplier = lua->getGlobalInt("craftingToolCraftTimeMultiplier");
-			
+
+			//Creature
+			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
+			if (lua->getGlobalFloat("creatureBaseScaleMultiplier") > 0) creatureBaseScaleMultiplier = lua->getGlobalFloat("creatureBaseScaleMultiplier");
+			if (lua->getGlobalFloat("creatureBaseXpMultiplier") > 0) creatureBaseXpMultiplier = lua->getGlobalFloat("creatureBaseXpMultiplier");
+			if (lua->getGlobalFloat("creatureBaseMeatAmountMultiplier") > 0) creatureBaseMeatAmountMultiplier = lua->getGlobalFloat("creatureBaseMeatAmountMultiplier");
+			if (lua->getGlobalFloat("creatureBaseHideAmountMultiplier") > 0) creatureBaseHideAmountMultiplier = lua->getGlobalFloat("creatureBaseHideAmountMultiplier");
+			if (lua->getGlobalFloat("creatureBaseBoneAmountMultiplier") > 0) creatureBaseBoneAmountMultiplier = lua->getGlobalFloat("creatureBaseBoneAmountMultiplier");
+			if (lua->getGlobalFloat("creatureBaseMilkMultiplier") > 0) creatureBaseMilkMultiplier = lua->getGlobalFloat("creatureBaseMilkMultiplier");
+			if (lua->getGlobalFloat("creatureBaseLevelMultiplier") > 0) creatureBaseLevelMultiplier = lua->getGlobalFloat("creatureBaseLevelMultiplier");
+			if (lua->getGlobalFloat("creatureBaseChanceHitMultiplier") > 0) creatureBaseChanceHitMultiplier = lua->getGlobalFloat("creatureBaseChanceHitMultiplier");
+			if (lua->getGlobalFloat("creatureBaseFerocityMultiplier") > 0) creatureBaseFerocityMultiplier = lua->getGlobalFloat("creatureBaseFerocityMultiplier");
+			if (lua->getGlobalFloat("creatureBaseDamageMaxMultiplier") > 0) creatureBaseDamageMaxMultiplier = lua->getGlobalFloat("creatureBaseDamageMaxMultiplier");
+			if (lua->getGlobalFloat("creatureBaseDamageMinMultiplier") > 0) creatureBaseDamageMinMultiplier = lua->getGlobalFloat("creatureBaseDamageMinMultiplier");
+			if (lua->getGlobalFloat("creatureBaseHAMMultiplier") > 0) creatureBaseHAMMultiplier = lua->getGlobalFloat("creatureBaseHAMMultiplier");
+			if (lua->getGlobalFloat("creatureBaseHAMMaxMultiplier") > 0) creatureBaseHAMMaxMultiplier = lua->getGlobalFloat("creatureBaseHAMMaxMultiplier");
+			if (lua->getGlobalFloat("creatureBaseResistsMultiplier") > 0) creatureBaseResistsMultiplier = lua->getGlobalFloat("creatureBaseResistsMultiplier");
+			if (lua->getGlobalFloat("creatureKineticMaxResists") >= 0) creatureKineticMaxResists = lua->getGlobalFloat("creatureKineticMaxResists");
+			if (lua->getGlobalFloat("creatureEnergyMaxResists") >= 0) creatureEnergyMaxResists = lua->getGlobalFloat("creatureEnergyMaxResists");
+			if (lua->getGlobalFloat("creatureBlastMaxResists") >= 0) creatureBlastMaxResists = lua->getGlobalFloat("creatureBlastMaxResists");
+			if (lua->getGlobalFloat("creatureHeatMaxResists") >= 0) creatureHeatMaxResists = lua->getGlobalFloat("creatureHeatMaxResists");
+			if (lua->getGlobalFloat("creatureColdMaxResists") >= 0) creatureColdMaxResists = lua->getGlobalFloat("creatureColdMaxResists");
+			if (lua->getGlobalFloat("creatureElectricityMaxResists") >= 0) creatureElectricityMaxResists = lua->getGlobalFloat("creatureElectricityMaxResists");
+			if (lua->getGlobalFloat("creatureAcidMaxResists") >= 0) creatureAcidMaxResists = lua->getGlobalFloat("creatureAcidMaxResists");
+			if (lua->getGlobalFloat("creatureStunMaxResists") >= 0) creatureStunMaxResists = lua->getGlobalFloat("creatureStunMaxResists");
+			if (lua->getGlobalFloat("creatureLightsaberMaxResists") >= 0) creatureLightsaberMaxResists = lua->getGlobalFloat("creatureLightsaberMaxResists");
+
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") > 0 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 

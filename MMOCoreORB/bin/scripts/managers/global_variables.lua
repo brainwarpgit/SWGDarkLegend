@@ -12,6 +12,32 @@ craftingFactoryCrateMaxSize = 1000 --default 100
 craftingFactoryRunTimeMultiplier = 0 --default 8
 craftingToolCraftTimeMultiplier = 0 --default 2
 
+--Creature
+creatureMaxLevel = 450 --default 336 Pulled from mobiles
+creatureBaseScaleMultiplier = 1 --default 1
+creatureBaseXpMultiplier = 1 --default 1
+creatureBaseMeatAmountMultiplier = 1 --default 1
+creatureBaseHideAmountMultiplier = 1 --default 1
+creatureBaseBoneAmountMultiplier = 1 --default 1
+creatureBaseMilkMultiplier = 1 --default 1
+creatureBaseLevelMultiplier = 1 --default 1
+creatureBaseChanceHitMultiplier = 0.1 --default 1
+creatureBaseFerocityMultiplier = 0.1 --default 1
+creatureBaseDamageMaxMultiplier = 0.1 --default 1
+creatureBaseDamageMinMultiplier = 0.1 --default 1
+creatureBaseHAMMultiplier = 0.1 --default 1
+creatureBaseHAMMaxMultiplier = 0.1 --default 1
+creatureBaseResistsMultipliers = 0.1 --default 1
+creatureKineticMaxResists = 80.0 --default 100.0
+creatureEnergyMaxResists = 80.0 --default 100.0
+creatureBlastMaxResists = 80.0 --default 100.0
+creatureHeatMaxResists = 80.0 --default 100.0
+creatureColdMaxResists = 80.0 --default 100.0
+creatureElectricityMaxResists = 80.0 --default 100.0
+creatureAcidMaxResists = 80.0--default 100.0
+creatureStunMaxResists = 40.0 --default 100.0
+creatureLightsaberMaxResists = 0.0 --default 100.0
+
 --Faction
 factionMaxRank = 21 --default 15  max 21
 

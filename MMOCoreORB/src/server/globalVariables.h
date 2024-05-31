@@ -19,6 +19,32 @@ namespace globalVariables {
 	extern int craftingFactoryRunTimeMultiplier;
 	extern int craftingToolCraftTimeMultiplier;
 
+// Creature
+	extern int creatureMaxLevel;
+	extern float creatureKineticMaxResists;
+	extern float creatureEnergyMaxResists;
+	extern float creatureBlastMaxResists;
+	extern float creatureHeatMaxResists;
+	extern float creatureColdMaxResists;
+	extern float creatureElectricityMaxResists;
+	extern float creatureAcidMaxResists;
+	extern float creatureStunMaxResists;
+	extern float creatureLightsaberMaxResists;
+	extern float creatureBaseScaleMultiplier;
+	extern float creatureBaseXpMultiplier;
+	extern float creatureBaseMeatAmountMultiplier;
+	extern float creatureBaseHideAmountMultiplier;
+	extern float creatureBaseBoneAmountMultiplier;
+	extern float creatureBaseMilkMultiplier;
+	extern float creatureBaseLevelMultiplier;
+	extern float creatureBaseChanceHitMultiplier;
+	extern float creatureBaseFerocityMultiplier;
+	extern float creatureBaseDamageMaxMultiplier;
+	extern float creatureBaseDamageMinMultiplier;
+	extern float creatureBaseHAMMultiplier;
+	extern float creatureBaseHAMMaxMultiplier;
+	extern float creatureBaseResistsMultiplier;
+
 //Faction
 	extern int factionMaxRank;
 
