@@ -7,6 +7,13 @@ namespace globalVariables {
 
 //Variables
 
+//Faction
+	extern int factionMaxRank;
+
+//Mission
+	extern int missionBountyExpirationTime;
+	extern int missionExpirationTime;
+
 //Player
 	extern int playerSamplingMultiplier;
 	extern int playerSamplingTime;

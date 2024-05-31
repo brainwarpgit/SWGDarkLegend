@@ -11,6 +11,7 @@
 #include "FactionMap.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "templates/faction/FactionRanks.h"
+#include "server/globalVariables.h"
 
 class FactionManager : public Singleton<FactionManager>, public Logger, public Object {
 	FactionMap factionMap;
@@ -61,7 +62,7 @@ public:
 	int getFactionPointsCap(int rank);
 
 	bool isHighestRank(int rank) {
-		return rank >= factionRanks.getCount() - 1 || rank >= 15;
+		return rank >= factionRanks.getCount() - 1 || rank >= globalVariables::factionMaxRank;
 	}
 
 	bool isFaction(const String& faction);
