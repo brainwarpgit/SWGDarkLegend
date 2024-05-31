@@ -29,6 +29,7 @@
 #include "server/zone/managers/frs/FrsManager.h"
 #include "server/zone/objects/creature/commands/QueueCommand.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
+#include "server/globalVariables.h"
 
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	if (player->isInCombat() || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
@@ -254,15 +255,17 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 		server->getZoneServer()->getPlayerManager()->handleAbortTradeMessage(player);
 	}
 
-	if (player->getCurrentCamp() == nullptr && player->getCityRegion() == nullptr && !ghost->isPrivileged()) {
+	if (player->getCurrentCamp() == nullptr && player->getCityRegion() == nullptr) {
 
 		Reference<CallPetTask*> callPet = new CallPetTask(_this.getReferenceUnsafeStaticCast(), player, "call_pet");
 
 		StringIdChatParameter message("pet/pet_menu", "call_pet_delay"); // Calling pet in %DI seconds. Combat will terminate pet call.
-		message.setDI(15);
-		player->sendSystemMessage(message);
+		message.setDI(globalVariables::petCallTime);
+		if (globalVariables::petCallTime > 0) {
+			player->sendSystemMessage(message);
+		}
 
-		player->addPendingTask("call_pet", callPet, 15 * 1000);
+		player->addPendingTask("call_pet", callPet, globalVariables::petCallTime * 1000);
 
 		if (petControlObserver == nullptr) {
 			petControlObserver = new PetControlObserver(_this.getReferenceUnsafeStaticCast());
@@ -513,8 +516,10 @@ void PetControlDeviceImplementation::storeObject(CreatureObject* player, bool fo
 
 	if (!force) {
 		// Fail if pet or player are in combat or if the pet is dead, unless forced
-		if (pet->isInCombat() || player->isInCombat() || player->isDead())
-			return;
+		if (globalVariables::petStoreInCombatEnabled == false) {
+			if (pet->isInCombat() || player->isInCombat() || player->isDead())
+				return;
+		}
 
 		// Check cooldown for call or store
 		if (!player->checkCooldownRecovery("petCallOrStoreCooldown")) {
@@ -603,19 +608,19 @@ bool PetControlDeviceImplementation::growPet(CreatureObject* player, bool force,
 
 	Time currentTime;
 	uint32 timeDelta = currentTime.getTime() - lastGrowth.getTime();
-	int stagesToGrow = timeDelta / 43200; // 12 hour
+	int stagesToGrow = timeDelta / globalVariables::petGrowthCycleTime * 60; // 12 hour
 
 	if (adult)
-		stagesToGrow = 10;
+		stagesToGrow = globalVariables::petGrowthCycleTime * 60;
 
 	if (stagesToGrow == 0 && !force)
 		return true;
 
 	int newStage = growthStage + stagesToGrow;
-	if (newStage > 10)
-		newStage = 10;
+	if (newStage > globalVariables::petGrowthCycleTime * 60)
+		newStage = globalVariables::petGrowthCycleTime * 60;
 
-	float newLevel = ((float)pet->getAdultLevel() / 10.0) * (float)newStage;
+	float newLevel = ((float)pet->getAdultLevel() / globalVariables::petGrowthCycleTime * 60) * (float)newStage;
 	if (newLevel < 1)
 		newLevel = 1;
 

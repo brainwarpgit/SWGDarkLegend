@@ -25,6 +25,12 @@ namespace globalVariables {
 	extern bool missionLevelSelectionEnabled;
 	extern int missionRewardMultiplier;
 
+//Pet
+	extern int petCallTime;
+	extern int petGrowthCycleTime;
+	extern int petGrowthStagesToGrown;
+	extern bool petStoreInCombatEnabled;
+
 //Player
 	extern int playerSamplingMultiplier;
 	extern int playerSamplingTime;
@@ -53,6 +59,13 @@ namespace globalVariables {
 	extern int structureMaxItemsPerStructure;
 	extern bool structureMaxItemsEnabled;
 	extern bool structureShowHouseMaxItemsEnabled;
+
+//Vehicle
+	extern int vehicleBaseDecayCycle;
+	extern int vehicleBaseDecayRate;
+	extern bool vehicleInitialDecayEnabled;
+	extern int vehicleCallTime;
+	extern bool vehicleStoreInCombatEnabled;
 
 //Initializer
 	bool loadConfigData();

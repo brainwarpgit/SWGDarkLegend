@@ -23,6 +23,12 @@ namespace globalVariables {
 	bool missionLevelSelectionEnabled = false;
 	int missionRewardMultiplier = 1;
 
+//Pet
+	int petCallTime = 15;
+	int petGrowthCycleTime = 720;
+	int petGrowthStagesToGrown = 10;
+	bool petStoreInCombatEnabled = false;
+
 //Player
 	int playerSamplingMultiplier = 1;
 	int playerSamplingTime = 25;
@@ -52,6 +58,13 @@ namespace globalVariables {
 	bool structureMaxItemsEnabled = true;
 	bool structureShowHouseMaxItemsEnabled = false;
 
+//Vehicle
+	int vehicleBaseDecayCycle = 600;
+	int vehicleBaseDecayRate = 15;
+	bool vehicleInitialDecayEnabled = true;
+	int vehicleCallTime = 15;
+	bool vehicleStoreInCombatEnabled = false;
+
 //Initializer
 	bool loadConfigData() {
 	    	Lua* lua = new Lua();
@@ -73,6 +86,12 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("missionDirectionSelectionEnabled") == true || lua->getGlobalBoolean("missionDirectionSelectionEnabled") == false) missionDirectionSelectionEnabled = lua->getGlobalBoolean("missionDirectionSelectionEnabled");
 			if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
 			if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
+
+			//Pet
+			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");
+			if (lua->getGlobalInt("petGrowthCycleTime") >= 0) petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");
+			if (lua->getGlobalInt("petGrowthStagesToGrown") > 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
+			if (lua->getGlobalBoolean("petStoreInCombatEnabled") == true || lua->getGlobalBoolean("petStoreInCombatEnabled") == false) petStoreInCombatEnabled = lua->getGlobalBoolean("petStoreInCombatEnabled");
 
 			//Player
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
@@ -98,6 +117,13 @@ namespace globalVariables {
 			if (lua->getGlobalInt("structureMaxItemsPerStructure") > 0) structureMaxItemsPerStructure = lua->getGlobalInt("structureMaxItemsPerStructure");
 			if (lua->getGlobalBoolean("structureMaxItemsEnabled") == true || lua->getGlobalBoolean("structureMaxItemsEnabled") == false) structureMaxItemsEnabled = lua->getGlobalBoolean("structureMaxItemsEnabled");
 			if (lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == true || lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == false) structureShowHouseMaxItemsEnabled = lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled");
+
+			//Vehicle
+			if (lua->getGlobalInt("vehicleBaseDecayCycle") >= 0) vehicleBaseDecayCycle = lua->getGlobalInt("vehicleBaseDecayCycle");
+			if (lua->getGlobalInt("vehicleBaseDecayRate") >= 0) vehicleBaseDecayRate = lua->getGlobalInt("vehicleBaseDecayRate");
+			if (lua->getGlobalBoolean("vehicleInitialDecayEnabled") == true || lua->getGlobalBoolean("vehicleInitialDecayEnabled") == false) vehicleInitialDecayEnabled = lua->getGlobalBoolean("vehicleInitialDecayEnabled");
+			if (lua->getGlobalInt("vehicleCallTime") >= 0) vehicleCallTime = lua->getGlobalInt("vehicleCallTime");
+			if (lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == true || lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == false) vehicleStoreInCombatEnabled = lua->getGlobalBoolean("vehicleStoreInCombatEnabled");
 
 		} catch (const Exception& e) {
 			delete lua;

@@ -18,6 +18,12 @@ missionDirectionSelectionEnabled = true --default false all mission terminals?
 missionLevelSelectionEnabled = true --default false destroy / faction terminals
 missionRewardMultiplier = 2 --default 1
 
+--Pet
+petCallTime = 0 --default 15 in seconds
+petGrowthCycleTime = 0 --default 720 in minutes
+petGrowthStagesToGrown = 10 --default 10
+petStoreInCombatEnabled = true --default false
+
 --Player
 playerSamplingMultiplier = 10 --default 1
 playerSamplingTime = 10 --default 25 in seconds
@@ -46,3 +52,10 @@ structureMaxZeroLotBuildingItems = 1000 --default 400
 structureMaxItemsPerStructure = 2500 --default 400
 structureMaxItemsEnabled = false --default true
 structureShowHouseMaxItemsEnabled = true --default false
+
+--Vehicle
+vehicleBaseDecayCycle = 600 -- default 600 in seconds
+vehicleBaseDecayRate = 15 --default 15
+vehicleInitialDecayEnabled = false --default true
+vehicleCallTime = 0 --default 15 in seconds
+vehicleStoreInCombatEnabled = true --default false
