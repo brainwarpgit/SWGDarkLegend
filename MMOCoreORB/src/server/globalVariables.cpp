@@ -61,6 +61,9 @@ namespace globalVariables {
 	bool playerStatMigrationSalonOnlyEnabled = false;
 	bool playerStatMigrationAnyLocationEnabled = false;
 	bool playerStatMigrationClearBuffsEnabled = false;
+	int playerWoundsonDeath = 100;
+	bool playerBackpackWipeEnabled = false;
+	bool playerChangeWearableColorsEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -156,7 +159,14 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerStatMigrationSalonOnlyEnabled") == true || lua->getGlobalBoolean("playerStatMigrationSalonOnlyEnabled") == false) playerStatMigrationSalonOnlyEnabled = lua->getGlobalBoolean("playerStatMigrationSalonOnlyEnabled");
 			if (lua->getGlobalBoolean("playerStatMigrationAnyLocationEnabled") == true || lua->getGlobalBoolean("playerStatMigrationAnyLocationEnabled") == false) playerStatMigrationAnyLocationEnabled = lua->getGlobalBoolean("playerStatMigrationAnyLocationEnabled");
 			if (lua->getGlobalBoolean("playerStatMigrationClearBuffsEnabled") == true || lua->getGlobalBoolean("playerStatMigrationClearBuffsEnabled") == false) playerStatMigrationClearBuffsEnabled = lua->getGlobalBoolean("playerStatMigrationClearBuffsEnabled");
+			if (lua->getGlobalInt("playerWoundsonDeath") >= 0) playerWoundsonDeath = lua->getGlobalInt("playerWoundsonDeath");
+			if (lua->getGlobalBoolean("playerBackpackWipeEnabled") == true || lua->getGlobalBoolean("playerBackpackWipeEnabled") == false) playerBackpackWipeEnabled = lua->getGlobalBoolean("playerBackpackWipeEnabled");
+			if (lua->getGlobalBoolean("playerChangeWearableColorsEnabled") == true || lua->getGlobalBoolean("playerChangeWearableColorsEnabled") == false) playerChangeWearableColorsEnabled = lua->getGlobalBoolean("playerChangeWearableColorsEnabled");
 			
+			//Player Creation
+			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
+			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
+
 			//Resources
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
 			if (lua->getGlobalInt("resourcesMinimumQuality") >= 0 && lua->getGlobalInt("resourcesMinimumQuality") <= lua->getGlobalInt("resourcesMaximumQuality")) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");

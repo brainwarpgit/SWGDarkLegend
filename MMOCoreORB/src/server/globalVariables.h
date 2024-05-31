@@ -63,6 +63,9 @@ namespace globalVariables {
 	extern bool playerStatMigrationSalonOnlyEnabled;
 	extern bool playerStatMigrationAnyLocationEnabled;
 	extern bool playerStatMigrationClearBuffsEnabled;
+	extern int playerWoundsonDeath;
+	extern bool playerBackpackWipeEnabled;
+	extern bool playerChangeWearableColorsEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

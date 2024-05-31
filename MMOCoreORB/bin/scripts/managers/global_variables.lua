@@ -56,6 +56,9 @@ playerStatMigrationLocation = "tutorial" --default "tutorial" -- isn't used when
 playerStatMigrationSalonOnlyEnabled = false --default false
 playerStatMigrationAnyLocationEnabled = true --default false
 playerStatMigrationClearBuffsEnabled = true --default false
+playerWoundsonDeath = 500 --default 100
+playerBackpackWipeEnabled = true --default false
+playerChangeWearableColorsEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
