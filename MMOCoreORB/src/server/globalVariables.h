@@ -15,6 +15,11 @@ namespace globalVariables {
 //Faction
 	extern int factionMaxRank;
 
+//Loot
+	extern int lootDistance;
+	extern bool lootAreaEnabled;
+	extern int lootCreditMultiplier;
+
 //Mission
 	extern int missionBountyExpirationTime;
 	extern int missionExpirationTime;

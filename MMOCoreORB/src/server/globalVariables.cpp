@@ -13,6 +13,11 @@ namespace globalVariables {
 //Faction
 	int factionMaxRank = 15;
 
+//Loot
+	int lootDistance = 16;
+	bool lootAreaEnabled = false;
+	int lootCreditMultiplier = 1;
+
 //Mission
 	int missionBountyExpirationTime = 48;
 	int missionExpirationTime = 48;
@@ -83,6 +88,11 @@ namespace globalVariables {
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") > 0 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 
+			//Loot
+			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
+			if (lua->getGlobalBoolean("lootAreaEnabled") == true || lua->getGlobalBoolean("lootAreaEnabled") == false) lootAreaEnabled = lua->getGlobalBoolean("lootAreaEnabled");
+			if (lua->getGlobalInt("lootCreditMultiplier") > 0) lootCreditMultiplier = lua->getGlobalInt("lootCreditMultiplier");
+			
 			//Mission
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
 			if (lua->getGlobalInt("missionExpirationTime") > 0) missionExpirationTime = lua->getGlobalInt("missionExpirationTime");

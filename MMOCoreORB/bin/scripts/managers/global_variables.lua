@@ -8,6 +8,11 @@ craftingToolCraftTimeMultiplier = 0 --default 2
 --Faction
 factionMaxRank = 21 --default 15  max 21
 
+--Loot
+lootDistance = 64 --default 16
+lootAreaEnabled = true --default false
+lootCreditMultiplier = 2 --default 1
+
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours
 missionExpirationTime = 48 --default 48 in hours

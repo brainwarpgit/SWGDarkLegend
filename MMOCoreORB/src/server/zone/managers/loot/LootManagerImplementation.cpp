@@ -18,6 +18,7 @@
 #include "server/zone/managers/loot/LootValues.h"
 #include "server/zone/managers/resource/ResourceManager.h"
 #include "server/zone/Zone.h"
+#include "server/globalVariables.h"
 
 // #define DEBUG_LOOT_MAN
 
@@ -251,7 +252,7 @@ int LootManagerImplementation::calculateLootCredits(int level) {
 
 	int credits = mincredits + System::random(maxcredits - mincredits);
 
-	return credits;
+	return credits * globalVariables::lootCreditMultiplier;
 }
 
 void LootManagerImplementation::setRandomLootValues(TransactionLog& trx, TangibleObject* prototype, const LootItemTemplate* itemTemplate, int level, float excMod) {

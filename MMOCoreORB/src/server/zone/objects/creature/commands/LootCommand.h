@@ -9,6 +9,7 @@
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/managers/group/GroupLootTask.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 class LootCommand : public QueueCommand {
 
@@ -52,7 +53,7 @@ public:
 		if (!agent->isDead() || creature->isDead())
 			return GENERALERROR;
 
-		if (!checkDistance(agent, creature, 16)) {
+		if (!creature->isInRange(creature, globalVariables::lootDistance)) {
 			creature->sendSystemMessage("@error_message:target_out_of_range"); //"Your target is out of range for this action."
 			return GENERALERROR;
 		}
@@ -85,7 +86,32 @@ public:
 		// Allow player to loot the corpse if they own it.
 		if (looterIsOwner) {
 			if (lootAll) {
-				playerManager->lootAll(creature, agent);
+				if (globalVariables::lootAreaEnabled == true) {
+					playerManager->lootAll(creature, agent);
+					Zone* zone = creature->getZone();
+					SortedVector<TreeEntry*> closeObjects;
+					CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) creature->getCloseObjects();
+					if (closeObjectsVector == nullptr) {
+						zone->getInRangeObjects(creature->getWorldPositionX(), creature->getWorldPositionZ(), creature->getWorldPositionY(), 64, &closeObjects, true);
+					} else {
+						closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
+					}
+					for (int i = 0; i < closeObjects.size(); ++i) {
+						SceneObject* obj = static_cast<SceneObject*>(closeObjects.get(i));
+						if (obj == nullptr)
+							continue;
+						if (obj->getObjectID() == creature->getObjectID())
+							continue;
+						CreatureObject* c = obj->asCreatureObject();
+						if (c == nullptr || c->isPlayerCreature() || !c->isDead())
+							continue;
+						if (!creature->isInRange(c, globalVariables::lootDistance))//distance
+							continue;
+						playerManager->lootAll(creature, c);
+					}
+				} else {
+					playerManager->lootAll(creature, agent);
+				}
 			} else {
 				//Check if the corpse's inventory contains any items.
 				if (lootContainer->getContainerObjectsSize() < 1) {
