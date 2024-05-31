@@ -36,6 +36,7 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
+#include "server/globalVariables.h"
 
 void TangibleObjectImplementation::initializeTransientMembers() {
 	SceneObjectImplementation::initializeTransientMembers();
@@ -1135,7 +1136,7 @@ Reference<FactoryCrate*> TangibleObjectImplementation::createFactoryCrate(int ma
 
 	Locker locker(crate);
 
-	crate->setMaxCapacity(maxSize);
+	crate->setMaxCapacity(globalVariables::craftingFactoryCrateMaxSize);
 
 
 	if (insertSelf) {

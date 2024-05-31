@@ -335,7 +335,7 @@ Core3.MissionManager = {
 	MaxBountiesPerJedi = 5,
 	PlayerBountyCooldown = true,
 	PlayerBountyCooldownTime = 86400000, -- 24 hour default
-	PrivateStructureJediMissions = true,
+	PrivateStructureJediMissions = false,
 }
 
 Core3.NameManager = {
@@ -353,7 +353,7 @@ Core3.PlanetManager = { -- Only for Debugging Used Defaults, can be changed.
 
 Core3.PlayerCreationManager = {
 	--EnableTutorial = false, --uncomment to force Tutorial on or off.   leave commented for player choice.
-	MaxCharactersPerGalaxy = 10,
+	MaxCharactersPerGalaxy = 4,
 }
 
 Core3.PlayerManager = {
@@ -392,7 +392,7 @@ Core3.ShipAiAgent = {
 }
 
 Core3.ShuttleZoneComponent = {
-	BootDelay = 300000, -- default 300000 in milliseconds
+	BootDelay = 60000, -- default 300000 in milliseconds
 }
 
 Core3.SpaceZone = {
@@ -425,7 +425,7 @@ Core3.TransactionLog = {
 
 Core3.TreManager = {
 	LatestTre = "SWGDL_update_01.tre",
-	ReloadStrings = false,
+	ReloadStrings = true,
 }
 
 Core3.Tweaks = {

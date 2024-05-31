@@ -5,6 +5,11 @@ namespace globalVariables {
 
 //Variables
 
+//Crafting
+	int craftingFactoryCrateMaxSize = 100;
+	int craftingFactoryRunTimeMultiplier = 8;
+	int craftingToolCraftTimeMultiplier = 2;
+
 //Faction
 	int factionMaxRank = 15;
 
@@ -23,7 +28,8 @@ namespace globalVariables {
 	int playerSamplingTime = 25;
 	bool playerSamplingMiniGameEnabled = true;
 	bool playerSamplingRadioactiveWarningEnabled = true;
-	
+	int playerMaxLots = 10;
+
 //Player Creation
 	int playerCreationNewCreationTime = 60;
 	bool playerCreationAllLanguagesEnabled = false;
@@ -33,6 +39,18 @@ namespace globalVariables {
 	int resourcesMinimumQuality = 0;
 	int resourcesMaximumQuality = 1000;
 	int resourcesContainerSize = 100000;
+
+//Skills
+	bool skillsInstantMasterPoliticianEnabled = false;
+	bool skillsInstantMasterMerchantEnabled = false;
+
+//Structure
+	int structureMaxItemsPerLot = 100;
+	int structureMaxCivicBuildingItems = 250;
+	int structureMaxZeroLotBuildingItems = 400;
+	int structureMaxItemsPerStructure = 400;
+	bool structureMaxItemsEnabled = true;
+	bool structureShowHouseMaxItemsEnabled = false;
 
 //Initializer
 	bool loadConfigData() {
@@ -58,15 +76,28 @@ namespace globalVariables {
 
 			//Player
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
-			if (lua->getGlobalInt("playerSamplingTime") > 0) playerSamplingTime = lua->getGlobalInt("playerSamplingTime");
+			if (lua->getGlobalInt("playerSamplingTime") >= 0) playerSamplingTime = lua->getGlobalInt("playerSamplingTime");
 			if (lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == true || lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == false) playerSamplingMiniGameEnabled = lua->getGlobalBoolean("playerSamplingMiniGameEnabled");
 			if (lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled") == true || lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled") == false) playerSamplingRadioactiveWarningEnabled = lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled");
+			if (lua->getGlobalInt("playerMaxLots") > 0) playerMaxLots = lua->getGlobalInt("playerMaxLots");
 
 			//Resources
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
-			if (lua->getGlobalInt("resourcesMinimumQuality") > 0) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");
-			if (lua->getGlobalInt("resourcesMaximumQuality") > 0) resourcesMaximumQuality = lua->getGlobalInt("resourcesMaximumQuality");
+			if (lua->getGlobalInt("resourcesMinimumQuality") >= 0 && lua->getGlobalInt("resourcesMinimumQuality") <= lua->getGlobalInt("resourcesMaximumQuality")) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");
+			if (lua->getGlobalInt("resourcesMaximumQuality") <= 1000 && lua->getGlobalInt("resourcesMaximumQuality") >= lua->getGlobalInt("resourcesMinimumQuality")) resourcesMaximumQuality = lua->getGlobalInt("resourcesMaximumQuality");
 			if (lua->getGlobalInt("resourcesContainerSize") > 0) resourcesContainerSize = lua->getGlobalInt("resourcesContainerSize");
+			
+			//Skills
+			if (lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == false) skillsInstantMasterPoliticianEnabled = lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled");
+			if (lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled") == false) skillsInstantMasterMerchantEnabled = lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled");
+			
+			//Structure
+			if (lua->getGlobalInt("structureMaxItemsPerLot") > 0) structureMaxItemsPerLot = lua->getGlobalInt("structureMaxItemsPerLot");
+			if (lua->getGlobalInt("structureMaxCivicBuildingItems") >= 0) structureMaxCivicBuildingItems = lua->getGlobalInt("structureMaxCivicBuildingItems");
+			if (lua->getGlobalInt("structureMaxZeroLotBuildingItems") >= 0) structureMaxZeroLotBuildingItems = lua->getGlobalInt("structureMaxZeroLotBuildingItems");
+			if (lua->getGlobalInt("structureMaxItemsPerStructure") > 0) structureMaxItemsPerStructure = lua->getGlobalInt("structureMaxItemsPerStructure");
+			if (lua->getGlobalBoolean("structureMaxItemsEnabled") == true || lua->getGlobalBoolean("structureMaxItemsEnabled") == false) structureMaxItemsEnabled = lua->getGlobalBoolean("structureMaxItemsEnabled");
+			if (lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == true || lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == false) structureShowHouseMaxItemsEnabled = lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled");
 
 		} catch (const Exception& e) {
 			delete lua;

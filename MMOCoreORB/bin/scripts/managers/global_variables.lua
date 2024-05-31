@@ -1,5 +1,10 @@
 --Global Variables added by SWGDarkLegend
 
+--Crafting
+craftingFactoryCrateMaxSize = 1000 --default 100
+craftingFactoryRunTimeMultiplier = 0 --default 8
+craftingToolCraftTimeMultiplier = 0 --default 2
+
 --Faction
 factionMaxRank = 21 --default 15  max 21
 
@@ -18,6 +23,7 @@ playerSamplingMultiplier = 10 --default 1
 playerSamplingTime = 10 --default 25 in seconds
 playerSamplingMiniGameEnabled = false --default true
 playerSamplingRadioactiveWarningEnabled = false --default true
+playerMaxLots = 20 --default 10
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
@@ -28,3 +34,15 @@ resourcesAddNameEnabled = true --default false
 resourcesMinimumQuality = 750 --default 0
 resourcesMaximumQuality = 1000 --default 1000
 resourcesContainerSize = 10000000 --default 100000
+
+--Skills
+skillsInstantMasterPoliticianEnabled = true --default false
+skillsInstantMasterMerchantEnabled = true --default false
+
+--Structure
+structureMaxItemsPerLot = 500 --default 100
+structureMaxCivicBuildingItems = 1000 --default 250
+structureMaxZeroLotBuildingItems = 1000 --default 400
+structureMaxItemsPerStructure = 2500 --default 400
+structureMaxItemsEnabled = false --default true
+structureShowHouseMaxItemsEnabled = true --default false

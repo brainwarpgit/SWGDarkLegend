@@ -7,6 +7,11 @@ namespace globalVariables {
 
 //Variables
 
+//Crafting
+	extern int craftingFactoryCrateMaxSize;
+	extern int craftingFactoryRunTimeMultiplier;
+	extern int craftingToolCraftTimeMultiplier;
+
 //Faction
 	extern int factionMaxRank;
 
@@ -25,6 +30,7 @@ namespace globalVariables {
 	extern int playerSamplingTime;
 	extern bool playerSamplingMiniGameEnabled;
 	extern bool playerSamplingRadioactiveWarningEnabled;
+	extern int playerMaxLots;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
@@ -35,6 +41,18 @@ namespace globalVariables {
 	extern int resourcesMinimumQuality;
 	extern int resourcesMaximumQuality;
 	extern int resourcesContainerSize;
+
+//Skills
+	extern bool skillsInstantMasterPoliticianEnabled;
+	extern bool skillsInstantMasterMerchantEnabled;
+
+//Structure
+	extern int structureMaxItemsPerLot;
+	extern int structureMaxCivicBuildingItems;
+	extern int structureMaxZeroLotBuildingItems;
+	extern int structureMaxItemsPerStructure;
+	extern bool structureMaxItemsEnabled;
+	extern bool structureShowHouseMaxItemsEnabled;
 
 //Initializer
 	bool loadConfigData();

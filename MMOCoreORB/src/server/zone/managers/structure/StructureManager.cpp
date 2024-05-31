@@ -50,6 +50,7 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "templates/building/CampStructureTemplate.h"
 #include "templates/customization/CustomizationIdManager.h"
+#include "server/globalVariables.h"
 
 namespace StorageManagerNamespace {
 int indexCallback(DB* secondary, const DBT* key, const DBT* data, DBT* result) {
@@ -1063,6 +1064,10 @@ void StructureManager::reportStructureStatus(CreatureObject* creature, Structure
 
 		status->addMenuItem("@player_structure:items_in_building_prompt " + String::valueOf(building->getCurrentNumberOfPlayerItems())); // Number of Items in Building:
 
+		if (globalVariables::structureShowHouseMaxItemsEnabled == true) {
+			status->addMenuItem("Maximum Items for Building:  " + String::valueOf(building->getMaximumNumberOfPlayerItems())); // Number of Items in Building:
+		}
+		
 #if ENABLE_STRUCTURE_JSON_EXPORT
 		if (creature->hasSkill("admin_base")) {
 			String exportNote = "Exported: " + building->exportJSON("reportStructureStatus");
