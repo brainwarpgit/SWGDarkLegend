@@ -5,6 +5,13 @@ namespace globalVariables {
 
 //Variables
 
+//Auction
+	int auctionMaxBazaarPrice = 20000;
+	int auctionMaxSales = 25;
+	int auctionMaxSalesFee = 20;
+	int auctionVendorExpirePeriod = 30;
+	int auctionCommodityExpirePeriod = 7;
+
 //Crafting
 	int craftingFactoryCrateMaxSize = 100;
 	int craftingFactoryRunTimeMultiplier = 8;
@@ -93,6 +100,13 @@ namespace globalVariables {
 			return false;
 		}
 		try {
+			//Auction
+			if (lua->getGlobalInt("auctionMaxBazaarPrice") > 0) auctionMaxBazaarPrice = lua->getGlobalInt("auctionMaxBazaarPrice");
+			if (lua->getGlobalInt("auctionMaxSales") > 0) auctionMaxSales = lua->getGlobalInt("auctionMaxSales");
+			if (lua->getGlobalInt("auctionMaxSalesFee") >= 0) auctionMaxSalesFee = lua->getGlobalInt("auctionMaxSalesFee");
+			if (lua->getGlobalInt("auctionVendorExpirePeriod") > 0) auctionVendorExpirePeriod = lua->getGlobalInt("auctionVendorExpirePeriod");
+			if (lua->getGlobalInt("auctionCommodityExpirePeriod") > 0) auctionCommodityExpirePeriod = lua->getGlobalInt("auctionCommodityExpirePeriod");
+			
 			//Crafting
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
 			if (lua->getGlobalInt("craftingFactoryRunTimeMultiplier") >= 0) craftingFactoryRunTimeMultiplier = lua->getGlobalInt("craftingFactoryRunTimeMultiplier");

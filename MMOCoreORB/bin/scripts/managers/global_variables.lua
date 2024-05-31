@@ -1,5 +1,12 @@
 --Global Variables added by SWGDarkLegend
 
+--Auction
+auctionMaxBazaarPrice = 10000000 --default 20000
+auctionMaxSales = 1000 --default 25
+auctionMaxSalesFee = 0 --default 20 in credits
+auctionVendorExpirePeriod = 60 --default 30 in days
+auctionCommodityExpirePeriod = 30 --default 7 in days
+
 --Crafting
 craftingFactoryCrateMaxSize = 1000 --default 100
 craftingFactoryRunTimeMultiplier = 0 --default 8

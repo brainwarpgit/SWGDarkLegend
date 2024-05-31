@@ -7,6 +7,13 @@ namespace globalVariables {
 
 //Variables
 
+//Auction
+	extern int auctionMaxBazaarPrice;
+	extern int auctionMaxSales;
+	extern int auctionMaxSalesFee;
+	extern int auctionVendorExpirePeriod;
+	extern int auctionCommodityExpirePeriod;
+
 //Crafting
 	extern int craftingFactoryCrateMaxSize;
 	extern int craftingFactoryRunTimeMultiplier;
