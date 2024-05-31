@@ -4,6 +4,18 @@
 namespace globalVariables {
 
 //Variables
+
+//Player
+	int playerSamplingMultiplier = 1;
+	int playerSamplingTime = 25000;
+	bool playerSamplingMiniGameEnabled = true;
+	bool playerSamplingRadioactiveWarningEnabled = true;
+
+//Resources
+	bool resourcesAddNameEnabled = false;
+	int resourcesMinimumQuality = 0;
+	int resourcesMaximumQuality = 1000;
+	int resourcesContainerSize = 100000;
 	
 //Initializer
 	bool loadConfigData() {
@@ -14,6 +26,17 @@ namespace globalVariables {
 			return false;
 		}
 		try {
+			//Player
+			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
+			if (lua->getGlobalInt("playerSamplingTime") > 0) playerSamplingTime = lua->getGlobalInt("playerSamplingTime");
+			if (lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == true || lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == false) playerSamplingMiniGameEnabled = lua->getGlobalBoolean("playerSamplingMiniGameEnabled");
+			if (lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled") == true || lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled") == false) playerSamplingRadioactiveWarningEnabled = lua->getGlobalBoolean("playerSamplingRadioactiveWarningEnabled");
+			
+			//Resources
+			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
+			if (lua->getGlobalInt("resourcesMinimumQuality") > 0) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");
+			if (lua->getGlobalInt("resourcesMaximumQuality") > 0) resourcesMaximumQuality = lua->getGlobalInt("resourcesMaximumQuality");
+			if (lua->getGlobalInt("resourcesContainerSize") > 0) resourcesContainerSize = lua->getGlobalInt("resourcesContainerSize");
 			
 		} catch (const Exception& e) {
 			delete lua;

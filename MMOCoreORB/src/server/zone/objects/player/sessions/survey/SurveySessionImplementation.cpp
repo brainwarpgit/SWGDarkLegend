@@ -18,6 +18,7 @@
 #include "server/zone/managers/resource/resourcespawner/SampleTask.h"
 #include "server/zone/managers/resource/resourcespawner/SurveyTask.h"
 #include "server/zone/managers/resource/resourcespawner/SampleResultsTask.h"
+#include "server/globalVariables.h"
 
 int SurveySessionImplementation::initializeSession(SurveyTool* tool) {
 	activeSurveyTool = tool;
@@ -207,11 +208,12 @@ void SurveySessionImplementation::startSample(const String& resname) {
 		return;
 	}
 
-	if (!lastResourceSampleName.isEmpty() && !activeSurveyTool->canSampleRadioactive()) {
-
-		if (resourceSpawn->isType("radioactive") && !activeSurveyTool->canSampleRadioactive()) {
-			activeSurveyTool->sendRadioactiveWarning(surveyer);
-			return;
+	if (globalVariables::playerSamplingRadioactiveWarningEnabled == true) {
+		if (!lastResourceSampleName.isEmpty() && !activeSurveyTool->canSampleRadioactive()) {
+			if (resourceSpawn->isType("radioactive") && !activeSurveyTool->canSampleRadioactive()) {
+				activeSurveyTool->sendRadioactiveWarning(surveyer);
+				return;
+			}
 		}
 	}
 
@@ -228,27 +230,31 @@ void SurveySessionImplementation::startSample(const String& resname) {
 	message.setTO(lastResourceSampleName);
 	surveyer->sendSystemMessage(message);
 
-	if (!doGamble && richSampleLocation.getPosition() == Vector3(0, 0, 0) && System::random(50) == 7) {
+	if (globalVariables::playerSamplingMiniGameEnabled == true) {
+		if (!doGamble && richSampleLocation.getPosition() == Vector3(0, 0, 0) && System::random(50) == 7) {
 
-		if (ghost->hasSuiBoxWindowType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME)) {
-			ghost->removeSuiBoxType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME);
+			if (ghost->hasSuiBoxWindowType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME)) {
+				ghost->removeSuiBoxType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME);
+			}
+
+			if (ghost->hasSuiBoxWindowType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME2)) {
+				ghost->removeSuiBoxType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME2);
+			}
+
+			if (System::random(1) == 1)
+				surveyCnodeMinigameSui();
+			else
+				surveyGnodeMinigameSui();
+
+		} else {
+
+			if (!lastResourceSampleName.isEmpty())
+				resourceManager->sendSample(surveyer, lastResourceSampleName, activeSurveyTool->getSampleAnimation());
 		}
-
-		if (ghost->hasSuiBoxWindowType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME2)) {
-			ghost->removeSuiBoxType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME2);
-		}
-
-		if (System::random(1) == 1)
-			surveyCnodeMinigameSui();
-		else
-			surveyGnodeMinigameSui();
-
 	} else {
-
 		if (!lastResourceSampleName.isEmpty())
-			resourceManager->sendSample(surveyer, lastResourceSampleName,
-					activeSurveyTool->getSampleAnimation());
-	}
+			resourceManager->sendSample(surveyer, lastResourceSampleName, activeSurveyTool->getSampleAnimation());	
+	}		
 }
 
 void SurveySessionImplementation::surveyCnodeMinigameSui() {
@@ -379,7 +385,7 @@ void SurveySessionImplementation::rescheduleSample() {
 		sampleTask = new SampleTask(surveyer, activeSurveyTool.get());
 
 	if (surveyer->getPendingTask("sample") == nullptr)
-		surveyer->addPendingTask("sample", sampleTask, 25000);
+		surveyer->addPendingTask("sample", sampleTask, globalVariables::playerSamplingTime);
 }
 
 void SurveySessionImplementation::rescheduleSampleResults(const ResourceSpawner* resourceSpawner, float density, const String& resname) {

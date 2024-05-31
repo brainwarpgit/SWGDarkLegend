@@ -8,12 +8,13 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
+#include "server/globalVariables.h"
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	TangibleObjectImplementation::fillAttributeList(alm, object);
 
 	StringBuffer ssQuantity;
-	ssQuantity << stackQuantity << "/" << ResourceContainer::MAXSIZE;
+	ssQuantity << stackQuantity << "/" << globalVariables::resourcesContainerSize;
 
 	alm->insertAttribute("resource_name", getSpawnName());
 	alm->insertAttribute("resource_contents", ssQuantity);
@@ -54,10 +55,10 @@ void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify
 
 	int newStackSize = 0;
 
-	if (!ignoreMax && stackQuantity > ResourceContainer::MAXSIZE) {
+	if (!ignoreMax && stackQuantity > globalVariables::resourcesContainerSize) {
 
-		newStackSize = stackQuantity - ResourceContainer::MAXSIZE;
-		stackQuantity = ResourceContainer::MAXSIZE;
+		newStackSize = stackQuantity - globalVariables::resourcesContainerSize;
+		stackQuantity = globalVariables::resourcesContainerSize;
 	}
 
 	if (newStackSize > 0) {
