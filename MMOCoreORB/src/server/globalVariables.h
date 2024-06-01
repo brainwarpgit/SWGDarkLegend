@@ -145,6 +145,10 @@ namespace globalVariables {
 	extern int vehicleCallTime;
 	extern bool vehicleStoreInCombatEnabled;
 
+//Wearables
+	extern bool wearablesFactionEnabled;
+	extern bool wearablesAllPlayerRacesEnabled;
+
 //Initializer
 	bool loadConfigData();
 }

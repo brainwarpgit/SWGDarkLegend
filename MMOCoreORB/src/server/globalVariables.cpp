@@ -143,6 +143,10 @@ namespace globalVariables {
 	int vehicleCallTime = 15;
 	bool vehicleStoreInCombatEnabled = false;
 
+//Wearables
+	bool wearablesFactionEnabled = true;
+	bool wearablesAllPlayerRacesEnabled = false;
+
 //Initializer
 	bool loadConfigData() {
 		Lua* lua = new Lua();
@@ -289,7 +293,11 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("vehicleInitialDecayEnabled") == true || lua->getGlobalBoolean("vehicleInitialDecayEnabled") == false) vehicleInitialDecayEnabled = lua->getGlobalBoolean("vehicleInitialDecayEnabled");
 			if (lua->getGlobalInt("vehicleCallTime") >= 0) vehicleCallTime = lua->getGlobalInt("vehicleCallTime");
 			if (lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == true || lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == false) vehicleStoreInCombatEnabled = lua->getGlobalBoolean("vehicleStoreInCombatEnabled");
-
+			
+			//Wearables
+			if (lua->getGlobalBoolean("wearablesFactionEnabled") == true || lua->getGlobalBoolean("wearablesFactionEnabled") == false) wearablesFactionEnabled = lua->getGlobalBoolean("wearablesFactionEnabled");
+			if (lua->getGlobalBoolean("wearablesAllPlayerRacesEnabled") == true || lua->getGlobalBoolean("wearablesAllPlayerRacesEnabled") == false) wearablesAllPlayerRacesEnabled = lua->getGlobalBoolean("wearablesAllPlayerRacesEnabled");
+			
 		} catch (const Exception& e) {
 			delete lua;
 			return false;

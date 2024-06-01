@@ -22,13 +22,13 @@ creatureBaseHideAmountMultiplier = 1 --default 1
 creatureBaseBoneAmountMultiplier = 1 --default 1
 creatureBaseMilkMultiplier = 1 --default 1
 creatureBaseLevelMultiplier = 1 --default 1
-creatureBaseChanceHitMultiplier = 0.1 --default 1
-creatureBaseFerocityMultiplier = 0.1 --default 1
-creatureBaseDamageMaxMultiplier = 0.1 --default 1
-creatureBaseDamageMinMultiplier = 0.1 --default 1
-creatureBaseHAMMultiplier = 0.1 --default 1
-creatureBaseHAMMaxMultiplier = 0.1 --default 1
-creatureBaseResistsMultipliers = 0.1 --default 1
+creatureBaseChanceHitMultiplier = 0.25 --default 1
+creatureBaseFerocityMultiplier = 0.25 --default 1
+creatureBaseDamageMaxMultiplier = 0.25 --default 1
+creatureBaseDamageMinMultiplier = 0.25 --default 1
+creatureBaseHAMMultiplier = 0.25 --default 1
+creatureBaseHAMMaxMultiplier = 0.25 --default 1
+creatureBaseResistsMultipliers = 0.25 --default 1
 creatureKineticMaxResists = 80.0 --default 100.0
 creatureEnergyMaxResists = 80.0 --default 100.0
 creatureBlastMaxResists = 80.0 --default 100.0
@@ -110,7 +110,7 @@ playerAwardSelfHealingXPEnabled = true --default false
 
 --Resources
 resourcesAddNameEnabled = true --default false
-resourcesMinimumQuality = 750 --default 0
+resourcesMinimumQuality = 1000 --default 0
 resourcesMaximumQuality = 1000 --default 1000
 resourcesContainerSize = 10000000 --default 100000
 
@@ -137,3 +137,8 @@ vehicleBaseDecayRate = 15 --default 15
 vehicleInitialDecayEnabled = false --default true
 vehicleCallTime = 0 --default 15 in seconds
 vehicleStoreInCombatEnabled = true --default false
+
+--Wearables
+wearablesAllPlayerRaces = { "object/creature/player/bothan_male.iff","object/creature/player/bothan_female.iff","object/creature/player/human_male.iff","object/creature/player/human_female.iff","object/creature/player/ithorian_male.iff","object/creature/player/ithorian_female.iff","object/creature/player/moncal_male.iff","object/creature/player/moncal_female.iff","object/creature/player/rodian_male.iff","object/creature/player/rodian_female.iff","object/creature/player/sullustan_male.iff","object/creature/player/sullustan_female.iff","object/creature/player/trandoshan_male.iff","object/creature/player/trandoshan_female.iff","object/creature/player/twilek_male.iff","object/creature/player/twilek_female.iff","object/creature/player/wookiee_male.iff","object/creature/player/wookiee_female.iff","object/creature/player/zabrak_male.iff","object/creature/player/zabrak_female.iff","object/mobile/vendor/aqualish_female.iff","object/mobile/vendor/aqualish_male.iff","object/mobile/vendor/bith_female.iff","object/mobile/vendor/bith_male.iff","object/mobile/vendor/bothan_female.iff","object/mobile/vendor/bothan_male.iff","object/mobile/vendor/devaronian_male.iff","object/mobile/vendor/gran_male.iff","object/mobile/vendor/human_female.iff","object/mobile/vendor/human_male.iff","object/mobile/vendor/ishi_tib_male.iff","object/mobile/vendor/ithorian_female.iff","object/mobile/vendor/ithorian_male.iff","object/mobile/vendor/moncal_female.iff","object/mobile/vendor/moncal_male.iff","object/mobile/vendor/nikto_male.iff","object/mobile/vendor/quarren_male.iff","object/mobile/vendor/rodian_female.iff","object/mobile/vendor/rodian_male.iff","object/mobile/vendor/sullustan_female.iff","object/mobile/vendor/sullustan_male.iff","object/mobile/vendor/trandoshan_female.iff","object/mobile/vendor/trandoshan_male.iff","object/mobile/vendor/twilek_female.iff","object/mobile/vendor/twilek_male.iff","object/mobile/vendor/weequay_male.iff","object/mobile/vendor/wookiee_female.iff","object/mobile/vendor/wookiee_male.iff","object/mobile/vendor/zabrak_female.iff","object/mobile/vendor/zabrak_male.iff" }
+wearablesFactionEnabled = false --default true
+wearablesAllPlayerRacesEnabled = true --default false
