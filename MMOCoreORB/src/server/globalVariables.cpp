@@ -16,6 +16,7 @@ namespace globalVariables {
 	int craftingFactoryCrateMaxSize = 100;
 	int craftingFactoryRunTimeMultiplier = 8;
 	int craftingToolCraftTimeMultiplier = 2;
+	int craftingMaxSockets = 4;
 
 //Creature
 	int creatureMaxLevel = 336;
@@ -58,6 +59,11 @@ namespace globalVariables {
 	int lootDistance = 16;
 	bool lootAreaEnabled = false;
 	int lootCreditMultiplier = 1;
+	int lootAttachmentMax = 25;
+	int lootAttachmentMin = 1;
+	int lootAttachmentMaxLevel = 250;
+	bool lootAttachmentNameEnabled = false;
+	int lootAttachmentModCount = 2;
 
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -140,6 +146,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
 			if (lua->getGlobalInt("craftingFactoryRunTimeMultiplier") >= 0) craftingFactoryRunTimeMultiplier = lua->getGlobalInt("craftingFactoryRunTimeMultiplier");
 			if (lua->getGlobalInt("craftingToolCraftTimeMultiplier") >= 0) craftingToolCraftTimeMultiplier = lua->getGlobalInt("craftingToolCraftTimeMultiplier");
+			if (lua->getGlobalInt("craftingMaxSockets") >= 0) craftingMaxSockets = lua->getGlobalInt("craftingMaxSockets");
 
 			//Creature
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
@@ -182,6 +189,11 @@ namespace globalVariables {
 			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
 			if (lua->getGlobalBoolean("lootAreaEnabled") == true || lua->getGlobalBoolean("lootAreaEnabled") == false) lootAreaEnabled = lua->getGlobalBoolean("lootAreaEnabled");
 			if (lua->getGlobalInt("lootCreditMultiplier") > 0) lootCreditMultiplier = lua->getGlobalInt("lootCreditMultiplier");
+			if (lua->getGlobalInt("lootAttachmentMax") > 0) lootAttachmentMax = lua->getGlobalInt("lootAttachmentMax");
+			if (lua->getGlobalInt("lootAttachmentMin") > 0) lootAttachmentMin = lua->getGlobalInt("lootAttachmentMin");
+			if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0) lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
+			if (lua->getGlobalInt("lootAttachmentModCount") > 0) lootAttachmentModCount = lua->getGlobalInt("lootAttachmentModCount");
+			if (lua->getGlobalBoolean("lootAttachmentNameEnabled") == true || lua->getGlobalBoolean("lootAttachmentNameEnabled") == false) lootAttachmentNameEnabled = lua->getGlobalBoolean("lootAttachmentNameEnabled");
 			
 			//Mission
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");

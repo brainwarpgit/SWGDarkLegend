@@ -11,6 +11,7 @@ auctionCommodityExpirePeriod = 30 --default 7 in days
 craftingFactoryCrateMaxSize = 1000 --default 100
 craftingFactoryRunTimeMultiplier = 0 --default 8
 craftingToolCraftTimeMultiplier = 0 --default 2
+craftingMaxSockets = 8 --default 4
 
 --Creature
 creatureMaxLevel = 450 --default 336 Pulled from mobiles
@@ -53,6 +54,11 @@ harvestDNASampleDistance = 64 --default 16
 lootDistance = 64 --default 16 (Distance does not affect menu options.   They are still greyed out past the default..  must use /loot all)
 lootAreaEnabled = true --default false
 lootCreditMultiplier = 2 --default 1
+lootAttachmentMax = 45 --default 25
+lootAttachmentMin = 1 --default 1
+lootAttachmentMaxLevel = 450 --default 250
+lootAttachmentNameEnabled = true --default false
+lootAttachmentModCount = 1 --default 2
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

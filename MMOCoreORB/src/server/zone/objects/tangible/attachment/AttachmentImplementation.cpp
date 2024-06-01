@@ -11,6 +11,7 @@
 #include "server/zone/packets/scene/AttributeListMessage.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
+#include "server/globalVariables.h"
 
 void AttachmentImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -30,10 +31,12 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 	if(roll < 5)
 		modCount += 1;
 
+	if (modCount > globalVariables::lootAttachmentModCount) modCount = globalVariables::lootAttachmentModCount;
+
 	for(int i = 0; i < modCount; ++i) {
 		//Mods can't be lower than -1 or greater than 25
-		int max = (int) Math::max(-1.f, Math::min(25.f, (float) round(0.1f * level + 3)));
-		int min = (int) Math::max(-1.f, Math::min(25.f, (float) round(0.075f * level - 1)));
+		int max = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round(((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) * level + 3)));
+		int min = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round((((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) - 0.0025f) * level - 1)));
 
 		int mod = System::random(max - min) + min;
 
@@ -77,7 +80,20 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 		msg->insertAttribute(name.toString(), value);
 
-		name.deleteAll();
+		if (globalVariables::lootAttachmentNameEnabled == true) {
+			StringId SEAName;
+			SEAName.setStringId("stat_n", key);
+			setCustomObjectName("", false);
+			setObjectName(SEAName, false);
+			setCustomObjectName(getDisplayedName() + " +" + String::valueOf(value), true);
+			StringId originalName;
+			if (isArmorAttachment())
+			    originalName.setStringId("item_n", "socket_gem_armor");
+			else
+			    originalName.setStringId("item_n", "socket_gem_clothing");
+			setObjectName(originalName, true);
+        	}
+        	name.deleteAll();
 	}
 
 }

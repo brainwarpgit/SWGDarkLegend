@@ -18,6 +18,7 @@ namespace globalVariables {
 	extern int craftingFactoryCrateMaxSize;
 	extern int craftingFactoryRunTimeMultiplier;
 	extern int craftingToolCraftTimeMultiplier;
+	extern int craftingMaxSockets;
 
 // Creature
 	extern int creatureMaxLevel;
@@ -60,6 +61,11 @@ namespace globalVariables {
 	extern int lootDistance;
 	extern bool lootAreaEnabled;
 	extern int lootCreditMultiplier;
+	extern int lootAttachmentMax;
+	extern int lootAttachmentMin;
+	extern int lootAttachmentMaxLevel;
+	extern bool lootAttachmentNameEnabled;
+	extern int lootAttachmentModCount;
 
 //Mission
 	extern int missionBountyExpirationTime;
