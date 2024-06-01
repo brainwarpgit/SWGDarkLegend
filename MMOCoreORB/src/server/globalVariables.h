@@ -32,7 +32,7 @@ namespace globalVariables {
 	extern float creatureStunMaxResists;
 	extern float creatureLightsaberMaxResists;
 	extern float creatureBaseScaleMultiplier;
-	extern float creatureBaseXpMultiplier;
+	extern float creatureBaseXPMultiplier;
 	extern float creatureBaseMeatAmountMultiplier;
 	extern float creatureBaseHideAmountMultiplier;
 	extern float creatureBaseBoneAmountMultiplier;
@@ -98,10 +98,22 @@ namespace globalVariables {
 	extern int playerWoundsonDeath;
 	extern bool playerBackpackWipeEnabled;
 	extern bool playerChangeWearableColorsEnabled;
+	extern bool playerOverwriteBuffEnabled;
+	extern bool playerWoundHealingAnywhereEnabled;
+	extern bool playerEnhanceHealingAnywhereEnabled;
+	extern int playerWoundHealingMultiplier;
+	extern int playerEnhanceHealingMultiplier;
+	extern int playerDamageHealingMultiplier;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
 	extern bool playerCreationAllLanguagesEnabled;
+
+//Player XP
+	extern bool playerForagingXPEnabled;
+	extern bool playerMilkingXPEnabled;
+	extern bool playerAwardPetHealingXPEnabled;
+	extern bool playerAwardSelfHealingXPEnabled;
 
 //Resources
 	extern bool resourcesAddNameEnabled;

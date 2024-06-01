@@ -3106,7 +3106,7 @@ int PlayerManagerImplementation::healEnhance(CreatureObject* enhancer, CreatureO
 	uint32 buffdiff = buffvalue;
 
 	//If a stronger buff already exists, then we don't buff the patient.
-	if (patient->hasBuff(buffcrc)) {
+	if (patient->hasBuff(buffcrc) && globalVariables::playerOverwriteBuffEnabled == false) {
 		Buff* buff = patient->getBuff(buffcrc);
 
 		if (buff != nullptr) {

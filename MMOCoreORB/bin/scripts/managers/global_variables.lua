@@ -16,7 +16,7 @@ craftingMaxSockets = 8 --default 4
 --Creature
 creatureMaxLevel = 450 --default 336 Pulled from mobiles
 creatureBaseScaleMultiplier = 1 --default 1
-creatureBaseXpMultiplier = 1 --default 1
+creatureBaseXPMultiplier = 1 --default 1
 creatureBaseMeatAmountMultiplier = 1 --default 1
 creatureBaseHideAmountMultiplier = 1 --default 1
 creatureBaseBoneAmountMultiplier = 1 --default 1
@@ -91,10 +91,22 @@ playerStatMigrationClearBuffsEnabled = true --default false
 playerWoundsonDeath = 500 --default 100
 playerBackpackWipeEnabled = true --default false
 playerChangeWearableColorsEnabled = true --default false
+playerOverwriteBuffEnabled = true --default false
+playerWoundHealingAnywhereEnabled = true --default false
+playerEnhanceHealingAnywhereEnabled = true --default false
+playerWoundHealingMultiplier = 2 --default 1
+playerEnhanceHealingMultiplier = 2 --default 1 also affects time and absorption(when applicable)
+playerDamageHealingMultiplier = 2 --default 1
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
 playerCreationAllLanguagesEnabled = true --default false
+
+--Player XP
+playerForagingXPEnabled = true --default false
+playerMilkingXPEnabled = true --default false
+playerAwardPetHealingXPEnabled = true --default false
+playerAwardSelfHealingXPEnabled = true --default false
 
 --Resources
 resourcesAddNameEnabled = true --default false

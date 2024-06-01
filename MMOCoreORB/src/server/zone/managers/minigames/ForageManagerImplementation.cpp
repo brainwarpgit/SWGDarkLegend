@@ -12,6 +12,8 @@
 #include "server/zone/objects/area/ForageAreaCollection.h"
 #include "templates/params/creature/CreatureAttribute.h"
 #include "server/zone/Zone.h"
+#include "server/zone/managers/player/PlayerManager.h"
+#include "server/globalVariables.h"
 
 void ForageManagerImplementation::startForaging(CreatureObject* player, int forageType) {
 	if (player == nullptr)
@@ -199,6 +201,23 @@ void ForageManagerImplementation::finishForaging(CreatureObject* player, int for
 
 		forageGiveItems(player, forageType, forageX, forageY, zoneName);
 
+		if (globalVariables::playerForagingXPEnabled == true) {
+			// Grant Wilderness Survival XP
+			ZoneServer* zoneServer = player->getZoneServer();
+			PlayerManager* playerManager = zoneServer->getPlayerManager();
+			
+			int xp = System::random(player->getSkillMod("foraging") + 50) + 50;
+			
+			if (forageType == ForageManager::SCOUT || forageType == ForageManager::SHELLFISH){
+				playerManager->awardExperience(player, "camp", xp);
+			}
+			else if (forageType == ForageManager::LAIR){
+				playerManager->awardExperience(player, "camp", xp);
+			}
+			else if (forageType == ForageManager::MEDICAL){
+				playerManager->awardExperience(player, "medical", xp);
+			}
+		}
 	}
 
 	return;

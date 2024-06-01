@@ -154,7 +154,7 @@ void CreatureTemplate::readObject(LuaObject* templateData) {
 	}
 
 	scale *= globalVariables::creatureBaseScaleMultiplier;
-	baseXp *= globalVariables::creatureBaseXpMultiplier;
+	baseXp *= globalVariables::creatureBaseXPMultiplier;
 	meatAmount *= globalVariables::creatureBaseMeatAmountMultiplier;
 	hideAmount *= globalVariables::creatureBaseHideAmountMultiplier;
 	boneAmount *= globalVariables::creatureBaseBoneAmountMultiplier;

@@ -14,6 +14,7 @@
 #include "server/zone/objects/creature/BuffAttribute.h"
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+#include "server/globalVariables.h"
 
 class HealEnhanceCommand : public QueueCommand {
 	float mindCost;
@@ -90,17 +91,19 @@ public:
 
 		int medicalRatingNotIncludingCityBonus = enhancer->getSkillMod("private_medical_rating") - enhancer->getSkillModOfType("private_medical_rating", SkillModManager::CITY);
 
-		if (medicalRatingNotIncludingCityBonus <= 0) {
-			enhancer->sendSystemMessage("@healing_response:must_be_near_droid"); // You must be in a hospital, at a campsite, or near a surgical droid to do that.
-			return false;
-		} else {
-			// Building private medical rating always takes precedence, If it a client object structure, no medical rating will prevent buffs/wound healing.
-			ManagedReference<SceneObject*> root = enhancer->getRootParent();
+		if (globalVariables::playerEnhanceHealingAnywhereEnabled == false) {
+			if (medicalRatingNotIncludingCityBonus <= 0) {
+				enhancer->sendSystemMessage("@healing_response:must_be_near_droid"); // You must be in a hospital, at a campsite, or near a surgical droid to do that.
+				return false;
+			} else {
+				// Building private medical rating always takes precedence, If it a client object structure, no medical rating will prevent buffs/wound healing.
+				ManagedReference<SceneObject*> root = enhancer->getRootParent();
 
-			if (root != nullptr && root->isClientObject()) {
-				if (enhancer->getSkillModOfType("private_medical_rating", SkillModManager::STRUCTURE) == 0) {
-					enhancer->sendSystemMessage("@healing_response:must_be_in_hospital"); // You must be in a hospital or at a campsite to do that.
-					return false;
+				if (root != nullptr && root->isClientObject()) {
+					if (enhancer->getSkillModOfType("private_medical_rating", SkillModManager::STRUCTURE) == 0) {
+						enhancer->sendSystemMessage("@healing_response:must_be_in_hospital"); // You must be in a hospital or at a campsite to do that.
+						return false;
+					}
 				}
 			}
 		}
@@ -224,8 +227,6 @@ public:
 	}
 
 	void awardXp(CreatureObject* creature, const String& type, int power) const {
-		if (!creature->isPlayerCreature())
-			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 
@@ -375,22 +376,26 @@ public:
 		uint32 currentBuff = 0;
 		uint32 buffcrc = BuffCRC::getMedicalBuff(attribute);
 
-		if (patient->hasBuff(buffcrc)) {
-			Buff* existingbuff = patient->getBuff(buffcrc);
+		if (globalVariables::playerOverwriteBuffEnabled == false) {
+			if (patient->hasBuff(buffcrc)) {
+				Buff* existingbuff = patient->getBuff(buffcrc);
 
-			currentBuff = getBuffStrength(existingbuff, attribute);
+				currentBuff = getBuffStrength(existingbuff, attribute);
+			}
 		}
 
 		// Applies battle fatigue
 		uint32 buffPower = getEnhancePackStrength(enhancePack, enhancer, patient);
+		
+		if (globalVariables::playerOverwriteBuffEnabled == false) {
+			if (buffPower < currentBuff) {
+				if (patient == enhancer)
+					enhancer->sendSystemMessage("Your current enhancements are of greater power and cannot be re-applied.");
+				else
+					enhancer->sendSystemMessage("Your target's current enhancements are of greater power and cannot be re-applied.");
 
-		if (buffPower < currentBuff) {
-			if (patient == enhancer)
-				enhancer->sendSystemMessage("Your current enhancements are of greater power and cannot be re-applied.");
-			else
-				enhancer->sendSystemMessage("Your target's current enhancements are of greater power and cannot be re-applied.");
-
-			return GENERALERROR;
+				return GENERALERROR;
+			}
 		}
 
 		auto zoneServer = server->getZoneServer();
@@ -403,7 +408,7 @@ public:
 		if (playerMan == nullptr)
 			return GENERALERROR;
 
-		uint32 amountEnhanced = playerMan->healEnhance(enhancer, patient, attribute, buffPower, enhancePack->getDuration(), enhancePack->getAbsorption());
+		uint32 amountEnhanced = playerMan->healEnhance(enhancer, patient, attribute, buffPower * globalVariables::playerEnhanceHealingMultiplier, enhancePack->getDuration() * globalVariables::playerEnhanceHealingMultiplier, enhancePack->getAbsorption() * globalVariables::playerEnhanceHealingMultiplier);
 
 		if (enhancer->isPlayerCreature() && patient->isPlayerCreature()) {
 			playerMan->sendBattleFatigueMessage(enhancer, patient);
@@ -420,8 +425,11 @@ public:
 			enhancePack->decreaseUseCount();
 		}
 
-		if (patient->getObjectID() != enhancer->getObjectID())
+		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
 			awardXp(enhancer, "medical", amountEnhanced); // No experience for healing yourself.
+		} else if (patient->getObjectID() != enhancer->getObjectID()) {
+			awardXp(enhancer, "medical", amountEnhanced); // No experience for healing yourself.
+		}
 
 		doAnimations(enhancer, patient);
 

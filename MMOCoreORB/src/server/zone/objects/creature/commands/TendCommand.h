@@ -12,6 +12,7 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "QueueCommand.h"
+#include "server/globalVariables.h"
 
 class TendCommand : public QueueCommand {
 protected:
@@ -125,8 +126,6 @@ public:
 	}
 
 	void awardXp(CreatureObject* creature, const String& type, int power) const {
-		if (!creature->isPlayerCreature())
-			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 
@@ -230,10 +229,14 @@ public:
 
 			int healPower = round(((float)creature->getSkillMod("healing_injury_treatment") / 3.f + 20.f) * bfScale);
 
-			int healedHealth = creatureTarget->healDamage(creature, CreatureAttribute::HEALTH, healPower);
-			int healedAction = creatureTarget->healDamage(creature, CreatureAttribute::ACTION, healPower, true, false);
+			int healedHealth = creatureTarget->healDamage(creature, CreatureAttribute::HEALTH, healPower * globalVariables::playerDamageHealingMultiplier);
+			int healedAction = creatureTarget->healDamage(creature, CreatureAttribute::ACTION, healPower * globalVariables::playerDamageHealingMultiplier, true, false);
 
 			sendHealMessage(creature, creatureTarget, healedHealth, healedAction);
+			if ((globalVariables::playerAwardSelfHealingXPEnabled == true || globalVariables::playerAwardPetHealingXPEnabled == true) && (healedHealth + healedAction) > 0) {
+				awardXp(creature, "medical", round((healedHealth + healedAction) * 2.5f));
+				creature->notifyObservers(ObserverEventType::ABILITYUSED, creatureTarget, STRING_HASHCODE("tendwound"));
+			}
 		} else if (tendWound) {
 			uint8 attribute = CreatureAttribute::UNKNOWN;
 
@@ -265,11 +268,11 @@ public:
 
 			int healPower = round(((float)creature->getSkillMod("healing_wound_treatment") / 3.f + 20.f) * bfScale);
 
-			int healedWounds = creatureTarget->healWound(creature, attribute, healPower);
+			int healedWounds = creatureTarget->healWound(creature, attribute, healPower * globalVariables::playerWoundHealingMultiplier);
 
 			sendWoundMessage(creature, creatureTarget, attribute, healedWounds);
 
-			if (creatureTarget != creature && healedWounds > 0) {
+			if ((globalVariables::playerAwardSelfHealingXPEnabled == true || globalVariables::playerAwardPetHealingXPEnabled == true) && healedWounds > 0) {
 				awardXp(creature, "medical", round(healedWounds * 2.5f));
 				creature->notifyObservers(ObserverEventType::ABILITYUSED, creatureTarget, STRING_HASHCODE("tendwound"));
 			}

@@ -30,7 +30,7 @@ namespace globalVariables {
 	float creatureStunMaxResists = 100.0f;
 	float creatureLightsaberMaxResists = 100.0f;
 	float creatureBaseScaleMultiplier = 1;
-	float creatureBaseXpMultiplier = 1;
+	float creatureBaseXPMultiplier = 1;
 	float creatureBaseMeatAmountMultiplier = 1;
 	float creatureBaseHideAmountMultiplier = 1;
 	float creatureBaseBoneAmountMultiplier = 1;
@@ -96,10 +96,22 @@ namespace globalVariables {
 	int playerWoundsonDeath = 100;
 	bool playerBackpackWipeEnabled = false;
 	bool playerChangeWearableColorsEnabled = false;
+	bool playerOverwriteBuffEnabled = false;
+	bool playerWoundHealingAnywhereEnabled = false;
+	bool playerEnhanceHealingAnywhereEnabled = false;
+	int playerWoundHealingMultiplier = 1;
+	int playerEnhanceHealingMultiplier = 1;
+	int playerDamageHealingMultiplier = 1;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
 	bool playerCreationAllLanguagesEnabled = false;
+
+//Player XP
+	bool playerForagingXPEnabled = false;
+	bool playerMilkingXPEnabled = false;
+	bool playerAwardPetHealingXPEnabled = false;
+	bool playerAwardSelfHealingXPEnabled = false;
 
 //Resources
 	bool resourcesAddNameEnabled = false;
@@ -151,7 +163,7 @@ namespace globalVariables {
 			//Creature
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
 			if (lua->getGlobalFloat("creatureBaseScaleMultiplier") > 0) creatureBaseScaleMultiplier = lua->getGlobalFloat("creatureBaseScaleMultiplier");
-			if (lua->getGlobalFloat("creatureBaseXpMultiplier") > 0) creatureBaseXpMultiplier = lua->getGlobalFloat("creatureBaseXpMultiplier");
+			if (lua->getGlobalFloat("creatureBaseXPMultiplier") > 0) creatureBaseXPMultiplier = lua->getGlobalFloat("creatureBaseXPMultiplier");
 			if (lua->getGlobalFloat("creatureBaseMeatAmountMultiplier") > 0) creatureBaseMeatAmountMultiplier = lua->getGlobalFloat("creatureBaseMeatAmountMultiplier");
 			if (lua->getGlobalFloat("creatureBaseHideAmountMultiplier") > 0) creatureBaseHideAmountMultiplier = lua->getGlobalFloat("creatureBaseHideAmountMultiplier");
 			if (lua->getGlobalFloat("creatureBaseBoneAmountMultiplier") > 0) creatureBaseBoneAmountMultiplier = lua->getGlobalFloat("creatureBaseBoneAmountMultiplier");
@@ -231,6 +243,11 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
 
+			
+			//Player XP
+			if (lua->getGlobalBoolean("playerForagingXPEnabled") == true || lua->getGlobalBoolean("playerForagingXPEnabled") == false) playerForagingXPEnabled = lua->getGlobalBoolean("playerForagingXPEnabled");
+			if (lua->getGlobalBoolean("playerMilkingXPEnabled") == true || lua->getGlobalBoolean("playerMilkingXPEnabled") == false) playerMilkingXPEnabled = lua->getGlobalBoolean("playerMilkingXPEnabled");
+			
 			//Resources
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
 			if (lua->getGlobalInt("resourcesMinimumQuality") >= 0 && lua->getGlobalInt("resourcesMinimumQuality") <= lua->getGlobalInt("resourcesMaximumQuality")) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");
