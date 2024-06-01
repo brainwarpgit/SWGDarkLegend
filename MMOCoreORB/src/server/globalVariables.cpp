@@ -130,6 +130,11 @@ namespace globalVariables {
 	int structureMaxItemsPerStructure = 400;
 	bool structureMaxItemsEnabled = true;
 	bool structureShowHouseMaxItemsEnabled = false;
+	int structureBaseMaintenanceRateMultiplier = 1;
+	int structureBasePowerRateMultiplier = 1;
+	bool structureAllowAllZonesEnabled = false;
+	int cityMaintenanceBaseMultiplier = 1;
+	int cityMaintenanceRateMultiplier = 1;
 
 //Vehicle
 	int vehicleBaseDecayCycle = 600;
@@ -187,14 +192,14 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("creatureLightsaberMaxResists") >= 0) creatureLightsaberMaxResists = lua->getGlobalFloat("creatureLightsaberMaxResists");
 
 			//Faction
-			if (lua->getGlobalInt("factionMaxRank") > 0 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
+			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 
 			//Harvest
 			if (lua->getGlobalInt("harvestDistance") > 0) harvestDistance = lua->getGlobalInt("harvestDistance");
 			if (lua->getGlobalBoolean("harvestAreaEnabled") == true || lua->getGlobalBoolean("harvestAreaEnabled") == false) harvestAreaEnabled = lua->getGlobalBoolean("harvestAreaEnabled");
 			if (lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == true || lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == false) harvestAreaCommandOnlyEnabled = lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled");
 			if (lua->getGlobalInt("harvestMultiplier") > 0) harvestMultiplier = lua->getGlobalInt("harvestMultiplier");
-			if (lua->getGlobalInt("harvestMilkTime") > 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
+			if (lua->getGlobalInt("harvestMilkTime") >= 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
 			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
 
 			//Loot
@@ -220,7 +225,7 @@ namespace globalVariables {
 			//Pet
 			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");
 			if (lua->getGlobalInt("petGrowthCycleTime") >= 0) petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");
-			if (lua->getGlobalInt("petGrowthStagesToGrown") > 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
+			if (lua->getGlobalInt("petGrowthStagesToGrown") >= 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
 			if (lua->getGlobalBoolean("petStoreInCombatEnabled") == true || lua->getGlobalBoolean("petStoreInCombatEnabled") == false) petStoreInCombatEnabled = lua->getGlobalBoolean("petStoreInCombatEnabled");
 
 			//Player
@@ -238,16 +243,23 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerWoundsonDeath") >= 0) playerWoundsonDeath = lua->getGlobalInt("playerWoundsonDeath");
 			if (lua->getGlobalBoolean("playerBackpackWipeEnabled") == true || lua->getGlobalBoolean("playerBackpackWipeEnabled") == false) playerBackpackWipeEnabled = lua->getGlobalBoolean("playerBackpackWipeEnabled");
 			if (lua->getGlobalBoolean("playerChangeWearableColorsEnabled") == true || lua->getGlobalBoolean("playerChangeWearableColorsEnabled") == false) playerChangeWearableColorsEnabled = lua->getGlobalBoolean("playerChangeWearableColorsEnabled");
-			
+			if (lua->getGlobalBoolean("playerOverwriteBuffEnabled") == true || lua->getGlobalBoolean("playerOverwriteBuffEnabled") == false) playerOverwriteBuffEnabled = lua->getGlobalBoolean("playerOverwriteBuffEnabled");
+			if (lua->getGlobalBoolean("playerWoundHealingAnywhereEnabled") == true || lua->getGlobalBoolean("playerWoundHealingAnywhereEnabled") == false) playerWoundHealingAnywhereEnabled = lua->getGlobalBoolean("playerWoundHealingAnywhereEnabled");
+			if (lua->getGlobalBoolean("playerEnhanceHealingAnywhereEnabled") == true || lua->getGlobalBoolean("playerEnhanceHealingAnywhereEnabled") == false) playerEnhanceHealingAnywhereEnabled = lua->getGlobalBoolean("playerEnhanceHealingAnywhereEnabled");
+			if (lua->getGlobalInt("playerWoundHealingMultiplier") > 0) playerWoundHealingMultiplier = lua->getGlobalInt("playerWoundHealingMultiplier");
+			if (lua->getGlobalInt("playerEnhanceHealingMultiplier") > 0) playerEnhanceHealingMultiplier = lua->getGlobalInt("playerEnhanceHealingMultiplier");
+			if (lua->getGlobalInt("playerDamageHealingMultiplier") > 0) playerDamageHealingMultiplier = lua->getGlobalInt("playerDamageHealingMultiplier");			
+
 			//Player Creation
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
 
-			
 			//Player XP
 			if (lua->getGlobalBoolean("playerForagingXPEnabled") == true || lua->getGlobalBoolean("playerForagingXPEnabled") == false) playerForagingXPEnabled = lua->getGlobalBoolean("playerForagingXPEnabled");
 			if (lua->getGlobalBoolean("playerMilkingXPEnabled") == true || lua->getGlobalBoolean("playerMilkingXPEnabled") == false) playerMilkingXPEnabled = lua->getGlobalBoolean("playerMilkingXPEnabled");
-			
+			if (lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled") == true || lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled") == false) playerAwardSelfHealingXPEnabled = lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled");
+			if (lua->getGlobalBoolean("playerAwardPetHealingXPEnabled") == true || lua->getGlobalBoolean("playerAwardPetHealingXPEnabled") == false) playerAwardPetHealingXPEnabled = lua->getGlobalBoolean("playerAwardPetHealingXPEnabled");
+
 			//Resources
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
 			if (lua->getGlobalInt("resourcesMinimumQuality") >= 0 && lua->getGlobalInt("resourcesMinimumQuality") <= lua->getGlobalInt("resourcesMaximumQuality")) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");
@@ -265,6 +277,11 @@ namespace globalVariables {
 			if (lua->getGlobalInt("structureMaxItemsPerStructure") > 0) structureMaxItemsPerStructure = lua->getGlobalInt("structureMaxItemsPerStructure");
 			if (lua->getGlobalBoolean("structureMaxItemsEnabled") == true || lua->getGlobalBoolean("structureMaxItemsEnabled") == false) structureMaxItemsEnabled = lua->getGlobalBoolean("structureMaxItemsEnabled");
 			if (lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == true || lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == false) structureShowHouseMaxItemsEnabled = lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled");
+			if (lua->getGlobalInt("structureBaseMaintenanceRateMultiplier") >= 0) structureBaseMaintenanceRateMultiplier = lua->getGlobalInt("structureBaseMaintenanceRateMultiplier");
+			if (lua->getGlobalInt("structureBasePowerRateMultiplier") >= 0) structureBasePowerRateMultiplier = lua->getGlobalInt("structureBasePowerRateMultiplier");
+			if (lua->getGlobalInt("cityMaintenanceBaseMultiplier") >= 0) cityMaintenanceBaseMultiplier = lua->getGlobalInt("cityMaintenanceBaseMultiplier");
+			if (lua->getGlobalInt("cityMaintenanceRateMultiplier") >= 0) cityMaintenanceRateMultiplier = lua->getGlobalInt("cityMaintenanceRateMultiplier");
+			if (lua->getGlobalBoolean("structureAllowAllZonesEnabled") == true || lua->getGlobalBoolean("structureAllowAllZonesEnabled") == false) structureAllowAllZonesEnabled = lua->getGlobalBoolean("structureAllowAllZonesEnabled");
 
 			//Vehicle
 			if (lua->getGlobalInt("vehicleBaseDecayCycle") >= 0) vehicleBaseDecayCycle = lua->getGlobalInt("vehicleBaseDecayCycle");

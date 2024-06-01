@@ -7,6 +7,7 @@
 
 
 #include "SharedStructureObjectTemplate.h"
+#include "server/globalVariables.h"
 
 
 void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
@@ -14,18 +15,30 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	lotSize = templateData->getByteField("lotSize");
 
-	baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate");
-
-	basePowerRate = templateData->getIntField("basePowerRate");
-
-	LuaObject allowzones = templateData->getObjectField("allowedZones");
-	allowedZones.removeAll(); //Make sure it's empty...
-
-	for (int i = 1; i <= allowzones.getTableSize(); ++i) {
-		allowedZones.put(allowzones.getStringAt(i));
+	if (globalVariables::structureBaseMaintenanceRateMultiplier > 0) {
+		baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate") * globalVariables::structureBaseMaintenanceRateMultiplier;
+	} else {
+		baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate");
 	}
 
-	allowzones.pop();
+	if (globalVariables::structureBasePowerRateMultiplier > 0) {
+		basePowerRate = templateData->getIntField("basePowerRate") * globalVariables::structureBasePowerRateMultiplier;
+	} else {
+		basePowerRate = templateData->getIntField("basePowerRate");
+	}
+
+	if (globalVariables::structureAllowAllZonesEnabled == true) {
+		allowedZones = {"corellia", "talus", "dathomir", "endor", "lok", "naboo", "rori", "tatooine", "yavin4", "dantooine"};
+	} else {
+		LuaObject allowzones = templateData->getObjectField("allowedZones");
+		allowedZones.removeAll(); //Make sure it's empty...
+
+		for (int i = 1; i <= allowzones.getTableSize(); ++i) {
+			allowedZones.put(allowzones.getStringAt(i));
+		}
+
+		allowzones.pop();
+	}
 
 	cityRankRequired = templateData->getByteField("cityRankRequired");
 
@@ -35,7 +48,16 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	uniqueStructure = templateData->getBooleanField("uniqueStructure");
 
-	cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase");
+	if (globalVariables::cityMaintenanceBaseMultiplier > 0) {
+		cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase") * globalVariables::cityMaintenanceBaseMultiplier;
+	} else {
+		cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase");
+	}
+	
+	if (globalVariables::cityMaintenanceRateMultiplier > 0) {
+		cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate") * globalVariables::cityMaintenanceRateMultiplier;
+	} else {
+		cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate");
+	}
 
-	cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate");
 }

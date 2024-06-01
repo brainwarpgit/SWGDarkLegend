@@ -125,6 +125,11 @@ structureMaxZeroLotBuildingItems = 1000 --default 400
 structureMaxItemsPerStructure = 2500 --default 400
 structureMaxItemsEnabled = false --default true
 structureShowHouseMaxItemsEnabled = true --default false
+structureBaseMaintenanceRateMultiplier = 1 --default 1
+structureBasePowerRateMultiplier = 1 --default 1
+structureAllowAllZonesEnabled = true --default false
+cityMaintenanceBaseMultiplier = 1 --default 1
+cityMaintenanceRateMultiplier = 1 --default 1
 
 --Vehicle
 vehicleBaseDecayCycle = 600 -- default 600 in seconds

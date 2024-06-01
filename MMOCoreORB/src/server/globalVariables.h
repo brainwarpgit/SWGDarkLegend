@@ -132,6 +132,11 @@ namespace globalVariables {
 	extern int structureMaxItemsPerStructure;
 	extern bool structureMaxItemsEnabled;
 	extern bool structureShowHouseMaxItemsEnabled;
+	extern int structureBaseMaintenanceRateMultiplier;
+	extern int structureBasePowerRateMultiplier;
+	extern bool structureAllowAllZonesEnabled;
+	extern int cityMaintenanceBaseMultiplier;
+	extern int cityMaintenanceRateMultiplier;
 
 //Vehicle
 	extern int vehicleBaseDecayCycle;
