@@ -7,6 +7,7 @@
 
 #include "server/zone/objects/resource/ResourceContainer.h"
 #include "server/zone/packets/BaseLineMessage.h"
+#include "server/globalVariables.h"
 
 class ResourceContainerObjectMessage6 : public BaseLineMessage {
 public:
@@ -17,7 +18,7 @@ public:
 		insertAscii(""); // Resource Type: "organic_food_small"
 		UnicodeString u_str = UnicodeString("");
 		insertUnicode(u_str); // Container Name
-		insertInt(ResourceContainer::MAXSIZE); // Max stack size
+		insertInt(globalVariables::resourcesContainerSize); // Max stack size
 		insertAscii(rcno->getSpawnType()); // Resource Type: planet specific
 		insertUnicode(rcno->getSpawnName());  // Resource name.
 		setSize();

@@ -21,6 +21,7 @@
 #include "server/zone/managers/planet/PlanetTravelPoint.h"
 #include "server/zone/managers/collision/CollisionManager.h"
 #include "server/zone/objects/group/GroupObject.h"
+#include "server/globalVariables.h"
 
 //#define ENABLE_CITY_TRAVEL_LIMIT
 
@@ -70,7 +71,7 @@ public:
 			return GENERALERROR;
 		}
 
-		if (!shuttle->isInRange(creature, 25.f)) {
+		if (!shuttle->isInRange(creature, globalVariables::playerShuttleBoardingDistance)) {
 			creature->sendSystemMessage("@player_structure:boarding_too_far"); //You are too far from the shuttle to board.
 			return GENERALERROR;
 		}

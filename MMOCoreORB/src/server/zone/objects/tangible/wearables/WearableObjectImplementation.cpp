@@ -14,6 +14,7 @@
 #include "server/zone/managers/skill/SkillModManager.h"
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 void WearableObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -94,10 +95,10 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 	float randomSkill = System::random(skillAdjust) * 10;
 	float roll = randomSkill / (400.f + maxMod);
 
-	float generatedCount = roll * MAXSOCKETS;
+	float generatedCount = roll * globalVariables::craftingMaxSockets;
 
-	if (generatedCount > MAXSOCKETS)
-		generatedCount = MAXSOCKETS;
+	if (generatedCount > globalVariables::craftingMaxSockets)
+		generatedCount = globalVariables::craftingMaxSockets;
 	else if (generatedCount > 3 && generatedCount <= 3.75f)
 		generatedCount = floor(generatedCount);
 
@@ -113,7 +114,7 @@ void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attac
 	if (!isASubChildOf(player))
 		return;
 
-	if (getRemainingSockets() > 0 && wearableSkillMods.size() < 6) {
+	if (getRemainingSockets() > 0 && wearableSkillMods.size() <= globalVariables::craftingMaxSockets) {
 		Locker locker(player);
 
 		if (isEquipped()) {

@@ -27,6 +27,7 @@
 
 #include "templates/installation/FactoryObjectTemplate.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 //#define DEBUG_FACTORIES
 
@@ -566,7 +567,7 @@ bool FactoryObjectImplementation::startFactory() {
 	timer = 30;
 	info(true) << "Factory Testing Timer Set To: " << timer;
 #else
-	timer = ((int)schematic->getComplexity()) * 8;
+	timer = ((int)schematic->getComplexity()) * globalVariables::craftingFactoryRunTimeMultiplier;
 #endif
 
 	if (!populateSchematicBlueprint(schematic))
@@ -780,7 +781,7 @@ FactoryCrate* FactoryObjectImplementation::locateCrateInOutputHopper(TangibleObj
 
 		FactoryCrate* crate = cast<FactoryCrate*>(object.get());
 
-		if (crate->getPrototype() != nullptr && crate->getPrototype()->getSerialNumber() == prototype->getSerialNumber() && crate->getUseCount() < crate->getMaxCapacity()) {
+		if (crate->getPrototype() != nullptr && crate->getPrototype()->getSerialNumber() == prototype->getSerialNumber() && crate->getUseCount() < globalVariables::craftingFactoryCrateMaxSize) {
 			return crate;
 		}
 	}

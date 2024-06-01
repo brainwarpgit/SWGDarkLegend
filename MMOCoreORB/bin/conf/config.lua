@@ -48,7 +48,7 @@ Core3 = {
 	MakeZone = 1,
 	MakePing = 1,
 	MakeStatus = 1,
-	MakeWeb = 0,
+--	MakeWeb = 0,
 
 	------ORB Server Config------
 	ORB = "",
@@ -60,7 +60,7 @@ Core3 = {
 	DBName = "swgemu",
 	DBUser = "swgemu",
 	DBPass = "123456",
-	DBInstances = 2,
+--	DBInstances = 2,
 	DBSecret = "swgemus3cr37!", -- Change this! This value should be unique and of reasonable length.
 
 	------Login Server Config------
@@ -78,7 +78,7 @@ Core3 = {
 	MantisPrfx = "mantis_", -- The prefix for your mantis tables.
 
 	------Metrics Server Config------
-	MetricsHost = "localhost",
+	MetricsHost = "127.0.0.1",
 	MetricsPort = 8125,
 	MetricsPrefix = "",
 
@@ -90,6 +90,8 @@ Core3 = {
 	ZoneProcessingThreads = 10,
 	ZoneAllowedConnections = 30000,
 	ZoneGalaxyID = 2, --The actual zone server's galaxyID. Should coordinate with your login server.
+	ZonePortsBalancer = 1,
+	ZonerServerPort = 0,
 
 	-------- GROUND ZONES -------
 	ZonesEnabled = {
@@ -147,8 +149,9 @@ Core3 = {
 	},
 
 	------TRE config------
-	TrePath = "/home/swgemu/Desktop/SWGEmu",
+	TrePath = "/home/swgemu/workspace/tre",
 	TreFiles = {
+		"SWGDL_update_01.tre",		
 		"default_patch.tre",
 		"patch_sku1_14_00.tre",
 		"patch_14_00.tre",
@@ -208,10 +211,10 @@ Core3 = {
 	StatusInterval = 30, -- interval to check if zone is locked up (in seconds)
 
 	------Web Server Config------
-	WebPorts = 44460, -- Can be multiple ports 44460,44461
-	WebAccessLog = "../log/webaccess.log",
-	WebErrorLog = "../log/weberror.log",
-	WebSessionTimeout = 600, -- Length that inactive web sessions expire
+--	WebPorts = 44460, -- Can be multiple ports 44460,44461
+--	WebAccessLog = "../log/webaccess.log",
+--	WebErrorLog = "../log/weberror.log",
+--	WebSessionTimeout = 600, -- Length that inactive web sessions expire
 
 	------Logging Config------
 	LogFile = "log/core3.log",
@@ -222,7 +225,12 @@ Core3 = {
 	PathfinderLogJSON = 0,
 	PlayerLogLevel = 4, -- -1 NONE, 0 FATAL, 1 ERROR, 2 WARNING, 3 LOG, 4 INFO, 5 DEBUG
 	MaxLogLines = 1000000, -- how often to rotate log (currently only log/player.log rotates)
-
+	RotateLogSizeMB = 100, -- Size to Rotate Logs in MB
+	RotateLogAtStart = 0,
+	OnlineLogSeconds = 300,
+	OnlineLogSize = 100000000,
+	LogOnlineOnSessionChange = 1,
+	
 	------REST Server Config------
 	RESTServerPort = 0,
 
@@ -232,22 +240,201 @@ Core3 = {
 
 	------Character Config------
 	CleanupMailCount = 25000,
-	DeleteCharacters = 10, -- How often in minutes to purge deleted characters
-
+--	DeleteCharacters = 10, -- How often in minutes to purge deleted characters
+	PurgeDeletedCharacters = 10,
+	SameAccountTipsAreFree = 0,
+	
 	------Extra Config ------
 	MaxNavMeshJobs = 6,
 	MaxAuctionSearchJobs = 1,
 	DumpObjFiles = 1,
-	ProgressMonitors = "true",
+	ProgressMonitors = "false",
 	UnloadContainers = 1, -- Whether to unload container contents from RAM after the container hasn't been accessed for a time
+	UseMetrics = 0,
+	PvpMode = 0,
+	MOTD = "Welcome to SWGEmu!",
+	Revision = "",
+	SessionStatsSeconds = 3600,
+	
 
 	------Server Config------
 	CharacterBuilderEnabled = "true",
 	AutoReg = 1,
+	RegistrationMessage = "Automatic registration is currently disabled.  Please contact the administrators of the server in order to get an authorized account.",
 
 	------TOS Config------
 	TermsOfServiceVersion = 0,
 	TermsOfService = "",
 }
 
+Core3.AccountManager = {
+	CreatedDateFirstConnect = false,
+	HolocronTicketsEnabled = false,
+}
+
+Core3.AiAgent = {
+	AiAgentLoadTesting = false,
+	ConsoleThrottle = 100,
+	LogLevel = 2,
+	Verbose = false,
+}
+
+Core3.AuctionItem = {
+	ExportOnDestroy = false,
+}
+
+Core3.AuctionManager = {
+	LogLevel = -1,
+	Startup = {
+	ExpireInvalid = false,
+	}
+}
+
+Core3.ChatManager = {
+	PvpBroadcastChannel = false,
+}
+
+Core3.CombatManager = {
+	AllowSameAccountLinkDeadBeneficialActions = true,
+}
+
+Core3.CommandConfigManager = {
+	DumpAdminCommand = false,
+}
+
+Core3.DirectorManager = {
+	SlowLoadMs = 1000,
+}
+
+Core3.FrsManager = {
+	ImmediateMaintXpDeduction = false,
+}
+
+Core3.GCWManager = {
+	useCovertOvertSystem = false,
+}
+
+Core3.Login = {
+	EnableSessionId = false,
+	SessionDuration = "00:15",
+}
+
+Core3.LootManager = {
+	DebugAttributes = false,
+}
+
+Core3.LuaEngine = {
+	LogLevel = 1,
+	LuaEventLogLevel = 4,
+}
+
+Core3.MissionManager = {
+	AnonymousBountyTerminals = false,
+	IncludeFactionPets = true,
+	ListRequestCooldown = 1400,
+	MaxBountiesPerJedi = 5,
+	PlayerBountyCooldown = true,
+	PlayerBountyCooldownTime = 86400000, -- 24 hour default
+	PrivateStructureJediMissions = false,
+}
+
+Core3.NameManager = {
+	FilterTable = oldFilterWords,
+}
+
+Core3.PlanetManager = { -- Only for Debugging Used Defaults, can be changed.
+	ShuttleportAwayTime = 300,
+	ShuttleportLandedTime = 120,
+	ShuttleportLandingTime = 11,
+	StarportAwayTime = 60,
+	StarportLandedTime = 120,
+	StarportLandingTime = 14,
+}
+
+Core3.PlayerCreationManager = {
+	--EnableTutorial = false, --uncomment to force Tutorial on or off.   leave commented for player choice.
+	MaxCharactersPerGalaxy = 4,
+}
+
+Core3.PlayerManager = {
+	AdvancedWaypoints = true,
+	DisableGroupVisibility = true,
+	GalaxyWideGrouping = true,
+	ValidClientVersion = "20050408-18:00",
+	WipeFillingOnClone = true,
+}
+
+Core3.PlayerObject = {
+	AlwaysSafeLogout = false,
+	LinkDeadDelay = 180, -- in seconds
+}
+
+Core3.Regions = {
+	minimumLairSpawnInterval = 5000,
+	spawnCheckRange = 64,
+}
+
+Core3.RESTServer = {
+	APIToken = "",
+	LogLevel = 4,
+	exportDir = "log/exports/api/%Y-%m-%d/%H/",
+	SSLCertFile = "",
+	SSLKeyFile = "",
+	WorkerThreads = 4,
+}
+
+Core3.SceneObject = {
+	exportDir = "log/exports/%Y-%m-%d/%H/",
+}
+
+Core3.ShipAiAgent = {
+	LogLevel = 2,
+}
+
+Core3.ShuttleZoneComponent = {
+	BootDelay = 60000, -- default 300000 in milliseconds
+}
+
+Core3.SpaceZone = {
+	ThreadsDefault = 1,
+}
+
+Core3.StructureMaintenanceTask = {
+	AllowBankPayments = true,
+}
+
+
+Core3.StructureManager = {
+	EnhancedFurnitureRotate = true,
+}
+
+Core3.StructureObject = {
+	MaintenanceBootDelay = 600,
+}
+
+Core3.TangibleObject = {
+	ForceNoTradeMessage = "",
+	ForceNoTradeADKMessage = "",
+	NoTradeMessage = "",
+}
+
+Core3.TransactionLog = {
+	LogLevel = 5,
+	WorkerThreads = 4,
+}	
+
+Core3.TreManager = {
+	LatestTre = "SWGDL_update_01.tre",
+	ReloadStrings = true,
+}
+
+Core3.Tweaks = {
+	StructureObject = {
+		DestroyOrphans = false,
+	}
+}
+
+Core3.Zone = {
+	ThreadsDefault = 1,
+}
 -- NOTE: conf/config-local.lua is parsed after this file if it exists

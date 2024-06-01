@@ -13,6 +13,7 @@
 #include "server/zone/objects/creature/events/InjuryTreatmentTask.h"
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+#include "server/globalVariables.h"
 
 class HealStateCommand : public QueueCommand {
 	float mindCost;
@@ -54,8 +55,6 @@ public:
 	}
 
 	void awardXp(CreatureObject* creature, String type, int power) const {
-		if (!creature->isPlayerCreature())
-			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 
@@ -299,8 +298,11 @@ public:
 			statePack->decreaseUseCount();
 		}
 
-		if (creatureTarget != creature && !creatureTarget->isPet())
+		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", 50); //No experience for healing yourself or pets.
+		} else if (creatureTarget != creature && !creatureTarget->isPet()) {
+			awardXp(creature, "medical", 50); //No experience for healing yourself or pets.
+		}
 
 		doAnimations(creature, creatureTarget);
 

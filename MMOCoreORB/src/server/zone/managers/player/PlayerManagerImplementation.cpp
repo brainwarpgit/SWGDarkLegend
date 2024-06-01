@@ -115,6 +115,7 @@
 #include "server/zone/objects/tangible/deed/ship/ShipDeed.h"
 
 #include "server/zone/managers/statistics/StatisticsManager.h"
+#include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl,
 					bool trackOnlineUsers) : Logger("PlayerManager") {
@@ -1780,10 +1781,10 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 	ManagedReference<SceneObject*> preDesignatedFacility = server->getObject(preDesignatedFacilityOid);
 
 	if (preDesignatedFacility == nullptr || preDesignatedFacility != cloner) {
-		player->addWounds(CreatureAttribute::HEALTH, 100, true, false);
-		player->addWounds(CreatureAttribute::ACTION, 100, true, false);
-		player->addWounds(CreatureAttribute::MIND, 100, true, false);
-		player->addShockWounds(100, true);
+		player->addWounds(CreatureAttribute::HEALTH, globalVariables::playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::ACTION, globalVariables::playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::MIND, globalVariables::playerWoundsonDeath, true, false);
+		player->addShockWounds(globalVariables::playerWoundsonDeath, true);
 	}
 
 	if (ConfigManager::instance()->useCovertOvertSystem()) {
@@ -3105,7 +3106,7 @@ int PlayerManagerImplementation::healEnhance(CreatureObject* enhancer, CreatureO
 	uint32 buffdiff = buffvalue;
 
 	//If a stronger buff already exists, then we don't buff the patient.
-	if (patient->hasBuff(buffcrc)) {
+	if (patient->hasBuff(buffcrc) && globalVariables::playerOverwriteBuffEnabled == false) {
 		Buff* buff = patient->getBuff(buffcrc);
 
 		if (buff != nullptr) {

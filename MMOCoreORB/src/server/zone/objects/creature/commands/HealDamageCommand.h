@@ -14,6 +14,7 @@
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/packets/object/CombatAction.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+#include "server/globalVariables.h"
 
 class HealDamageCommand : public QueueCommand {
 	float range;
@@ -243,8 +244,6 @@ public:
 	}
 
 	void awardXp(CreatureObject* creature, const String& type, int power) const {
-		if (!creature->isPlayerCreature())
-			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 
@@ -272,24 +271,24 @@ public:
 
 
 			if (atts.contains(CreatureAttribute::HEALTH)) {
-				healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower);
+				healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower * globalVariables::playerDamageHealingMultiplier);
 				notifyObservers = false;
 			}
 
 			if (atts.contains(CreatureAttribute::ACTION)) {
 				if (notifyObservers) {
-					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower);
+					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier);
 					notifyObservers = false;
 				} else {
-					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower, true, false);
+					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
 				}
 			}
 
 			if (atts.contains(CreatureAttribute::MIND)) {
 				if (notifyObservers) {
-					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower);
+					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier);
 				} else {
-					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower, true, false);
+					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
 				}
 			}
 
@@ -300,8 +299,11 @@ public:
 
 			sendHealMessage(creature, targetCreature, healthHealed, actionHealed, mindHealed);
 
-			if (targetCreature != creature && !targetCreature->isPet())
+			if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
 				awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself or pets.
+			} else if (targetCreature != creature && !targetCreature->isPet()) {
+				awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself or pets.
+			}
 
 			checkForTef(creature, targetCreature);
 		}
@@ -460,24 +462,24 @@ public:
 
 
 		if (atts.contains(CreatureAttribute::HEALTH)) {
-			healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower);
+			healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower * globalVariables::playerDamageHealingMultiplier);
 			notifyObservers = false;
 		}
 
 		if (atts.contains(CreatureAttribute::ACTION)) {
 			if (notifyObservers) {
-				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower);
+				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier);
 				notifyObservers = false;
 			} else {
-				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower, true, false);
+				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
 			}
 		}
 
 		if (atts.contains(CreatureAttribute::MIND)) {
 			if (notifyObservers) {
-				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower);
+				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier);
 			} else {
-				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower, true, false);
+				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
 			}
 		}
 
@@ -493,9 +495,11 @@ public:
 		Locker locker(stimPack);
 		stimPack->decreaseUseCount();
 
-		if (targetCreature != creature && !targetCreature->isPet())
+		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself.
-
+		} else if (targetCreature != creature && !targetCreature->isPet()) {
+			awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself.
+		}
 		if (targetCreature != creature)
 			clocker.release();
 

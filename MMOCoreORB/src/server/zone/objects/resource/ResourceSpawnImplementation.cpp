@@ -6,8 +6,8 @@
 #include "server/zone/Zone.h"
 #include "server/zone/objects/resource/ResourceContainer.h"
 #include "server/zone/managers/crafting/CraftingManager.h"
-
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
+#include "server/globalVariables.h"
 
 void ResourceSpawnImplementation::fillAttributeList(AttributeListMessage* alm,
 		CreatureObject* object) {
@@ -242,7 +242,12 @@ Reference<ResourceContainer*> ResourceSpawnImplementation::createResource(int un
    	if (units != 0)
    		newResource->setQuantity(units);
 
-   	newResource->setCustomObjectName(getFamilyName(), false);
+   	if (globalVariables::resourcesAddNameEnabled == true) {
+	   	String resourceName = getFinalClass() + " (" + getName() + ")"; 
+		newResource->setCustomObjectName(getFamilyName() + " ["+getName()+"]", true);
+   	} else {
+   		newResource->setCustomObjectName(getFamilyName(), false);
+   	}
 
    	++containerReferenceCount;
 

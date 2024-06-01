@@ -7,6 +7,7 @@
 
 #include "CreatureTemplate.h"
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
+#include "server/globalVariables.h"
 
 CreatureTemplate::CreatureTemplate() {
 	conversationTemplate = 0;
@@ -152,19 +153,167 @@ void CreatureTemplate::readObject(LuaObject* templateData) {
 		milkType = templateData->getStringField("milkType").trim();
 	}
 
+	scale *= globalVariables::creatureBaseScaleMultiplier;
+	baseXp *= globalVariables::creatureBaseXPMultiplier;
+	meatAmount *= globalVariables::creatureBaseMeatAmountMultiplier;
+	hideAmount *= globalVariables::creatureBaseHideAmountMultiplier;
+	boneAmount *= globalVariables::creatureBaseBoneAmountMultiplier;
+	milk *= globalVariables::creatureBaseMilkMultiplier;
+	level *= globalVariables::creatureBaseLevelMultiplier;
+	chanceHit *= globalVariables::creatureBaseChanceHitMultiplier;
+	ferocity *= globalVariables::creatureBaseFerocityMultiplier;
+	damageMax *= globalVariables::creatureBaseDamageMaxMultiplier;
+	damageMin *= globalVariables::creatureBaseDamageMinMultiplier;
+	baseHAM *= globalVariables::creatureBaseHAMMultiplier;
+	baseHAMmax *= globalVariables::creatureBaseHAMMaxMultiplier;
+	
+	if (damageMin >= damageMax) damageMin = damageMax * 0.9;
+	if (baseHAMmax >= baseHAM) baseHAM = baseHAMmax * 0.9;
+	
+	level = std::max(1,std::min(globalVariables::creatureMaxLevel, level));
+	damageMin = std::max(1,damageMin);
+	damageMax = std::max(2,damageMax);
+	baseHAM = std::max(1,baseHAM);
+	baseHAMmax = std::max(2,baseHAMmax);
+		
 	LuaObject res = templateData->getObjectField("resists");
 	if (res.getTableSize() == 9) {
-		kinetic = res.getFloatAt(1);
+		kinetic = res.getFloatAt(1); 	
+		if (kinetic > 100) {
+			kinetic = (((kinetic - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (kinetic > 100 + globalVariables::creatureKineticMaxResists) {
+				kinetic = 100 + globalVariables::creatureKineticMaxResists;
+			}
+		} else {
+			kinetic *= globalVariables::creatureBaseResistsMultiplier;
+			if (kinetic > globalVariables::creatureKineticMaxResists) {
+				kinetic = globalVariables::creatureKineticMaxResists;
+			}
+		}
+		if (kinetic < 0) {
+			kinetic = -1;
+		}
 		energy = res.getFloatAt(2);
+		if (energy > 100) {
+			energy = (((energy - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (energy > 100 + globalVariables::creatureEnergyMaxResists) {
+				energy = 100 + globalVariables::creatureEnergyMaxResists;
+			}
+		} else {
+			energy *= globalVariables::creatureBaseResistsMultiplier;
+			if (energy > globalVariables::creatureEnergyMaxResists) {
+				energy = globalVariables::creatureEnergyMaxResists;
+			}
+		}
+		if (energy < 0) {
+			energy = -1;
+		}
 		blast = res.getFloatAt(3);
+		if (blast > 100) {
+			blast = (((blast - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (blast > 100 + globalVariables::creatureBlastMaxResists) {
+				blast = 100 + globalVariables::creatureBlastMaxResists;
+			}
+		} else {
+			blast *= globalVariables::creatureBaseResistsMultiplier;
+			if (blast > globalVariables::creatureBlastMaxResists) {
+				blast = globalVariables::creatureBlastMaxResists;
+			}
+		}
+		if (blast < 0) {
+			blast = -1;
+		}
 		heat = res.getFloatAt(4);
+		if (heat > 100) {
+			heat = (((heat - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (heat > 100 + globalVariables::creatureHeatMaxResists) {
+				heat = 100 + globalVariables::creatureHeatMaxResists;
+			}
+		} else {
+			heat *= globalVariables::creatureBaseResistsMultiplier;
+			if (heat > globalVariables::creatureHeatMaxResists) {
+				heat = globalVariables::creatureHeatMaxResists;
+			}
+		}
+		if (heat < 0) {
+			heat = -1;
+		}
 		cold = res.getFloatAt(5);
+		if (cold > 100) {
+			cold = (((cold - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (cold > 100 + globalVariables::creatureColdMaxResists) {
+				cold = 100 + globalVariables::creatureColdMaxResists;
+			}
+		} else {
+			cold *= globalVariables::creatureBaseResistsMultiplier;
+			if (cold > globalVariables::creatureColdMaxResists) {
+				cold = globalVariables::creatureColdMaxResists;
+			}
+		}
+		if (cold < 0) {
+			cold = -1;
+		}
 		electricity = res.getFloatAt(6);
+		if (electricity > 100) {
+			electricity = (((electricity - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (electricity > 100 + globalVariables::creatureElectricityMaxResists) {
+				electricity = 100 + globalVariables::creatureElectricityMaxResists;
+			}
+		} else {
+			electricity *= globalVariables::creatureBaseResistsMultiplier;
+			if (electricity > globalVariables::creatureElectricityMaxResists) {
+				electricity = globalVariables::creatureElectricityMaxResists;
+			}
+		}
+		if (electricity < 0) {
+			electricity = -1;
+		}
 		acid = res.getFloatAt(7);
+		if (acid > 100) {
+			acid = (((acid - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (acid > 100 + globalVariables::creatureAcidMaxResists) {
+				acid = 100 + globalVariables::creatureAcidMaxResists;
+			}
+		} else {
+			acid *= globalVariables::creatureBaseResistsMultiplier;
+			if (acid > globalVariables::creatureAcidMaxResists) {
+				acid = globalVariables::creatureAcidMaxResists;
+			}
+		}
+		if (acid < 0) {
+			acid = -1;
+		}
 		stun = res.getFloatAt(8);
+		if (stun > 100) {
+			stun = (((stun - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (stun > 100 + globalVariables::creatureStunMaxResists) {
+				stun = 100 + globalVariables::creatureStunMaxResists;
+			}
+		} else {
+			stun *= globalVariables::creatureBaseResistsMultiplier;
+			if (stun > globalVariables::creatureStunMaxResists) {
+				stun = globalVariables::creatureStunMaxResists;
+			}
+		}
+		if (stun < 0) {
+			stun = -1;
+		}
 		lightSaber = res.getFloatAt(9);
+		if (lightSaber > 100) {
+			lightSaber = (((lightSaber - 100) * globalVariables::creatureBaseResistsMultiplier) + 100);
+			if (lightSaber > 100 + globalVariables::creatureLightsaberMaxResists) {
+				lightSaber = 100 + globalVariables::creatureLightsaberMaxResists;
+			}
+		} else {
+			lightSaber *= globalVariables::creatureBaseResistsMultiplier;
+			if (lightSaber > globalVariables::creatureLightsaberMaxResists) {
+				lightSaber = globalVariables::creatureLightsaberMaxResists;
+			}
+		}
+		if (lightSaber < 0) {
+			lightSaber = -1;
+		}	
 	}
-
 	res.pop();
 
 	LuaObject temps = templateData->getObjectField("templates");

@@ -14,7 +14,7 @@
 #include "server/zone/objects/draftschematic/DraftSchematic.h"
 #include "server/zone/objects/tangible/attachment/Attachment.h"
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
-
+#include "server/globalVariables.h"
 
 void WearableContainerObjectImplementation::initializeTransientMembers() {
 	ContainerImplementation::initializeTransientMembers();
@@ -84,10 +84,10 @@ void WearableContainerObjectImplementation::generateSockets(CraftingValues* craf
 	float randomSkill = System::random(skillAdjust) * 10;
 	float roll = randomSkill / (400.f + maxMod);
 
-	float generatedCount = roll * MAXSOCKETS;
+	float generatedCount = roll * globalVariables::craftingMaxSockets;
 
-	if (generatedCount > MAXSOCKETS)
-		generatedCount = MAXSOCKETS;
+	if (generatedCount > globalVariables::craftingMaxSockets)
+		generatedCount = globalVariables::craftingMaxSockets;
 	else if (generatedCount > 3 && generatedCount <= 3.75f)
 		generatedCount = floor(generatedCount);
 

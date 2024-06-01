@@ -17,6 +17,7 @@
 #include "server/zone/objects/region/CityRegion.h"
 #include "server/zone/objects/player/sessions/TradeSession.h"
 #include "server/zone/managers/player/PlayerManager.h"
+#include "server/globalVariables.h"
 
 void VehicleControlDeviceImplementation::generateObject(CreatureObject* player) {
 	if (player->isDead() || player->isIncapacitated())
@@ -82,10 +83,12 @@ void VehicleControlDeviceImplementation::generateObject(CreatureObject* player) 
 		Reference<CallMountTask*> callMount = new CallMountTask(_this.getReferenceUnsafeStaticCast(), player, "call_mount");
 
 		StringIdChatParameter message("pet/pet_menu", "call_vehicle_delay");
-		message.setDI(15);
-		player->sendSystemMessage(message);
+		message.setDI(globalVariables::vehicleCallTime);
+		if (globalVariables::vehicleCallTime > 0) {
+			player->sendSystemMessage(message);
+		}
 
-		player->addPendingTask("call_mount", callMount, 15 * 1000);
+		player->addPendingTask("call_mount", callMount, globalVariables::vehicleCallTime * 1000);
 
 		if (vehicleControlObserver == nullptr) {
 			vehicleControlObserver = new VehicleControlObserver(_this.getReferenceUnsafeStaticCast());
@@ -179,9 +182,11 @@ void VehicleControlDeviceImplementation::storeObject(CreatureObject* player, boo
 	/*if (!controlledObject->isInQuadTree())
 		return;*/
 
-	if (!force && (player->isInCombat() || player->isDead()))
-		return;
-
+	if (globalVariables::vehicleStoreInCombatEnabled == false) {
+		if (!force && (player->isInCombat() || player->isDead()))
+			return;
+	}
+	
 	if (player->isRidingMount() && player->getParent() == controlledObject) {
 		if (!force && !player->checkCooldownRecovery("mount_dismount"))
 			return;
