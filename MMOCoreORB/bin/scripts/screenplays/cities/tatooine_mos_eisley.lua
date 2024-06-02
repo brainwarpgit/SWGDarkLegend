@@ -270,7 +270,7 @@ TatooineMosEisleyScreenPlay = CityScreenPlay:new {
 		{"bounty_hunter",300,5.61884,7.01001,14.3502,118.356,1076949, ""},
 		{"bounty_hunter",300,6.01244,7.01,-14.2554,63.6677,1076948, ""},
 		{"informant_npc_lvl_3",0,3.8,7,-12.5,84,1076948, ""},
-		{"junk_sneg", 0, -1.63376, 7.01, 7.35289, 203.569, 1076943, ""},
+		{"junk_dealer", 0, -1.63376, 7.01, 7.35289, 203.569, 1076943, ""},
 
 		--Lower Floor
 		{"vendor",60,30.8955,-0.255725,2.05785,180.009,1076968, "conversation"},
@@ -428,15 +428,15 @@ function TatooineMosEisleyScreenPlay:spawnMobiles()
 
 	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 3271.49, 5, -4797.09, 52, 0)
 	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
 	end
 	pNpc = spawnMobile(self.planet, "junk_dealer", 0, -31.1, -0.5, 7.1, 31, 1082887)
 	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerArmsConvoTemplate")
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
 	end
 
 	--Creatures
-	--[[
+	
 	spawnMobile(self.planet, "minor_worrt",300,3863.8,5,-4809.5,170,0)
 	spawnMobile(self.planet, "minor_worrt",300,3857.8,5,-4814.4,127,0)
 	spawnMobile(self.planet, "minor_worrt",300,3856.5,5,-4826.1,45,0)
@@ -487,5 +487,5 @@ function TatooineMosEisleyScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "worrt",300,3585.7,5,-4530.5,-81,0)
 	spawnMobile(self.planet, "worrt",300,3573.9,5,-4529.6,108,0)
 	spawnMobile(self.planet, "worrt",300,3580.5,5,-4544.8,34,0)
-	]]
+	
 end

@@ -71,7 +71,7 @@ DantooineAgroOutpostScreenPlay = CityScreenPlay:new {
 		{"ytzosh", 60, 1636.98, 4, -6402.56, 322, 0, ""},
 		{"ussox", 60, 1635.07, 4, -6402.37, 322, 0, ""},
 		{"yras_shen_jen",60,1572.26,4,-6417.06,75.0582,0, "neutral"},
-		{"junk_quich", 0, 1579.04, 4, -6374.52, 48, 0, ""}
+		{"junk_dealer", 0, 1579.04, 4, -6374.52, 48, 0, ""}
 	}
 }
 

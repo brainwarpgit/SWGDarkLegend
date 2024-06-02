@@ -59,7 +59,8 @@ DantooineImperialOutpostScreenPlay = CityScreenPlay:new {
 		{"bek_rabor", 60, -4223.5, 3, -2386, 115, 0, ""},
 		{"juntah_herm", 60, -4222, 3, -2386.5, 300, 0, ""},
 		{"imperial_recruiter", 0, -4197, 3, -2411, 270, 0, ""},
-		{"insurgent",60,0,0,-5.7,0,1365878, "npc_imperial"}
+		{"insurgent",60,0,0,-5.7,0,1365878, "npc_imperial"},
+		{"junk_dealer", 0, -4203, 3, -2346, 225, 0, ""}
 	}
 }
 

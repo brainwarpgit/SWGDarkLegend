@@ -205,7 +205,7 @@ TatooineMosEspaScreenPlay = CityScreenPlay:new {
 		{"commoner_technician",300,7.41432,1.00001,-6.90893,0,1261017, "conversation"},
 
 		--Junk Shop
-		{"junk_nado", 0, 1.2, -0.5, 5.5, -144, 1255997, ""},
+		{"junk_dealer", 0, 1.2, -0.5, 5.5, -144, 1255997, ""},
 
 		--Guild Hall -2997 2426
 		{"trainer_brawler",0,-11,1.1,-14,0,1255994, ""},
@@ -413,7 +413,7 @@ function TatooineMosEspaScreenPlay:spawnMobiles()
 	end
 
 	--Creatures
-	--[[
+	
 	spawnMobile(self.planet, "dwarf_eopie",300,-3217.87,6.7851,2010.86,329.47,0)
 	spawnMobile(self.planet, "dwarf_eopie",300,-3205.35,6.01035,2016.06,32.4216,0)
 	spawnMobile(self.planet, "dwarf_eopie",300,-3208.98,6.12053,2017.03,118.154,0)
@@ -564,5 +564,5 @@ function TatooineMosEspaScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "worrt",300,-2589.82,5,2226.13,110.267,0)
 	spawnMobile(self.planet, "worrt",300,-2613.31,5.08118,1969.82,347.531,0)
 	spawnMobile(self.planet, "worrt",300,-2628.18,5.04651,1955.15,351.895,0)
-	]]
+	
 end

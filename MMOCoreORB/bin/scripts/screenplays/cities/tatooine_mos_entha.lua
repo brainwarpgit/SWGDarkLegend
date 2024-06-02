@@ -459,11 +459,11 @@ function TatooineMosEnthaScreenPlay:spawnMobiles()
 
 	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 1471.19, 7.6, 3325.8, 0, 0)
 	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
 	end
 
 	--Creatures
-	--[[
+	
 	spawnMobile(self.planet, "desert_razorback",300,1085.48,5.82507,3065.96,107.775,0)
 	spawnMobile(self.planet, "desert_razorback",300,1083.59,6.13166,3075.94,41.0805,0)
 	spawnMobile(self.planet, "desert_razorback",300,1094.58,5.57916,3087.09,213.896,0)
@@ -661,5 +661,5 @@ function TatooineMosEnthaScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "worrt",300,1113.08,18.0283,3257.68,318.548,0)
 	spawnMobile(self.planet, "worrt",300,1191.12,7.30368,2862.36,37.9791,0)
 	spawnMobile(self.planet, "worrt",300,1179.97,6.94709,2862.22,304.96,0)
-	]]
+	
 end

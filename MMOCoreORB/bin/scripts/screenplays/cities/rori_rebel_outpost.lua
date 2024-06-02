@@ -11,7 +11,7 @@ RoriRebelOutpostScreenPlay = CityScreenPlay:new {
 
 	--{respawn, x, z, y, direction, cell, mood}
 	stationaryMobiles = {
-		{1, 3702.3, 96, -6439.5, 330, 0, "bored"},
+		--{1, 3702.3, 96, -6439.5, 330, 0, "bored"},
 		{1, 3645.7, 96, -6439, 80, 0, "happy"},
 		{1, 3640.8, 96, -6439.1, 71, 0, "npc_sitting_chair"},
 		{1, 3702.6, 96, -6434.3, 94, 0, "npc_use_terminal_high"},
@@ -24,7 +24,8 @@ RoriRebelOutpostScreenPlay = CityScreenPlay:new {
 		{"patron", 360, 6.1, 0.6, 0.7, 270, 4505634, "npc_sitting_chair"},
 		{"patron", 360, 1.8, 0.6, 1.8, 69, 4505634, "npc_standing_drinking"},
 		{"vordin_sildor", 60, 4.2, 0.1, 0.8, 196, 4505667, "npc_sitting_chair"},
-
+		{"junk_dealer", 0, 3702, 96, -6439, 270, 0, ""},
+		
 		--Guard Tower with rifle trainer
 		{"rebel_specforce_pathfinder", 360, 3651, 103, -6485, 90, 0, ""},
 		{"specforce_wilderness_operative", 360, 3651, 103, -6489, 90, 0, ""},

@@ -19,11 +19,16 @@ registerScreenPlay("Yavin4LaborOutpostScreenPlay", true)
 
 function Yavin4LaborOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		--self:spawnMobiles()
+		self:spawnMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
---function Yavin4LaborOutpostScreenPlay:spawnMobiles()
+function Yavin4LaborOutpostScreenPlay:spawnMobiles()
 
---end
+	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -6982, 73, -5751, 20, 0)
+	if pNpc ~= nil then
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
+	end
+	
+end

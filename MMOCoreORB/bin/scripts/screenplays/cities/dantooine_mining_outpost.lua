@@ -72,7 +72,8 @@ DantooineMiningOutpostScreenPlay = CityScreenPlay:new {
 		{"kess_yarrow",60,-623.484,3,2481.77,149.192,0, "neutral"},
 		{"rane_yarrow",60,-625.457,3,2479.41,86.8842,0, "neutral"},
 		{"fern_yarrow",60,-625.684,3,2481.19,119.665,0, "neutral"},
-		{"planet_record_keeper_dantooine", 60, -604.016, 3, 2538.15, 200.426, 0, ""}
+		{"planet_record_keeper_dantooine", 60, -604.016, 3, 2538.15, 200.426, 0, ""},
+		{"junk_dealer", 0, -594, 3, 2527, 160, 0, ""}
 	}
 }
 

@@ -55,7 +55,8 @@ DathomirTradeOutpostScreenPlay = CityScreenPlay:new {
 		{"commoner", 60, 621.667, 6, 3092.75, 351.148, 0, ""},
 		{"scientist", 60, 623.05, 6, 3037.98, 54.874, 0, ""},
 		{"informant_npc_lvl_3", 0,590,6,3091,-31,0, ""},
-		{"informant_npc_lvl_3", 0,598,6,3025,180,0, ""}
+		{"informant_npc_lvl_3", 0,598,6,3025,180,0, ""},
+		{"junk_dealer", 0,630,6,3092,180,0, ""}
 	}
 }
 

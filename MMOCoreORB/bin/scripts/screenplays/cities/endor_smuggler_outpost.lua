@@ -81,4 +81,8 @@ function EndorSmugglerOutpostScreenPlay:spawnMobiles()
 		self:setMoodString(pNpc, "npc_sitting_chair")
 		CreatureObject(pNpc):setOptionsBitmask(0)
 	end
+	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -913, 80, 1604, 135, 0)
+	if pNpc ~= nil then
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
+	end
 end

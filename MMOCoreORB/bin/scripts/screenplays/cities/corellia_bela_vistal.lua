@@ -167,7 +167,7 @@ CorelliaBelaVistalScreenPlay = CityScreenPlay:new {
 		{"info_broker",60,21.6023,-0.894996,-17.4913,180.012,3375356, "conversation"},
 		{"medic",60,-43.4991,0.105009,-23.2411,135.007,3375367, "conversation"},
 		{"mercenary",300,-5.46842,-0.894998,20.8012,0,3375361, "conversation"},
-		{"junk_malik", 0, 6969.06, 330, -5588.66, 105, 0, ""},
+		{"junk_dealer", 0, 6969.06, 330, -5588.66, 105, 0, ""},
 		{"junk_dealer", 0, 6756.79, 315, -5779.1, 96, 0, ""}
 	}
 }
@@ -215,6 +215,6 @@ function CorelliaBelaVistalScreenPlay:spawnMobiles()
 
 	local pNpc = spawnMobile("corellia", "junk_dealer", 0, 6840.98, 315, -5630.49, -47, 0)
 	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
 	end
 end

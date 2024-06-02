@@ -51,4 +51,8 @@ function Yavin4MiningOutpostScreenPlay:spawnMobiles()
 	spawnMobile("yavin4", "rebel_commando", 460, -255.5, 35.0, 4859.2, 81, 0)
 	spawnMobile("yavin4", "rebel_commando", 460, -250.5, 35.0, 4854.2, 86, 0)
 	spawnMobile("yavin4", "rebel_commando", 460, -260.5, 35.0, 4864.2, 76, 0)
+	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -294, 35, 4896, 270, 0)
+	if pNpc ~= nil then
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
+	end
 end

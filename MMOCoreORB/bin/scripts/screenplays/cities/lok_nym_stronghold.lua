@@ -207,7 +207,7 @@ LokNymStrongholdScreenPlay = CityScreenPlay:new {
 		{"pilot",60,18.2791,-0.894996,-14.4794,0,8145379, "conversation"},
 		{"pilot",60,-23.8096,1.6,-6.26968,0,8145362, "conversation"},
 		{"junk_dealer", 0, 366, 12, 5202.8, -178, 0, ""},
-		{"junk_reggi", 0, 443.925, 12, 4879.41, 145, 0, ""},
+		{"junk_dealer", 0, 443.925, 12, 4879.41, 145, 0, ""},
 		{"rifea_eicik", 60, -23.1848, 1.58812, 1.95072, 180.005, 8145358, "conversation"},
 		{"rorha_wahe", 60, 7.54821, -0.894991, -8.57564, 0, 8145378, "conversation"},
 		{"scientist",60,-13.3486,0.26,5.66362,360.011,2745870, "conversation"},
@@ -278,7 +278,7 @@ function LokNymStrongholdScreenPlay:spawnMobiles()
 
 	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 345.73, 12, 5139.45, -177, 0)
 	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
 	end
 
 	pNpc = spawnMobile(self.planet, "nym_kusak_guardian", 60, -3.62, 3.27819, -25.44, 39.0011, 6595511)

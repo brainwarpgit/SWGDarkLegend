@@ -83,4 +83,8 @@ function EndorResearchOutpostScreenPlay:spawnMobiles()
 			CreatureObject(pNpc):clearOptionBit(AIENABLED)
 		end
 	end
+	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 3198, 24, -3485, 270, 0)
+	if pNpc ~= nil then
+		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
+	end
 end
