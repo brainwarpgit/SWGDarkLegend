@@ -94,6 +94,7 @@ naboo_regions = {
 	{"@naboo_region_names:keren", 336, 2140, {RECTANGLE, 2512, 3264}, CITY + NOSPAWNAREA},
 	{"@naboo_region_names:moenia", 4800, -4784, {CIRCLE, 336}, CITY + NOSPAWNAREA},
 	{"@naboo_region_names:theed", -6160, 3920, {RECTANGLE, -4480, 4816}, CITY +  NOSPAWNAREA},
+	{"theed_newbie_area",-4870, 3951, {CIRCLE, 400}, NOBUILDZONEAREA + NOSPAWNAREA},
 	{"@naboo_region_names:lake_retreat", -5568, 0, {CIRCLE, 176}, CITY + NOSPAWNAREA + NOBUILDZONEAREA},
 	{"@naboo_region_names:emperors_retreat", 2280, -3944, {CIRCLE, 280}, NOSPAWNAREA + NOBUILDZONEAREA + NAVAREA},
 
