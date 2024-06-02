@@ -140,6 +140,11 @@ namespace globalVariables {
 	extern bool structureAllowAllZonesEnabled;
 	extern int cityMaintenanceBaseMultiplier;
 	extern int cityMaintenanceRateMultiplier;
+	extern bool structureInstallationQuickAddMaintenanceEnabled;
+	extern int structureInstallationQuickAddMaintenanceAmount;
+	extern bool structureInstallationQuickAddPowerEnabled;
+	extern int structureInstallationQuickAddPowerAmount;
+	extern bool structureInstallationResourcesRetrieveAllEnabled;
 
 //Vehicle
 	extern int vehicleBaseDecayCycle;
@@ -152,7 +157,7 @@ namespace globalVariables {
 	extern bool vendorLowMaintenanceEmailEnabled;
 	extern int vendorLowMaintenanceEmailWarningThreshold;
 	extern bool vendorSkimSalesForMaintenanceEnabled;
-	extern int vendorSkimSalesForMaintenancePercent;
+	extern float vendorSkimSalesForMaintenancePercent;
 
 //Wearables
 	extern bool wearablesFactionEnabled;

@@ -1097,8 +1097,12 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 		sellerBodySale.setTU(vendor->getDisplayedName());
 		sellerBodySale.setTO(itemName);
 		sellerBodySale.setTT(item->getBidderName());
-		sellerBodySale.setDI(item->getPrice());
-
+		if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
+			sellerBodySale.setDI(item->getPrice() - (item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100)));
+		} else {
+			sellerBodySale.setDI(item->getPrice());
+		}
+		
 		StringIdChatParameter sellerBodyLoc("@auction:seller_success_location"); // The sale took place at %TT, on %TO.
 		sellerBodyLoc.setTO(vendorPlanetName);
 		sellerBodyLoc.setTT(vendorRegionName);
@@ -1134,7 +1138,16 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 		//Send the Mail
 		locker.release();
 		UnicodeString blankBody;
-		cman->sendMail(sender, sellerSubject, blankBody, sellerName, &sellerBodyVector, &sellerWaypointVector);
+		int skimprice = 0;
+		if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
+			skimprice = item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100);
+			StringBuffer body;
+			body << skimprice << " was deducted from the total sale of " << item->getPrice() << " and added to vendor maintenance.";
+			cman->sendMail(sender, sellerSubject, body.toString(), sellerName, &sellerBodyVector, &sellerWaypointVector);
+		} else {
+			cman->sendMail(sender, sellerSubject, blankBody, sellerName, &sellerBodyVector, &sellerWaypointVector);
+		}
+		//cman->sendMail(sender, sellerSubject, blankBody, sellerName, &sellerBodyVector, &sellerWaypointVector);
 		cman->sendMail(sender, buyerSubject, blankBody, item->getBidderName(), &buyerBodyVector, &buyerWaypointVector);
 
 		if(auctionMap->getVendorItemCount(vendor, true) == 0)
@@ -1201,27 +1214,25 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 
 	locker.release();
 	// Skim % of vendor sale into vendor maint
+	int skim = 0;
 	if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
-		int skim = 0;
-		
 		if (!item->isOnBazaar() && item->getPrice() > 10){
 			VendorDataComponent* vendorData = NULL;
 			DataObjectComponentReference* data = vendor->getDataObjectComponent();
-			if(data != NULL && data->get() != NULL && data->get()->isVendorData())
+			if(data != NULL && data->get() != NULL && data->get()->isVendorData()) {
 				vendorData = cast<VendorDataComponent*>(data->get());
-
+			}
 			if(vendorData != NULL){
 				skim = item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100);
-				
-				if(skim > 100000) // Respecting hard cap in VendorData handlePayMaintanence()
+				if(skim > 100000) {// Respecting hard cap in VendorData handlePayMaintanence()
 					skim = 100000;
-					
+				}
 				vendorData->skimMaintanence(skim);
 			}
 		}
 	}
 	Locker slocker(seller);
-	seller->addBankCredits(item->getPrice());
+	seller->addBankCredits(item->getPrice() - skim);
 	trx.commit();
 
 	if (city != nullptr && tax > 0) {

@@ -133,6 +133,11 @@ structureBasePowerRateMultiplier = 1 --default 1
 structureAllowAllZonesEnabled = true --default false
 cityMaintenanceBaseMultiplier = 1 --default 1
 cityMaintenanceRateMultiplier = 1 --default 1
+structureInstallationQuickAddMaintenanceEnabled = true --default false
+structureInstallationQuickAddMaintenanceAmount = 50 --default 10 in k credits Max 100
+structureInstallationQuickAddPowerEnabled = true --default false
+structureInstallationQuickAddPowerAmount = 50 --default 10 in k power Max 100
+structureInstallationResourcesRetrieveAllEnabled = true --default false
 
 --Vehicle
 vehicleBaseDecayCycle = 600 -- default 600 in seconds

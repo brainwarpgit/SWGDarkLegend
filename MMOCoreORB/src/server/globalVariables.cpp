@@ -138,6 +138,11 @@ namespace globalVariables {
 	bool structureAllowAllZonesEnabled = false;
 	int cityMaintenanceBaseMultiplier = 1;
 	int cityMaintenanceRateMultiplier = 1;
+	bool structureInstallationQuickAddMaintenanceEnabled = false;
+	int structureInstallationQuickAddMaintenanceAmount = 10000;
+	bool structureInstallationQuickAddPowerEnabled = false;
+	int structureInstallationQuickAddPowerAmount = 10000;
+	bool structureInstallationResourcesRetrieveAllEnabled = false;
 
 //Vehicle
 	int vehicleBaseDecayCycle = 600;
@@ -150,7 +155,7 @@ namespace globalVariables {
 	bool vendorLowMaintenanceEmailEnabled = false;
 	int vendorLowMaintenanceEmailWarningThreshold = 360;
 	bool vendorSkimSalesForMaintenanceEnabled = false;
-	int vendorSkimSalesForMaintenancePercent = 5;
+	float vendorSkimSalesForMaintenancePercent = 5;
 
 //Wearables
 	bool wearablesFactionEnabled = true;
@@ -298,7 +303,12 @@ namespace globalVariables {
 			if (lua->getGlobalInt("cityMaintenanceBaseMultiplier") >= 0) cityMaintenanceBaseMultiplier = lua->getGlobalInt("cityMaintenanceBaseMultiplier");
 			if (lua->getGlobalInt("cityMaintenanceRateMultiplier") >= 0) cityMaintenanceRateMultiplier = lua->getGlobalInt("cityMaintenanceRateMultiplier");
 			if (lua->getGlobalBoolean("structureAllowAllZonesEnabled") == true || lua->getGlobalBoolean("structureAllowAllZonesEnabled") == false) structureAllowAllZonesEnabled = lua->getGlobalBoolean("structureAllowAllZonesEnabled");
-
+			if (lua->getGlobalBoolean("structureInstallationQuickAddMaintenanceEnabled") == true || lua->getGlobalBoolean("structureInstallationQuickAddMaintenanceEnabled") == false) structureInstallationQuickAddMaintenanceEnabled = lua->getGlobalBoolean("structureInstallationQuickAddMaintenanceEnabled");
+			if (lua->getGlobalInt("structureInstallationQuickAddMaintenanceAmount") > 0 && lua->getGlobalInt("structureInstallationQuickAddMaintenanceAmount") <= 100) structureInstallationQuickAddMaintenanceAmount = lua->getGlobalInt("structureInstallationQuickAddMaintenanceAmount");
+			if (lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled") == true || lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled") == false) structureInstallationQuickAddPowerEnabled = lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled");
+			if (lua->getGlobalInt("structureInstallationQuickAddPowerAmount") > 0 && lua->getGlobalInt("structureInstallationQuickAddPowerAmount") <= 100) structureInstallationQuickAddPowerAmount = lua->getGlobalInt("structureInstallationQuickAddPowerAmount");
+			if (lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == true || lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == false) structureInstallationResourcesRetrieveAllEnabled = lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled");
+			
 			//Vehicle
 			if (lua->getGlobalInt("vehicleBaseDecayCycle") >= 0) vehicleBaseDecayCycle = lua->getGlobalInt("vehicleBaseDecayCycle");
 			if (lua->getGlobalInt("vehicleBaseDecayRate") >= 0) vehicleBaseDecayRate = lua->getGlobalInt("vehicleBaseDecayRate");
@@ -310,7 +320,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled") == true || lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled") == false) vendorLowMaintenanceEmailEnabled = lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled");
 			if (lua->getGlobalInt("vendorLowMaintenanceEmailWarningThreshold") > 0) vendorLowMaintenanceEmailWarningThreshold = lua->getGlobalInt("vendorLowMaintenanceEmailWarningThreshold");
 			if (lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled") == true || lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled") == false) vendorSkimSalesForMaintenanceEnabled = lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled");
-			if (lua->getGlobalInt("vendorSkimSalesForMaintenancePercent") > 0) vendorSkimSalesForMaintenancePercent = lua->getGlobalInt("vendorSkimSalesForMaintenancePercent");
+			if (lua->getGlobalFloat("vendorSkimSalesForMaintenancePercent") > 0) vendorSkimSalesForMaintenancePercent = lua->getGlobalFloat("vendorSkimSalesForMaintenancePercent");
 			
 			//Wearables
 			if (lua->getGlobalBoolean("wearablesFactionEnabled") == true || lua->getGlobalBoolean("wearablesFactionEnabled") == false) wearablesFactionEnabled = lua->getGlobalBoolean("wearablesFactionEnabled");
