@@ -11,6 +11,7 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/creature/VehicleObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 class RepairVehicleSuiCallback : public SuiCallback {
 public:
@@ -44,7 +45,14 @@ public:
 			return;
 
 		int repairCost = vehicle->calculateRepairCost(player);
-		int totalFunds = player->getBankCredits();
+		int bank = player->getBankCredits();
+		int cash = player->getCashCredits();
+		int totalFunds;
+		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+			totalFunds = player->getBankCredits();
+		} else {
+			totalFunds = bank + cash;
+		}
 		int tax = 0;
 
 		ManagedReference<CityRegion*> city =vehicle->getCityRegion().get();
@@ -53,14 +61,26 @@ public:
 			repairCost += tax;
 		}
 
-		if (repairCost > totalFunds) {
-			player->sendSystemMessage("@pet/pet_menu:lacking_funds_prefix " + String::valueOf(repairCost - totalFunds) + " @pet/pet_menu:lacking_funds_suffix"); //You lack the additional  credits required to repair your vehicle.
-			return;
-		}
-
-		{
+		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+			if (repairCost > totalFunds) {
+				player->sendSystemMessage("@pet/pet_menu:lacking_funds_prefix " + String::valueOf(repairCost - totalFunds) + " @pet/pet_menu:lacking_funds_suffix"); //You lack the additional  credits required to repair your vehicle.
+				return;
+			}
 			TransactionLog trx(player, TrxCode::VEHICLEREPAIRS, repairCost);
 			player->subtractBankCredits(repairCost);
+		} else {
+			if (bank < repairCost) {
+				int diff = repairCost - bank;
+
+				if (diff > cash) {
+					player->sendSystemMessage("@pet/pet_menu:lacking_funds_prefix " + String::valueOf(repairCost - totalFunds) + " @pet/pet_menu:lacking_funds_suffix"); //You lack the additional  credits required to repair your vehicle.
+					return;
+				}
+
+				player->subtractBankCredits(bank); //Take all from bank, since they didn't have enough to cover.
+				player->subtractCashCredits(diff); //Take the rest from cash.
+				TransactionLog trx(player, TrxCode::VEHICLEREPAIRS, (bank + diff));	
+			}		
 		}
 
 		StringIdChatParameter params("@base_player:prose_pay_success_no_target"); //You successfully make a payment of %DI credits.

@@ -518,6 +518,9 @@ void AuctionManagerImplementation::doAuctionMaint(TerminalListVector* items, con
 }
 
 void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 objectid, SceneObject* vendor, const UnicodeString& description, int price, uint32 duration, bool auction, bool premium) {
+	int bank = player->getBankCredits();
+	int cash = player->getCashCredits();
+	int totalFunds = bank + cash;
 
 	if (vendor == nullptr || (!vendor->isVendor() && !vendor->isBazaarTerminal())) {
 		error() << "addSaleItem(plyer=" << player->getObjectID() << ", objectid=" << objectid << "): Not valid vendor object.";
@@ -676,14 +679,57 @@ void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 ob
 				costReduction = .60f;
 
 		if (item->isPremiumAuction()) {
-			TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * (globalVariables::auctionMaxSalesFee * 5), false);
-			player->subtractBankCredits(costReduction * (globalVariables::auctionMaxSalesFee * 5));
-			str.setDI(costReduction * (globalVariables::auctionMaxSalesFee * 5));
+			if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+				TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * (globalVariables::auctionMaxSalesFee * 5), false);
+				player->subtractBankCredits(costReduction * (globalVariables::auctionMaxSalesFee * 5));
+				str.setDI(costReduction * (globalVariables::auctionMaxSalesFee * 5));
+			} else {
+				int listCost = costReduction * (globalVariables::auctionMaxSalesFee * 5);
+				if (bank < listCost) {
+					int diff = listCost - bank;
 
+					if (diff > cash) {
+						player->sendSystemMessage("You do not have enough credits to cover the listing fee");
+						return;
+					}
+				
+					TransactionLog trx(player, TrxCode::BAZAARSYSTEM, (bank + diff), false);
+					player->subtractBankCredits(bank); //Take all from bank, since they didn't have enough to cover.
+					player->subtractCashCredits(diff); //Take the rest from cash.
+					str.setDI(listCost);
+				} else {
+		
+					TransactionLog trx(player, TrxCode::BAZAARSYSTEM, listCost, false);
+					player->subtractBankCredits(listCost); //Take all of the payment from bank.
+					str.setDI(listCost);
+				}
+			}
 		} else {
-			TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * globalVariables::auctionMaxSalesFee, false);
-			player->subtractBankCredits(costReduction * globalVariables::auctionMaxSalesFee);
-			str.setDI(costReduction * globalVariables::auctionMaxSalesFee);
+			if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+				TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * globalVariables::auctionMaxSalesFee, false);
+				player->subtractBankCredits(costReduction * globalVariables::auctionMaxSalesFee);
+				str.setDI(costReduction * globalVariables::auctionMaxSalesFee);
+			} else {
+				int listCost = costReduction * (globalVariables::auctionMaxSalesFee * 5);
+				if (bank < listCost) {
+					int diff = listCost - bank;
+
+					if (diff > cash) {
+						player->sendSystemMessage("You do not have enough credits to cover the listing fee");
+						return;
+					}
+				
+					TransactionLog trx(player, TrxCode::BAZAARSYSTEM, (bank + diff), false);
+					player->subtractBankCredits(bank); //Take all from bank, since they didn't have enough to cover.
+					player->subtractCashCredits(diff); //Take the rest from cash.
+					str.setDI(listCost);
+				} else {
+		
+					TransactionLog trx(player, TrxCode::BAZAARSYSTEM, listCost, false);
+					player->subtractBankCredits(listCost); //Take all of the payment from bank.
+					str.setDI(listCost);
+				}
+			}
 		}
 
 		player->sendSystemMessage(str);
@@ -801,8 +847,19 @@ int AuctionManagerImplementation::checkSaleItem(CreatureObject* player, SceneObj
 		if (price > globalVariables::auctionMaxBazaarPrice)
 			return ItemSoldMessage::INVALIDSALEPRICE;
 
-		if (player->getBankCredits() < globalVariables::auctionMaxSalesFee)
-			return ItemSoldMessage::NOTENOUGHCREDITS;
+		int bank = player->getBankCredits();
+		int cash = player->getCashCredits();
+		int availableCredits = bank + cash;
+
+		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+			if (player->getBankCredits() < globalVariables::auctionMaxSalesFee) {
+				return ItemSoldMessage::NOTENOUGHCREDITS;
+			}
+		} else {
+			if (availableCredits < globalVariables::auctionMaxSalesFee) {
+				return ItemSoldMessage::NOTENOUGHCREDITS;
+			}
+		}
 
 		if (premium && player->getBankCredits() < globalVariables::auctionMaxSalesFee * 5)
 			return ItemSoldMessage::NOTENOUGHCREDITS;
@@ -923,8 +980,18 @@ int AuctionManagerImplementation::checkBidAuction(CreatureObject* player, Auctio
 		return BidAuctionResponseMessage::INVALIDPRICE;
 	}
 
-	if (player->getBankCredits() < price1) { // Credit Check
-		return BidAuctionResponseMessage::NOTENOUGHCREDITS;
+	int bank = player->getBankCredits();
+	int cash = player->getCashCredits();
+	int availableCredits = bank + cash;
+
+	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (player->getBankCredits() < price1) { // Credit Check
+			return BidAuctionResponseMessage::NOTENOUGHCREDITS;
+		}
+	} else {
+		if (availableCredits < price1) { // Credit Check
+			return BidAuctionResponseMessage::NOTENOUGHCREDITS;
+		}
 	}
 
 	return 0;
@@ -937,6 +1004,9 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 		return;
 
 	int tax = 0;
+	int bank = player->getBankCredits();
+	int cash = player->getCashCredits();
+	int availableCredits = bank + cash;
 	ManagedReference<CityRegion*> city = nullptr;
 	String vendorPlanetName("@planet_n:" + vendor->getZone()->getZoneName());
 	String vendorRegionName = vendorPlanetName;
@@ -981,7 +1051,23 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 	trx.setAutoCommit(false);
 	trx.addRelatedObject(item->getAuctionedItemObjectID(), true);
 	trx.setExportRelatedObjects(true);
-	player->subtractBankCredits(item->getPrice());
+	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		player->subtractBankCredits(item->getPrice());
+	} else {
+		int itemPrice = item->getPrice();
+
+		if (bank < itemPrice) {
+			int diff = itemPrice - bank;
+
+			if (diff > cash){
+				player->sendSystemMessage("You lack sufficent credits to make this purchase.");
+				return;
+			}
+
+			player->subtractBankCredits(bank); //Take all from bank, since they didn't have enough to cover.
+			player->subtractCashCredits(diff); //Take the rest from cash.
+		}
+	}
 
 	BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), 0);
 	player->sendMessage(msg);
@@ -1114,7 +1200,26 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 	}
 
 	locker.release();
+	// Skim % of vendor sale into vendor maint
+	if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
+		int skim = 0;
+		
+		if (!item->isOnBazaar() && item->getPrice() > 10){
+			VendorDataComponent* vendorData = NULL;
+			DataObjectComponentReference* data = vendor->getDataObjectComponent();
+			if(data != NULL && data->get() != NULL && data->get()->isVendorData())
+				vendorData = cast<VendorDataComponent*>(data->get());
 
+			if(vendorData != NULL){
+				skim = item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100);
+				
+				if(skim > 100000) // Respecting hard cap in VendorData handlePayMaintanence()
+					skim = 100000;
+					
+				vendorData->skimMaintanence(skim);
+			}
+		}
+	}
 	Locker slocker(seller);
 	seller->addBankCredits(item->getPrice());
 	trx.commit();
@@ -1164,17 +1269,43 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 		int increase = price1 - item->getPrice();
 
 		int fullPrice = proxyBid + increase - item->getPrice();
+		int priorBank = priorBidder->getBankCredits();
+		int priorCash = priorBidder->getCashCredits();
+		int priorAvailableCredits = priorBank + priorCash;
 
 		//TODO: prior didnt have enough money -> assert.. fix properly
-		if (priorBidder->getBankCredits() < fullPrice) {
-			BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
-			player->sendMessage(msg);
+		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+			if (priorBidder->getBankCredits() < fullPrice) {
+				BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
+				player->sendMessage(msg);
 
-			return;
+				return;
+			}
+			TransactionLog trx(priorBidder, TrxCode::AUCTIONBID, fullPrice, false);
+			priorBidder->subtractBankCredits(fullPrice);
+		} else {
+			if (priorAvailableCredits < fullPrice) {
+				BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
+				player->sendMessage(msg);
+
+				return;
+			}
+
+			if (priorBank < fullPrice) {
+				int priorDiff = fullPrice - priorBank;
+
+				//TODO: prior didnt have enough money -> assert.. fix properly
+				if (priorDiff > priorCash){
+					BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
+					player->sendMessage(msg);
+					return;
+				}
+
+				TransactionLog trx(priorBidder, TrxCode::AUCTIONBID, (priorBank + priorDiff), false);
+				priorBidder->subtractBankCredits(priorBank); //Take all from bank, since they didn't have enough to cover.
+				priorBidder->subtractCashCredits(priorDiff); //Take the rest from cash.
+			}
 		}
-
-		TransactionLog trx(priorBidder, TrxCode::AUCTIONBID, fullPrice, false);
-		priorBidder->subtractBankCredits(fullPrice);
 		item->setPrice(proxyBid + increase);
 		BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::SUCCEDED);
 		player->sendMessage(msg);
@@ -1191,12 +1322,25 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 	Locker locker(item);
 	Locker plocker(player);
 
-	if (player->getBankCredits() < price1 ||
-			player->getBankCredits() < item->getPrice()) {
-		BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
-		player->sendMessage(msg);
+	int playerBank = player->getBankCredits();
+	int playerCash = player->getCashCredits();
+	int playerAvailableCredits = playerBank + playerCash;
 
-		return;
+	if (globalVariables::playerPaymentCashAndBankEnabled == false){
+		if (player->getBankCredits() < price1 ||
+			player->getBankCredits() < item->getPrice()) {
+			BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
+			player->sendMessage(msg);
+
+			return;
+		}
+	} else {
+		if (playerAvailableCredits <  price1 || playerAvailableCredits < item->getPrice()) {
+			BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
+			player->sendMessage(msg);
+
+			return;
+		}
 	}
 
 	item->setProxy(proxyBid);
@@ -1217,8 +1361,24 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 		item->setBidderName(playername);
 
 		// take money from high bidder
-		TransactionLog trx(player, TrxCode::AUCTIONBID, item->getPrice(), false);
-		player->subtractBankCredits(item->getPrice());
+		if (globalVariables::playerPaymentCashAndBankEnabled == false){
+			TransactionLog trx(player, TrxCode::AUCTIONBID, item->getPrice(), false);
+			player->subtractBankCredits(item->getPrice());
+		} else {
+			if (playerBank < item->getPrice()) {
+				int playerDiff = item->getPrice() - playerBank;
+
+				if (playerDiff > playerCash){
+					player->sendSystemMessage("You lack sufficent funds to make this purchase.");
+					return;
+				}
+
+				TransactionLog trx(player, TrxCode::AUCTIONBID, (playerBank + playerDiff), false);
+				player->subtractBankCredits(playerBank); //Take all from bank, since they didn't have enough to cover.
+				player->subtractCashCredits(playerDiff); //Take the rest from cash.
+			}
+		}
+		
 
 		if (priorBidder != nullptr) {
 			Locker clocker(priorBidder, player);
@@ -1242,8 +1402,23 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 		item->setBuyerID(player->getObjectID());
 		item->setBidderName(playername);
 
-		TransactionLog trx(player, TrxCode::AUCTIONBID, item->getPrice(), false);
-		player->subtractBankCredits(item->getPrice());
+		if (globalVariables::playerPaymentCashAndBankEnabled == false){
+			TransactionLog trx(player, TrxCode::AUCTIONBID, item->getPrice(), false);
+			player->subtractBankCredits(item->getPrice());
+		} else {
+			if (playerBank < item->getPrice()) {
+				int playerDiff = item->getPrice() - playerBank;
+
+				if (playerDiff > playerCash){
+					player->sendSystemMessage("You lack sufficent funds to make this purchase.");
+					return;
+				}
+
+				TransactionLog trx(player, TrxCode::AUCTIONBID, (playerBank + playerDiff), false);
+				player->subtractBankCredits(playerBank); //Take all from bank, since they didn't have enough to cover.
+				player->subtractCashCredits(playerDiff); //Take the rest from cash.
+			}
+		}
 	}
 
 	BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), 0);

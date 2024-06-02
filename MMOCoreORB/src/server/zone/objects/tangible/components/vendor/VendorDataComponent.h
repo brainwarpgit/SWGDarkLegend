@@ -272,6 +272,10 @@ public:
 
 	void cancelVendorCheckTask();
 
+	void skimMaintanence(int value){
+		maintAmount += value;
+	}
+
 private:
 	void addSerializableVariables();
 };

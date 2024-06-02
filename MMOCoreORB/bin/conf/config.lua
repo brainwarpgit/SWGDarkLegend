@@ -365,8 +365,8 @@ Core3.PlayerManager = {
 }
 
 Core3.PlayerObject = {
-	AlwaysSafeLogout = false,
-	LinkDeadDelay = 180, -- in seconds
+	AlwaysSafeLogout = true, --default false
+	LinkDeadDelay = 60, -- default 180 in seconds
 }
 
 Core3.Regions = {

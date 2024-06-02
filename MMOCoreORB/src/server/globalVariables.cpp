@@ -107,6 +107,9 @@ namespace globalVariables {
 	int playerCreationNewCreationTime = 60;
 	bool playerCreationAllLanguagesEnabled = false;
 
+//Player Payments
+	bool playerPaymentCashAndBankEnabled = false;
+
 //Player XP
 	bool playerForagingXPEnabled = false;
 	bool playerMilkingXPEnabled = false;
@@ -142,6 +145,12 @@ namespace globalVariables {
 	bool vehicleInitialDecayEnabled = true;
 	int vehicleCallTime = 15;
 	bool vehicleStoreInCombatEnabled = false;
+
+//Vendor
+	bool vendorLowMaintenanceEmailEnabled = false;
+	int vendorLowMaintenanceEmailWarningThreshold = 360;
+	bool vendorSkimSalesForMaintenanceEnabled = false;
+	int vendorSkimSalesForMaintenancePercent = 5;
 
 //Wearables
 	bool wearablesFactionEnabled = true;
@@ -258,6 +267,9 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
 
+			//Player Payments
+			if (lua->getGlobalBoolean("playerPaymentCashAndBankEnabled") == true || lua->getGlobalBoolean("playerPaymentCashAndBankEnabled") == false) playerPaymentCashAndBankEnabled = lua->getGlobalBoolean("playerPaymentCashAndBankEnabled");
+
 			//Player XP
 			if (lua->getGlobalBoolean("playerForagingXPEnabled") == true || lua->getGlobalBoolean("playerForagingXPEnabled") == false) playerForagingXPEnabled = lua->getGlobalBoolean("playerForagingXPEnabled");
 			if (lua->getGlobalBoolean("playerMilkingXPEnabled") == true || lua->getGlobalBoolean("playerMilkingXPEnabled") == false) playerMilkingXPEnabled = lua->getGlobalBoolean("playerMilkingXPEnabled");
@@ -293,6 +305,12 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("vehicleInitialDecayEnabled") == true || lua->getGlobalBoolean("vehicleInitialDecayEnabled") == false) vehicleInitialDecayEnabled = lua->getGlobalBoolean("vehicleInitialDecayEnabled");
 			if (lua->getGlobalInt("vehicleCallTime") >= 0) vehicleCallTime = lua->getGlobalInt("vehicleCallTime");
 			if (lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == true || lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == false) vehicleStoreInCombatEnabled = lua->getGlobalBoolean("vehicleStoreInCombatEnabled");
+			
+			//Vendor
+			if (lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled") == true || lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled") == false) vendorLowMaintenanceEmailEnabled = lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled");
+			if (lua->getGlobalInt("vendorLowMaintenanceEmailWarningThreshold") > 0) vendorLowMaintenanceEmailWarningThreshold = lua->getGlobalInt("vendorLowMaintenanceEmailWarningThreshold");
+			if (lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled") == true || lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled") == false) vendorSkimSalesForMaintenanceEnabled = lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled");
+			if (lua->getGlobalInt("vendorSkimSalesForMaintenancePercent") > 0) vendorSkimSalesForMaintenancePercent = lua->getGlobalInt("vendorSkimSalesForMaintenancePercent");
 			
 			//Wearables
 			if (lua->getGlobalBoolean("wearablesFactionEnabled") == true || lua->getGlobalBoolean("wearablesFactionEnabled") == false) wearablesFactionEnabled = lua->getGlobalBoolean("wearablesFactionEnabled");

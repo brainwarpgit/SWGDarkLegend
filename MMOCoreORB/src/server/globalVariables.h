@@ -109,6 +109,9 @@ namespace globalVariables {
 	extern int playerCreationNewCreationTime;
 	extern bool playerCreationAllLanguagesEnabled;
 
+//Player Payments
+	extern bool playerPaymentCashAndBankEnabled;
+
 //Player XP
 	extern bool playerForagingXPEnabled;
 	extern bool playerMilkingXPEnabled;
@@ -144,6 +147,12 @@ namespace globalVariables {
 	extern bool vehicleInitialDecayEnabled;
 	extern int vehicleCallTime;
 	extern bool vehicleStoreInCombatEnabled;
+
+//Vendor
+	extern bool vendorLowMaintenanceEmailEnabled;
+	extern int vendorLowMaintenanceEmailWarningThreshold;
+	extern bool vendorSkimSalesForMaintenanceEnabled;
+	extern int vendorSkimSalesForMaintenancePercent;
 
 //Wearables
 	extern bool wearablesFactionEnabled;
