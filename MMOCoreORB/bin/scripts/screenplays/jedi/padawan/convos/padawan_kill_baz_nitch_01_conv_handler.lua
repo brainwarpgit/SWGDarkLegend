@@ -35,6 +35,7 @@ function padawan_kill_baz_nitch_01_conv_handler:runScreenHandlers(pConvTemplate,
 
 	if (screenID == "intro_reached_goal") then
 		PadawanTrials:passTrial(pPlayer)
+		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
 	elseif (screenID == "curb_infestation") then
 		PadawanTrials:setupHuntTrial(pPlayer)
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)

@@ -371,6 +371,7 @@ function PadawanTrials:notifyTunedLightsaberCrystal(pPlayer, pItem)
 
 	CreatureObject(pPlayer):setScreenPlayState(1, trialState .. "_crystal")
 	self:passTrial(pPlayer)
+	CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
 	return 1
 end
 

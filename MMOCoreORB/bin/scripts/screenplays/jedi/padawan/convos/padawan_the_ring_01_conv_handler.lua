@@ -42,6 +42,7 @@ function padawan_the_ring_01_conv_handler:runScreenHandlers(pConvTemplate, pPlay
 		PadawanTrials:failTrial(pPlayer)
 	elseif (screenID == "go_so_far") then
 		PadawanTrials:passTrial(pPlayer)
+		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
 	elseif (screenID == "last_location") then
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)
 		writeData(SceneObject(pNpc):getObjectID() .. ":destroyNpcOnExit", 1)
