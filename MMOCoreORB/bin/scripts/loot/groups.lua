@@ -37,10 +37,16 @@ includeFile("groups/armor/ithorian_sentinel_armor.lua")
 includeFile("groups/armor/kashyyykian_black_mtn_armor.lua")
 includeFile("groups/armor/kashyyykian_ceremonial_armor.lua")
 includeFile("groups/armor/kashyyykian_hunting_armor.lua")
-includeFile("groups/armor/mabari_armor.lua")
+includeFile("groups/armor/mandalorian_armor.lua")
+includeFile("groups/armor/marauder_s01_armor.lua")
+includeFile("groups/armor/marauder_s02_armor.lua")
+includeFile("groups/armor/marauder_s03_armor.lua")
+includeFile("groups/armor/marine_armor.lua")
 includeFile("groups/armor/padded_armor.lua")
+includeFile("groups/armor/stormtrooper_armor.lua")
 includeFile("groups/armor/tantel_armor.lua")
 includeFile("groups/armor/ubese_armor.lua")
+includeFile("groups/armor/mabari_armor.lua") --zam
 
 -- bestine election sub-folder
 includeFile("groups/bestine_election/bestine_history_quest_reward.lua")

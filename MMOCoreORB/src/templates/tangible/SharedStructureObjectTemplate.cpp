@@ -15,18 +15,10 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	lotSize = templateData->getByteField("lotSize");
 
-	if (globalVariables::structureBaseMaintenanceRateMultiplier > 0) {
-		baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate") * globalVariables::structureBaseMaintenanceRateMultiplier;
-	} else {
-		baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate");
-	}
+	baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate") * globalVariables::structureBaseMaintenanceRateMultiplier;
 
-	if (globalVariables::structureBasePowerRateMultiplier > 0) {
-		basePowerRate = templateData->getIntField("basePowerRate") * globalVariables::structureBasePowerRateMultiplier;
-	} else {
-		basePowerRate = templateData->getIntField("basePowerRate");
-	}
-
+	basePowerRate = templateData->getIntField("basePowerRate") * globalVariables::structureBasePowerRateMultiplier;
+	
 	if (globalVariables::structureAllowAllZonesEnabled == true) {
 		allowedZones = {"corellia", "talus", "dathomir", "endor", "lok", "naboo", "rori", "tatooine", "yavin4", "dantooine"};
 	} else {
@@ -48,16 +40,8 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	uniqueStructure = templateData->getBooleanField("uniqueStructure");
 
-	if (globalVariables::cityMaintenanceBaseMultiplier > 0) {
-		cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase") * globalVariables::cityMaintenanceBaseMultiplier;
-	} else {
-		cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase");
-	}
-	
-	if (globalVariables::cityMaintenanceRateMultiplier > 0) {
-		cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate") * globalVariables::cityMaintenanceRateMultiplier;
-	} else {
-		cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate");
-	}
+	cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase") * globalVariables::cityMaintenanceBaseMultiplier;
+
+	cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate") * globalVariables::cityMaintenanceRateMultiplier;
 
 }
