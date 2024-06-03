@@ -101,6 +101,7 @@ playerDamageHealingMultiplier = 2 --default 1
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
 playerCreationAllLanguagesEnabled = true --default false
+playerCreationJoinGalaxyChatEnabled = true --default false
 
 --Player Payments
 playerPaymentCashAndBankEnabled = true --default false Auction/CityManager/Structure/RepairVehicle

@@ -591,7 +591,9 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	//Join auction chat room
 	ghost->addChatRoom(chatManager->getAuctionRoom()->getRoomID());
-
+	if (globalVariables::playerCreationJoinGalaxyChatEnabled == true) {	
+		ghost->addChatRoom(chatManager->getGalaxyRoom()->getRoomID());
+	}
 	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(playerCreature, SuiWindowType::NONE);
 	box->setPromptTitle("PLEASE NOTE");
 	box->setPromptText("You are limited to creating one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Attempting to create another character or deleting your character before the " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minute timer expires will reset the timer.");
