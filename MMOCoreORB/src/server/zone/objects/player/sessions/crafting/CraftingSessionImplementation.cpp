@@ -30,6 +30,7 @@
 #include "templates/params/RangedIntCustomizationVariable.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/globalVariables.h"
+#include "server/userVariables.h"
 
 // #define DEBUG_EXPERIMENTATION
 
@@ -39,7 +40,17 @@ int CraftingSessionImplementation::initializeSession(CraftingTool* tool, Craftin
 
 	ManagedReference<CreatureObject*> crafter = this->crafter.get();
 	ManagedReference<CraftingTool*> craftingTool = this->craftingTool.get();
-
+	ManagedReference<CraftingStation*> craftingStation = this->craftingStation.get();
+	
+	userVariables::setUserVariable("toolEffectiveness",crafter->getFirstName(),craftingTool->getEffectiveness());
+	
+	if (craftingStation != nullptr) {
+		auto strongStation = craftingStation.get();
+		userVariables::setUserVariable("stationNearby",crafter->getFirstName(),strongStation->isInRange(crafter, 7.0f));
+	} else {
+		userVariables::setUserVariable("stationNearby",crafter->getFirstName(),0);
+	}
+	
 	crafter->addActiveSession(SessionFacadeType::CRAFTING, _this.getReferenceUnsafeStaticCast());
 	craftingTool->addActiveSession(SessionFacadeType::CRAFTING, _this.getReferenceUnsafeStaticCast());
 
@@ -204,6 +215,9 @@ int CraftingSessionImplementation::cancelSession() {
 		crafter->sendSystemMessage("*** Canceling crafting session ***");
 	}
 
+	userVariables::setUserVariable("toolEffectiveness",crafter->getFirstName(),0);
+	userVariables::setUserVariable("stationNearby",crafter->getFirstName(),false);
+
 	return clearSession();
 }
 
@@ -274,7 +288,7 @@ int CraftingSessionImplementation::clearSession() {
 	if (crafterGhost != nullptr && crafterGhost->getDebug()) {
 		crafter->sendSystemMessage("*** Clearing crafting session ***");
 	}
-
+	
 	return 0;
 }
 
@@ -309,6 +323,7 @@ void CraftingSessionImplementation::closeCraftingWindow(int clientCounter, bool 
 	if (crafterGhost != nullptr && crafterGhost->getDebug()) {
 		crafter->sendSystemMessage("*** Closing crafting window ***");
 	}
+
 }
 
 void CraftingSessionImplementation::sendSlotMessage(int counter, int message) {
@@ -997,6 +1012,9 @@ void CraftingSessionImplementation::finishAssembly(int clientCounter) {
 
 	crafter->sendMessage(objMsg);
 	// End Object Controller **************************************
+	
+	userVariables::setUserVariable("toolEffectiveness",crafter->getFirstName(),0);
+	userVariables::setUserVariable("stationNearby",crafter->getFirstName(),false);
 }
 
 
@@ -1358,6 +1376,7 @@ void CraftingSessionImplementation::finishStage2(int clientCounter) {
 	objMsg->insertInt(1);
 	objMsg->insertByte(clientCounter);
 	crafter->sendMessage(objMsg);
+	
 }
 
 void CraftingSessionImplementation::createPrototype(int clientCounter, bool createItem) {

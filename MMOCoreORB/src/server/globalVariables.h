@@ -19,6 +19,10 @@ namespace globalVariables {
 	extern int craftingFactoryRunTimeMultiplier;
 	extern int craftingToolCraftTimeMultiplier;
 	extern int craftingMaxSockets;
+	extern int craftingMinSocketMod;
+	extern int craftingMaxSocketMod;
+	extern bool craftingNewGenerateSocketsEnabled;
+	extern bool craftingWearableContainerSocketsEnabled;
 
 // Creature
 	extern int creatureMaxLevel;

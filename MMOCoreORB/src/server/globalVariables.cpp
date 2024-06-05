@@ -17,6 +17,10 @@ namespace globalVariables {
 	int craftingFactoryRunTimeMultiplier = 8;
 	int craftingToolCraftTimeMultiplier = 2;
 	int craftingMaxSockets = 4;
+	int craftingMinSocketMod = 60;
+	int craftingMaxSocketMod = 175;
+	bool craftingNewGenerateSocketsEnabled = false;
+	bool craftingWearableContainerSocketsEnabled = false;
 
 //Creature
 	int creatureMaxLevel = 336;
@@ -183,7 +187,11 @@ namespace globalVariables {
 			if (lua->getGlobalInt("craftingFactoryRunTimeMultiplier") >= 0) craftingFactoryRunTimeMultiplier = lua->getGlobalInt("craftingFactoryRunTimeMultiplier");
 			if (lua->getGlobalInt("craftingToolCraftTimeMultiplier") >= 0) craftingToolCraftTimeMultiplier = lua->getGlobalInt("craftingToolCraftTimeMultiplier");
 			if (lua->getGlobalInt("craftingMaxSockets") >= 0) craftingMaxSockets = lua->getGlobalInt("craftingMaxSockets");
-
+			if (lua->getGlobalInt("craftingMinSocketMod") >= 0) craftingMinSocketMod = lua->getGlobalInt("craftingMinSocketMod");
+			if (lua->getGlobalInt("craftingMaxSocketMod") > 0) craftingMaxSocketMod = lua->getGlobalInt("craftingMaxSocketMod");
+			if (lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled") == true || lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled") == false) craftingNewGenerateSocketsEnabled = lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled");
+			if (lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == true || lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == false) craftingWearableContainerSocketsEnabled = lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled");
+			
 			//Creature
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
 			if (lua->getGlobalFloat("creatureBaseScaleMultiplier") > 0) creatureBaseScaleMultiplier = lua->getGlobalFloat("creatureBaseScaleMultiplier");

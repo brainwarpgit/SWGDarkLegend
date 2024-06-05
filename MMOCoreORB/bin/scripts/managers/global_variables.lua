@@ -12,6 +12,10 @@ craftingFactoryCrateMaxSize = 1000 --default 100
 craftingFactoryRunTimeMultiplier = 0 --default 8
 craftingToolCraftTimeMultiplier = 0 --default 2
 craftingMaxSockets = 8 --default 4
+craftingMinSocketMod = 20 --default 60 Minimum Skill Level to craft sockets
+craftingMaxSocketMod = 150 --default 175 Maximum Skill Level to craft max sockets
+craftingNewGenerateSocketsEnabled = true --default false.   Skill based socket generation vs random
+craftingWearableContainerSocketsEnabled = false --default true
 
 --Creature
 creatureMaxLevel = 450 --default 336 Pulled from mobiles
@@ -54,9 +58,9 @@ harvestDNASampleDistance = 64 --default 16
 lootDistance = 64 --default 16 (Distance does not affect menu options.   They are still greyed out past the default..  must use /loot all)
 lootAreaEnabled = true --default false
 lootCreditMultiplier = 2 --default 1
-lootAttachmentMax = 45 --default 25
+lootAttachmentMax = 25 --default 25
 lootAttachmentMin = 1 --default 1
-lootAttachmentMaxLevel = 450 --default 250
+lootAttachmentMaxLevel = 250 --default 250
 lootAttachmentNameEnabled = true --default false
 lootAttachmentModCount = 1 --default 2
 
