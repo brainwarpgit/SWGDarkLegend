@@ -35,12 +35,17 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 
 	for(int i = 0; i < modCount; ++i) {
 		//Mods can't be lower than -1 or greater than 25
-		int max = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round(((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) * level + 3)));
-		int min = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round((((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) - 0.0025f) * level - 1)));
-
-		int mod = System::random(max - min) + min;
-
-		if(mod == 0)
+		int max = 0;
+		int min = 0;
+		int mod = 0;
+		if (level >= globalVariables::lootAttachmentMaxLevel) {
+			mod = globalVariables::lootAttachmentMax;
+		} else {	
+			max = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round(((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) * level + 2)));
+			min = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round((((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) ) * level - 2)));
+			mod = System::random(max - min) + min;
+		}
+		if(mod <= 0)
 			mod = 1;
 
 		String modName = server->getZoneServer()->getLootManager()->getRandomLootableMod(gameObjectType);

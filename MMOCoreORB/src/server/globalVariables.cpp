@@ -235,7 +235,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("lootCreditMultiplier") > 0) lootCreditMultiplier = lua->getGlobalInt("lootCreditMultiplier");
 			if (lua->getGlobalInt("lootAttachmentMax") > 0) lootAttachmentMax = lua->getGlobalInt("lootAttachmentMax");
 			if (lua->getGlobalInt("lootAttachmentMin") > 0) lootAttachmentMin = lua->getGlobalInt("lootAttachmentMin");
-			if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0) lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
+			if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0 && lua->getGlobalInt("lootAttachmentMaxLevel") <= 336) lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
 			if (lua->getGlobalInt("lootAttachmentModCount") > 0) lootAttachmentModCount = lua->getGlobalInt("lootAttachmentModCount");
 			if (lua->getGlobalBoolean("lootAttachmentNameEnabled") == true || lua->getGlobalBoolean("lootAttachmentNameEnabled") == false) lootAttachmentNameEnabled = lua->getGlobalBoolean("lootAttachmentNameEnabled");
 			
