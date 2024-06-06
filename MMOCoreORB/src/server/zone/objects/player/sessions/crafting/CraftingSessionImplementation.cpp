@@ -775,7 +775,11 @@ void CraftingSessionImplementation::initialAssembly(int clientCounter) {
 	int custpoints = int(crafter->getSkillMod(custskill));
 
 	// Determine the outcome of the craft, Amazing through Critical
-	assemblyResult = craftingManager->calculateAssemblySuccess(crafter, draftSchematic, craftingTool->getEffectiveness());
+	float effectiveness = craftingTool->getEffectiveness();
+	if (globalVariables::craftingNewAssemblyEnabled == true) {
+		if (userVariables::getUserVariable("stationNearby",crafter->getFirstName()) == 1) effectiveness += 15;
+	}
+	assemblyResult = craftingManager->calculateAssemblySuccess(crafter, draftSchematic, effectiveness);
 
 	if (assemblyResult != CraftingManager::AMAZINGSUCCESS && craftingTool->getForceCriticalAssembly() > 0) {
 		assemblyResult = CraftingManager::AMAZINGSUCCESS;
@@ -1104,10 +1108,16 @@ void CraftingSessionImplementation::experiment(int rowsAttempted, const String& 
 		// Each line gets it's own rolls
 		// Calcualte a new failure rate for each line of experimentation
 		failure = craftingManager->calculateExperimentationFailureRate(crafter, manufactureSchematic, pointsAttempted);
-
+		float effectiveness = craftingTool->getEffectiveness();
+		if (userVariables::getUserVariable("stationNearby",crafter->getFirstName()) == 1) effectiveness += 15;		
+	
 		if (experimentationPointsUsed <= experimentationPointsTotal) {
 			// Set the experimentation result ie:  Amazing Success
-			experimentationResult = craftingManager->calculateExperimentationSuccess(crafter, manufactureSchematic->getDraftSchematic(), failure);
+			if (globalVariables::craftingNewExperimentEnabled == true) {
+				experimentationResult = craftingManager->calculateExperimentationSuccess(crafter, manufactureSchematic->getDraftSchematic(), effectiveness);
+			} else {
+				experimentationResult = craftingManager->calculateExperimentationSuccess(crafter, manufactureSchematic->getDraftSchematic(), failure);
+			}
 
 			if (experimentationResult != CraftingManager::AMAZINGSUCCESS && craftingTool->getForceCriticalExperiment() > 0) {
 				// We are going to mutute the tool, lock it

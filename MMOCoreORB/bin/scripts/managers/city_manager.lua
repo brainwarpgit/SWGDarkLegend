@@ -244,7 +244,6 @@ CitySpecializations = {
 			{"private_spec_samplerate", 20},
 			{"private_medical_rating", 20},
 			{"private_spec_cloning", 40},
-			{"private_spec_experimentation", 30},
 			{"private_spec_missions", 30},
 			{"private_med_battle_fatigue", 100},
 			{"private_med_wound_health", 100},			

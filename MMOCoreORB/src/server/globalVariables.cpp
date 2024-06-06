@@ -21,6 +21,8 @@ namespace globalVariables {
 	int craftingMaxSocketMod = 175;
 	bool craftingNewGenerateSocketsEnabled = false;
 	bool craftingWearableContainerSocketsEnabled = false;
+	bool craftingNewAssemblyEnabled = false;
+	bool craftingNewExperimentEnabled= false;
 
 //Creature
 	int creatureMaxLevel = 336;
@@ -191,7 +193,9 @@ namespace globalVariables {
 			if (lua->getGlobalInt("craftingMaxSocketMod") > 0) craftingMaxSocketMod = lua->getGlobalInt("craftingMaxSocketMod");
 			if (lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled") == true || lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled") == false) craftingNewGenerateSocketsEnabled = lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled");
 			if (lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == true || lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == false) craftingWearableContainerSocketsEnabled = lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled");
-			
+			if (lua->getGlobalBoolean("craftingNewAssemblyEnabled") == true || lua->getGlobalBoolean("craftingNewAssemblyEnabled") == false) craftingNewAssemblyEnabled = lua->getGlobalBoolean("craftingNewAssemblyEnabled");
+			if (lua->getGlobalBoolean("craftingNewExperimentEnabled") == true || lua->getGlobalBoolean("craftingNewExperimentEnabled") == false) craftingNewExperimentEnabled = lua->getGlobalBoolean("craftingNewExperimentEnabled");
+
 			//Creature
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
 			if (lua->getGlobalFloat("creatureBaseScaleMultiplier") > 0) creatureBaseScaleMultiplier = lua->getGlobalFloat("creatureBaseScaleMultiplier");

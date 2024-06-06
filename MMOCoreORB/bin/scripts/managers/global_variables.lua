@@ -16,6 +16,8 @@ craftingMinSocketMod = 20 --default 60 Minimum Skill Level to craft sockets
 craftingMaxSocketMod = 150 --default 175 Maximum Skill Level to craft max sockets
 craftingNewGenerateSocketsEnabled = true --default false.   Skill based socket generation vs random
 craftingWearableContainerSocketsEnabled = false --default true
+craftingNewAssemblyEnabled = true --default false   Skill based assembly 
+craftingNewExperimentEnabled= true --default false   Skill based Experimentation 
 
 --Creature
 creatureMaxLevel = 450 --default 336 Pulled from mobiles

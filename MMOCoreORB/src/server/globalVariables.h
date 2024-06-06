@@ -23,6 +23,8 @@ namespace globalVariables {
 	extern int craftingMaxSocketMod;
 	extern bool craftingNewGenerateSocketsEnabled;
 	extern bool craftingWearableContainerSocketsEnabled;
+	extern bool craftingNewAssemblyEnabled;
+	extern bool craftingNewExperimentEnabled;
 
 // Creature
 	extern int creatureMaxLevel;
