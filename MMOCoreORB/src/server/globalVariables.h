@@ -79,6 +79,9 @@ namespace globalVariables {
 	extern bool lootAttachmentNameEnabled;
 	extern int lootAttachmentModCount;
 	extern bool lootCreditLuckModifier;
+	extern int lootMaxLevel;
+	extern int lootMinLevel;
+
 //Mission
 	extern int missionBountyExpirationTime;
 	extern int missionExpirationTime;

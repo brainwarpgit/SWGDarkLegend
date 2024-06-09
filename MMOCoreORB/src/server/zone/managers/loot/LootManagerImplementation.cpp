@@ -317,8 +317,8 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
 	trx.addState("lootVersion", 2);
 
-	level = (level < LootManager::LEVELMIN) ? LootManager::LEVELMIN : level;
-	level = (level > LootManager::LEVELMAX) ? LootManager::LEVELMAX : level;
+	level = (level < globalVariables::lootMinLevel) ? globalVariables::lootMinLevel : level;
+	level = (level > globalVariables::lootMaxLevel) ? globalVariables::lootMaxLevel : level;
 
 	const String& directTemplateObject = templateObject->getDirectObjectTemplate();
 

@@ -2,6 +2,7 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
 #include "templates/LootItemTemplate.h"
+#include "server/globalVariables.h"
 
 LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
 	setLoggingName("LootValues: " + lootTemplate->getTemplateName());
@@ -33,12 +34,12 @@ void LootValues::setLevel(const LootItemTemplate* lootTemplate, int lootLevel) {
 		return;
 	}
 
-	if (levelMax > LEVELMAX || levelMax == -1) {
-		levelMax = LEVELMAX;
+	if (levelMax > globalVariables::lootMaxLevel || levelMax == -1) {
+		levelMax = globalVariables::lootMaxLevel;
 	}
 
-	if (levelMin < LEVELMIN) {
-		levelMin = LEVELMIN;
+	if (levelMin < globalVariables::lootMinLevel) {
+		levelMin = globalVariables::lootMinLevel;
 	}
 
 	float levelRank = getLevelRankValue(lootLevel);
@@ -416,7 +417,7 @@ int LootValues::getDistributedValue(int min, int max, int level, float distMin, 
 }
 
 float LootValues::getLevelRankValue(int level, float distMin, float distMax) {
-	float rank = Math::clamp(0.f, (level - LEVELMIN) / (float)(LEVELMAX - LEVELMIN), 1.f);
+	float rank = Math::clamp(0.f, (level - globalVariables::lootMinLevel) / (float)(globalVariables::lootMaxLevel - globalVariables::lootMinLevel), 1.f);
 
 	return Math::linearInterpolate(distMin, distMax, rank);
 }

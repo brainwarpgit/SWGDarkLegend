@@ -130,7 +130,6 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 			assemblySkill = 20;
 		}
 		float assemblyDivisor = (globalVariables::craftingMaxSocketMod - globalVariables::craftingMinSocketMod) / globalVariables::craftingMaxSockets;
-		info(std::to_string(luckSkill),true);
 		if (assemblySkill < globalVariables::craftingMinSocketMod || luckSkill < globalVariables::craftingMinSocketMod) {
 			return;
 		} else {	
