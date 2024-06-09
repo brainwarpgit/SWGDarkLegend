@@ -78,7 +78,7 @@ class WearableObject extends TangibleObject {
 
 	private native void generateSockets(CraftingValues craftingValues);
 
-	public native string repairAttempt(int repairChance);
+	public native string repairAttempt(int repairChance, int luckSkill, float repairMaxMod);
 
 	@local
 	public VectorMap<string, int> getWearableSkillMods() {

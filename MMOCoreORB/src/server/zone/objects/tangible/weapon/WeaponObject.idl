@@ -565,7 +565,7 @@ class WeaponObject extends TangibleObject {
 
 	public native void decreasePowerupUses(CreatureObject player);
 
-	public native string repairAttempt(int repairChance);
+	public native string repairAttempt(int repairChance, int luckSkill, float repairMaxMod);
 
 	public native void decay(CreatureObject user);
 

@@ -23,6 +23,9 @@ namespace globalVariables {
 	bool craftingWearableContainerSocketsEnabled = false;
 	bool craftingNewAssemblyEnabled = false;
 	bool craftingNewExperimentEnabled= false;
+	bool craftingNewRepairEnabled = false;
+	bool craftingRepairBrokenEnabled = false;
+	float craftingRepairMaxMod = 0.8f;
 
 //Creature
 	int creatureMaxLevel = 336;
@@ -49,7 +52,8 @@ namespace globalVariables {
 	float creatureBaseHAMMultiplier = 1;
 	float creatureBaseHAMMaxMultiplier = 1;
 	float creatureBaseResistsMultiplier = 1;
-
+	float creatureWildSpawnDensity = 32.0f;
+	
 //Faction
 	int factionMaxRank = 15;
 
@@ -108,6 +112,10 @@ namespace globalVariables {
 	int playerWoundHealingMultiplier = 1;
 	int playerEnhanceHealingMultiplier = 1;
 	int playerDamageHealingMultiplier = 1;
+	bool playerInsureWeaponsEnabled = false;
+	float playerMeditateHealingMultiplier = 1.0f;
+	bool playerMeditateFatigueHealingEnabled = false;
+	int playerMeditateFatigueHealingAmount = 10;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -195,6 +203,9 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == true || lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == false) craftingWearableContainerSocketsEnabled = lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled");
 			if (lua->getGlobalBoolean("craftingNewAssemblyEnabled") == true || lua->getGlobalBoolean("craftingNewAssemblyEnabled") == false) craftingNewAssemblyEnabled = lua->getGlobalBoolean("craftingNewAssemblyEnabled");
 			if (lua->getGlobalBoolean("craftingNewExperimentEnabled") == true || lua->getGlobalBoolean("craftingNewExperimentEnabled") == false) craftingNewExperimentEnabled = lua->getGlobalBoolean("craftingNewExperimentEnabled");
+			if (lua->getGlobalBoolean("craftingNewRepairEnabled") == true || lua->getGlobalBoolean("craftingNewRepairEnabled") == false) craftingNewRepairEnabled = lua->getGlobalBoolean("craftingNewRepairEnabled");
+			if (lua->getGlobalBoolean("craftingRepairBrokenEnabled") == true || lua->getGlobalBoolean("craftingRepairBrokenEnabled") == false) craftingRepairBrokenEnabled = lua->getGlobalBoolean("craftingRepairBrokenEnabled");
+			if (lua->getGlobalFloat("craftingRepairMaxMod") > 0 && lua->getGlobalFloat("craftingRepairMaxMod") < 1) craftingRepairMaxMod = lua->getGlobalFloat("craftingRepairMaxMod");
 
 			//Creature
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
@@ -221,6 +232,7 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("creatureAcidMaxResists") >= 0) creatureAcidMaxResists = lua->getGlobalFloat("creatureAcidMaxResists");
 			if (lua->getGlobalFloat("creatureStunMaxResists") >= 0) creatureStunMaxResists = lua->getGlobalFloat("creatureStunMaxResists");
 			if (lua->getGlobalFloat("creatureLightsaberMaxResists") >= 0) creatureLightsaberMaxResists = lua->getGlobalFloat("creatureLightsaberMaxResists");
+			if (lua->getGlobalFloat("creatureWildSpawnDensity") >= 0) creatureWildSpawnDensity = lua->getGlobalFloat("creatureWildSpawnDensity");
 
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
@@ -280,7 +292,11 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerWoundHealingMultiplier") > 0) playerWoundHealingMultiplier = lua->getGlobalInt("playerWoundHealingMultiplier");
 			if (lua->getGlobalInt("playerEnhanceHealingMultiplier") > 0) playerEnhanceHealingMultiplier = lua->getGlobalInt("playerEnhanceHealingMultiplier");
 			if (lua->getGlobalInt("playerDamageHealingMultiplier") > 0) playerDamageHealingMultiplier = lua->getGlobalInt("playerDamageHealingMultiplier");			
-
+			if (lua->getGlobalBoolean("playerInsureWeaponsEnabled") == true || lua->getGlobalBoolean("playerInsureWeaponsEnabled") == false) playerInsureWeaponsEnabled = lua->getGlobalBoolean("playerInsureWeaponsEnabled");
+			if (lua->getGlobalFloat("playerMeditateHealingMultiplier") >= 0) playerMeditateHealingMultiplier = lua->getGlobalFloat("playerMeditateHealingMultiplier");
+			if (lua->getGlobalBoolean("playerMeditateFatigueHealingEnabled") == true || lua->getGlobalBoolean("playerMeditateFatigueHealingEnabled") == false) playerMeditateFatigueHealingEnabled = lua->getGlobalBoolean("playerMeditateFatigueHealingEnabled");
+			if (lua->getGlobalInt("playerMeditateFatigueHealingAmount") > 0) playerMeditateFatigueHealingAmount = lua->getGlobalInt("playerMeditateFatigueHealingAmount");			
+			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");

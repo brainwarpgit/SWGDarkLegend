@@ -25,6 +25,9 @@ namespace globalVariables {
 	extern bool craftingWearableContainerSocketsEnabled;
 	extern bool craftingNewAssemblyEnabled;
 	extern bool craftingNewExperimentEnabled;
+	extern bool craftingNewRepairEnabled;
+	extern bool craftingRepairBrokenEnabled;
+	extern float craftingRepairMaxMod;
 
 // Creature
 	extern int creatureMaxLevel;
@@ -51,6 +54,9 @@ namespace globalVariables {
 	extern float creatureBaseHAMMultiplier;
 	extern float creatureBaseHAMMaxMultiplier;
 	extern float creatureBaseResistsMultiplier;
+	extern float creatureWildSpawnDensity;
+	extern bool playerMeditateFatigueHealingEnabled;
+	extern int playerMeditateFatigueHealingAmount;
 
 //Faction
 	extern int factionMaxRank;
@@ -110,7 +116,9 @@ namespace globalVariables {
 	extern int playerWoundHealingMultiplier;
 	extern int playerEnhanceHealingMultiplier;
 	extern int playerDamageHealingMultiplier;
-
+	extern bool playerInsureWeaponsEnabled;
+	extern float playerMeditateHealingMultiplier;
+	
 //Player Creation
 	extern int playerCreationNewCreationTime;
 	extern bool playerCreationAllLanguagesEnabled;

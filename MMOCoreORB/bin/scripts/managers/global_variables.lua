@@ -17,7 +17,10 @@ craftingMaxSocketMod = 150 --default 175 Maximum Skill Level to craft max socket
 craftingNewGenerateSocketsEnabled = true --default false.   Skill based socket generation vs random
 craftingWearableContainerSocketsEnabled = false --default true
 craftingNewAssemblyEnabled = true --default false   Skill based assembly 
-craftingNewExperimentEnabled= true --default false   Skill based Experimentation 
+craftingNewExperimentEnabled= true --default false   Skill based Experimentation
+craftingNewRepairEnabled = true --default false Skill based Repair
+craftingRepairBrokenEnabled = true -- default false
+craftingRepairMaxMod = 0.8 --default 0.8   You must choose between > 0 and < 1
 
 --Creature
 creatureMaxLevel = 450 --default 336 Pulled from mobiles
@@ -34,7 +37,7 @@ creatureBaseDamageMaxMultiplier = 0.25 --default 1
 creatureBaseDamageMinMultiplier = 0.25 --default 1
 creatureBaseHAMMultiplier = 0.25 --default 1
 creatureBaseHAMMaxMultiplier = 0.25 --default 1
-creatureBaseResistsMultipliers = 0.25 --default 1
+creatureBaseResistsMultiplier = 0.25 --default 1
 creatureKineticMaxResists = 80.0 --default 100.0
 creatureEnergyMaxResists = 80.0 --default 100.0
 creatureBlastMaxResists = 80.0 --default 100.0
@@ -44,6 +47,7 @@ creatureElectricityMaxResists = 80.0 --default 100.0
 creatureAcidMaxResists = 80.0--default 100.0
 creatureStunMaxResists = 40.0 --default 100.0
 creatureLightsaberMaxResists = 0.0 --default 100.0
+creatureWildSpawnDensity = 64.0 --default 32.0
 
 --Faction
 factionMaxRank = 21 --default 15  max 21
@@ -103,6 +107,10 @@ playerEnhanceHealingAnywhereEnabled = true --default false
 playerWoundHealingMultiplier = 2 --default 1
 playerEnhanceHealingMultiplier = 2 --default 1 also affects time and absorption(when applicable)
 playerDamageHealingMultiplier = 2 --default 1
+playerInsureWeaponsEnabled = true --default false
+playerMeditateHealingMultiplier = 10.0 --default 1.0
+playerMeditateFatigueHealingEnabled = true --default false
+playerMeditateFatigueHealingAmount = 10 --default 10
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

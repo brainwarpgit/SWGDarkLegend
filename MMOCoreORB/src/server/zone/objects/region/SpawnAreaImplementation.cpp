@@ -16,6 +16,7 @@
 #include "server/zone/objects/area/areashapes/AreaShape.h"
 #include "server/ServerCore.h"
 #include "server/zone/objects/area/events/RemoveNoSpawnAreaTask.h"
+#include "server/globalVariables.h"
 
 //#define DEBUG_SPAWNING
 
@@ -117,7 +118,7 @@ Vector3 SpawnAreaImplementation::getRandomPosition(SceneObject* player) {
 
 	const auto worldPosition = player->getWorldPosition();
 
-	position = areaShape->getRandomPosition(worldPosition, 32.0f, ZoneServer::CLOSEOBJECTRANGE);
+	position = areaShape->getRandomPosition(worldPosition, globalVariables::creatureWildSpawnDensity / 2, ZoneServer::CLOSEOBJECTRANGE);
 
 	return position;
 }
@@ -158,7 +159,7 @@ int SpawnAreaImplementation::notifyObserverEvent(unsigned int eventType, Observa
 
 			Locker locker(area);
 
-			area->setRadius(ConfigManager::instance()->getSpawnCheckRange());
+			area->setRadius(globalVariables::creatureWildSpawnDensity / 2);
 			area->addAreaFlag(ActiveArea::NOSPAWNAREA);
 			area->initializePosition(sceneO->getPositionX(), sceneO->getPositionZ(), sceneO->getPositionY());
 
@@ -226,7 +227,7 @@ void SpawnAreaImplementation::tryToSpawn(CreatureObject* player) {
 		return;
 	}
 
-	float checkRange = finalSpawn->getSize() + ConfigManager::instance()->getSpawnCheckRange();
+	float checkRange = finalSpawn->getSize() + globalVariables::creatureWildSpawnDensity;
 
 	// Check the spot to see if spawning is allowed
 	if (!planetManager->isSpawningPermittedAt(randomPosition.getX(), randomPosition.getY(), checkRange, isWorldSpawnArea())) {
