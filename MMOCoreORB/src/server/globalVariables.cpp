@@ -116,6 +116,8 @@ namespace globalVariables {
 	float playerMeditateHealingMultiplier = 1.0f;
 	bool playerMeditateFatigueHealingEnabled = false;
 	int playerMeditateFatigueHealingAmount = 10;
+	float playerHAMRegenSittingMultiplier = 5.0f;
+	float playerHAMRegenKneelingMultiplier = 5.0f;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -303,6 +305,8 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerMeditateHealingMultiplier") >= 0) playerMeditateHealingMultiplier = lua->getGlobalFloat("playerMeditateHealingMultiplier");
 			if (lua->getGlobalBoolean("playerMeditateFatigueHealingEnabled") == true || lua->getGlobalBoolean("playerMeditateFatigueHealingEnabled") == false) playerMeditateFatigueHealingEnabled = lua->getGlobalBoolean("playerMeditateFatigueHealingEnabled");
 			if (lua->getGlobalInt("playerMeditateFatigueHealingAmount") > 0) playerMeditateFatigueHealingAmount = lua->getGlobalInt("playerMeditateFatigueHealingAmount");			
+			if (lua->getGlobalFloat("playerHAMRegenSittingMultiplier") >= 0) playerHAMRegenSittingMultiplier = lua->getGlobalFloat("playerHAMRegenSittingMultiplier");
+			if (lua->getGlobalFloat("playerHAMRegenKneelingMultiplier") >= 0) playerHAMRegenKneelingMultiplier = lua->getGlobalFloat("playerHAMRegenKneelingMultiplier");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");

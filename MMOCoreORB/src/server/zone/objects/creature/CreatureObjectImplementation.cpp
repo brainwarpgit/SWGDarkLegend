@@ -94,6 +94,7 @@
 #include "server/zone/managers/director/ScreenPlayObserver.h"
 #include "server/zone/objects/player/events/SpawnHelperDroidTask.h"
 #include "server/zone/packets/object/StartNpcConversation.h"
+#include "server/globalVariables.h"
 
 float CreatureObjectImplementation::DEFAULTRUNSPEED = 5.376f;
 
@@ -2946,9 +2947,9 @@ void CreatureObjectImplementation::activateHAMRegeneration(int latency) {
 	float modifier = (float)latency/1000.f;
 
 	if (isKneeling())
-		modifier *= 1.25f;
+		modifier *= 1.25f * globalVariables::playerHAMRegenKneelingMultiplier;
 	else if (isSitting())
-		modifier *= 1.75f;
+		modifier *= 1.75f* globalVariables::playerHAMRegenSittingMultiplier;
 
 	// this formula gives the amount of regen per second
 	uint32 healthTick = (uint32) ceil((float) Math::max(0, getHAM(

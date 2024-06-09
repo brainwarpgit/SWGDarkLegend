@@ -118,6 +118,8 @@ namespace globalVariables {
 	extern int playerDamageHealingMultiplier;
 	extern bool playerInsureWeaponsEnabled;
 	extern float playerMeditateHealingMultiplier;
+	extern float playerHAMRegenSittingMultiplier;
+	extern float playerHAMRegenKneelingMultiplier;
 	
 //Player Creation
 	extern int playerCreationNewCreationTime;

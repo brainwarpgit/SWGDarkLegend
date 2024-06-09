@@ -111,6 +111,8 @@ playerInsureWeaponsEnabled = true --default false
 playerMeditateHealingMultiplier = 10.0 --default 1.0
 playerMeditateFatigueHealingEnabled = true --default false
 playerMeditateFatigueHealingAmount = 10 --default 10
+playerHAMRegenSittingMultiplier = 5 --default 1
+playerHAMRegenKneelingMultiplier = 5 --default 1
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
