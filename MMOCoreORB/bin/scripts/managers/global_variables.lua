@@ -136,6 +136,13 @@ resourcesContainerSize = 10000000 --default 100000
 skillsInstantMasterPoliticianEnabled = true --default false
 skillsInstantMasterMerchantEnabled = true --default false
 
+--Slicing
+slicingNewSliceEnabled = true --default false
+slicingTerminalSliceCooldown = .5 --default 2 in minutes
+slicingArmorSliceSocketsEnabled = true --default false
+slicingArmorPierceSliceEnabled = true --default false
+slicingWeaponPierceSliceEnabled = true --default false
+
 --Structure
 structureMaxItemsPerLot = 500 --default 100
 structureMaxCivicBuildingItems = 1000 --default 250

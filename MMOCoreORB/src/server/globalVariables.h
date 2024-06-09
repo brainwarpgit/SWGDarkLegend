@@ -143,6 +143,13 @@ namespace globalVariables {
 	extern bool skillsInstantMasterPoliticianEnabled;
 	extern bool skillsInstantMasterMerchantEnabled;
 
+//Slicing
+	extern bool slicingNewSliceEnabled;
+	extern float slicingTerminalSliceCooldown;
+	extern bool slicingArmorSliceSocketsEnabled;
+	extern bool slicingArmorPierceSliceEnabled;
+	extern bool slicingWeaponPierceSliceEnabled;
+
 //Structure
 	extern int structureMaxItemsPerLot;
 	extern int structureMaxCivicBuildingItems;

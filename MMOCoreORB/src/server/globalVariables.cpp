@@ -141,6 +141,13 @@ namespace globalVariables {
 	bool skillsInstantMasterPoliticianEnabled = false;
 	bool skillsInstantMasterMerchantEnabled = false;
 
+//Slicing
+	bool slicingNewSliceEnabled = false;
+	float slicingTerminalSliceCooldown = 2;
+	bool slicingArmorSliceSocketsEnabled = false;
+	bool slicingArmorPierceSliceEnabled = false;
+	bool slicingWeaponPierceSliceEnabled = false;
+
 //Structure
 	int structureMaxItemsPerLot = 100;
 	int structureMaxCivicBuildingItems = 250;
@@ -321,6 +328,13 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == false) skillsInstantMasterPoliticianEnabled = lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled");
 			if (lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled") == false) skillsInstantMasterMerchantEnabled = lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled");
 			
+			//Slicing
+			if (lua->getGlobalBoolean("slicingNewSliceEnabled") == true || lua->getGlobalBoolean("slicingNewSliceEnabled") == false) slicingNewSliceEnabled = lua->getGlobalBoolean("slicingNewSliceEnabled");
+			if (lua->getGlobalFloat("slicingTerminalSliceCooldown") >= 0) slicingTerminalSliceCooldown = lua->getGlobalFloat("slicingTerminalSliceCooldown");
+			if (lua->getGlobalBoolean("slicingArmorSliceSocketsEnabled") == true || lua->getGlobalBoolean("slicingArmorSliceSocketsEnabled") == false) slicingArmorSliceSocketsEnabled = lua->getGlobalBoolean("slicingArmorSliceSocketsEnabled");
+			if (lua->getGlobalBoolean("slicingArmorPierceSliceEnabled") == true || lua->getGlobalBoolean("slicingArmorPierceSliceEnabled") == false) slicingArmorPierceSliceEnabled = lua->getGlobalBoolean("slicingArmorPierceSliceEnabled");
+			if (lua->getGlobalBoolean("slicingWeaponPierceSliceEnabled") == true || lua->getGlobalBoolean("slicingWeaponPierceSliceEnabled") == false) slicingWeaponPierceSliceEnabled = lua->getGlobalBoolean("slicingWeaponPierceSliceEnabled");
+
 			//Structure
 			if (lua->getGlobalInt("structureMaxItemsPerLot") > 0) structureMaxItemsPerLot = lua->getGlobalInt("structureMaxItemsPerLot");
 			if (lua->getGlobalInt("structureMaxCivicBuildingItems") >= 0) structureMaxCivicBuildingItems = lua->getGlobalInt("structureMaxCivicBuildingItems");
