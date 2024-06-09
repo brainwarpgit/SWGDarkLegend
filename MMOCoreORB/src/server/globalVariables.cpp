@@ -74,6 +74,7 @@ namespace globalVariables {
 	int lootAttachmentMaxLevel = 250;
 	bool lootAttachmentNameEnabled = false;
 	int lootAttachmentModCount = 2;
+	bool lootCreditLuckModifier = false;
 
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -263,6 +264,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0 && lua->getGlobalInt("lootAttachmentMaxLevel") <= 336) lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
 			if (lua->getGlobalInt("lootAttachmentModCount") > 0) lootAttachmentModCount = lua->getGlobalInt("lootAttachmentModCount");
 			if (lua->getGlobalBoolean("lootAttachmentNameEnabled") == true || lua->getGlobalBoolean("lootAttachmentNameEnabled") == false) lootAttachmentNameEnabled = lua->getGlobalBoolean("lootAttachmentNameEnabled");
+			if (lua->getGlobalBoolean("lootCreditLuckModifier") == true || lua->getGlobalBoolean("lootCreditLuckModifier") == false) lootCreditLuckModifier = lua->getGlobalBoolean("lootCreditLuckModifier");
 			
 			//Mission
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");

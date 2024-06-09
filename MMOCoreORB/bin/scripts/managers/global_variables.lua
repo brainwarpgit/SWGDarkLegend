@@ -69,6 +69,7 @@ lootAttachmentMin = 1 --default 1
 lootAttachmentMaxLevel = 250 --default 250  336 is current max due to template levels at least the best i can figure.   setting this higher than 336 never really results in a lootAttachmentMax
 lootAttachmentNameEnabled = true --default false
 lootAttachmentModCount = 1 --default 2
+lootCreditLuckModifier = true --default false
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours
