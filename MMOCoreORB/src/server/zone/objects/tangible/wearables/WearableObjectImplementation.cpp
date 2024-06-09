@@ -57,14 +57,14 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 	if (socketsGenerated) {
 		return;
 	}
-	ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
-	ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
-	ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
 	if (globalVariables::craftingNewGenerateSocketsEnabled == false) {
 		int skill = 0;
 		int luck = 0;
 		if (craftingValues != nullptr) {
+			ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
 			if (manuSchematic != nullptr) {
+				ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
+				ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
 				if (player != nullptr && draftSchematic != nullptr) {
 					String assemblySkill = draftSchematic->getAssemblySkill();
 					skill = player->getSkillMod(assemblySkill);
@@ -101,13 +101,16 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 		int assemblySkill = 0;
 		int luckSkill = 0;
 		if (craftingValues != nullptr) {
+			ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
 			if (manuSchematic != nullptr) {
+				ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
+				ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
 				if (player != nullptr && draftSchematic != nullptr) {
 					int cityBonus = player->getSkillMod("private_spec_assembly");
 					assemblySkill = std::min(player->getSkillMod("clothing_assembly"),125);
 					int forceBonus = std::min(player->getSkillMod("force_assembly"),45);
-					int luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
 					int craftBonus = 0;
+					int luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
 					toolEffectiveness = userVariables::getUserVariable("toolEffectiveness",player->getFirstName());
 					if (userVariables::getUserVariable("stationNearby",player->getFirstName()) == 1.f) stationNearby = 15;
 					if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
@@ -122,7 +125,12 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 				}
 			}
 		}
+		if (luckSkill == 0 && assemblySkill == 0) { // Makes this Loot and not crafted.
+			luckSkill = System::random(globalVariables::craftingMaxSocketMod) + globalVariables::craftingMinSocketMod;
+			assemblySkill = 20;
+		}
 		float assemblyDivisor = (globalVariables::craftingMaxSocketMod - globalVariables::craftingMinSocketMod) / globalVariables::craftingMaxSockets;
+		info(std::to_string(luckSkill),true);
 		if (assemblySkill < globalVariables::craftingMinSocketMod || luckSkill < globalVariables::craftingMinSocketMod) {
 			return;
 		} else {	
