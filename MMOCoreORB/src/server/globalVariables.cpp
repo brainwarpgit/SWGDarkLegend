@@ -119,6 +119,8 @@ namespace globalVariables {
 	int playerMeditateFatigueHealingAmount = 10;
 	float playerHAMRegenSittingMultiplier = 5.0f;
 	float playerHAMRegenKneelingMultiplier = 5.0f;
+	float playerMaxArmorUnSliced = 80;
+	float playerMaxArmorSliced = 90;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -309,7 +311,9 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerMeditateFatigueHealingAmount") > 0) playerMeditateFatigueHealingAmount = lua->getGlobalInt("playerMeditateFatigueHealingAmount");			
 			if (lua->getGlobalFloat("playerHAMRegenSittingMultiplier") >= 0) playerHAMRegenSittingMultiplier = lua->getGlobalFloat("playerHAMRegenSittingMultiplier");
 			if (lua->getGlobalFloat("playerHAMRegenKneelingMultiplier") >= 0) playerHAMRegenKneelingMultiplier = lua->getGlobalFloat("playerHAMRegenKneelingMultiplier");
-			
+			if (lua->getGlobalFloat("playerMaxArmorUnSliced") >= 0) playerMaxArmorUnSliced = lua->getGlobalFloat("playerMaxArmorUnSliced");
+			if (lua->getGlobalFloat("playerMaxArmorSliced") >= 0) playerMaxArmorSliced = lua->getGlobalFloat("playerMaxArmorSliced");
+		
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");

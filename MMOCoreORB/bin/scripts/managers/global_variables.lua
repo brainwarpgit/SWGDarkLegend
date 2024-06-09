@@ -114,6 +114,8 @@ playerMeditateFatigueHealingEnabled = true --default false
 playerMeditateFatigueHealingAmount = 10 --default 10
 playerHAMRegenSittingMultiplier = 5 --default 1
 playerHAMRegenKneelingMultiplier = 5 --default 1
+playerMaxArmorUnSliced = 80 --default 80
+playerMaxArmorSliced = 90 --default 90
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

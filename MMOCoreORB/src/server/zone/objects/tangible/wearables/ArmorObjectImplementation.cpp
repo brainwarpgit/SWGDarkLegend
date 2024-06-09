@@ -9,6 +9,7 @@
 #include "templates/tangible/ArmorObjectTemplate.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
 #include "templates/tangible/SharedWeaponObjectTemplate.h"
+#include "server/globalVariables.h"
 
 void ArmorObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -288,18 +289,18 @@ float ArmorObjectImplementation::getTypeValue(int type, float value) const {
 	else if (isSpecial(type)) {
 		newValue = specialProtection + value;
 
-		if (newValue > 80)
-			newValue = 80;
+		if (newValue > globalVariables::playerMaxArmorUnSliced)
+			newValue = globalVariables::playerMaxArmorUnSliced;
 	} else {
 		newValue = baseProtection + value;
 		newValue *= effectivenessSlice;
 
 		if(sliced && effectivenessSlice > 1) {
-			if(newValue > 90)
-				newValue = 90;
+			if(newValue > globalVariables::playerMaxArmorSliced)
+				newValue = globalVariables::playerMaxArmorSliced;
 		} else {
-			if(newValue > 80)
-				newValue = 80;
+			if(newValue > globalVariables::playerMaxArmorUnSliced)
+				newValue = globalVariables::playerMaxArmorUnSliced;
 		}
 	}
 
