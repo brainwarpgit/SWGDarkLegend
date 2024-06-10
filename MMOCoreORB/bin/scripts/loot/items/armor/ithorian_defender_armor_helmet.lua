@@ -5,7 +5,7 @@ ithorian_defender_armor_helmet = {
 	directObjectTemplate = "object/tangible/wearables/armor/ithorian_defender/ith_armor_s01_helmet.iff",
 	craftingValues = {
 		{"armor_rating",1,1,0},
-		{"blasteffectiveness",10,45,10},
+		--{"blasteffectiveness",10,45,10},
 		{"armor_effectiveness",8,29,10},
 		{"armor_integrity",18750, 31000,0},
 		{"armor_health_encumbrance",22,13,0},

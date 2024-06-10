@@ -128,7 +128,7 @@ armor_all = {
 		{itemTemplate = "kashyyykian_hunting_armor_bracer_r", weight = 63694},
 		{itemTemplate = "kashyyykian_hunting_armor_chest_plate", weight = 63694},
 		{itemTemplate = "kashyyykian_hunting_armor_leggings", weight = 63694},
-		{itemTemplate = "marine_armor_belt", weight = 63694},
+		{itemTemplate = "marine_armor_backpack", weight = 63694},
 		{itemTemplate = "marine_armor_bicep_l", weight = 63694},
 		{itemTemplate = "marine_armor_bicep_r", weight = 63694},
 		{itemTemplate = "marine_armor_shoes", weight = 63694},

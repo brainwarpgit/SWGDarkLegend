@@ -5,7 +5,7 @@ tantel_armor_chest_plate = {
 	directObjectTemplate = "object/tangible/wearables/armor/tantel/armor_tantel_skreej_chest_plate.iff",
 	craftingValues = {
 		{"armor_rating",1,1,0},
-		{"energyeffectiveness",10,30,10},
+		--{"energyeffectiveness",10,30,10},
 		{"armor_effectiveness",4,19,10},
 		{"armor_integrity",11250, 18750,0},
 		{"armor_health_encumbrance",95,56,0},
