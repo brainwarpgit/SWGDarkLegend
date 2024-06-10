@@ -17,6 +17,7 @@
 #include "server/zone/managers/loot/CrystalData.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/ZoneServer.h"
+#include "server/globalVariables.h"
 
 void LightsaberCrystalComponentImplementation::initializeTransientMembers() {
 	ComponentImplementation::initializeTransientMembers();
@@ -304,7 +305,11 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 				alm->insertAttribute("wpn_attack_cost_health", sacHealth);
 				alm->insertAttribute("wpn_attack_cost_action", sacAction);
 				alm->insertAttribute("wpn_attack_cost_mind", sacMind);
-				alm->insertAttribute("forcecost", (int)getForceCost());
+				if (globalVariables::lootShowForceCostDecimalEnabled == false) {
+					alm->insertAttribute("forcecost", (int)getForceCost());
+				} else {
+					alm->insertAttribute("forcecost", (float)getForceCost());
+				}
 
 				// For debugging
 				if (player->isPrivileged()) {
@@ -453,9 +458,18 @@ void LightsaberCrystalComponentImplementation::updateCraftingValues(CraftingValu
 	int color = values->getCurrentValue("color");
 
 	if (colorMax != 31) {
-		int finalColor = Math::min(color, 11);
-		setColor(finalColor);
-		updateCrystal(finalColor);
+		if (globalVariables::lootRareColorCrystalsEnabled == false) {
+			int finalColor = Math::min(color, 11);
+			setColor(finalColor);
+			updateCrystal(finalColor);
+		} else {
+			int finalColor = System::random(12);
+			if (System::random(100) >= 90){
+				finalColor = System::random(18) + 12;
+			}
+			setColor(finalColor);
+			updateCrystal(finalColor);
+		}
 	} else {
 		setColor(31);
 		updateCrystal(31);

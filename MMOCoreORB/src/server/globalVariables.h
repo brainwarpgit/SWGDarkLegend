@@ -82,6 +82,8 @@ namespace globalVariables {
 	extern bool lootCreditLuckModifier;
 	extern int lootMaxLevel;
 	extern int lootMinLevel;
+	extern bool lootShowForceCostDecimalEnabled;
+	extern bool lootRareColorCrystalsEnabled;
 
 //Mission
 	extern int missionBountyExpirationTime;
@@ -126,6 +128,7 @@ namespace globalVariables {
 	extern float playerHAMRegenKneelingMultiplier;
 	extern float playerMaxArmorUnSliced;
 	extern float playerMaxArmorSliced;
+	extern bool playerJediForceRunToggleEnabled;
 	
 //Player Creation
 	extern int playerCreationNewCreationTime;

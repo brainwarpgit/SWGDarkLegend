@@ -78,7 +78,9 @@ namespace globalVariables {
 	bool lootCreditLuckModifier = false;
 	int lootMaxLevel = 300;
 	int lootMinLevel = 1;
-
+	bool lootShowForceCostDecimalEnabled = false;
+	bool lootRareColorCrystalsEnabled = false;
+	
 //Mission
 	int missionBountyExpirationTime = 48;
 	int missionExpirationTime = 48;
@@ -124,6 +126,7 @@ namespace globalVariables {
 	float playerHAMRegenKneelingMultiplier = 5.0f;
 	float playerMaxArmorUnSliced = 80;
 	float playerMaxArmorSliced = 90;
+	bool playerJediForceRunToggleEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -273,7 +276,9 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootCreditLuckModifier") == true || lua->getGlobalBoolean("lootCreditLuckModifier") == false) lootCreditLuckModifier = lua->getGlobalBoolean("lootCreditLuckModifier");
 			if (lua->getGlobalInt("lootMaxLevel") > 0 && lua->getGlobalInt("lootMaxLevel") <= 450 && lua->getGlobalInt("lootMaxLevel") > lua->getGlobalInt("lootMinLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
 			if (lua->getGlobalInt("lootMinLevel") > 0 && lua->getGlobalInt("lootMinLevel") < lua->getGlobalInt("lootMaxLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
-	
+			if (lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == true || lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == false) lootShowForceCostDecimalEnabled = lua->getGlobalBoolean("lootShowForceCostDecimalEnabled");
+			if (lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == true || lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == false) lootRareColorCrystalsEnabled = lua->getGlobalBoolean("lootRareColorCrystalsEnabled");
+
 			//Mission
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
 			if (lua->getGlobalInt("missionExpirationTime") > 0) missionExpirationTime = lua->getGlobalInt("missionExpirationTime");
@@ -319,7 +324,8 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerHAMRegenKneelingMultiplier") >= 0) playerHAMRegenKneelingMultiplier = lua->getGlobalFloat("playerHAMRegenKneelingMultiplier");
 			if (lua->getGlobalFloat("playerMaxArmorUnSliced") >= 0) playerMaxArmorUnSliced = lua->getGlobalFloat("playerMaxArmorUnSliced");
 			if (lua->getGlobalFloat("playerMaxArmorSliced") >= 0) playerMaxArmorSliced = lua->getGlobalFloat("playerMaxArmorSliced");
-		
+			if (lua->getGlobalBoolean("playerJediForceRunToggleEnabled") == true || lua->getGlobalBoolean("playerJediForceRunToggleEnabled") == false) playerJediForceRunToggleEnabled = lua->getGlobalBoolean("playerJediForceRunToggleEnabled");
+
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");

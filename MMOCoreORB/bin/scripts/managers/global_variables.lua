@@ -73,6 +73,8 @@ lootAttachmentModCount = 1 --default 2
 lootCreditLuckModifier = true --default false
 lootMaxLevel = 450 --default 300
 lootMinLevel = 1 --default 1
+lootShowForceCostDecimalEnabled = true --default false
+lootRareColorCrystalsEnabled = true --default false
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours
@@ -119,6 +121,7 @@ playerHAMRegenSittingMultiplier = 5 --default 1
 playerHAMRegenKneelingMultiplier = 5 --default 1
 playerMaxArmorUnSliced = 80 --default 80
 playerMaxArmorSliced = 90 --default 90
+playerJediForceRunToggleEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
