@@ -27,6 +27,7 @@ require("sui.custom.SuiProcessorPuzzle")
 require("sui.custom.SuiRadiationSensor")
 require("sui.custom.SuiReceiverPuzzle")
 
+includeFile("tools/dl_services_terminal.lua")
 includeFile("tools/mission_level_choice.lua")
 includeFile("tools/mission_direction_choice.lua")
 includeFile("helperfuncs.lua")
