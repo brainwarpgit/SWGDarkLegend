@@ -56,6 +56,7 @@ namespace globalVariables {
 	
 //Faction
 	int factionMaxRank = 15;
+	float factionCapMultiplier = 1.0f;
 
 //Harvest
 	int harvestDistance = 10;
@@ -250,6 +251,7 @@ namespace globalVariables {
 
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
+			if (lua->getGlobalFloat("factionCapMultiplier") > 0) factionCapMultiplier = lua->getGlobalFloat("factionCapMultiplier");
 
 			//Harvest
 			if (lua->getGlobalInt("harvestDistance") > 0) harvestDistance = lua->getGlobalInt("harvestDistance");

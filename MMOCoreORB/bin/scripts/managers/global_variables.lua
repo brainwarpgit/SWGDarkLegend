@@ -51,6 +51,7 @@ creatureWildSpawnDensity = 64.0 --default 32.0
 
 --Faction
 factionMaxRank = 21 --default 15  max 21
+factionCapMultiplier = 100 --default 1
 
 --Harvest
 harvestDistance = 64 --default 10 (Distance does not affect menu options.   They are still greyed out past the default..  must use /harvest)

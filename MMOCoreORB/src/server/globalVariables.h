@@ -60,6 +60,7 @@ namespace globalVariables {
 
 //Faction
 	extern int factionMaxRank;
+	extern float factionCapMultiplier;
 
 //Harvest
 	extern int harvestDistance;
