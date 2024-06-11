@@ -84,6 +84,7 @@ namespace globalVariables {
 	extern int lootMinLevel;
 	extern bool lootShowForceCostDecimalEnabled;
 	extern bool lootRareColorCrystalsEnabled;
+	extern bool lootGroupCreditsSplitEnabled;
 
 //Mission
 	extern int missionBountyExpirationTime;

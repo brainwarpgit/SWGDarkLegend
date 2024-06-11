@@ -80,6 +80,7 @@ namespace globalVariables {
 	int lootMinLevel = 1;
 	bool lootShowForceCostDecimalEnabled = false;
 	bool lootRareColorCrystalsEnabled = false;
+	bool lootGroupCreditsSplitEnabled = true;
 	
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -287,8 +288,9 @@ namespace globalVariables {
 			if (lua->getGlobalInt("lootMinLevel") > 0 && lua->getGlobalInt("lootMinLevel") < lua->getGlobalInt("lootMaxLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
 			if (lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == true || lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == false) lootShowForceCostDecimalEnabled = lua->getGlobalBoolean("lootShowForceCostDecimalEnabled");
 			if (lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == true || lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == false) lootRareColorCrystalsEnabled = lua->getGlobalBoolean("lootRareColorCrystalsEnabled");
+			if (lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == true || lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == false) lootGroupCreditsSplitEnabled = lua->getGlobalBoolean("lootGroupCreditsSplitEnabled");
 
-			//Mission
+			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
 			if (lua->getGlobalInt("missionExpirationTime") > 0) missionExpirationTime = lua->getGlobalInt("missionExpirationTime");
 			if (lua->getGlobalInt("missionMaxCount") > 0) missionMaxCount = lua->getGlobalInt("missionMaxCount");

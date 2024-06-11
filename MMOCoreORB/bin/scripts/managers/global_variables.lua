@@ -75,6 +75,7 @@ lootMaxLevel = 450 --default 300
 lootMinLevel = 1 --default 1
 lootShowForceCostDecimalEnabled = true --default false
 lootRareColorCrystalsEnabled = true --default false
+lootGroupCreditsSplitEnabled = false --default true
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours
