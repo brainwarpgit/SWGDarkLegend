@@ -139,6 +139,8 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "enhanceCharacter", &LuaCreatureObject::enhanceCharacter },
 		{ "setWounds", &LuaCreatureObject::setWounds },
 		{ "setShockWounds", &LuaCreatureObject::setShockWounds },
+		{ "removeBuffs", &LuaCreatureObject::removeBuffs },
+		{ "emptyStomach", &LuaCreatureObject::emptyStomach },
 		{ "getForceSensitiveSkillCount", &LuaCreatureObject::getForceSensitiveSkillCount },
 		{ "villageKnightPrereqsMet", &LuaCreatureObject::villageKnightPrereqsMet },
 		{ "isOnLeave", &LuaTangibleObject::isOnLeave },
@@ -1238,6 +1240,27 @@ int LuaCreatureObject::isRidingMount(lua_State* L) {
 
 int LuaCreatureObject::dismount(lua_State* L) {
 	realObject->dismount();
+	return 0;
+}
+
+int LuaCreatureObject::removeBuffs(lua_State* L) {
+	Reference<PlayerObject*> player = realObject->getPlayerObject();
+	
+	realObject->clearBuffs(true, false);
+	
+	return 0;
+}
+
+int LuaCreatureObject::emptyStomach(lua_State* L) {
+	
+	if (!realObject->isPlayerCreature())
+		return 0;
+	
+	Reference<PlayerObject*> player = realObject->getPlayerObject();
+	
+	player->setFoodFilling(0);
+	player->setDrinkFilling(0);
+	
 	return 0;
 }
 

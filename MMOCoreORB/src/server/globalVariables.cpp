@@ -127,6 +127,14 @@ namespace globalVariables {
 	float playerMaxArmorUnSliced = 80;
 	float playerMaxArmorSliced = 90;
 	bool playerJediForceRunToggleEnabled = false;
+	bool playerEntertainerHealsAllWoundsEnabled = false;
+	float playerEntertainerWoundHealMultiplier = false;
+	bool playerEntertainerBuffDurationCustomEnabled = false;
+	float playerEnterainerBuffDuration = 1;
+	bool playerEntertainerAllBuffsMusicOrDanceEnabled = false;
+	bool playerEntertainerBuffSelfEnabled = false;
+	bool playerEntertainerInstantBuffEnabled = false;
+	bool playerEntertainerBuffAnywhereEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -141,6 +149,7 @@ namespace globalVariables {
 	bool playerMilkingXPEnabled = false;
 	bool playerAwardPetHealingXPEnabled = false;
 	bool playerAwardSelfHealingXPEnabled = false;
+	bool playerAwardXPWeaponSplitEnabled = false;
 
 //Resources
 	bool resourcesAddNameEnabled = false;
@@ -325,7 +334,15 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerMaxArmorUnSliced") >= 0) playerMaxArmorUnSliced = lua->getGlobalFloat("playerMaxArmorUnSliced");
 			if (lua->getGlobalFloat("playerMaxArmorSliced") >= 0) playerMaxArmorSliced = lua->getGlobalFloat("playerMaxArmorSliced");
 			if (lua->getGlobalBoolean("playerJediForceRunToggleEnabled") == true || lua->getGlobalBoolean("playerJediForceRunToggleEnabled") == false) playerJediForceRunToggleEnabled = lua->getGlobalBoolean("playerJediForceRunToggleEnabled");
-
+			if (lua->getGlobalBoolean("playerEntertainerHealsAllWoundsEnabled") == true || lua->getGlobalBoolean("playerEntertainerHealsAllWoundsEnabled") == false) playerEntertainerHealsAllWoundsEnabled = lua->getGlobalBoolean("playerEntertainerHealsAllWoundsEnabled");
+			if (lua->getGlobalFloat("playerEntertainerWoundHealMultiplier") >= 0) playerEntertainerWoundHealMultiplier = lua->getGlobalFloat("playerEntertainerWoundHealMultiplier");
+			if (lua->getGlobalBoolean("playerEntertainerBuffDurationCustomEnabled") == true || lua->getGlobalBoolean("playerEntertainerBuffDurationCustomEnabled") == false) playerEntertainerBuffDurationCustomEnabled = lua->getGlobalBoolean("playerEntertainerBuffDurationCustomEnabled");
+			if (lua->getGlobalFloat("playerEnterainerBuffDuration") >= 0) playerEnterainerBuffDuration = lua->getGlobalFloat("playerEnterainerBuffDuration");
+			if (lua->getGlobalBoolean("playerEntertainerAllBuffsMusicOrDanceEnabled") == true || lua->getGlobalBoolean("playerEntertainerAllBuffsMusicOrDanceEnabled") == false) playerEntertainerAllBuffsMusicOrDanceEnabled = lua->getGlobalBoolean("playerEntertainerAllBuffsMusicOrDanceEnabled");
+			if (lua->getGlobalBoolean("playerEntertainerBuffSelfEnabled") == true || lua->getGlobalBoolean("playerEntertainerBuffSelfEnabled") == false) playerEntertainerBuffSelfEnabled = lua->getGlobalBoolean("playerEntertainerBuffSelfEnabled");
+			if (lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled") == true || lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled") == false) playerEntertainerInstantBuffEnabled = lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled");
+			if (lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled") == true || lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled") == false) playerEntertainerBuffAnywhereEnabled = lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled");
+			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
@@ -339,6 +356,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerMilkingXPEnabled") == true || lua->getGlobalBoolean("playerMilkingXPEnabled") == false) playerMilkingXPEnabled = lua->getGlobalBoolean("playerMilkingXPEnabled");
 			if (lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled") == true || lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled") == false) playerAwardSelfHealingXPEnabled = lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled");
 			if (lua->getGlobalBoolean("playerAwardPetHealingXPEnabled") == true || lua->getGlobalBoolean("playerAwardPetHealingXPEnabled") == false) playerAwardPetHealingXPEnabled = lua->getGlobalBoolean("playerAwardPetHealingXPEnabled");
+			if (lua->getGlobalBoolean("playerAwardXPWeaponSplitEnabled") == true || lua->getGlobalBoolean("playerAwardXPWeaponSplitEnabled") == false) playerAwardXPWeaponSplitEnabled = lua->getGlobalBoolean("playerAwardXPWeaponSplitEnabled");
 
 			//Resources
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");

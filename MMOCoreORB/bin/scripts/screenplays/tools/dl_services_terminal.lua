@@ -2,6 +2,7 @@ swgdl_buff_terminal = ScreenPlay:new {
 	numberOfActs = 1,
 	healingFee = 0, -- Optional fee (in Credits) for healing wounds and battle fatigue
 	woundFee = 0,
+	resetFee = 0,
 	--buffPets = 0, -- 0 = No, 1 = Yes. Will buff all the player's active pets Health/Action/Mind with the same boost as the player.
 	--buffPetSecondaryStats = 0, -- 0 = No, 1 = Yes. Will also buff the pet's secondary stats.
 	--buffs = {
@@ -139,6 +140,14 @@ function swgdl_buff_terminal:openWindow(pCreatureObject, pUsingObject)
 	--	sui.add("Apply " .. self.buffs[i][1] .. " (" .. tostring(self.buffs[i][2]) .. "cr/" .. tostring(self.buffs[i][3]) .. "h)", "")
 	--end
 
+	local resetMessage = "Reset Buffs"
+	
+	if (self.resetFee > 0) then
+		resetMessage = resetMessage .. " (" .. tostring(self.resetFee) .. "cr)"
+	end
+	
+	sui.add(resetMessage, "")
+	
 	sui.sendTo(pCreatureObject)
 end
 
@@ -166,6 +175,8 @@ function swgdl_buff_terminal:defaultCallback(pPlayer, pSui, eventIndex, args)
 	--	self:applyBuff(pPlayer, selectedOption - 3) -- The -3 is to compensate for the first four entries in the menu
 	elseif (selectedOption == 2) then
 		self:woundWounds(pPlayer)
+	elseif (selectedOption == 3) then
+		self:removePlayerBuffs(pPlayer)
 	end
 end
 

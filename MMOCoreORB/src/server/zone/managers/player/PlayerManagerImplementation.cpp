@@ -2117,7 +2117,11 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 				float xpAmount = baseXp;
 				int playerLevel = calculatePlayerLevel(attackerCreo, xpType);
 
-				xpAmount *= (float) damage / totalDamage;
+				if (globalVariables::playerAwardXPWeaponSplitEnabled == false) {
+					xpAmount *= (float) damage / totalDamage;
+				} else {
+					xpAmount *= (float) 1 / entry->size();
+				}
 
 				//Cap xp based on level
 				xpAmount = Math::min(xpAmount, playerLevel * 300.f);
@@ -6264,6 +6268,62 @@ void PlayerManagerImplementation::enhanceCharacter(CreatureObject* player) {
 
 	if (message && player->isPlayerCreature())
 		player->sendSystemMessage("An unknown force strengthens you for battles yet to come.");
+}
+
+void PlayerManagerImplementation::enhanceSelfDance(CreatureObject* player) {
+	if (player == nullptr)
+		return;
+
+	bool message = true;
+
+	float skillmod = (player->getSkillMod("healing_dance_mind") * .005 );
+
+	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
+	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
+	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
+
+	int selfDuration = (120.0f + (10.0f / 60.0f));
+	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	}
+	
+	message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
+	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+		message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
+		message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
+	}
+
+	if (message && player->isPlayerCreature())
+		player->sendSystemMessage("You receive Mind buffs.");
+
+}
+
+void PlayerManagerImplementation::enhanceSelfMusic(CreatureObject* player) {
+	if (player == nullptr)
+        	return;
+
+	bool message = true;
+
+	float skillmod = (player->getSkillMod("healing_music_mind") * .005);
+
+	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
+	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
+	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
+
+	int selfDuration = (120.0f + (10.0f / 60.0f));
+	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	}
+	
+	message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
+	message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
+	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+		message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
+	}
+
+	if (message && player->isPlayerCreature())
+		player->sendSystemMessage("You receive Mind buffs.");
+
 }
 
 void PlayerManagerImplementation::sendAdminJediList(CreatureObject* player) {

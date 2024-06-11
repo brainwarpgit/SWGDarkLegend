@@ -122,6 +122,14 @@ playerHAMRegenKneelingMultiplier = 5 --default 1
 playerMaxArmorUnSliced = 80 --default 80
 playerMaxArmorSliced = 90 --default 90
 playerJediForceRunToggleEnabled = true --default false
+playerEntertainerHealsAllWoundsEnabled = true --default false
+playerEntertainerWoundHealMultiplier = 10 --default 1
+playerEntertainerBuffDurationCustomEnabled = true --default false
+playerEnterainerBuffDuration = 480  --default 130 in minutes
+playerEntertainerAllBuffsMusicOrDanceEnabled = true --default false
+playerEntertainerBuffSelfEnabled = true --default false
+playerEntertainerInstantBuffEnabled = true --default false
+playerEntertainerBuffAnywhereEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
@@ -136,6 +144,7 @@ playerForagingXPEnabled = true --default false
 playerMilkingXPEnabled = true --default false
 playerAwardPetHealingXPEnabled = true --default false
 playerAwardSelfHealingXPEnabled = true --default false
+playerAwardXPWeaponSplitEnabled = true --default false
 
 --Resources
 resourcesAddNameEnabled = true --default false

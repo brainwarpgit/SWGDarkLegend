@@ -129,7 +129,15 @@ namespace globalVariables {
 	extern float playerMaxArmorUnSliced;
 	extern float playerMaxArmorSliced;
 	extern bool playerJediForceRunToggleEnabled;
-	
+	extern bool playerEntertainerHealsAllWoundsEnabled;
+	extern float playerEntertainerWoundHealMultiplier;
+	extern bool playerEntertainerBuffDurationCustomEnabled;
+	extern float playerEnterainerBuffDuration;
+	extern bool playerEntertainerAllBuffsMusicOrDanceEnabled;
+	extern bool playerEntertainerBuffSelfEnabled;
+	extern bool playerEntertainerInstantBuffEnabled;
+	extern bool playerEntertainerBuffAnywhereEnabled;
+
 //Player Creation
 	extern int playerCreationNewCreationTime;
 	extern bool playerCreationAllLanguagesEnabled;
@@ -143,6 +151,7 @@ namespace globalVariables {
 	extern bool playerMilkingXPEnabled;
 	extern bool playerAwardPetHealingXPEnabled;
 	extern bool playerAwardSelfHealingXPEnabled;
+	extern bool playerAwardXPWeaponSplitEnabled;
 
 //Resources
 	extern bool resourcesAddNameEnabled;
