@@ -1856,7 +1856,7 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 		int xpLoss = (int)(jediXpCap * -0.05);
 		int curExp = ghost->getExperience("jedi_general");
 
-		int negXpCap = -10000000; // Cap on negative jedi experience
+		int negXpCap = globalVariables::playerJediNegativeXPCap; // Cap on negative jedi experience
 
 		if ((curExp + xpLoss) < negXpCap)
 			xpLoss = negXpCap - curExp;
@@ -2443,6 +2443,46 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 
 	if (player->hasBuff(BuffCRC::FOOD_XP_INCREASE) && !player->containsActiveSession(SessionFacadeType::CRAFTING))
 		buffMultiplier += player->getSkillModFromBuffs("xp_increase") / 100.f;
+
+	if (xpType == "bio_engineer_dna_harvesting") buffMultiplier *= globalVariables::playerDNASamplingXPMultiplier;
+	if (xpType == "bountyhunter") buffMultiplier *= globalVariables::playerBountyHunterXPMultiplier;
+	if (xpType == "camp") buffMultiplier *= globalVariables::playerWildernessSurvivalXPMultiplier;
+	if (xpType == "combat_general") buffMultiplier *= globalVariables::playerCombatXPMultiplier;
+	if (xpType == "combat_meleespecialize_onehand") buffMultiplier *= globalVariables::playerOnehandedWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_polearm") buffMultiplier *= globalVariables::playerPolearmWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_twohand") buffMultiplier *= globalVariables::playerTwohandedWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_unarmed") buffMultiplier *= globalVariables::playerUnarmedCombatXPMultiplier;
+	if (xpType == "combat_rangedspecialize_carbine") buffMultiplier *= globalVariables::playerCarbineWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_heavy") buffMultiplier *= globalVariables::playerHeavyWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_pistol") buffMultiplier *= globalVariables::playerPistolWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_rifle") buffMultiplier *= globalVariables::playerRifleWeaponsXPMultiplier;
+	if (xpType == "crafting_bio_engineer_creature") buffMultiplier *= globalVariables::playerBioEngineerCraftingXPMultiplier;
+	if (xpType == "crafting_clothing_armor") buffMultiplier *= globalVariables::playerArmorCraftingXPMultiplier;
+	if (xpType == "crafting_clothing_general") buffMultiplier *= globalVariables::playerTailoringXPMultiplier;
+	if (xpType == "crafting_droid_general") buffMultiplier *= globalVariables::playerDroidCraftingXPMultiplier;
+	if (xpType == "crafting_food_general") buffMultiplier *= globalVariables::playerFoodCraftingXPMultiplier;
+	if (xpType == "crafting_general") buffMultiplier *= globalVariables::playerGeneralCraftingXPMultiplier;
+	if (xpType == "crafting_medicine_general") buffMultiplier *= globalVariables::playerMedicineCraftingXPMultiplier;
+	if (xpType == "crafting_spice") buffMultiplier *= globalVariables::playerSpiceCraftingXPMultiplier;
+	if (xpType == "crafting_structure_general") buffMultiplier *= globalVariables::playerStructureCraftingXPMultiplier;
+	if (xpType == "crafting_weapons_general") buffMultiplier *= globalVariables::playerWeaponCraftingXPMultiplier;
+	if (xpType == "creaturehandler") buffMultiplier *= globalVariables::playerCreatureHandlingXPMultiplier;
+	if (xpType == "dance") buffMultiplier *= globalVariables::playerDancingXPMultiplier;
+	if (xpType == "entertainer_healing") buffMultiplier *= globalVariables::playerEntertainerHealingXPMultiplier;
+	if (xpType == "force_rank_xp") buffMultiplier *= globalVariables::playerForceRankXPMultiplier;
+	if (xpType == "imagedesigner") buffMultiplier *= globalVariables::playerImageDesignerXPMultiplier;
+	if (xpType == "jedi_general") buffMultiplier *= globalVariables::playerJediXPMultiplier;
+	if (xpType == "medical") buffMultiplier *= globalVariables::playerMedicalXPMultiplier;
+	if (xpType == "merchant") buffMultiplier *= globalVariables::playerMerchantXPMultiplier;
+	if (xpType == "music") buffMultiplier *= globalVariables::playerMusicianXPMultiplier;
+	if (xpType == "political") buffMultiplier *= globalVariables::playerPoliticalXPMultiplier;
+	if (xpType == "resource_harvesting_inorganic") buffMultiplier *= globalVariables::playerSurveyingXPMultiplier;
+	if (xpType == "scout") buffMultiplier *= globalVariables::playerScoutingXPMultiplier;
+	if (xpType == "shipwright") buffMultiplier *= globalVariables::playerShipwrightXPMultiplier;
+	if (xpType == "slicing") buffMultiplier *= globalVariables::playerSlicingXPMultiplier;
+	if (xpType == "space_combat_general") buffMultiplier *= globalVariables::playerStarshipCombatXPMultiplier;
+	if (xpType == "squadleader") buffMultiplier *= globalVariables::playerSquadLeadershipXPMultiplier;
+	if (xpType == "trapping") buffMultiplier *= globalVariables::playerTrappingXPMultiplier;
 
 	int xp = 0;
 
