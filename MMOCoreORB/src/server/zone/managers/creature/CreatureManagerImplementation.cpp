@@ -596,6 +596,8 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 		ManagedReference<CreatureObject*> player = copyThreatMap.getHighestDamageGroupLeader();
 
+		int luckSkill = std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30);
+		
 		uint64 ownerID = 0;
 
 		if (player != nullptr) {
@@ -654,7 +656,6 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 			if (destructedObject->isNonPlayerCreatureObject() && !destructedObject->isEventMob()) {
 				destructedObject->clearCashCredits();
-				int luckSkill = player->getSkillMod("luck") + player->getSkillMod("force_luck");
 				int credits = lootManager->calculateLootCredits(destructedObject->getLevel(), luckSkill);
 				TransactionLog trx(TrxCode::NPCLOOT, destructedObject, credits, true);
 				trx.addState("destructor", destructorObjectID);
@@ -666,7 +667,7 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 			TransactionLog trx(TrxCode::NPCLOOT, destructedObject);
 			creatureInventory->setContainerOwnerID(ownerID);
 
-			if (lootManager->createLoot(trx, creatureInventory, destructedObject)) {
+			if (lootManager->createLoot(trx, creatureInventory, destructedObject, luckSkill)) {
 				trx.commit(true);
 			} else if (trx.isEnabled() && !trx.isAborted()) {
 				trx.abort() << "createLoot failed for ai object for unknown reason.";

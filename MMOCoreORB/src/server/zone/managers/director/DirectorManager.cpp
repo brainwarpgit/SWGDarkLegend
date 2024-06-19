@@ -993,6 +993,8 @@ int DirectorManager::createLootFromCollection(lua_State* L) {
 		return 0;
 
 	int level = lua_tonumber(L, -1);
+	int creatureDifficulty = 1;
+	int luckSkill = 0;
 	lua_pop(L, 1);
 
 	LuaObject luaObject(L);
@@ -1017,7 +1019,7 @@ int DirectorManager::createLootFromCollection(lua_State* L) {
 	TransactionLog trx(TrxCode::LUALOOT, dst);
 	trx.addContextFromLua(L);
 	trx.addState("dstContainer", container->getObjectID());
-	if (lootManager->createLootFromCollection(trx, container, &lootCollection, level)) {
+	if (lootManager->createLootFromCollection(trx, container, &lootCollection, level, creatureDifficulty, luckSkill)) {
 		trx.commit(true);
 	} else {
 		trx.abort() << __FUNCTION__ << " failed: level=" << level;
