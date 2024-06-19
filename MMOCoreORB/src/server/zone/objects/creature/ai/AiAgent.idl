@@ -327,6 +327,14 @@ class AiAgent extends CreatureObject {
 		return Logger.getLogLevel();
 	}
 
+	@read
+	public unsigned int getCreatureDifficulty() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getCreatureDifficulty();    
+	}
+    
 	/**
 	 * Schedules the next recovery event
 	 * @pre { at least this is locked }
@@ -1631,7 +1639,7 @@ class AiAgent extends CreatureObject {
 	}
 
 	@read
-	public int getMaxDaamge() {
+	public int getMaxDamage() {
 		return maxDamage;
 	}
 

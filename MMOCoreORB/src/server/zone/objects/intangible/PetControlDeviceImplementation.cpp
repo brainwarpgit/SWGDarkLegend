@@ -611,16 +611,16 @@ bool PetControlDeviceImplementation::growPet(CreatureObject* player, bool force,
 	int stagesToGrow = timeDelta / globalVariables::petGrowthCycleTime * 60; // 12 hour
 
 	if (adult)
-		stagesToGrow = globalVariables::petGrowthCycleTime * 60;
+		stagesToGrow = globalVariables::petGrowthStagesToGrown;
 
 	if (stagesToGrow == 0 && !force)
 		return true;
 
 	int newStage = growthStage + stagesToGrow;
-	if (newStage > globalVariables::petGrowthCycleTime * 60)
-		newStage = globalVariables::petGrowthCycleTime * 60;
+	if (newStage > globalVariables::petGrowthStagesToGrown)
+		newStage = globalVariables::petGrowthStagesToGrown;
 
-	float newLevel = ((float)pet->getAdultLevel() / globalVariables::petGrowthCycleTime * 60) * (float)newStage;
+	float newLevel = ((float)pet->getAdultLevel() / globalVariables::petGrowthStagesToGrown) * (float)newStage;
 	if (newLevel < 1)
 		newLevel = 1;
 

@@ -118,7 +118,7 @@ Vector3 SpawnAreaImplementation::getRandomPosition(SceneObject* player) {
 
 	const auto worldPosition = player->getWorldPosition();
 
-	position = areaShape->getRandomPosition(worldPosition, globalVariables::creatureWildSpawnDensity / 2, ZoneServer::CLOSEOBJECTRANGE);
+	position = areaShape->getRandomPosition(worldPosition, 32.0f, ZoneServer::CLOSEOBJECTRANGE);
 
 	return position;
 }
@@ -159,7 +159,7 @@ int SpawnAreaImplementation::notifyObserverEvent(unsigned int eventType, Observa
 
 			Locker locker(area);
 
-			area->setRadius(globalVariables::creatureWildSpawnDensity / 2);
+			area->setRadius(ConfigManager::instance()->getSpawnCheckRange());
 			area->addAreaFlag(ActiveArea::NOSPAWNAREA);
 			area->initializePosition(sceneO->getPositionX(), sceneO->getPositionZ(), sceneO->getPositionY());
 

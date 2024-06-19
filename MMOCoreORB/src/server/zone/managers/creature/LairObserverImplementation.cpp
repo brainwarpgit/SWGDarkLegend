@@ -19,6 +19,7 @@
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
 #include "server/zone/managers/creature/DisseminateExperienceTask.h"
 #include "server/zone/managers/creature/LairRepopulateTask.h"
+#include "server/globalVariables.h"
 
 int LairObserverImplementation::notifyObserverEvent(unsigned int eventType, Observable* observable, ManagedObject* arg1, int64 arg2) {
 	int i = 0;
@@ -330,8 +331,16 @@ bool LairObserverImplementation::checkForNewSpawns(TangibleObject* lair, Tangibl
 				babiesSpawned++;
 			}
 
-			if (creo == nullptr)
-				creo = creatureManager->spawnCreatureWithAi(templateToSpawn.hashCode(), x, z, y);
+			if (creo == nullptr) {
+				String templateName = creatureTemplate->getTemplateName();
+				int creatureRoll = System::random(1000);
+				int creatureDifficulty = 1;
+				if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
+				if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+				if (creatureDifficulty == 2) templateName += "_2";
+				if (creatureDifficulty == 3) templateName += "_3";
+				creo = creatureManager->spawnCreatureWithAi(templateName.hashCode(), x, z, y);
+			}
 
 			if (creo == nullptr)
 				continue;

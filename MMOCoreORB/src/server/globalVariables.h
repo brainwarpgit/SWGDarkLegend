@@ -55,8 +55,22 @@ namespace globalVariables {
 	extern float creatureBaseHAMMaxMultiplier;
 	extern float creatureBaseResistsMultiplier;
 	extern float creatureWildSpawnDensity;
-	extern bool playerMeditateFatigueHealingEnabled;
-	extern int playerMeditateFatigueHealingAmount;
+	extern float creatureSpawnElitePercentage;
+	extern float creatureSpawnHeroicPercentage;
+	extern float creatureModBaseScaleModifier;
+	extern float creatureModBaseXPModifier;
+	extern float creatureModBaseMeatAmountModifier;
+	extern float creatureModBaseHideAmountModifier;
+	extern float creatureModBaseBoneAmountModifier;
+	extern float creatureModBaseMilkModifier;
+	extern float creatureModBaseLevelModifier;
+	extern float creatureModBaseChanceHitModifier;
+	extern float creatureModBaseFerocityModifier;
+	extern float creatureModBaseDamageMaxModifier;
+	extern float creatureModBaseDamageMinModifier;
+	extern float creatureModBaseHAMModifier;
+	extern float creatureModBaseHAMMaxModifier;
+	extern float creatureModBaseResistsModifier;
 
 //Faction
 	extern int factionMaxRank;
@@ -125,6 +139,8 @@ namespace globalVariables {
 	extern int playerDamageHealingMultiplier;
 	extern bool playerInsureWeaponsEnabled;
 	extern float playerMeditateHealingMultiplier;
+	extern bool playerMeditateFatigueHealingEnabled;
+	extern int playerMeditateFatigueHealingAmount;
 	extern float playerHAMRegenSittingMultiplier;
 	extern float playerHAMRegenKneelingMultiplier;
 	extern float playerMaxArmorUnSliced;
@@ -193,6 +209,7 @@ namespace globalVariables {
 	extern float playerSquadLeadershipXPMultiplier;
 	extern float playerTrappingXPMultiplier;
 	extern int playerJediNegativeXPCap;
+	
 //Resources
 	extern bool resourcesAddNameEnabled;
 	extern int resourcesMinimumQuality;

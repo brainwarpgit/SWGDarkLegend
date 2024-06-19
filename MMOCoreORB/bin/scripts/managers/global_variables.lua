@@ -1,5 +1,12 @@
 --Global Variables added by SWGDarkLegend
-
+--
+--
+--
+--
+--
+--
+--
+--
 --Auction
 auctionMaxBazaarPrice = 10000000 --default 20000
 auctionMaxSales = 1000 --default 25
@@ -48,6 +55,22 @@ creatureAcidMaxResists = 80.0--default 100.0
 creatureStunMaxResists = 40.0 --default 100.0
 creatureLightsaberMaxResists = 0.0 --default 100.0
 creatureWildSpawnDensity = 64.0 --default 32.0
+creatureSpawnElitePercentage = 30 --default 30 in percent
+creatureSpawnHeroicPercentage = 10 --default 10 in percent
+creatureModBaseScaleModifier = .05 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseXPModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseMeatAmountModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseHideAmountModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseBoneAmountModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseMilkModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseLevelModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseChanceHitModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseFerocityModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseDamageMaxModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseDamageMinModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseHAMModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseHAMMaxModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureModBaseResistsModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
 
 --Faction
 factionMaxRank = 21 --default 15  max 21
@@ -89,8 +112,8 @@ missionRewardMultiplier = 2 --default 1
 
 --Pet
 petCallTime = 0 --default 15 in seconds
-petGrowthCycleTime = 0 --default 720 in minutes
-petGrowthStagesToGrown = 10 --default 10
+petGrowthCycleTime = 1 --default 720 in minutes can not be less than 1
+petGrowthStagesToGrown = 10 --default 10 can not be less than 1
 petStoreInCombatEnabled = true --default false
 
 --Player

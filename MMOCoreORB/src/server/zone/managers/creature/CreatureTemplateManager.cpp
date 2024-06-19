@@ -207,31 +207,35 @@ int CreatureTemplateManager::addTemplate(lua_State* L) {
 	}
 
 	String ascii =  lua_tostring(L, -2);
-	uint32 crc = (uint32) ascii.hashCode();
 
 	LuaObject obj(L);
-	CreatureTemplate* newTemp = new CreatureTemplate();
-	newTemp->setTemplateName(ascii);
-	newTemp->readObject(&obj);
+	for (int i = 1; i <= 3; ++i) {
+		CreatureTemplate* newTemp = new CreatureTemplate();
+		String templateName = ascii;
+		if (i == 2) templateName += "_2";
+		if (i == 3) templateName += "_3";
+		uint32 crc = (uint32) templateName.hashCode();
+		newTemp->setTemplateName(templateName);
+		newTemp->readObject(&obj, i);
 
-	if (instance()->hashTable.containsKey(crc)) {
-		luaL_where (L, 2);
-		String luaMethodName = lua_tostring(L, -1);
+		if (instance()->hashTable.containsKey(crc)) {
+			luaL_where (L, 2);
+			String luaMethodName = lua_tostring(L, -1);
 
-		lua_pop(L, 1);
+			lua_pop(L, 1);
 
-		instance()->error("overwriting mobile " + ascii + " with " + luaMethodName);
+			instance()->error("overwriting mobile " + ascii + " with " + luaMethodName);
 
-		ERROR_CODE = DUPLICATE_MOBILE;
+			ERROR_CODE = DUPLICATE_MOBILE;
+		}
+
+		CreatureTemplateManager::instance()->hashTable.put(crc, newTemp);
+
+		int count = loadedMobileTemplates.increment();
+
+		//if (ConfigManager::instance()->isProgressMonitorActivated() && !DEBUG_MODE)
+			printf("\r\tLoading mobile templates: [%d] / [?]\t", count);
 	}
-
-	CreatureTemplateManager::instance()->hashTable.put(crc, newTemp);
-
-	int count = loadedMobileTemplates.increment();
-
-	if (ConfigManager::instance()->isProgressMonitorActivated() && !DEBUG_MODE)
-		printf("\r\tLoading mobile templates: [%d] / [?]\t", count);
-
 	return 0;
 }
 

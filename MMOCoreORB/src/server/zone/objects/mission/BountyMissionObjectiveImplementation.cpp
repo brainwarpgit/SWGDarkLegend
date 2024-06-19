@@ -12,6 +12,8 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/mission/MissionManager.h"
 #include "server/zone/managers/creature/CreatureManager.h"
+#include "server/zone/managers/creature/CreatureTemplateManager.h"
+#include "server/zone/objects/creature/ai/CreatureTemplate.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/objects/mission/MissionObject.h"
 #include "server/zone/objects/mission/MissionObserver.h"
@@ -22,6 +24,7 @@
 #include "server/zone/objects/mission/bountyhunter/BountyHunterDroid.h"
 #include "server/zone/objects/mission/bountyhunter/events/BountyHunterTargetTask.h"
 #include "server/zone/managers/visibility/VisibilityManager.h"
+#include "server/globalVariables.h"
 
 void BountyMissionObjectiveImplementation::setNpcTemplateToSpawn(SharedObjectTemplate* sp) {
 	npcTemplateToSpawn = sp;
@@ -141,9 +144,9 @@ void BountyMissionObjectiveImplementation::complete() {
 
 void BountyMissionObjectiveImplementation::spawnTarget(const String& zoneName) {
 	Locker locker(&syncMutex);
-
+	String strdifficulty = "";
+	int creatureDifficulty = 1;
 	ManagedReference<MissionObject* > mission = this->mission.get();
-
 	if (mission == nullptr || (npcTarget != nullptr && npcTarget->isInQuadTree()) || isPlayerTarget()) {
 		return;
 	}
@@ -163,7 +166,22 @@ void BountyMissionObjectiveImplementation::spawnTarget(const String& zoneName) {
 		Vector3 position = getTargetPosition();
 
 		try {
-			npcTarget = cast<AiAgent*>(zone->getCreatureManager()->spawnCreatureWithAi(mission->getTargetOptionalTemplate().hashCode(), position.getX(), zone->getHeight(position.getX(), position.getY()), position.getY(), 0));
+			String missionTarget = mission->getTargetOptionalTemplate();
+			int creatureRoll = System::random(1000);
+			if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
+			if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+			if (creatureDifficulty == 2) missionTarget += "_2";
+			if (creatureDifficulty == 3) missionTarget += "_3";
+			CreatureTemplate* creoTempl = CreatureTemplateManager::instance()->getTemplate(missionTarget.hashCode());
+			int level = creoTempl->getLevel();
+			strdifficulty = "\\#C0C0C0 [" + std::to_string(level) + "]";
+			if (creatureDifficulty == 2) {
+				strdifficulty = " -\\#FFA500 Elite\\#C0C0C0 [" + std::to_string(level) + "]";
+			}
+			if (creatureDifficulty == 3) {
+				strdifficulty = " -\\#FF0000 Heroic\\#C0C0C0 [" + std::to_string(level) + "]";
+			}	
+			npcTarget = cast<AiAgent*>(zone->getCreatureManager()->spawnCreatureWithAi(missionTarget.hashCode(), position.getX(), zone->getHeight(position.getX(), position.getY()), position.getY(), 0));
 		} catch (Exception& e) {
 			fail();
 			ManagedReference<CreatureObject*> player = getPlayerOwner();
@@ -173,7 +191,7 @@ void BountyMissionObjectiveImplementation::spawnTarget(const String& zoneName) {
 			error("Template error: " + e.getMessage() + " Template = '" + mission->getTargetOptionalTemplate() +"'");
 		}
 		if (npcTarget != nullptr) {
-			npcTarget->setCustomObjectName(mission->getTargetName(), true);
+			npcTarget->setCustomObjectName(mission->getTargetName() + strdifficulty, true);
 			//TODO add observer to catch player kill and fail mission in that case.
 			addObserverToCreature(ObserverEventType::OBJECTDESTRUCTION, npcTarget);
 			addObserverToCreature(ObserverEventType::DAMAGERECEIVED, npcTarget);

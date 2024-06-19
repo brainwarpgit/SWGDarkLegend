@@ -1,6 +1,8 @@
 #include "globalVariables.h"
 #include "engine/lua/Lua.h"
 
+//#include <string>
+
 namespace globalVariables {
 
 //Variables
@@ -53,7 +55,23 @@ namespace globalVariables {
 	float creatureBaseHAMMaxMultiplier = 1;
 	float creatureBaseResistsMultiplier = 1;
 	float creatureWildSpawnDensity = 32.0f;
-	
+	float creatureSpawnElitePercentage = 30;
+	float creatureSpawnHeroicPercentage = 10;
+	float creatureModBaseScaleModifier = 0;
+	float creatureModBaseXPModifier = 0;
+	float creatureModBaseMeatAmountModifier = 0;
+	float creatureModBaseHideAmountModifier = 0;
+	float creatureModBaseBoneAmountModifier = 0;
+	float creatureModBaseMilkModifier = 0;
+	float creatureModBaseLevelModifier = 0;
+	float creatureModBaseChanceHitModifier = 0;
+	float creatureModBaseFerocityModifier = 0;
+	float creatureModBaseDamageMaxModifier = 0;
+	float creatureModBaseDamageMinModifier = 0;
+	float creatureModBaseHAMModifier = 0;
+	float creatureModBaseHAMMaxModifier = 0;
+	float creatureModBaseResistsModifier = 0;
+
 //Faction
 	int factionMaxRank = 15;
 	float factionCapMultiplier = 1.0f;
@@ -129,7 +147,7 @@ namespace globalVariables {
 	float playerMaxArmorSliced = 90;
 	bool playerJediForceRunToggleEnabled = false;
 	bool playerEntertainerHealsAllWoundsEnabled = false;
-	float playerEntertainerWoundHealMultiplier = false;
+	float playerEntertainerWoundHealMultiplier = 1;
 	bool playerEntertainerBuffDurationCustomEnabled = false;
 	float playerEnterainerBuffDuration = 1;
 	bool playerEntertainerAllBuffsMusicOrDanceEnabled = false;
@@ -259,7 +277,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("auctionVendorExpirePeriod") > 0) auctionVendorExpirePeriod = lua->getGlobalInt("auctionVendorExpirePeriod");
 			if (lua->getGlobalInt("auctionCommodityExpirePeriod") > 0) auctionCommodityExpirePeriod = lua->getGlobalInt("auctionCommodityExpirePeriod");
 			
-			//Crafting
+			//Crafting 
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
 			if (lua->getGlobalInt("craftingFactoryRunTimeMultiplier") >= 0) craftingFactoryRunTimeMultiplier = lua->getGlobalInt("craftingFactoryRunTimeMultiplier");
 			if (lua->getGlobalInt("craftingToolCraftTimeMultiplier") >= 0) craftingToolCraftTimeMultiplier = lua->getGlobalInt("craftingToolCraftTimeMultiplier");
@@ -300,6 +318,22 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("creatureStunMaxResists") >= 0) creatureStunMaxResists = lua->getGlobalFloat("creatureStunMaxResists");
 			if (lua->getGlobalFloat("creatureLightsaberMaxResists") >= 0) creatureLightsaberMaxResists = lua->getGlobalFloat("creatureLightsaberMaxResists");
 			if (lua->getGlobalFloat("creatureWildSpawnDensity") >= 0) creatureWildSpawnDensity = lua->getGlobalFloat("creatureWildSpawnDensity");
+			if (lua->getGlobalFloat("creatureSpawnElitePercentage") >= 0 && lua->getGlobalFloat("creatureSpawnElitePercentage") <= 100 && lua->getGlobalFloat("creatureSpawnElitePercentage") + lua->getGlobalFloat("creatureSpawnHeroicPercentage") <= 100) creatureSpawnElitePercentage = 1000 - (lua->getGlobalFloat("creatureSpawnElitePercentage") * 10);
+			if (lua->getGlobalFloat("creatureSpawnHeroicPercentage") >= 0 && lua->getGlobalFloat("creatureSpawnHeroicPercentage") <= 100 && lua->getGlobalFloat("creatureSpawnElitePercentage") + lua->getGlobalFloat("creatureSpawnHeroicPercentage") <= 100) creatureSpawnHeroicPercentage = (1000 - lua->getGlobalFloat("creatureSpawnElitePercentage")) - (lua->getGlobalFloat("creatureSpawnHeroicPercentage") * 10);
+			if (lua->getGlobalFloat("creatureModBaseScaleModifier") >= 0) creatureModBaseScaleModifier = lua->getGlobalFloat("creatureModBaseScaleModifier");
+			if (lua->getGlobalFloat("creatureModBaseXPModifier") >= 0) creatureModBaseXPModifier = lua->getGlobalFloat("creatureModBaseXPModifier");
+			if (lua->getGlobalFloat("creatureModBaseMeatAmountModifier") >= 0) creatureModBaseMeatAmountModifier = lua->getGlobalFloat("creatureModBaseMeatAmountModifier");
+			if (lua->getGlobalFloat("creatureModBaseHideAmountModifier") >= 0) creatureModBaseHideAmountModifier = lua->getGlobalFloat("creatureModBaseHideAmountModifier");
+			if (lua->getGlobalFloat("creatureModBaseBoneAmountModifier") >= 0) creatureModBaseBoneAmountModifier = lua->getGlobalFloat("creatureModBaseBoneAmountModifier");
+			if (lua->getGlobalFloat("creatureModBaseMilkModifier") >= 0) creatureModBaseMilkModifier = lua->getGlobalFloat("creatureModBaseMilkModifier");
+			if (lua->getGlobalFloat("creatureModBaseLevelModifier") >= 0) creatureModBaseLevelModifier = lua->getGlobalFloat("creatureModBaseLevelModifier");
+			if (lua->getGlobalFloat("creatureModBaseChanceHitModifier") >= 0) creatureModBaseChanceHitModifier = lua->getGlobalFloat("creatureModBaseChanceHitModifier");
+			if (lua->getGlobalFloat("creatureModBaseFerocityModifier") >= 0) creatureModBaseFerocityModifier = lua->getGlobalFloat("creatureModBaseFerocityModifier");
+			if (lua->getGlobalFloat("creatureModBaseDamageMaxModifier") >= 0) creatureModBaseDamageMaxModifier = lua->getGlobalFloat("creatureModBaseDamageMaxModifier");
+			if (lua->getGlobalFloat("creatureModBaseDamageMinModifier") >= 0) creatureModBaseDamageMinModifier = lua->getGlobalFloat("creatureModBaseDamageMinModifier");
+			if (lua->getGlobalFloat("creatureModBaseHAMModifier") >= 0) creatureModBaseHAMModifier = lua->getGlobalFloat("creatureModBaseHAMModifier");
+			if (lua->getGlobalFloat("creatureModBaseHAMMaxModifier") >= 0) creatureModBaseHAMMaxModifier = lua->getGlobalFloat("creatureModBaseHAMMaxModifier");
+			if (lua->getGlobalFloat("creatureModBaseResistsModifier") >= 0) creatureModBaseResistsModifier = lua->getGlobalFloat("creatureModBaseResistsModifier");
 
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
@@ -341,8 +375,8 @@ namespace globalVariables {
 
 			//Pet
 			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");
-			if (lua->getGlobalInt("petGrowthCycleTime") >= 0) petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");
-			if (lua->getGlobalInt("petGrowthStagesToGrown") >= 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
+			if (lua->getGlobalInt("petGrowthCycleTime") > 0) petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");
+			if (lua->getGlobalInt("petGrowthStagesToGrown") > 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
 			if (lua->getGlobalBoolean("petStoreInCombatEnabled") == true || lua->getGlobalBoolean("petStoreInCombatEnabled") == false) petStoreInCombatEnabled = lua->getGlobalBoolean("petStoreInCombatEnabled");
 
 			//Player
