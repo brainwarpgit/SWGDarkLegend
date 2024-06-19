@@ -1602,7 +1602,7 @@ void AuctionManagerImplementation::retrieveItem(CreatureObject* player, uint64 o
 	RetrieveAuctionItemResponseMessage* msg = nullptr;
 
 	// check for valid vendor terminal
-	if ((vendor == nullptr || !vendor->isVendor()) && !vendor->isBazaarTerminal()) {
+	if (vendor == nullptr || (!vendor->isVendor() && !vendor->isBazaarTerminal())) {
 		msg = new RetrieveAuctionItemResponseMessage(objectid, RetrieveAuctionItemResponseMessage::NOTALLOWED);
 		player->sendMessage(msg);
 		return;
