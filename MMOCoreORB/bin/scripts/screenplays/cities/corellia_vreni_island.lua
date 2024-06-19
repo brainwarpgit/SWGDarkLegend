@@ -108,6 +108,18 @@ CorelliaVreniIslandScreenPlay = CityScreenPlay:new {
 		{"mercenary",300,-16.3,-0.9,3.2,106,3005697, "angry"},
 		{"mercenary",300,-16.3,-0.9,-2.9,65,3005697, "angry"},
 		{"medic",60,1.4,0.7,2.0,167,7615445, "npc_use_terminal_high"}
+	},
+
+	citySpawns = {
+		--newb grind starter spawns
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0},
+		{"meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0},
+		{"meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0},
 	}
 }
 
@@ -120,6 +132,7 @@ function CorelliaVreniIslandScreenPlay:start()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -155,12 +168,12 @@ function CorelliaVreniIslandScreenPlay:spawnMobiles()
 	end
 
 	--newb grind starter spawns
-	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
+	--[[spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
 	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
 	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
 	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
 	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
 	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)
 	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)
-	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)
+	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)]]
 end

@@ -193,6 +193,77 @@ NabooTheedScreenPlay = CityScreenPlay:new {
 		{"commoner_naboo", 60, -23.0, 0.7, -70.5, 190, 1692102, "conversation"},
 		{"commoner_naboo", 60, -24.1, 0.7, -71.7, 35, 1692102, "conversation"},
 		{"commoner_naboo", 60, -22.5, 0.7, -72.0, 350, 1692102, "conversation"}
+	},
+	
+	citySpawns = {
+		--Creatures
+		{"flewt", 300, getRandomNumber(10) + -5195, 6, getRandomNumber(10) + 3988, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5200, 6, getRandomNumber(10) + 3997, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5207, 6, getRandomNumber(10) + 3992, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5205, 6, getRandomNumber(10) + 3989, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5201, 6, getRandomNumber(10) + 3981, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5202, 6, getRandomNumber(10) + 3975, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5152.02, 6, getRandomNumber(10) + 3882.86, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5156.30, 6, getRandomNumber(10) + 3880.18, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5145.15, 6, getRandomNumber(10) + 3882.41, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5148.77, 6, getRandomNumber(10) + 3879.10, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5153.03, 6, getRandomNumber(10) + 3876.91, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5143.66, 6, getRandomNumber(10) + 3875.17, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(10) + -5054.71, 6, getRandomNumber(10) + 3959.16, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(10) + -5049.91, 6, getRandomNumber(10) + 3959.13, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(10) + -5056.38, 6, getRandomNumber(10) + 3954.13, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(10) + -5050.76, 6, getRandomNumber(10) + 3955.11, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(10) + -5046.74, 6, getRandomNumber(10) + 3956.10, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(10) + -5050.08, 6, getRandomNumber(10) + 3951.88, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -5068.63, 6, getRandomNumber(10) + 3874.93, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -5063.50, 6, getRandomNumber(10) + 3874.98, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -5059.21, 6, getRandomNumber(10) + 3873.08, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -5064.77, 6, getRandomNumber(10) + 3870.68, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -5069.20, 6, getRandomNumber(10) + 3867.40, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -5059.54, 6, getRandomNumber(10) + 3866.31, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -5062.01, 6, getRandomNumber(10) + 3771.87, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -5070.54, 6, getRandomNumber(10) + 3772.20, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -5067.63, 6, getRandomNumber(10) + 3777.25, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -5072.20, 6, getRandomNumber(10) + 3778.46, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -5065.83, 6, getRandomNumber(10) + 3781.39, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -5061.01, 6, getRandomNumber(10) + 3779.68, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -4952.30, 6, getRandomNumber(10) + 3863.72, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -4947.92, 6, getRandomNumber(10) + 3863.87, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -4944.95, 6, getRandomNumber(10) + 3866.25, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -4948.41, 6, getRandomNumber(10) + 3869.46, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -4946.46, 6, getRandomNumber(10) + 3873.06, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -4952.32, 6, getRandomNumber(10) + 3873.58, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -4969.69, 6, getRandomNumber(10) + 3767.96, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -4962.60, 6, getRandomNumber(10) + 3767.81, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -4960.24, 6, getRandomNumber(10) + 3772.21, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -4965.28, 6, getRandomNumber(10) + 3772.93, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -4970.08, 6, getRandomNumber(10) + 3776.47, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + -4967.46, 6, getRandomNumber(10) + 3780.19, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -4862.57, 6, getRandomNumber(10) + 3768.61, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -4854.70, 6, getRandomNumber(10) + 3768.47, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -4858.64, 6, getRandomNumber(10) + 3773.44, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -4866.15, 6, getRandomNumber(10) + 3775.88, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -4860.42, 6, getRandomNumber(10) + 3778.87, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -4856.47, 6, getRandomNumber(10) + 3776.79, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5041, 6, getRandomNumber(10) + 3681, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5050, 6, getRandomNumber(10) + 3682, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5046, 6, getRandomNumber(10) + 3675, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5040, 6, getRandomNumber(10) + 3671, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5039, 6, getRandomNumber(10) + 3685, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(10) + -5047, 6, getRandomNumber(10) + 3686, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -4946.98, 6, getRandomNumber(10) + 3644.18, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -4939.79, 6, getRandomNumber(10) + 3645.60, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -4942.72, 6, getRandomNumber(10) + 3647.44, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -4946.78, 6, getRandomNumber(10) + 3650.67, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -4943.30, 6, getRandomNumber(10) + 3652.44, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(10) + -4939.35, 6, getRandomNumber(10) + 3653.82, getRandomNumber(360), 0},
+		--double waterfall island near Palace
+		{"mott_calf", 600, getRandomNumber(10) + -5201.0, 6, getRandomNumber(10) + 4542.6, getRandomNumber(360), 0},
+		{"mott_calf", 600, getRandomNumber(10) + -5195.0, 6, getRandomNumber(10) + 4537.4, getRandomNumber(360), 0},
+		{"mott_calf", 600, getRandomNumber(10) + -5202.4, 6, getRandomNumber(10) + 4552.0, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5176.4, 6, getRandomNumber(10) + 4612.2, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5161.3, 6, getRandomNumber(10) + 4601.7, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + -5193.3, 6, getRandomNumber(10) + 4610.0, getRandomNumber(360), 0},
 	}
 }
 
@@ -205,6 +276,7 @@ function NabooTheedScreenPlay:start()
 		self:spawnGcwMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -242,7 +314,7 @@ function NabooTheedScreenPlay:spawnMobiles()
 	end
 
 	--Creatures
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5195, 6, getRandomNumber(10) + 3988, getRandomNumber(360), 0)
+	--[[spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5195, 6, getRandomNumber(10) + 3988, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5200, 6, getRandomNumber(10) + 3997, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5207, 6, getRandomNumber(10) + 3992, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5205, 6, getRandomNumber(10) + 3989, getRandomNumber(360), 0)
@@ -310,7 +382,7 @@ function NabooTheedScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "mott_calf", 300, getRandomNumber(10) + -4942.72, 6, getRandomNumber(10) + 3647.44, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mott_calf", 300, getRandomNumber(10) + -4946.78, 6, getRandomNumber(10) + 3650.67, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mott_calf", 300, getRandomNumber(10) + -4943.30, 6, getRandomNumber(10) + 3652.44, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mott_calf", 300, getRandomNumber(10) + -4939.35, 6, getRandomNumber(10) + 3653.82, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "mott_calf", 300, getRandomNumber(10) + -4939.35, 6, getRandomNumber(10) + 3653.82, getRandomNumber(360), 0)]]
 	
 	--Cantina
 	pNpc = spawnMobile(self.planet, "junk_dealer", 0, -5.8, -0.9, -20.9, -52, 96)
@@ -319,11 +391,11 @@ function NabooTheedScreenPlay:spawnMobiles()
 	end
 
 	--double waterfall island near Palace
-	spawnMobile(self.planet, "mott_calf", 600, getRandomNumber(10) + -5201.0, 6, getRandomNumber(10) + 4542.6, getRandomNumber(360), 0)
+	--[[spawnMobile(self.planet, "mott_calf", 600, getRandomNumber(10) + -5201.0, 6, getRandomNumber(10) + 4542.6, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mott_calf", 600, getRandomNumber(10) + -5195.0, 6, getRandomNumber(10) + 4537.4, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mott_calf", 600, getRandomNumber(10) + -5202.4, 6, getRandomNumber(10) + 4552.0, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5176.4, 6, getRandomNumber(10) + 4612.2, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5161.3, 6, getRandomNumber(10) + 4601.7, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5193.3, 6, getRandomNumber(10) + 4610.0, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + -5193.3, 6, getRandomNumber(10) + 4610.0, getRandomNumber(360), 0)]]
 	
 end

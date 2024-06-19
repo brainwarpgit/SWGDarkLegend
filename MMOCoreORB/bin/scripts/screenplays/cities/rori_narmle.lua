@@ -125,6 +125,128 @@ RoriNarmleScreenPlay = CityScreenPlay:new {
 		{"trainer_dancer", 0, 18.0876, 2.12874, 53.6634, 1, 4635403, ""},
 		{"theater_manager", 0, 21.5522, 2.12797, 63.5137, 0, 4635403, ""},
 		{"trainer_musician", 0, 21.8, 2.1, 76.4, 180, 4635403, ""}
+	},
+
+	citySpawns = {
+		--Creatures
+		{"scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0},
+
+		{"capper_spineflap", 300,getRandomNumber(10) + -5473.1, 77.3,getRandomNumber(10) + -1875.4, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + -5473.8, 77.3,getRandomNumber(10) + -1875.4, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + -5473.8, 77.3,getRandomNumber(10) + -1875.4, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + -5473.8, 77.3,getRandomNumber(10) + -1875.4, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + -5473.8, 77.3,getRandomNumber(10) + -1875.4, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + -5473.8, 77.3,getRandomNumber(10) + -1875.4, getRandomNumber(360), 0},
+
+		{"timid_vir_vur", 300,getRandomNumber(10) + -5633.6, 77.3,getRandomNumber(10) + -2193.5, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + -5633.6, 77.3,getRandomNumber(10) + -2193.5, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + -5633.6, 77.3,getRandomNumber(10) + -2193.5, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + -5633.6, 77.3,getRandomNumber(10) + -2193.5, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + -5633.6, 77.3,getRandomNumber(10) + -2193.5, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + -5633.6, 77.3,getRandomNumber(10) + -2193.5, getRandomNumber(360), 0},
+
+		{"nightspider", 300,getRandomNumber(10) + -5000.4, 76.7,getRandomNumber(10) + -2077.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + -5000.4, 76.7,getRandomNumber(10) + -2077.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + -5000.4, 76.7,getRandomNumber(10) + -2077.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + -5000.4, 76.7,getRandomNumber(10) + -2077.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + -5000.4, 76.7,getRandomNumber(10) + -2077.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + -5000.4, 76.7,getRandomNumber(10) + -2077.3, getRandomNumber(360), 0},
+
+		{"frightened_borgle", 300,getRandomNumber(10) + -4819.4, 76.7,getRandomNumber(10) + -2280.7, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + -4819.4, 76.7,getRandomNumber(10) + -2280.7, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + -4819.4, 76.7,getRandomNumber(10) + -2280.7, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + -4819.4, 76.7,getRandomNumber(10) + -2280.7, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + -4819.4, 76.7,getRandomNumber(10) + -2280.7, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + -4819.4, 76.7,getRandomNumber(10) + -2280.7, getRandomNumber(360), 0},
+
+		{"frail_squall", 300,getRandomNumber(10) + -5070.4, 75.1,getRandomNumber(10) + -2696.7, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + -5070.4, 75.1,getRandomNumber(10) + -2696.7, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + -5070.4, 75.1,getRandomNumber(10) + -2696.7, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + -5070.4, 75.1,getRandomNumber(10) + -2696.7, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + -5070.4, 75.1,getRandomNumber(10) + -2696.7, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + -5070.4, 75.1,getRandomNumber(10) + -2696.7, getRandomNumber(360), 0},
+
+		{"vrobalet", 300,getRandomNumber(10) + -5544.4, 77.3,getRandomNumber(10) + -2411.0, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + -5544.4, 77.3,getRandomNumber(10) + -2411.0, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + -5544.4, 77.3,getRandomNumber(10) + -2411.0, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + -5544.4, 77.3,getRandomNumber(10) + -2411.0, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + -5544.4, 77.3,getRandomNumber(10) + -2411.0, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + -5544.4, 77.3,getRandomNumber(10) + -2411.0, getRandomNumber(360), 0},
+
+		--Thugs
+		{"fringer", 300, -5360.0, 80.1, -2045.0, 122, 0},
+		{"gundark_crook", 300, -5354.7, 80.1, -2046.1, -98, 0},
+		{"gundark_crook", 300, -5355.9, 80.1, -2050.3, -44, 0},
+		{"gundark_ruffian", 300, -5417.6, 80.0, -2093.0, -14, 0},
+		{"gundark_ruffian", 300, -5414.1, 80.0, -2090.7, -154, 0},
+		{"gundark_ruffian", 300, -5416.5, 80.0, -2088.6, -90, 0},
+		{"gundark_ruffian", 300, -5412.7, 80.0, -2092.7, 34, 0},
+		{"fringer", 300, -5491.8, 80.0, -2167.2, -122, 0},
+		{"gundark_crook", 300, -5493.5, 80.0, -2171.9, 45, 0},
+		{"gundark_hooligan", 300, -5401.1, 80.0, -2219.3, -114, 0},
+		{"gundark_crook", 300, -5403.7, 80.0, -2223.2, 44, 0},
+		{"gundark_hooligan", 300, -5405.9, 80.0, -2219.7, 0, 0},
+		{"fringer", 300, -5332.9, 80.0, -2233.4, 92, 0},
+		{"gundark_crook", 300, -5358.2, 80.0, -2234.4, 92, 0},
+		{"fringer", 300, -5229.4, 80.0, -2236.8, 180, 0},
+		{"scoundrel", 300, -5205.7, 80.2, -2179.3, 105, 0},
+		{"gundark_ruffian", 300, -5199.3, 80.2, -2179.6, -135, 0},
+		{"scoundrel", 300, -5191.5, 80.1, -2191.5, -25, 0},
+		{"gundark_crook", 300, -5188.4, 80.0, -2273.9, -174, 0},
+		{"gundark_ruffian", 300, -5233.1, 80.0, -2303.1, -144, 0},
+		{"gundark_desperado", 300, -5236.7, 80.0, -2302.8, 174, 0},
+		{"gundark_hooligan", 300, -5240.5, 80.0, -2302.7, 180, 0},
+		{"gundark_hooligan", 300, -5237.8, 80.0, -2307.6, 1, 0},
+		{"gundark_crook", 300, -5234.4, 80.0, -2310.0, 44, 0},
+		{"gundark_crook", 300, -5277.6, 80.0, -2371.7, 0, 0},
+		{"male_rodian_thug_low", 300, -5277.6, 80.0, -2367.7, 180, 0},
+		{"fringer", 300, -5166.0, 80.0, -2494.0, 122, 0},
+		{"fringer", 300, -5165.3, 80.0, -2498.7, 19, 0},
+		{"fringer", 300, -5163.4, 80.0, -2497.1, -45, 0},
+		{"gundark_desperado", 300, -5087.8, 80.0, -2521.7, 2, 0},
+		{"gundark_hooligan", 300, -5085.4, 80.0, -2435.9, -145, 0},
+		{"gundark_hooligan", 300, -5137.1, 80.0, -2412.0, 40, 0},
+		{"mercenary", 300, 18.1, 1.3, 10.3, 18, 4635492},
+		{"mercenary", 300, 22.0, 1.3, 10.3, -27, 4635492},
+		{"gundark_desperado", 300, -5086.5, 80.0, -2276.6, -41, 0},
+		{"gundark_hooligan", 300, -5048.0, 80.0, -2225.5, 125, 0},
+		{"gundark_desperado", 300, -5030.7, 80.0, -2249.5, -87, 0},
+		{"gundark_desperado", 300, -4965.7, 80.0, -2322.0, -88, 0},
+		{"gundark_desperado", 300, -4969.7, 80.0, -2322.5, 88, 0},
+		{"gundark_desperado", 300, -4966.6, 80.0, -2317.7, 180, 0},
+
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5170.2, 80.6,getRandomNumber(10) + -2073.5, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5170.2, 80.6,getRandomNumber(10) + -2073.5, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5170.2, 80.6,getRandomNumber(10) + -2073.5, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5170.2, 80.6,getRandomNumber(10) + -2073.5, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5170.2, 80.6,getRandomNumber(10) + -2073.5, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5170.2, 80.6,getRandomNumber(10) + -2073.5, getRandomNumber(360), 0},
+
+		{"gundark_rogue", 300,getRandomNumber(10) + -5606.4, 76.8,getRandomNumber(10) + -2000.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -5606.4, 76.8,getRandomNumber(10) + -2000.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -5606.4, 76.8,getRandomNumber(10) + -2000.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -5606.4, 76.8,getRandomNumber(10) + -2000.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -5606.4, 76.8,getRandomNumber(10) + -2000.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -5606.4, 76.8,getRandomNumber(10) + -2000.3, getRandomNumber(360), 0},
+
+		{"gundark_rogue", 300,getRandomNumber(10) + -4865.6, 78.8,getRandomNumber(10) + -2499.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -4865.6, 78.8,getRandomNumber(10) + -2499.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -4865.6, 78.8,getRandomNumber(10) + -2499.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -4865.6, 78.8,getRandomNumber(10) + -2499.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -4865.6, 78.8,getRandomNumber(10) + -2499.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + -4865.6, 78.8,getRandomNumber(10) + -2499.3, getRandomNumber(360), 0},
+
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0},
 	}
 }
 
@@ -135,6 +257,7 @@ function RoriNarmleScreenPlay:start()
 		self:spawnMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnSceneObjects()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -177,7 +300,7 @@ function RoriNarmleScreenPlay:spawnMobiles()
 	end
 
 	--Creatures
-	spawnMobile(self.planet, "scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0)
+	--[[spawnMobile(self.planet, "scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "scorched_krevol", 300,getRandomNumber(10) + -5286.7, 80.1,getRandomNumber(10) + -1915.4, getRandomNumber(360), 0)
@@ -294,5 +417,5 @@ function RoriNarmleScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(10) + -5391.4, 77.3,getRandomNumber(10) + -2532.1, getRandomNumber(360), 0)]]
 end

@@ -198,6 +198,62 @@ TalusNashalScreenPlay = CityScreenPlay:new {
 		{"info_broker",60,11.3604,-0.894992,5.58351,180.01,4265375, "conversation"},
 		{"commoner_technician",60,2.49489,-0.894992,-4.58394,179.992,4265375, "conversation"},
 		{"insurgent",60,11.3604,-0.894992,4.58351,360.011,4265375, "nervous"}
+	},
+
+	citySpawns = {
+		--thugs
+		{"chunker_mooch", 300, 4096, 2, 5299, 54, 0},
+		{"chunker_mooch", 300, 4099, 2, 5288, 4, 0},
+		{"chunker_mooch", 300, 4093, 2, 5295, 160, 0},
+		{"chunker_nitwit", 300, 4253, 2, 5141, 129, 0},
+		{"chunker_nitwit", 300, 4252, 2, 5156, 32, 0},
+		{"chunker_nitwit", 300, 4249, 2, 5151, 237, 0},
+		{"chunker_nitwit", 300, 4245, 2, 5150, 91, 0},
+		{"fed_dub_captain", 300, 4149, 2, 5129, 220, 0},
+		{"fed_dub_captain", 300, 4520, 2, 5532, 74, 0},
+		{"fed_dub_captain", 300, 4525, 2, 5047, 337, 0},
+		{"fed_dub_constable", 300, 4178, 2, 5114, 117, 0},
+		{"fed_dub_constable", 300, 4356, 2, 5213, 44, 0},
+		{"fed_dub_constable", 300, 4370, 2, 5023, 68, 0},
+		{"fed_dub_constable", 300, 4521, 2, 5533, 74, 0},
+		{"fed_dub_constable", 300, 4529, 2, 5035, 343, 0},
+		{"fed_dub_constable", 300, 4367, 2, 5015, 67, 0},
+		{"fed_dub_constable", 300, 4369, 2, 5013, 60, 0},
+		{"fed_dub_investigator", 300, 4356, 2, 5214, 36, 0},
+		{"fed_dub_investigator", 300, 4176, 2, 5114, 296, 0},
+		{"fed_dub_investigator", 300, 4524, 2, 5049, 305, 0},
+		{"fed_dub_patrolman", 300, 4035, 2, 5220, 232, 0},
+		{"fed_dub_patrolman", 300, 4151, 2, 5127, 240, 0},
+		{"fed_dub_patrolman", 300, 4355, 2, 5216, 50, 0},
+		{"fed_dub_patrolman", 300, 4176, 2, 5115, 117, 0},
+		{"fed_dub_patrolman", 300, 4381, 2, 5019, 23, 0},
+		{"fed_dub_patrolman", 300, 4367.6, 2, 5013.9, 53, 0},
+		{"fed_dub_patrolman", 300, 4531, 2, 5035, 147, 0},
+		{"fed_dub_patrolman", 300, 4519, 2, 5532, 74, 0},
+		{"fed_dub_patrolman", 300, 4530, 2, 5032, 343, 0},
+		{"fed_dub_patrolman", 300, 4518, 2, 5531, 74, 0},
+		{"fed_dub_patrolman", 300, 4517, 2, 5532, 174, 0},
+		{"fed_dub_patrolman", 300, 4354, 2, 5213, 36, 0},
+		{"sleemo_delinquent", 300, 4432, 2, 5439, 166, 0},
+		{"sleemo_delinquent", 300, 4432, 2, 5437, 327, 0},
+		{"sleemo_delinquent", 300, 4429, 2, 5438, 235, 0},
+		{"sleemo_hoodlum", 300, 4510, 2, 5073, 317, 0},
+		{"sleemo_hoodlum", 300, 4508, 2, 5079, 301, 0},
+		{"sleemo_hoodlum", 300, 4507, 2, 5084, 300, 0},
+		{"sleemo_hoodlum", 300, 4516, 2, 5076, 135, 0},
+
+		--newb grind starter spawns
+		{"clipped_fynock", 300, getRandomNumber(10) + 4563, 2.8, getRandomNumber(10) + 5503, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 4563, 2.8, getRandomNumber(10) + 5503, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 4563, 2.8, getRandomNumber(10) + 5503, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 4563, 2.8, getRandomNumber(10) + 5503, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 4563, 2.8, getRandomNumber(10) + 5503, getRandomNumber(360), 0},
+
+		{"song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0},
 	}
 }
 
@@ -209,6 +265,7 @@ function TalusNashalScreenPlay:start()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -245,7 +302,7 @@ function TalusNashalScreenPlay:spawnMobiles()
 	end
 
 	--thugs
-	spawnMobile(self.planet, "chunker_mooch", 300, 4096, 2, 5299, 54, 0)
+	--[[spawnMobile(self.planet, "chunker_mooch", 300, 4096, 2, 5299, 54, 0)
 	spawnMobile(self.planet, "chunker_mooch", 300, 4099, 2, 5288, 4, 0)
 	spawnMobile(self.planet, "chunker_mooch", 300, 4093, 2, 5295, 160, 0)
 	spawnMobile(self.planet, "chunker_nitwit", 300, 4253, 2, 5141, 129, 0)
@@ -296,5 +353,5 @@ function TalusNashalScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "song_rasp", 300, getRandomNumber(10) + 4237.4, 28.6, getRandomNumber(10) + 5389.7, getRandomNumber(360), 0)]]
 end

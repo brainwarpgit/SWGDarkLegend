@@ -167,6 +167,95 @@ NabooKaadaraScreenPlay = CityScreenPlay:new {
 		{"informant_npc_lvl_3", 1, 5277, -192, 6560, 0, 0, ""},
 		{"junk_dealer", 0, -14.5, 1.1, 3.0, 116, 1741459, ""},
 		{"junk_dealer", 0, 5143.9, -192, 6818, 47, 0, ""}
+	},
+
+	citySpawns = {
+		--thugs
+		{"skaak_tipper_mugger", 300, 5414.8, -192, 6713.9, 112, 0},
+		{"skaak_tipper_mugger", 300, 5414.8, -192, 6708.4, -132, 0},
+		{"skaak_tipper_mugger", 300, 5418.8, -192, 6711.3, -26, 0},
+		{"skaak_tipper_bandit", 300, 5242.9, -192, 6796.6, -151, 0},
+		{"skaak_tipper_bandit", 300, 5240.1, -192, 6796.9, 90, 0},
+		{"skaak_tipper_bandit", 300, 5241.1, -192, 6793.4, -15, 0},
+		{"skaak_tipper_bandit", 300, 5202.0, -192, 6560.6, 83, 0},
+		{"skaak_tipper_bandit", 300, 5205.0, -192, 6558.6, 3, 0},
+		{"skaak_tipper_bandit", 300, 5204.0, -192, 6559.3, -53, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5347.0, -192, getRandomNumber(12) + 6805, getRandomNumber(180) + -90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5347.0, -192, getRandomNumber(12) + 6805, getRandomNumber(180) + -90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5347.0, -192, getRandomNumber(12) + 6805, getRandomNumber(180) + -90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5347.0, -192, getRandomNumber(12) + 6805, getRandomNumber(180) + -90, 0},
+		{"skaak_tipper_mugger", 300, 4917.3, -192, 6740.5, -90, 0},
+		{"skaak_tipper_mugger", 300, 4914.0, -192, 6743.7, -136, 0},
+		{"skaak_tipper_mugger", 300, 4912.2, -192, 6737.5, 76, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5018, -191.4, getRandomNumber(20) + 6591, getRandomNumber(180) + 90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5018, -191.4, getRandomNumber(20) + 6591, getRandomNumber(180) + 90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5018, -191.4, getRandomNumber(20) + 6591, getRandomNumber(180) + 90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5018, -191.4, getRandomNumber(20) + 6591, getRandomNumber(180) + 90, 0},
+		{"skaak_tipper_crook", 300, getRandomNumber(20) + 5018, -191.4, getRandomNumber(20) + 6591, getRandomNumber(180) + 90, 0},
+
+		--creatures
+		{"nuna", 300, getRandomNumber(20) + 5346.5, -205.4, getRandomNumber(12) + 6888.5, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5346.5, -205.4, getRandomNumber(12) + 6888.5, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5346.5, -205.4, getRandomNumber(12) + 6888.5, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5346.5, -205.4, getRandomNumber(12) + 6888.5, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5346.5, -205.4, getRandomNumber(12) + 6888.5, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5346.5, -205.4, getRandomNumber(12) + 6888.5, getRandomNumber(360), 0},
+
+		{"nuna", 300, getRandomNumber(20) + 5159.7, -208.1, getRandomNumber(12) + 6906.3, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5159.7, -208.1, getRandomNumber(12) + 6906.3, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5159.7, -208.1, getRandomNumber(12) + 6906.3, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5159.7, -208.1, getRandomNumber(12) + 6906.3, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5159.7, -208.1, getRandomNumber(12) + 6906.3, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 5159.7, -208.1, getRandomNumber(12) + 6906.3, getRandomNumber(360), 0},
+
+		{"nuna", 300, getRandomNumber(20) + 4925.0, -208.2, getRandomNumber(12) + 6934.8, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 4925.0, -208.2, getRandomNumber(12) + 6934.8, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 4925.0, -208.2, getRandomNumber(12) + 6934.8, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 4925.0, -208.2, getRandomNumber(12) + 6934.8, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 4925.0, -208.2, getRandomNumber(12) + 6934.8, getRandomNumber(360), 0},
+		{"nuna", 300, getRandomNumber(20) + 4925.0, -208.2, getRandomNumber(12) + 6934.8, getRandomNumber(360), 0},
+
+		{"nightspider", 300, getRandomNumber(20) + 4995.1, -193.5, getRandomNumber(20) + 6452, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 4995.1, -193.5, getRandomNumber(20) + 6452, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 4995.1, -193.5, getRandomNumber(20) + 6452, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 4995.1, -193.5, getRandomNumber(20) + 6452, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 4995.1, -193.5, getRandomNumber(20) + 6452, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 4995.1, -193.5, getRandomNumber(20) + 6452, getRandomNumber(360), 0},
+
+		{"mott_calf", 300, getRandomNumber(20) + 5150.0, -196.9, getRandomNumber(20) + 6404, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5150.0, -196.9, getRandomNumber(20) + 6404, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5150.0, -196.9, getRandomNumber(20) + 6404, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5150.0, -196.9, getRandomNumber(20) + 6404, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5150.0, -196.9, getRandomNumber(20) + 6404, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5150.0, -196.9, getRandomNumber(20) + 6404, getRandomNumber(360), 0},
+
+		{"hermit_spider", 300, getRandomNumber(20) + 5269, -195.4, getRandomNumber(20) + 6318, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(20) + 5269, -195.4, getRandomNumber(20) + 6318, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(20) + 5269, -195.4, getRandomNumber(20) + 6318, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(20) + 5269, -195.4, getRandomNumber(20) + 6318, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(20) + 5269, -195.4, getRandomNumber(20) + 6318, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(20) + 5269, -195.4, getRandomNumber(20) + 6318, getRandomNumber(360), 0},
+
+		{"flewt", 300, getRandomNumber(20) + 5471, -197.8, getRandomNumber(20) + 6480.6, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(20) + 5471, -197.8, getRandomNumber(20) + 6480.6, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(20) + 5471, -197.8, getRandomNumber(20) + 6480.6, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(20) + 5471, -197.8, getRandomNumber(20) + 6480.6, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(20) + 5471, -197.8, getRandomNumber(20) + 6480.6, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(20) + 5471, -197.8, getRandomNumber(20) + 6480.6, getRandomNumber(360), 0},
+
+		{"mott_calf", 300, getRandomNumber(20) + 5558, -192.5, getRandomNumber(20) + 6634, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5558, -192.5, getRandomNumber(20) + 6634, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5558, -192.5, getRandomNumber(20) + 6634, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5558, -192.5, getRandomNumber(20) + 6634, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5558, -192.5, getRandomNumber(20) + 6634, getRandomNumber(360), 0},
+		{"mott_calf", 300, getRandomNumber(20) + 5558, -192.5, getRandomNumber(20) + 6634, getRandomNumber(360), 0},
+
+		{"nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0},
+		{"nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0},
 	}
 }
 
@@ -179,6 +268,7 @@ function NabooKaadaraScreenPlay:start()
 		self:spawnGcwMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -212,7 +302,7 @@ function NabooKaadaraScreenPlay:spawnMobiles()
 	end
 
 	--thugs
-	spawnMobile(self.planet, "skaak_tipper_mugger", 300, 5414.8, -192, 6713.9, 112, 0)
+	--[[spawnMobile(self.planet, "skaak_tipper_mugger", 300, 5414.8, -192, 6713.9, 112, 0)
 	spawnMobile(self.planet, "skaak_tipper_mugger", 300, 5414.8, -192, 6708.4, -132, 0)
 	spawnMobile(self.planet, "skaak_tipper_mugger", 300, 5418.8, -192, 6711.3, -26, 0)
 	spawnMobile(self.planet, "skaak_tipper_bandit", 300, 5242.9, -192, 6796.6, -151, 0)
@@ -296,7 +386,7 @@ function NabooKaadaraScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "nightspider", 300, getRandomNumber(20) + 5535.6, -193.9, getRandomNumber(20) + 6745, getRandomNumber(360), 0)]]
 
 	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 5149.79, -192, 6745.73, -72, 0)
 	if pNpc ~= nil then

@@ -80,7 +80,8 @@ function CityScreenPlay:spawnMob(num, controllingFaction, difficulty)
 		scaling = "_hard"
 	end
 
-	pNpc = spawnMobile(self.planet, npcTemplate .. scaling, 0, x, z, y, heading, parentID)
+	--pNpc = spawnMobile(self.planet, npcTemplate .. scaling, 0, x, z, y, heading, parentID)
+	pNpc = spawnMobile(self.planet, self:spawnRandomMob(npcTemplate), 0, x, z, y, heading, parentID)
 
 	if pNpc ~= nil then
 		if npcMood ~= "" then
@@ -158,7 +159,8 @@ function CityScreenPlay:spawnPatrol(num)
 	end
 
 	--{patrolPoints, template, x, z, y, direction, cell, mood, combatPatrol}
-	local pMobile = spawnMobile(self.planet, template, 0, patrol[3], patrol[4], patrol[5], patrol[6], patrol[7])
+	--local pMobile = spawnMobile(self.planet, template, 0, patrol[3], patrol[4], patrol[5], patrol[6], patrol[7])
+	local pMobile = spawnMobile(self.planet, self:spawnRandomMob(template), 0, patrol[3], patrol[4], patrol[5], patrol[6], patrol[7])
 
 	if (pMobile ~= nil and points ~= nil) then
 		if mood ~= "" then
@@ -317,7 +319,8 @@ function CityScreenPlay:spawnStationaryMobile(num)
 	end
 
 	--{respawn, x, z, y, direction, cell, mood}
-	local pMobile = spawnMobile(self.planet, template, mobile[1], mobile[2], mobile[3], mobile[4], mobile[5], mobile[6])
+	--local pMobile = spawnMobile(self.planet, template, mobile[1], mobile[2], mobile[3], mobile[4], mobile[5], mobile[6])
+	local pMobile = spawnMobile(self.planet, self:spawnRandomMob(template), mobile[1], mobile[2], mobile[3], mobile[4], mobile[5], mobile[6])
 
 	if (pMobile ~= nil) then
 		if mood ~= "" then
@@ -330,4 +333,53 @@ function CityScreenPlay:spawnStationaryMobile(num)
 			CreatureObject(pMobile):clearOptionBit(AIENABLED)
 		end
 	end
+end
+
+function CityScreenPlay:spawnCityMobiles()
+	for i = 1, #self.citySpawns, 1 do
+		local citySpawn = self.citySpawns[i]
+		local pMobile = spawnMobile(self.planet,self:spawnRandomMob(citySpawn[1]),-1,citySpawn[3],citySpawn[4],citySpawn[5],citySpawn[6],citySpawn[7])
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnCity", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", citySpawn[2])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function CityScreenPlay:spawnRandomMob(mobName)
+	local mobs = {"", "_2", "_3"}
+	local randomNumber = getRandomNumber(1000)
+	local randomIndex
+	if randomNumber > 900 then
+		randomIndex = 3
+	elseif randomNumber > 600 then
+		randomIndex = 2
+	else 
+		randomIndex = 1
+	end
+	local randomMob = mobs[randomIndex]
+	mobName = mobName .. randomMob
+	return mobName
+end
+
+function CityScreenPlay:onDespawnCity(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnCity", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function CityScreenPlay:respawnCity(mob, spawnNumber)
+	local citySpawn = self.citySpawns[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(self.planet,self:spawnRandomMob(citySpawn[1]),-1,citySpawn[3],citySpawn[4],citySpawn[5],citySpawn[6],citySpawn[7])
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnCity", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", citySpawn[2])
+	writeData(mobID .. ":mobID", spawnNumber)
 end

@@ -214,6 +214,90 @@ TalusDearicScreenPlay = CityScreenPlay:new {
 		{"junk_dealer", 0, 183.6, 6, -3065.1, 87, 0, ""},
 		{"junk_dealer", 0, 146.55, 6, -2852.41, 87, 0, ""},
 		{"junk_dealer", 0, -14.4, 1.1, 2.9, 133, 3175374, ""}
+	},
+
+	citySpawns = {
+		--thugs
+		{"chunker_nitwit", 300, 152, 6, -3013, 146, 0},
+		{"chunker_nitwit", 300, 157, 6, -3017, 192, 0},
+		{"chunker_nitwit", 300, 161, 6, -3007, 2, 0},
+		{"chunker_nitwit", 300, 163, 6, -3016, 314, 0},
+		{"chunker_nitwit", 300, 21, 6, -2826, 268, 0},
+		{"chunker_nitwit", 300, 24, 6, -2823, 37, 0},
+		{"chunker_nitwit", 300, 28, 6, -2823, 337, 0},
+		{"chunker_nitwit", 300, 31, 6, -2836, 89, 0},
+		{"chunker_nitwit", 300, 461, 6, -3112, 226, 0},
+		{"chunker_nitwit", 300, 464, 6, -3106, 80, 0},
+		{"chunker_nitwit", 300, 470, 6, -3110, 48, 0},
+		{"chunker_nitwit", 300, 471, 6, -3106, 223, 0},
+		{"chunker_punk", 300, 202, 6, -2860, 129, 0},
+		{"chunker_punk", 300, 206, 6, -2867, 80, 0},
+		{"chunker_punk", 300, 208, 6, -2860, 137, 0},
+		{"chunker_punk", 300, 209, 6, -2864, 97, 0},
+		{"chunker_punk", 300, 763, 6, -3279, 244, 0},
+		{"chunker_punk", 300, 777, 6, -3285, 269, 0},
+		{"chunker_punk", 300, 778, 6, -3287, 175, 0},
+		{"chunker_punk", 300, 780, 6, -3286, 172, 0},
+		{"chunker_swindler", 300, 101, 9, -3210, 232, 0},
+		{"chunker_swindler", 300, 104, 8, -3206, 110, 0},
+		{"chunker_swindler", 300, 113, 7, -3197, 15, 0},
+		{"criminal", 300, 146, 6, -3066, 303, 0},
+		{"criminal", 300, 155, 6, -3032, 72, 0},
+		{"criminal", 300, 287, 6, -3055, 265, 0},
+		{"criminal", 300, 373, 6, -2764, 333, 0},
+		{"criminal", 300, 470, 6, -3222, 220, 0},
+		{"criminal", 300, 636, 6, -2979, 141, 0},
+		{"fed_dub_captain", 300, 286, 6, -3106, 318, 0},
+		{"fed_dub_captain", 300, 718, 6, -2859, 171, 0},
+		{"fed_dub_captain", 300, 730, 6, -3198, 179, 0},
+		{"fed_dub_constable", 300, 138, 6, -2978, 113, 0},
+		{"fed_dub_constable", 300, 283, 6, -3109, 179, 0},
+		{"fed_dub_constable", 300, 500, 6, -3192, 357, 0},
+		{"fed_dub_constable", 300, 517, 6, -3170, 152, 0},
+		{"fed_dub_constable", 300, 537, 6, -3197, 85, 0},
+		{"fed_dub_constable", 300, 539, 6, -3202, 115, 0},
+		{"fed_dub_constable", 300, 563, 6, -2911, 10, 0},
+		{"fed_dub_investigator", 300, 198, 6, -2794, 71, 0},
+		{"fed_dub_investigator", 300, 201, 6, -3099, 318, 0},
+		{"fed_dub_investigator", 300, 376, 6, -2923, 271, 0},
+		{"fed_dub_investigator", 300, 390, 6, -3184, 180, 0},
+		{"fed_dub_patrolman", 300, 144, 6, -3098, 134, 0},
+		{"fed_dub_patrolman", 300, 200, 6, -2794, 88, 0},
+		{"fed_dub_patrolman", 300, 200, 6, -3099, 275, 0},
+		{"fed_dub_patrolman", 300, 201, 6, -2796, 225, 0},
+		{"fed_dub_patrolman", 300, 202, 6, -3099, 359, 0},
+		{"fed_dub_patrolman", 300, 287, 6, -3107, 218, 0},
+		{"fed_dub_patrolman", 300, 287, 6, -3135, 184, 0},
+		{"fed_dub_patrolman", 300, 287, 6, -3136, 10, 0},
+		{"fed_dub_patrolman", 300, 289, 6, -2794, -96, 0},
+		{"fed_dub_patrolman", 300, 377, 6, -2923, 267, 0},
+		{"fed_dub_patrolman", 300, 532, 6, -3196, 146, 0},
+		{"fed_dub_patrolman", 300, 541, 6, -2994, 270, 0},
+		{"fed_dub_patrolman", 300, 586, 6, -3193, 271, 0},
+		{"fed_dub_patrolman", 300, 635, 6, -3182, 85, 0},
+		{"fed_dub_patrolman", 300, 715, 6, -2844, 180, 0},
+		{"fed_dub_patrolman", 300, 716, 6, -2866, 318, 0},
+
+		--newb grind starter spawns
+		{"minor_sludge_panther", 300, getRandomNumber(10) + 83.9, 6.0, getRandomNumber(10) + -2729.6, getRandomNumber(360), 0},
+		{"minor_sludge_panther", 300, getRandomNumber(10) + 83.9, 6.0, getRandomNumber(10) + -2729.6, getRandomNumber(360), 0},
+		{"minor_sludge_panther", 300, getRandomNumber(10) + 83.9, 6.0, getRandomNumber(10) + -2729.6, getRandomNumber(360), 0},
+
+		{"clipped_fynock", 300, getRandomNumber(10) + 58.0, 6.0, getRandomNumber(10) + -2967, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 58.0, 6.0, getRandomNumber(10) + -2967, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 58.0, 6.0, getRandomNumber(10) + -2967, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 58.0, 6.0, getRandomNumber(10) + -2967, getRandomNumber(360), 0},
+		{"clipped_fynock", 300, getRandomNumber(10) + 58.0, 6.0, getRandomNumber(10) + -2967, getRandomNumber(360), 0},
+
+		{"song_rasp", 300, getRandomNumber(10) + 78.7, 5.9, getRandomNumber(10) + -3059, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 78.7, 5.9, getRandomNumber(10) + -3059, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 78.7, 5.9, getRandomNumber(10) + -3059, getRandomNumber(360), 0},
+		{"song_rasp", 300, getRandomNumber(10) + 78.7, 5.9, getRandomNumber(10) + -3059, getRandomNumber(360), 0},
+
+		{"docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0},
+		{"docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0},
+		{"docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0},
+		{"docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0},
 	}
 }
 
@@ -225,6 +309,7 @@ function TalusDearicScreenPlay:start()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -261,7 +346,7 @@ function TalusDearicScreenPlay:spawnMobiles()
 	end
 
 	--thugs
-	spawnMobile(self.planet, "chunker_nitwit", 300, 152, 6, -3013, 146, 0)
+	--[[spawnMobile(self.planet, "chunker_nitwit", 300, 152, 6, -3013, 146, 0)
 	spawnMobile(self.planet, "chunker_nitwit", 300, 157, 6, -3017, 192, 0)
 	spawnMobile(self.planet, "chunker_nitwit", 300, 161, 6, -3007, 2, 0)
 	spawnMobile(self.planet, "chunker_nitwit", 300, 163, 6, -3016, 314, 0)
@@ -340,5 +425,5 @@ function TalusDearicScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "docile_kahmurra", 300, getRandomNumber(10) + 225.8, 6.0, getRandomNumber(10) + -3157, getRandomNumber(360), 0)]]
 end

@@ -147,6 +147,144 @@ RoriRestussScreenPlay = CityScreenPlay:new {
 		{"trainer_tailor", 0, 11, 1.133, -13, 0, 4635663, ""},
 		{"trainer_tailor", 0, 5209, 80, 5729, 180, 0, ""},
 		{"trainer_weaponsmith", 0, 0, 1, -13, 0, 4635775, ""}
+	},	
+
+	citySpawns = {
+		--Creatures
+		{"nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0},
+		{"nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0},
+
+		{"vrobalet", 300,getRandomNumber(10) + 4984.2, 77.9,getRandomNumber(10) + 5928.7, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + 4984.2, 77.9,getRandomNumber(10) + 5928.7, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + 4984.2, 77.9,getRandomNumber(10) + 5928.7, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + 4984.2, 77.9,getRandomNumber(10) + 5928.7, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + 4984.2, 77.9,getRandomNumber(10) + 5928.7, getRandomNumber(360), 0},
+		{"vrobalet", 300,getRandomNumber(10) + 4984.2, 77.9,getRandomNumber(10) + 5928.7, getRandomNumber(360), 0},
+
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5131.6, 77.9,getRandomNumber(10) + 5954.7, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5131.6, 77.9,getRandomNumber(10) + 5954.7, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5131.6, 77.9,getRandomNumber(10) + 5954.7, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5131.6, 77.9,getRandomNumber(10) + 5954.7, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5131.6, 77.9,getRandomNumber(10) + 5954.7, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5131.6, 77.9,getRandomNumber(10) + 5954.7, getRandomNumber(360), 0},
+
+		{"capper_spineflap", 300,getRandomNumber(10) + 5246.5, 80.4,getRandomNumber(10) + 6009.0, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + 5246.5, 80.4,getRandomNumber(10) + 6009.0, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + 5246.5, 80.4,getRandomNumber(10) + 6009.0, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + 5246.5, 80.4,getRandomNumber(10) + 6009.0, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + 5246.5, 80.4,getRandomNumber(10) + 6009.0, getRandomNumber(360), 0},
+		{"capper_spineflap", 300,getRandomNumber(10) + 5246.5, 80.4,getRandomNumber(10) + 6009.0, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5449.4, 80.4,getRandomNumber(10) + 5947.3, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5449.4, 80.4,getRandomNumber(10) + 5947.3, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5449.4, 80.4,getRandomNumber(10) + 5947.3, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5449.4, 80.4,getRandomNumber(10) + 5947.3, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5449.4, 80.4,getRandomNumber(10) + 5947.3, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5449.4, 80.4,getRandomNumber(10) + 5947.3, getRandomNumber(360), 0},
+
+		{"scorched_krevol", 300,getRandomNumber(10) + 5581.4, 80.6,getRandomNumber(10) + 5869.5, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + 5581.4, 80.6,getRandomNumber(10) + 5869.5, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + 5581.4, 80.6,getRandomNumber(10) + 5869.5, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + 5581.4, 80.6,getRandomNumber(10) + 5869.5, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + 5581.4, 80.6,getRandomNumber(10) + 5869.5, getRandomNumber(360), 0},
+		{"scorched_krevol", 300,getRandomNumber(10) + 5581.4, 80.6,getRandomNumber(10) + 5869.5, getRandomNumber(360), 0},
+
+		{"frightened_borgle", 300,getRandomNumber(10) + 5689.2, 80.5,getRandomNumber(10) + 5773.9, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + 5689.2, 80.5,getRandomNumber(10) + 5773.9, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + 5689.2, 80.5,getRandomNumber(10) + 5773.9, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + 5689.2, 80.5,getRandomNumber(10) + 5773.9, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + 5689.2, 80.5,getRandomNumber(10) + 5773.9, getRandomNumber(360), 0},
+		{"frightened_borgle", 300,getRandomNumber(10) + 5689.2, 80.5,getRandomNumber(10) + 5773.9, getRandomNumber(360), 0},
+
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5497, 80.4,getRandomNumber(10) + 5403, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5497, 80.4,getRandomNumber(10) + 5403, getRandomNumber(360), 0},
+		{"timid_vir_vur", 300,getRandomNumber(10) + 5497, 80.4,getRandomNumber(10) + 5403, getRandomNumber(360), 0},
+		{"ikopi", 300,getRandomNumber(10) + 5497, 80.4,getRandomNumber(10) + 5403, getRandomNumber(360), 0},
+		{"ikopi", 300,getRandomNumber(10) + 5497, 80.4,getRandomNumber(10) + 5403, getRandomNumber(360), 0},
+		{"ikopi", 300,getRandomNumber(10) + 5497, 80.4,getRandomNumber(10) + 5403, getRandomNumber(360), 0},
+
+		{"ikopi", 300,getRandomNumber(10) + 5357.7, 80.2,getRandomNumber(10) + 5369, getRandomNumber(360), 0},
+		{"ikopi", 300,getRandomNumber(10) + 5357.7, 80.2,getRandomNumber(10) + 5369, getRandomNumber(360), 0},
+		{"ikopi", 300,getRandomNumber(10) + 5357.7, 80.2,getRandomNumber(10) + 5369, getRandomNumber(360), 0},
+		{"ikopi", 300,getRandomNumber(10) + 5357.7, 80.2,getRandomNumber(10) + 5369, getRandomNumber(360), 0},
+
+		{"frail_squall", 300,getRandomNumber(10) + 5211.5, 79.7,getRandomNumber(10) + 5378.5, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5211.5, 79.7,getRandomNumber(10) + 5378.5, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5211.5, 79.7,getRandomNumber(10) + 5378.5, getRandomNumber(360), 0},
+		{"frail_squall", 300,getRandomNumber(10) + 5211.5, 79.7,getRandomNumber(10) + 5378.5, getRandomNumber(360), 0},
+
+		{"pigmy_pugoriss", 300,getRandomNumber(10) + 5056, 78.2,getRandomNumber(10) + 5372, getRandomNumber(360), 0},
+		{"pigmy_pugoriss", 300,getRandomNumber(10) + 5056, 78.2,getRandomNumber(10) + 5372, getRandomNumber(360), 0},
+		{"pigmy_pugoriss", 300,getRandomNumber(10) + 5056, 78.2,getRandomNumber(10) + 5372, getRandomNumber(360), 0},
+		{"pigmy_pugoriss", 300,getRandomNumber(10) + 5056, 78.2,getRandomNumber(10) + 5372, getRandomNumber(360), 0},
+		{"pigmy_pugoriss", 300,getRandomNumber(10) + 5056, 78.2,getRandomNumber(10) + 5372, getRandomNumber(360), 0},
+		{"pigmy_pugoriss", 300,getRandomNumber(10) + 5056, 78.2,getRandomNumber(10) + 5372, getRandomNumber(360), 0},
+
+		--Thugs
+		{"fringer", 300, 5399.5, 80.0, 5676.8, 161, 0},
+		{"gundark_ruffian", 300, 5520.3, 80.0, 5535.2, 130, 0},
+		{"gundark_ruffian", 300, 5521.7, 80.0, 5529.0, 80, 0},
+		{"gundark_ruffian", 300, 5525.3, 80.0, 5533.2, -50, 0},
+		{"gundark_desperado", 300, 5313.2, 80.0, 5795.4, 95, 0},
+		{"gundark_desperado", 300, 5313.2, 80.0, 5791.2, 50, 0},
+		{"garyns_prowler", 300, 5269.9, 80.0, 5815.0, 77, 0},
+
+		{"garyns_prowler", 300,getRandomNumber(15) + 5316.0, 80.0,getRandomNumber(15) + 5831.2, getRandomNumber(360), 0},
+		{"garyns_prowler", 300,getRandomNumber(15) + 5316.0, 80.0,getRandomNumber(15) + 5831.2, getRandomNumber(360), 0},
+		{"garyns_prowler", 300,getRandomNumber(15) + 5316.0, 80.0,getRandomNumber(15) + 5831.2, getRandomNumber(360), 0},
+		{"garyns_prowler", 300,getRandomNumber(15) + 5316.0, 80.0,getRandomNumber(15) + 5831.2, getRandomNumber(360), 0},
+		{"garyns_prowler", 300,getRandomNumber(15) + 5316.0, 80.0,getRandomNumber(15) + 5831.2, getRandomNumber(360), 0},
+		{"garyns_prowler", 300,getRandomNumber(15) + 5316.0, 80.0,getRandomNumber(15) + 5831.2, getRandomNumber(360), 0},
+
+		{"gundark_rogue", 300,getRandomNumber(10) + 4969.6, 84.0,getRandomNumber(10) + 5644.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 4969.6, 84.0,getRandomNumber(10) + 5644.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 4969.6, 84.0,getRandomNumber(10) + 5644.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 4969.6, 84.0,getRandomNumber(10) + 5644.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 4969.6, 84.0,getRandomNumber(10) + 5644.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 4969.6, 84.0,getRandomNumber(10) + 5644.5, getRandomNumber(360), 0},
+
+		{"swamp_rat", 300,getRandomNumber(10) + 4937.0, 77.0,getRandomNumber(10) + 5752.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 4937.0, 77.0,getRandomNumber(10) + 5752.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 4937.0, 77.0,getRandomNumber(10) + 5752.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 4937.0, 77.0,getRandomNumber(10) + 5752.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 4937.0, 77.0,getRandomNumber(10) + 5752.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 4937.0, 77.0,getRandomNumber(10) + 5752.5, getRandomNumber(360), 0},
+
+		{"gundark_rogue", 300,getRandomNumber(10) + 5114.1, 78.4,getRandomNumber(10) + 5811.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5114.1, 78.4,getRandomNumber(10) + 5811.3, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5114.1, 78.4,getRandomNumber(10) + 5811.3, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5114.1, 78.4,getRandomNumber(10) + 5811.3, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5114.1, 78.4,getRandomNumber(10) + 5811.3, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5114.1, 78.4,getRandomNumber(10) + 5811.3, getRandomNumber(360), 0},
+
+		{"gundark_rogue", 300,getRandomNumber(10) + 5279.6, 79.8,getRandomNumber(10) + 5905.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5279.6, 79.8,getRandomNumber(10) + 5905.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5279.6, 79.8,getRandomNumber(10) + 5905.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5279.6, 79.8,getRandomNumber(10) + 5905.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5279.6, 79.8,getRandomNumber(10) + 5905.5, getRandomNumber(360), 0},
+		{"gundark_rogue", 300,getRandomNumber(10) + 5279.6, 79.8,getRandomNumber(10) + 5905.5, getRandomNumber(360), 0},
+
+		{"swamp_rat", 300,getRandomNumber(10) + 5623.1, 80.6,getRandomNumber(10) + 5662.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 5623.1, 80.6,getRandomNumber(10) + 5662.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 5623.1, 80.6,getRandomNumber(10) + 5662.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 5623.1, 80.6,getRandomNumber(10) + 5662.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 5623.1, 80.6,getRandomNumber(10) + 5662.5, getRandomNumber(360), 0},
+		{"swamp_rat", 300,getRandomNumber(10) + 5623.1, 80.6,getRandomNumber(10) + 5662.5, getRandomNumber(360), 0},
+
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5626.7, 80.4,getRandomNumber(10) + 5528.9, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5626.7, 80.4,getRandomNumber(10) + 5528.9, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5626.7, 80.4,getRandomNumber(10) + 5528.9, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5626.7, 80.4,getRandomNumber(10) + 5528.9, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5626.7, 80.4,getRandomNumber(10) + 5528.9, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(10) + 5626.7, 80.4,getRandomNumber(10) + 5528.9, getRandomNumber(360), 0},
+
+		{"gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0},
+		{"gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0},
 	}
 }
 
@@ -158,6 +296,7 @@ function RoriRestussScreenPlay:start()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -189,7 +328,7 @@ function RoriRestussScreenPlay:spawnMobiles()
 	end
 
 	--Creatures
-	spawnMobile(self.planet, "nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0)
+	--[[spawnMobile(self.planet, "nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "nightspider", 300,getRandomNumber(10) + 4980.2, 76.9,getRandomNumber(10) + 5535.3, getRandomNumber(360), 0)
@@ -322,5 +461,5 @@ function RoriRestussScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "gundark_hooligan", 300,getRandomNumber(5) + 5108.7, 80.0,getRandomNumber(12) + 5624, getRandomNumber(360), 0)]]
 end

@@ -121,6 +121,35 @@ TatooineWayfarScreenPlay = CityScreenPlay:new {
 		{"trainer_unarmed",0,-5055,75,-6633,310,0, "npc_sitting_ground"},
 		{"junk_dealer", 1, -5242.27, 75, -6495.05, 138, 0, ""},
 		{"junk_dealer", 1, -5132.78, 75, -6585.28, 72, 0, ""}
+	},
+
+	citySpawns = {
+		--Outside
+		{"criminal",300,-5210.29,75,-6570.98,235.683,0},
+		{"informant_npc_lvl_2",0,-5205,75,-6503,315,0},
+		{"jabba_enforcer",360,-5233.49,75,-6571.71,339.496,0},
+		{"jabba_enforcer",360,-5248.39,75,-6549.52,120.944,0},
+		{"jabba_enforcer",360,-5273.74,75,-6518.97,98.1445,0},
+		{"jabba_enforcer",360,-5184.2,75,-6538,79,0},
+		{"jabba_enforcer",360,-5232.15,75,-6575.29,339.495,0},
+		{"jabba_henchman",360,-5282.79,75,-6521.67,116.926,0},
+		{"jabba_henchman",360,-5232.74,75,-6573.71,339.487,0},
+		{"jawa",360,-5242.73,75,-6503.24,231.558,0},
+		{"jawa",360,-5062.65,75,-6596.72,44.1352,0},
+		{"jawa",360,-5258.59,75,-6504.38,232.79,0},
+		{"jawa",360,-5061.61,75,-6597.5,31.812,0},
+		{"jawa",360,-5059.34,75,-6594.17,29.6942,0},
+		{"jawa_engineer",360,-5108.37,75,-6492.24,199.616,0},
+		{"jawa_healer",360,-5247.3,75,-6503.9,260,0},
+		{"jawa_smuggler",360,-5206.91,75,-6490.08,86.0945,0},
+		{"jawa_smuggler",360,-5128.63,75,-6489.39,118.658,0},
+		{"jawa_smuggler",360,-5051.74,75,-6606.62,334.538,0},
+		{"jawa_thief",360,-5248.59,75,-6504.38,83.8473,0},
+		{"jawa_thief",360,-5053.6,75,-6625.89,176.389,0},
+		{"jawa_warlord",360,-5245.66,75,-6521.01,177.159,0},
+		{"jawa_warlord",360,-5248.59,75,-6514.38,140.997,0},
+		{"jawa_warlord",360,-5066.64,75,-6600.84,318.437,0},
+		{"jawa_warlord",360,-5054.39,75,-6602.99,341.563,0},
 	}
 }
 
@@ -133,6 +162,7 @@ function TatooineWayfarScreenPlay:start()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -165,7 +195,7 @@ function TatooineWayfarScreenPlay:spawnMobiles()
 	end
 
 	--Outside
-	spawnMobile(self.planet, "criminal",300,-5210.29,75,-6570.98,235.683,0)
+	--[[spawnMobile(self.planet, "criminal",300,-5210.29,75,-6570.98,235.683,0)
 	spawnMobile(self.planet, "informant_npc_lvl_2",0,-5205,75,-6503,315,0)
 	spawnMobile(self.planet, "jabba_enforcer",360,-5233.49,75,-6571.71,339.496,0)
 	spawnMobile(self.planet, "jabba_enforcer",360,-5248.39,75,-6549.52,120.944,0)
@@ -189,5 +219,5 @@ function TatooineWayfarScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "jawa_warlord",360,-5245.66,75,-6521.01,177.159,0)
 	spawnMobile(self.planet, "jawa_warlord",360,-5248.59,75,-6514.38,140.997,0)
 	spawnMobile(self.planet, "jawa_warlord",360,-5066.64,75,-6600.84,318.437,0)
-	spawnMobile(self.planet, "jawa_warlord",360,-5054.39,75,-6602.99,341.563,0)
+	spawnMobile(self.planet, "jawa_warlord",360,-5054.39,75,-6602.99,341.563,0)]]
 end

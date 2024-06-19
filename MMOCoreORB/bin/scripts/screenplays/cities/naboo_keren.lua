@@ -127,6 +127,24 @@ NabooKerenScreenPlay = CityScreenPlay:new {
 		{"trainer_bountyhunter",0,2087,30,2575,180,0, ""},
 		{"junk_dealer", 0, 1274.18, 13, 2787.07, -96, 0, ""},
 		{"junk_dealer", 0, 1372.26, 13, 2705.58, -173, 0, ""}
+	},
+
+	citySpawns = {
+		--newb grind starter spawns
+		{"gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0},
+		{"flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0},
+		{"chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0},
+		{"chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0},
+		{"chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0},
+		{"chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0},
+		{"chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0},
 	}
 }
 
@@ -137,6 +155,7 @@ function NabooKerenScreenPlay:start()
 		self:spawnMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -178,10 +197,10 @@ function NabooKerenScreenPlay:spawnMobiles()
 	end
 
 	--newb grind starter spawns
+	--[[spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
@@ -191,5 +210,5 @@ function NabooKerenScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)]]
 end

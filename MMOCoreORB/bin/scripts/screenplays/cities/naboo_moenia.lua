@@ -123,6 +123,36 @@ NabooMoeniaScreenPlay = CityScreenPlay:new {
 		{"trainer_doctor",0,-25,0.26,-4,180,1717506, ""},
 		{"trainer_medic",0,-17.2255,0.26,-1.2311,150,1717506, ""},
 		{"trainer_medic",0,16.6671,0.26,5.91467,177,1717502, ""}
+	},
+
+	citySpawns = {
+		--Outside
+		{"mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+		{"mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+		{"mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+
+		--newb grind starter spawns
+		{"diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0},
+		{"diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0},
+		{"diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0},
 	}
 }
 
@@ -135,6 +165,7 @@ function NabooMoeniaScreenPlay:start()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -167,7 +198,7 @@ function NabooMoeniaScreenPlay:spawnMobiles()
 	end
 
 	--Outside
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
+	--[[spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
@@ -192,5 +223,5 @@ function NabooMoeniaScreenPlay:spawnMobiles()
 	spawnMobile(self.planet, "mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)
 	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)
+	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)]]
 end
