@@ -42,6 +42,8 @@ protected:
 	float baseCreatureHAM;
 	float baseCreatureHAMmax;
 	float baseCreatureResists;
+	
+	float cdpMultiplier;
 
 	float kinetic;
 	float energy;
@@ -140,7 +142,7 @@ public:
 
 	virtual ~CreatureTemplate();
 
-	void readObject(LuaObject* templateData, int creatureDifficulty);
+	void readObject(LuaObject* templateData, int creatureDifficulty, float cdpMultiplier);
 
 	inline float getKinetic() const {
 		if (isSpecialProtection(SharedWeaponObjectTemplate::KINETIC))
@@ -251,6 +253,10 @@ public:
 
 	inline unsigned int getCreatureDifficulty() const {
 		return creatureDifficulty;
+	}	
+	
+	inline float getCDPMultiplier() const {
+		return cdpMultiplier;
 	}	
 	
 	inline const String& getCustomName() const {

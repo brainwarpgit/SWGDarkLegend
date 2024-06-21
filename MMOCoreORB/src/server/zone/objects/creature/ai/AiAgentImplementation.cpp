@@ -186,11 +186,11 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 	
 	String strdifficulty = "";
 	
-	if (creatureDifficulty == 2) {
-		strdifficulty = "\\#FFA500 Elite";
+	if (creatureDifficulty == 2 || creatureDifficulty == 5) {
+		strdifficulty = " - \\#FFA500 Elite";
 	}
-	if (creatureDifficulty == 3) {
-		strdifficulty = "\\#FF0000 Heroic";
+	if (creatureDifficulty == 3 || creatureDifficulty == 6) {
+		strdifficulty = " - \\#FF0000 Heroic";
 	}	
 
 	planetMapCategory = npcTemplate->getPlanetMapCategory();
@@ -254,17 +254,19 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 		int templSpecies = getSpecies();
 
 		if (!npcTemplate->getRandomNameTag()) {
-			if (creatureDifficulty >= 2 && creatureDifficulty <= 3 && attackable >= 1 && customaimap != 146400298) {
-				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + " - " + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
-			} else if ((creatureDifficulty == 1) && attackable >= 1 && customaimap != 146400298) {
-				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+			//if (((creatureDifficulty >= 2 && creatureDifficulty <= 3) || (creatureDifficulty >= 5 && creatureDifficulty <= 6)) && attackable >= 1 && customaimap != 146400298) {
+			if (attackable >= 1 && customaimap != 146400298) {
+				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+			//} else if ((creatureDifficulty == 1 || creatureDifficulty == 4) && attackable >= 1 && customaimap != 146400298) {
+			//	setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
 			} else {
 				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies), false);
 			}
 		} else {
 			String newName = nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies);
-			if (creatureDifficulty >= 2 && creatureDifficulty <= 3 && attackable >= 1 && customaimap != 146400298) {			
-				newName += " - " + strdifficulty + "\\#FFFFFF (";
+			//if (creatureDifficulty >= 2 && creatureDifficulty <= 3 && attackable >= 1 && customaimap != 146400298) {			
+			if (attackable >= 1 && customaimap != 146400298) {			
+				newName += strdifficulty + "\\#FFFFFF (";
 			} else {
 				newName += "\\#FFFFFF (";
 			}
@@ -279,10 +281,11 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 			}
 		}
 	} else {
-		if (creatureDifficulty >= 2  && creatureDifficulty <= 3 && attackable >= 1 && customaimap != 146400298) {			
-			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + " - " + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
-		} else if ((creatureDifficulty == 1) && attackable >= 1 && customaimap != 146400298) {
-			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+		//if (((creatureDifficulty >= 2 && creatureDifficulty <= 3) || (creatureDifficulty >= 5 && creatureDifficulty <= 6)) && attackable >= 1 && customaimap != 146400298) {			
+		if (attackable >= 1 && customaimap != 146400298) {			
+			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+		//} else if ((creatureDifficulty == 1 || creatureDifficulty == 4) && attackable >= 1 && customaimap != 146400298) {
+		//	setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
 		} else {
 			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString(), false);
 		}
@@ -466,6 +469,9 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 	else if (getArmor() == 3)
 		alm->insertAttribute("armorrating", "Heavy");
 
+	alm->insertAttribute("creatureDifficulty",std::to_string(getCreatureDifficulty()));
+	if (getCreatureDifficulty() > 3) alm->insertAttribute("cdpMultiplier",std::to_string(getCDPMultiplier()));
+	
 	if (isSpecialProtection(SharedWeaponObjectTemplate::KINETIC)) {
 		StringBuffer txt;
 		txt << Math::getPrecision(getKinetic(), 1) << "%";

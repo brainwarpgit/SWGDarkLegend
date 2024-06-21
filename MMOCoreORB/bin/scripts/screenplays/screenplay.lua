@@ -99,6 +99,55 @@ function ScreenPlay:setCustomName(pObj, name)
 	SceneObject(pObj):setCustomObjectName(name)
 end
 
+function ScreenPlay:spawnScreenPMobiles()
+	for i = 1, #self.ScreenPSpawns, 1 do
+		local ScreenPSpawn = self.ScreenPSpawns[i]
+		local pMobile = spawnMobile(ScreenPSpawn[1],self:spawnRandomMobScreenP(ScreenPSpawn[2]),-1,ScreenPSpawn[4],ScreenPSpawn[5],ScreenPSpawn[6],ScreenPSpawn[7],ScreenPSpawn[8])
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenP", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", ScreenPSpawn[3])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function ScreenPlay:spawnRandomMobScreenP(mobName)
+	local mobs = {"", "_2", "_3"}
+	local randomNumber = getRandomNumber(1000)
+	local randomIndex
+	if randomNumber > 900 then
+		randomIndex = 3
+	elseif randomNumber > 600 then
+		randomIndex = 2
+	else 
+		randomIndex = 1
+	end
+	local randomMob = mobs[randomIndex]
+	mobName = mobName .. randomMob
+	return mobName
+end
+
+function ScreenPlay:onDespawnScreenP(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnScreenP", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function ScreenPlay:respawnScreenP(mob, spawnNumber)
+	local ScreenPSpawn = self.ScreenPSpawns[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(ScreenPSpawn[1],self:spawnRandomMobScreenP(ScreenPSpawn[2]),-1,ScreenPSpawn[4],ScreenPSpawn[5],ScreenPSpawn[6],ScreenPSpawn[7],ScreenPSpawn[8])
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenP", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", ScreenPSpawn[3])
+	writeData(mobID .. ":mobID", spawnNumber)
+end
+
 Act = Object:new {
 
 }

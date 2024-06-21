@@ -334,6 +334,13 @@ class AiAgent extends CreatureObject {
         
 	        return npcTemplate.get().getCreatureDifficulty();    
 	}
+ 	
+ 	public float getCDPMultiplier() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getCDPMultiplier();    
+	}
     
 	/**
 	 * Schedules the next recovery event

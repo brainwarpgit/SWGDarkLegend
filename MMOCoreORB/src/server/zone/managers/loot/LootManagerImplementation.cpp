@@ -649,21 +649,12 @@ bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, Sc
 	Vector<int> rolls;
 	Vector<String> lootGroupNames;
 
-	int lootRolls = 1;
+	int lootRolls = creatureDifficulty;
 
-	if (creatureDifficulty == 4) {
-		lootRolls = 5;
-	}
-	if (creatureDifficulty == 3) {
-		lootRolls = creatureDifficulty;
-	}
-	if (creatureDifficulty == 2) {
-		lootRolls = creatureDifficulty;
-	}
 	for (int x = 0; x < lootRolls; ++x) {
 		for (int i = 0; i < lootCollection->count(); ++i) {
 			const LootGroupCollectionEntry* collectionEntry = lootCollection->get(i);
-			int lootChance = collectionEntry->getLootChance();
+			int lootChance = collectionEntry->getLootChance() * globalVariables::lootChanceMultiplier;
 
 			if (lootChance <= 0)
 				continue;
