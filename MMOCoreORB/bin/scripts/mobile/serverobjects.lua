@@ -29,7 +29,7 @@ includeFile("faction/serverobjects.lua")
 includeFile("dungeon/serverobjects.lua") 
 
 -- Weapons
-includeFile("weapon/serverobjects.lua") 
+includeFile("weapon/serverobjects.lua")
 
 -- Spawn Groups
 includeFile("spawn/serverobjects.lua")
@@ -45,6 +45,9 @@ includeFile("lair/serverobjects.lua")
 
 -- Outfits
 includeFile("outfits/serverobjects.lua")
+
+--Caves
+includeFile("CDP/serverobjects.lua")
 
 -- Custom content - Loads last to allow for overrides
 includeFile("../custom_scripts/mobile/serverobjects.lua")
