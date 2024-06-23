@@ -26,7 +26,6 @@ mutant_rancor = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/mutant_rancor.iff"},
 	hues = { 0, 1, 2, 3, 4, 5, 6, 7 },
 	scale = 1.15,
@@ -55,4 +54,3 @@ mutant_rancor = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(mutant_rancor, "mutant_rancor_caveDathomirRancorCave")
-

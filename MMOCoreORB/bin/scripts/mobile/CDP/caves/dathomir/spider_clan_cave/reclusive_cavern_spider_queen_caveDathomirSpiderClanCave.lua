@@ -26,7 +26,6 @@ reclusive_cavern_spider_queen = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/gaping_spider_recluse.iff"},
 	scale = 1.5,
 	lootGroups = {},

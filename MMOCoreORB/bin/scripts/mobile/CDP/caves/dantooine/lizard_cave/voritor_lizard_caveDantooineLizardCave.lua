@@ -26,7 +26,6 @@ voritor_lizard = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/voritor_lizard_hue.iff"},
 	hues = { 0, 1, 2, 3, 4, 5, 6, 7 },
 	controlDeviceTemplate = "object/intangible/pet/voritor_lizard_hue.iff",
@@ -52,4 +51,3 @@ voritor_lizard = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(voritor_lizard, "voritor_lizard_caveDantooineLizardCave")
-

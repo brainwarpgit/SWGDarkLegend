@@ -26,7 +26,6 @@ ancient_bull_rancor = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/bull_rancor.iff"},
 	hues = { 16, 17, 18, 19, 20, 21, 22, 23 },
 	scale = 1.25,
@@ -55,4 +54,3 @@ ancient_bull_rancor = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(ancient_bull_rancor, "ancient_bull_rancor_caveDathomirRancorCave")
-

@@ -26,7 +26,6 @@ voritor_dasher = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/voritor_dasher.iff"},
 	hues = { 24, 25, 26, 27, 28, 29, 30, 31 },
 	scale = 1.05,
@@ -52,4 +51,3 @@ voritor_dasher = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(voritor_dasher, "voritor_dasher_caveDantooineLizardCave")
-

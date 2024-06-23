@@ -28,15 +28,11 @@ zealot_of_lord_nyax = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
 
-
 	templates = {"object/mobile/dressed_force_sensitive_crypt_crawler.iff"},
 	lootGroups = {
 		{
 			groups = {
-				{group = "junk", chance = 7000000},
-				{group = "pistols", chance = 1000000},
-				{group = "rifles", chance = 1000000},
-				{group = "carbines", chance = 1000000}
+				{group = "followers_of_lord_nyax_tier_1", chance = 10000000}
 			}
 		}
 	},

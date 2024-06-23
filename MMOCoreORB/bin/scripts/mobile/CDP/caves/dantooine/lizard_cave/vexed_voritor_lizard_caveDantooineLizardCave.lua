@@ -26,7 +26,6 @@ vexed_voritor_lizard = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/vexed_voritor_lizard.iff"},
 	hues = { 24, 25, 26, 27, 28, 29, 30, 31 },
 	scale = 1.15,
@@ -52,4 +51,3 @@ vexed_voritor_lizard = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(vexed_voritor_lizard, "vexed_voritor_lizard_caveDantooineLizardCave")
-

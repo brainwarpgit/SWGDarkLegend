@@ -26,7 +26,6 @@ grassland_voritor_tracker = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/grassland_voritor_tracker.iff"},
 	hues = { 16, 17, 18, 19, 20, 21, 22, 23 },
 	scale = 1.1,
@@ -52,4 +51,3 @@ grassland_voritor_tracker = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(grassland_voritor_tracker, "grassland_voritor_tracker_caveDantooineLizardCave")
-

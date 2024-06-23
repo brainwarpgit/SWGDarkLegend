@@ -28,16 +28,13 @@ janta_primalist = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
 
-
 	templates = {
 		"object/mobile/dantari_male.iff",
 		"object/mobile/dantari_female.iff"},
 	lootGroups = {
 		{
 			groups = {
-				{group = "junk", chance = 5500000},
-				{group = "janta_common", chance = 1500000},
-				{group = "loot_kit_parts", chance = 3000000}
+				{group = "janta_tribe_tier_2", chance = 10000000}
 			}
 		}
 	},
@@ -55,4 +52,3 @@ janta_primalist = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(janta_primalist, "janta_primalist_caveDantooineJantaCave")
-

@@ -19,6 +19,7 @@
 #include "server/zone/managers/resource/ResourceManager.h"
 #include "server/zone/Zone.h"
 #include "templates/params/creature/CreatureAttribute.h"
+#include "server/globalVariables.h"
 
 // #define DEBUG_LOOT_MAN
 
@@ -280,13 +281,18 @@ void LootManagerImplementation::setJunkValue(TangibleObject* prototype, const Lo
 	prototype->setJunkValue(junkValue);
 }
 
-int LootManagerImplementation::calculateLootCredits(int level) {
-	int maxcredits = (int) round((.03f * level * level) + (3 * level) + 50);
-	int mincredits = (int) round((((float) maxcredits) * .5f) + (2.0f * level));
+int LootManagerImplementation::calculateLootCredits(int level, int luckSkill) {
+	int lootModifier = 0;
+	if (globalVariables::lootCreditLuckModifier == true) {
+		lootModifier = System::random(luckSkill);
+	}
+	
+	int maxcredits = (int) round((.03f * (level + lootModifier) * (level + lootModifier)) + (3 * (level + lootModifier)) + 50);
+	int mincredits = (int) round((((float) maxcredits) * .5f) + (2.0f * (level + lootModifier)));
 
 	int credits = mincredits + System::random(maxcredits - mincredits);
 
-	return credits;
+	return credits * globalVariables::lootCreditMultiplier;
 }
 
 void LootManagerImplementation::setRandomLootValues(TransactionLog& trx, TangibleObject* prototype, const LootItemTemplate* itemTemplate, int level, float excMod) {
@@ -346,13 +352,13 @@ void LootManagerImplementation::setRandomLootValues(TransactionLog& trx, Tangibl
 	}
 }
 
-TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx, const LootItemTemplate* templateObject, int level, bool maxCondition) {
+TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx, const LootItemTemplate* templateObject, int level, bool maxCondition, int creatureDifficulty, int luckSkill) {
 #ifdef DEBUG_LOOT_MAN
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- called ----------";
 #endif
 
 	const String& directTemplateObject = templateObject->getDirectObjectTemplate();
-	level = Math::clamp((int)LEVELMIN, level, (int)LEVELMAX);
+	level = Math::clamp((int)globalVariables::lootMinLevel, level, (int)globalVariables::lootMaxLevel);
 
 	trx.addState("lootVersion", 2);
 	trx.addState("lootTemplate", directTemplateObject);
@@ -383,6 +389,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	}
 
 	float chance = LootValues::getLevelRankValue(Math::max(level - 50, 0), 0.f, 0.35f) * levelChance;
+	chance += (creatureDifficulty * 25) + (creatureDifficulty * luckSkill);
 	float excMod = baseModifier;
 
 	if (System::random(legendaryChance) <= chance) {
@@ -596,7 +603,7 @@ String LootManagerImplementation::getRandomLootableMod(uint32 sceneObjectType) {
 	return "";
 }
 
-bool LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* container, AiAgent* creature) {
+bool LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* container, AiAgent* creature, int luckSkill) {
 	auto lootCollection = creature->getLootGroups();
 
 	if (lootCollection == nullptr) {
@@ -610,10 +617,10 @@ bool LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* con
 		return false;
 	}
 
-	return createLootFromCollection(trx, container, lootCollection, creature->getLevel());
+	return createLootFromCollection(trx, container, lootCollection, creature->getLevel(), creature->getCreatureDifficulty(), luckSkill);
 }
 
-bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, SceneObject* container, const LootGroupCollection* lootCollection, int level) {
+bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, SceneObject* container, const LootGroupCollection* lootCollection, int level, int creatureDifficulty, int luckSkill) {
 	uint64 objectID = 0;
 
 	trx.addState("lootCollectionSize", lootCollection->count());
@@ -622,45 +629,49 @@ bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, Sc
 	Vector<int> rolls;
 	Vector<String> lootGroupNames;
 
-	for (int i = 0; i < lootCollection->count(); ++i) {
-		const LootGroupCollectionEntry* collectionEntry = lootCollection->get(i);
-		int lootChance = collectionEntry->getLootChance();
+	int lootRolls = creatureDifficulty;
 
-		if (lootChance <= 0)
-			continue;
+	for (int x = 0; x < lootRolls; ++x) {
+		for (int i = 0; i < lootCollection->count(); ++i) {
+			const LootGroupCollectionEntry* collectionEntry = lootCollection->get(i);
+			int lootChance = collectionEntry->getLootChance() * globalVariables::lootChanceMultiplier;
 
-		int roll = System::random(10000000);
-
-		rolls.add(roll);
-
-		if (roll > lootChance)
-			continue;
-
- 		// Start at 0
-		int tempChance = 0;
-
-		const LootGroups* lootGroups = collectionEntry->getLootGroups();
-
-		//Now we do the second roll to determine loot group.
-		roll = System::random(10000000);
-
-		rolls.add(roll);
-
-		//Select the loot group to use.
-		for (int k = 0; k < lootGroups->count(); ++k) {
-			const LootGroupEntry* groupEntry = lootGroups->get(k);
-
-			lootGroupNames.add(groupEntry->getLootGroupName());
-
-			tempChance += groupEntry->getLootChance();
-
-			// Is this entry lower than the roll? If yes, then we want to try the next groupEntry.
-			if (tempChance < roll)
+			if (lootChance <= 0)
 				continue;
 
-			objectID = createLoot(trx, container, groupEntry->getLootGroupName(), level);
+			int roll = System::random(10000000);
 
-			break;
+			rolls.add(roll);
+
+			if (roll > lootChance)
+				continue;
+
+	 		// Start at 0
+			int tempChance = 0;
+
+			const LootGroups* lootGroups = collectionEntry->getLootGroups();
+
+			//Now we do the second roll to determine loot group.
+			roll = System::random(10000000);
+
+			rolls.add(roll);
+
+			//Select the loot group to use.
+			for (int k = 0; k < lootGroups->count(); ++k) {
+				const LootGroupEntry* groupEntry = lootGroups->get(k);
+
+				lootGroupNames.add(groupEntry->getLootGroupName());
+
+				tempChance += groupEntry->getLootChance();
+
+				// Is this entry lower than the roll? If yes, then we want to try the next groupEntry.
+				if (tempChance < roll)
+					continue;
+
+				objectID = createLoot(trx, container, groupEntry->getLootGroupName(), level, false, creatureDifficulty, luckSkill);
+
+				break;
+			}
 		}
 	}
 
@@ -675,7 +686,7 @@ bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, Sc
 	return objectID > 0 ? true : false;
 }
 
-uint64 LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* container, const String& lootMapEntry, int level, bool maxCondition) {
+uint64 LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* container, const String& lootMapEntry, int level, bool maxCondition, int creatureDifficulty, int luckSkill) {
 	String lootEntry = lootMapEntry;
 	String lootGroup = "";
 
@@ -711,7 +722,7 @@ uint64 LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* c
 
 		obj = createLootResource(lootEntry, zone->getZoneName());
 	} else {
-		obj = createLootObject(trx, itemTemplate, level, maxCondition);
+		obj = createLootObject(trx, itemTemplate, level, maxCondition, creatureDifficulty, luckSkill);
 	}
 
 	if (obj == nullptr) {
@@ -733,7 +744,7 @@ uint64 LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* c
 
 bool LootManagerImplementation::createLootSet(TransactionLog& trx, SceneObject* container, const String& lootGroup, int level, bool maxCondition, int setSize) {
 	Reference<const LootGroupTemplate*> group = lootGroupMap->getLootGroupTemplate(lootGroup);
-
+	int creatureDifficulty = 1;
 	if (group == nullptr) {
 		warning("Loot group template requested does not exist: " + lootGroup);
 		return false;
@@ -758,7 +769,7 @@ bool LootManagerImplementation::createLootSet(TransactionLog& trx, SceneObject* 
 		TangibleObject* obj = nullptr;
 
 		if (q == 0) {
-			obj = createLootObject(trx, itemTemplate, level, maxCondition);
+			obj = createLootObject(trx, itemTemplate, level, maxCondition, creatureDifficulty);
 			trx.addState("lootSetNum", q);
 		} else {
 			TransactionLog trxSub = trx.newChild();
@@ -767,7 +778,7 @@ bool LootManagerImplementation::createLootSet(TransactionLog& trx, SceneObject* 
 			trxSub.addState("lootGroup", lootGroup);
 			trxSub.addState("lootSetNum", q);
 
-			obj = createLootObject(trxSub, itemTemplate, level, maxCondition);
+			obj = createLootObject(trxSub, itemTemplate, level, maxCondition, creatureDifficulty);
 
 			trxSub.setSubject(obj);
 		}

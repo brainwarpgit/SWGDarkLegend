@@ -26,7 +26,6 @@ slinking_voritor_hunter = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/slinking_voritor_hunter.iff"},
 	hues = { 0, 1, 2, 3, 4, 5, 6, 7 },
 	scale = 1.25,
@@ -52,4 +51,3 @@ slinking_voritor_hunter = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(slinking_voritor_hunter, "slinking_voritor_hunter_caveDantooineLizardCave")
-

@@ -26,16 +26,11 @@ lord_nyax = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
 
-
 	templates = {"object/mobile/dressed_lord_nyax.iff"},
 	lootGroups = {
 		{
 		groups = {
-				{group = "junk", chance = 4000000},
-				{group = "nyax", chance = 3000000},
-				{group = "grenades_looted", chance = 1000000},
-				{group = "armor_attachments", chance = 1000000},
-				{group = "clothing_attachments", chance = 1000000}
+				{group = "followers_of_lord_nyax_tier_4", chance = 10000000}
 			}
 		}
 	},

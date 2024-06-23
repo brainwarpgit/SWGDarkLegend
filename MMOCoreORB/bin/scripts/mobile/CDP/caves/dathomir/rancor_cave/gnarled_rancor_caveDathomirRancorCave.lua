@@ -26,7 +26,6 @@ gnarled_rancor = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/rancor_hue.iff"},
 	hues = { 24, 25, 26, 27, 28, 29, 30, 31 },
 	controlDeviceTemplate = "object/intangible/pet/rancor_hue.iff",
@@ -56,4 +55,3 @@ gnarled_rancor = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(gnarled_rancor, "gnarled_rancor_caveDathomirRancorCave")
-

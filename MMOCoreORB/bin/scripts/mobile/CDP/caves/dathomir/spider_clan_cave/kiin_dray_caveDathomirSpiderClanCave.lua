@@ -26,7 +26,6 @@ kiin_dray = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/gaping_spider_recluse_giant_kiin_dray.iff"},
 	scale = 4.0,
 	lootGroups = {},

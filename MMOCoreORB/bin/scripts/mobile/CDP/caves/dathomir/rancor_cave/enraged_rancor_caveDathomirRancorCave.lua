@@ -26,7 +26,6 @@ enraged_rancor = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/rancor_hue.iff"},
 	hues = { 16, 17, 18, 19, 20, 21, 22, 23 },
 	scale = 1.15,
@@ -55,4 +54,3 @@ enraged_rancor = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(enraged_rancor, "enraged_rancor_caveDathomirRancorCave")
-

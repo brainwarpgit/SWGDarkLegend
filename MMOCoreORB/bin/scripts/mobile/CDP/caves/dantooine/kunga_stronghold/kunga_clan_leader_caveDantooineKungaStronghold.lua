@@ -28,17 +28,11 @@ kunga_clan_leader = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
 
-
 	templates = {"object/mobile/dantari_male.iff"},
 	lootGroups = {
 		{
 			groups = {
-				{group = "junk", chance = 3500000},
-				{group = "loot_kit_parts", chance = 3000000},
-				{group = "armor_attachments", chance = 500000},
-				{group = "clothing_attachments", chance = 500000},
-				{group = "wearables_all", chance = 2000000},
-				{group = "power_crystals", chance = 500000}
+				{group = "kunga_tribe_tier_3", chance = 10000000}
 			}
 		}
 	},
@@ -56,4 +50,3 @@ kunga_clan_leader = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(kunga_clan_leader, "kunga_clan_leader_caveDantooineKungaStronghold")
-

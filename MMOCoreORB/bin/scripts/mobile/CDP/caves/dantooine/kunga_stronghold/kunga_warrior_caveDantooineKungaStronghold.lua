@@ -28,20 +28,13 @@ kunga_warrior = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
 
-
 	templates = {
 		"object/mobile/dantari_male.iff",
 		"object/mobile/dantari_female.iff"},
 	lootGroups = {
 		{
 			groups = {
-				{group = "junk", chance = 3500000},
-				{group = "loot_kit_parts", chance = 3000000},
-				{group = "armor_attachments", chance = 500000},
-				{group = "clothing_attachments", chance = 500000},
-				{group = "wearables_common", chance = 1000000},
-				{group = "wearables_uncommon", chance = 1000000},
-				{group = "power_crystals", chance = 500000}
+				{group = "kunga_tribe_tier_3", chance = 10000000}
 			}
 		}
 	},
@@ -59,4 +52,3 @@ kunga_warrior = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(kunga_warrior, "kunga_warrior_caveDantooineKungaStronghold")
-

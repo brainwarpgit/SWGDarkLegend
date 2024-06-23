@@ -26,7 +26,6 @@ horned_voritor_lizard = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = CARNIVORE,
 
-
 	templates = {"object/mobile/voritor_lizard_hue.iff"},
 	hues = { 24, 25, 26, 27, 28, 29, 30, 31 },
 	scale = 1.2,
@@ -52,4 +51,3 @@ horned_voritor_lizard = Creature:new {
 }
 
 CreatureTemplates:addCreatureTemplate(horned_voritor_lizard, "horned_voritor_lizard_caveDantooineLizardCave")
-
