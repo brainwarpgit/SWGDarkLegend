@@ -10,6 +10,7 @@
 #include "server/zone/Zone.h"
 #include "server/zone/objects/cell/CellObject.h"
 #include "server/zone/managers/gcw/GCWManager.h"
+#include "server/zone/objects/creature/CreatureObject.h"
 
 const char LuaBuildingObject::className[] = "LuaBuildingObject";
 
@@ -155,9 +156,17 @@ int LuaBuildingObject::spawnChildCreature(lua_State* L) {
 
 	Locker locker(realObject);
 
-	realObject->spawnChildCreature(mobile, respawnTimer, x, z, y, heading, parentID);
+	CreatureObject* creature = realObject->spawnChildCreature(mobile, respawnTimer, x, z, y, heading, parentID);
 
-	return 0;
+	if (creature == nullptr) {
+		lua_pushnil(L);
+	} else {
+		Locker locker(creature);
+		creature->_setUpdated(true);
+		lua_pushlightuserdata(L, creature);
+	}
+	
+	return 1;
 }
 
 int LuaBuildingObject::spawnChildSceneObject(lua_State* L) {

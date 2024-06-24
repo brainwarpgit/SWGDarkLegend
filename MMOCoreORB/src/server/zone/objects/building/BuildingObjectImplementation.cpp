@@ -1718,16 +1718,16 @@ void BuildingObjectImplementation::spawnChildCreaturesFromTemplate() {
 	}
 }
 
-void BuildingObjectImplementation::spawnChildCreature(String& mobile, int respawnTimer, float x, float z, float y, float heading, unsigned long long cellID) {
+CreatureObject* BuildingObjectImplementation::spawnChildCreature(String& mobile, int respawnTimer, float x, float z, float y, float heading, unsigned long long cellID) {
 	CreatureManager* creatureManager = zone->getCreatureManager();
 
 	if (creatureManager == nullptr)
-		return;
+		return nullptr;
 
 	CreatureObject* creature = creatureManager->spawnCreatureWithAi(mobile.hashCode(), x, z, y, cellID, false);
 
 	if (creature == nullptr)
-		return;
+		return nullptr;
 
 	Locker clocker(creature, asBuildingObject());
 
@@ -1739,6 +1739,8 @@ void BuildingObjectImplementation::spawnChildCreature(String& mobile, int respaw
 	}
 
 	childCreatureObjects.put(creature);
+	
+	return creature;
 }
 
 bool BuildingObjectImplementation::hasTemplateChildCreatures() const {
