@@ -122,6 +122,7 @@ namespace globalVariables {
 	float craftingRepairMaxMod = 0.8f;
 
 //Creature
+	bool creatureRandomDifficultyEnabled = false;
 	int creatureMaxLevel = 336;
 	float creatureKineticMaxResists = 100.0f;
 	float creatureEnergyMaxResists = 100.0f;
@@ -479,7 +480,8 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("craftingRepairBrokenEnabled") == true || lua->getGlobalBoolean("craftingRepairBrokenEnabled") == false) craftingRepairBrokenEnabled = lua->getGlobalBoolean("craftingRepairBrokenEnabled");
 			if (lua->getGlobalFloat("craftingRepairMaxMod") > 0 && lua->getGlobalFloat("craftingRepairMaxMod") < 1) craftingRepairMaxMod = lua->getGlobalFloat("craftingRepairMaxMod");
 
-			//Creature
+			//Creature 
+			if (lua->getGlobalBoolean("creatureRandomDifficultyEnabled") == true || lua->getGlobalBoolean("creatureRandomDifficultyEnabled") == false) creatureRandomDifficultyEnabled = lua->getGlobalBoolean("creatureRandomDifficultyEnabled");
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
 			if (lua->getGlobalFloat("creatureBaseScaleMultiplier") > 0) creatureBaseScaleMultiplier = lua->getGlobalFloat("creatureBaseScaleMultiplier");
 			if (lua->getGlobalFloat("creatureBaseXPMultiplier") > 0) creatureBaseXPMultiplier = lua->getGlobalFloat("creatureBaseXPMultiplier");

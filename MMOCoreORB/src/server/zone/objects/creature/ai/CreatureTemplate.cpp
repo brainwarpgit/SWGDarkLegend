@@ -155,7 +155,11 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	tauntable = templateData->getBooleanField("tauntable", true);
 	healerType = templateData->getStringField("healerType").trim();
 	lightsaberColor = templateData->getIntField("lightsaberColor");
-	creatureDifficulty = creatureDiff;
+	if (globalVariables::creatureRandomDifficultyEnabled == false) {
+		creatureDifficulty = 1;
+	} else {
+		creatureDifficulty = creatureDiff;
+	}
 	cdpMultiplier = cdpMult;
 	
 	if(!templateData->getStringField("defaultAttack").isEmpty())
@@ -186,7 +190,7 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	baseCreatureResists = globalVariables::creatureBaseResistsMultiplier;
 	std::string templateName = getTemplateName();
 	float levelPercentBase = ((float)level * baseCreatureLevel) / (float)globalVariables::creatureMaxLevel * 100.0f;
-	if (creatureDifficulty <= 3) {
+	if (creatureDifficulty >=1 && creatureDifficulty <= 3) {
 		for(int i = 2; i <= creatureDifficulty; ++i) {
 			baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
 			baseCreatureXp += globalVariables::creatureModBaseXPModifier;
@@ -258,7 +262,6 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	if (armor > 3) armor = 3;
 
 	float levelPercentModified = (float)level / (float)globalVariables::creatureMaxLevel * 100.0f;
-	
 	float levelPercentDifference = (levelPercentModified - levelPercentBase) * 1.25f;
 	if (creatureDifficulty <= 3) levelPercentDifference = 0.0f;
 
@@ -324,7 +327,6 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		heat = res.getFloatAt(4);
 		if (heat > 100) {
 			heat = ((((heat - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			heat = (((heat - 100) * baseCreatureResists) + 100);
 			if (heat > 100 + globalVariables::creatureHeatMaxResists) {
 				heat = 100 + globalVariables::creatureHeatMaxResists;
 			}

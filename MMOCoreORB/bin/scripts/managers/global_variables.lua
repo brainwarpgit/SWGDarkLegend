@@ -122,6 +122,7 @@ craftingRepairBrokenEnabled = true -- default false
 craftingRepairMaxMod = 0.8 --default 0.8   You must choose between > 0 and < 1
 
 --Creature
+creatureRandomDifficultyEnabled = true --default false
 creatureMaxLevel = 450 --default 336 Pulled from mobiles
 creatureBaseScaleMultiplier = 1 --default 1
 creatureBaseXPMultiplier = 1 --default 1

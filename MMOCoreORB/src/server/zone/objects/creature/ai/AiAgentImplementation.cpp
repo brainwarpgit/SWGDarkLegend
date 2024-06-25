@@ -256,7 +256,7 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 		if (!npcTemplate->getRandomNameTag()) {
 			//if (((creatureDifficulty >= 2 && creatureDifficulty <= 3) || (creatureDifficulty >= 5 && creatureDifficulty <= 6)) && attackable >= 1 && customaimap != 146400298) {
 			if (attackable >= 1 && customaimap != 146400298) {
-				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "] ", false);
 			//} else if ((creatureDifficulty == 1 || creatureDifficulty == 4) && attackable >= 1 && customaimap != 146400298) {
 			//	setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
 			} else {
@@ -277,13 +277,13 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 
 			newName += ")";
 			if (attackable >= 1 && customaimap != 146400298) {
-				setCustomObjectName(newName + "\\#C0C0C0 [" + std::to_string(level) + "]", false);
+				setCustomObjectName(newName + "\\#C0C0C0 [" + std::to_string(level) + "] ", false);
 			}
 		}
 	} else {
 		//if (((creatureDifficulty >= 2 && creatureDifficulty <= 3) || (creatureDifficulty >= 5 && creatureDifficulty <= 6)) && attackable >= 1 && customaimap != 146400298) {			
 		if (attackable >= 1 && customaimap != 146400298) {			
-			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "] ", false);
 		//} else if ((creatureDifficulty == 1 || creatureDifficulty == 4) && attackable >= 1 && customaimap != 146400298) {
 		//	setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
 		} else {

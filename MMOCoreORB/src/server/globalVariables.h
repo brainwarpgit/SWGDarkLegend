@@ -122,6 +122,7 @@ namespace globalVariables {
 	extern float craftingRepairMaxMod;
 
 // Creature
+	extern bool creatureRandomDifficultyEnabled;
 	extern int creatureMaxLevel;
 	extern float creatureKineticMaxResists;
 	extern float creatureEnergyMaxResists;
