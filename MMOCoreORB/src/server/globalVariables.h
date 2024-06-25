@@ -247,6 +247,7 @@ namespace globalVariables {
 	extern bool playerEntertainerBuffSelfEnabled;
 	extern bool playerEntertainerInstantBuffEnabled;
 	extern bool playerEntertainerBuffAnywhereEnabled;
+	extern float playerSpeedMultiplier;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

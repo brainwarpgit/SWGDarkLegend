@@ -302,6 +302,8 @@ namespace globalVariables {
 	float playerSquadLeadershipXPMultiplier = 1;
 	float playerTrappingXPMultiplier = 1;
 	int playerJediNegativeXPCap = -10000000;
+	float playerSpeedMultiplier = 1;
+
 //Resources
 	bool resourcesAddNameEnabled = false;
 	int resourcesMinimumQuality = 0;
@@ -603,6 +605,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerEntertainerBuffSelfEnabled") == true || lua->getGlobalBoolean("playerEntertainerBuffSelfEnabled") == false) playerEntertainerBuffSelfEnabled = lua->getGlobalBoolean("playerEntertainerBuffSelfEnabled");
 			if (lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled") == true || lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled") == false) playerEntertainerInstantBuffEnabled = lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled");
 			if (lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled") == true || lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled") == false) playerEntertainerBuffAnywhereEnabled = lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled");
+			if (lua->getGlobalInt("playerSpeedMultiplier") >= 1) playerSpeedMultiplier = lua->getGlobalInt("playerSpeedMultiplier");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");

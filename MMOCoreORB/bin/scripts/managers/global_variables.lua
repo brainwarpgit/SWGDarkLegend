@@ -247,6 +247,7 @@ playerEntertainerAllBuffsMusicOrDanceEnabled = true --default false
 playerEntertainerBuffSelfEnabled = true --default false
 playerEntertainerInstantBuffEnabled = true --default false
 playerEntertainerBuffAnywhereEnabled = true --default false
+playerSpeedMultiplier = 2 --default 1
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
