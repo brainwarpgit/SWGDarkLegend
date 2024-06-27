@@ -1,6 +1,7 @@
 local ObjectManager = require("managers.object.object_manager")
 
 TatooineBenKenobisHouse = ScreenPlay:new {
+	screenplayName = "TatooineBenKenobisHouse",
 	numberOfActs = 1,
 }
 

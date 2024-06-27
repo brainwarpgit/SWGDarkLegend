@@ -1,4 +1,5 @@
 local ObjectManager = require("managers.object.object_manager")
+local Logger = require("utils.logger")
 
 function printf(...) io.write(string.format(table.unpack({...}))) end
 
@@ -100,17 +101,23 @@ function ScreenPlay:setCustomName(pObj, name)
 end
 
 function ScreenPlay:spawnScreenPMobiles()
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
 	for i = 1, #self.ScreenPSpawns, 1 do
 		local ScreenPSpawn = self.ScreenPSpawns[i]
 		local pMobile = spawnMobile(ScreenPSpawn[1],self:spawnRandomMobScreenP(ScreenPSpawn[2]),-1,ScreenPSpawn[4],ScreenPSpawn[5],ScreenPSpawn[6],ScreenPSpawn[7],ScreenPSpawn[8])
+		if ScreenPSpawn[9] ~= nil and ScreenPSpawn[9] ~= 0 then
+			AiAgent(pMobile):addObjectFlag(ScreenPSpawn[9])
+		end
+		if ScreenPSpawn[10] ~= nil and ScreenPSpawn[10] ~= 0 then
+			self:setMoodString(pMobile, ScreenPSpawn[10])
+		end
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
 		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenP", pMobile)
 		local mobID = SceneObject(pMobile):getObjectID()
 		writeData(mobID .. ":respawnTimer", ScreenPSpawn[3])
 		writeData(mobID .. ":mobID", i)
 	end
 end
-
-
 
 function ScreenPlay:spawnRandomMobScreenP(mobName)
 	local mobs = {"", "_2", "_3"}
@@ -144,9 +151,156 @@ end
 function ScreenPlay:respawnScreenP(mob, spawnNumber)
 	local ScreenPSpawn = self.ScreenPSpawns[tonumber(spawnNumber)]
 	local pMobile = spawnMobile(ScreenPSpawn[1],self:spawnRandomMobScreenP(ScreenPSpawn[2]),-1,ScreenPSpawn[4],ScreenPSpawn[5],ScreenPSpawn[6],ScreenPSpawn[7],ScreenPSpawn[8])
+	if ScreenPSpawn[9] ~= nil and ScreenPSpawn[9] ~= 0 then
+		AiAgent(pMobile):addObjectFlag(ScreenPSpawn[9])
+	end
+	if ScreenPSpawn[10] ~= nil and ScreenPSpawn[10] ~= 0 then
+		self:setMoodString(pMobile, ScreenPSpawn[10])
+	end
 	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenP", pMobile)
 	local mobID = SceneObject(pMobile):getObjectID()
 	writeData(mobID .. ":respawnTimer", ScreenPSpawn[3])
+	writeData(mobID .. ":mobID", spawnNumber)
+end
+
+function ScreenPlay:spawnScreenPMobilesTusken()
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
+	for i = 1, #self.ScreenPSpawnsTusken, 1 do
+		local ScreenPSpawnTusken = self.ScreenPSpawnsTusken[i]
+		local pMobile = spawnMobile(ScreenPSpawnTusken[1],self:spawnRandomMobScreenP(ScreenPSpawnTusken[2]),-1,ScreenPSpawnTusken[4],ScreenPSpawnTusken[5],ScreenPSpawnTusken[6],ScreenPSpawnTusken[7],ScreenPSpawnTusken[8])
+		if ScreenPSpawnTusken[9] ~= nil and ScreenPSpawnTusken[9] ~= 0 then
+			AiAgent(pMobile):addObjectFlag(ScreenPSpawnTusken[9])
+		end
+		if ScreenPSpawnTusken[10] ~= nil and ScreenPSpawnTusken[10] ~= 0 then
+			self:setMoodString(pMobile, ScreenPSpawnTusken[10])
+		end
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenPTusken", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", ScreenPSpawnTusken[3])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function ScreenPlay:spawnScreenPMobilesKrayt()
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
+	for i = 1, #self.ScreenPSpawnsKrayt, 1 do
+		local ScreenPSpawnKrayt = self.ScreenPSpawnsKrayt[i]
+		local pMobile = spawnMobile(ScreenPSpawnKrayt[1],self:spawnRandomMobScreenP(ScreenPSpawnKrayt[2]),-1,ScreenPSpawnKrayt[4],ScreenPSpawnKrayt[5],ScreenPSpawnKrayt[6],ScreenPSpawnKrayt[7],ScreenPSpawnKrayt[8])
+		if ScreenPSpawnKrayt[9] ~= nil and ScreenPSpawnKrayt[9] ~= 0 then
+			AiAgent(pMobile):addObjectFlag(ScreenPSpawnKrayt[9])
+		end
+		if ScreenPSpawnKrayt[10] ~= nil and ScreenPSpawnKrayt[10] ~= 0 then
+			self:setMoodString(pMobile, ScreenPSpawnKrayt[10])
+		end
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenPKrayt", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", ScreenPSpawnKrayt[3])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function ScreenPlay:spawnScreenPMobilesJawa()
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
+	for i = 1, #self.ScreenPSpawnsJawa, 1 do
+		local ScreenPSpawnJawa = self.ScreenPSpawnsJawa[i]
+		local pMobile = spawnMobile(ScreenPSpawnJawa[1],self:spawnRandomMobScreenP(ScreenPSpawnJawa[2]),-1,ScreenPSpawnJawa[4],ScreenPSpawnJawa[5],ScreenPSpawnJawa[6],ScreenPSpawnJawa[7],ScreenPSpawnJawa[8])
+		if ScreenPSpawnJawa[9] ~= nil and ScreenPSpawnJawa[9] ~= 0 then
+			AiAgent(pMobile):addObjectFlag(ScreenPSpawnJawa[9])
+		end
+		if ScreenPSpawnJawa[10] ~= nil and ScreenPSpawnJawa[10] ~= 0 then
+			self:setMoodString(pMobile, ScreenPSpawnJawa[10])
+		end
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenPJawa", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", ScreenPSpawnJawa[3])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function ScreenPlay:onDespawnScreenPTusken(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnScreenPTusken", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function ScreenPlay:onDespawnScreenPKrayt(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnScreenPKrayt", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function ScreenPlay:onDespawnScreenPJawa(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnScreenPJawa", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function ScreenPlay:respawnScreenPTusken(mob, spawnNumber)
+	local ScreenPSpawnTusken = self.ScreenPSpawnsTusken[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(ScreenPSpawnTusken[1],self:spawnRandomMobScreenP(ScreenPSpawnTusken[2]),-1,ScreenPSpawnTusken[4],ScreenPSpawnTusken[5],ScreenPSpawnTusken[6],ScreenPSpawnTusken[7],ScreenPSpawnTusken[8])
+	if ScreenPSpawnTusken[9] ~= nil and ScreenPSpawnTusken[9] ~= 0 then
+		AiAgent(pMobile):addObjectFlag(ScreenPSpawnTusken[9])
+	end
+	if ScreenPSpawnTusken[10] ~= nil and ScreenPSpawnTusken[10] ~= 0 then
+		self:setMoodString(pMobile, ScreenPSpawnTusken[10])
+	end
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenPTusken", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", ScreenPSpawnTusken[3])
+	writeData(mobID .. ":mobID", spawnNumber)
+end
+
+function ScreenPlay:respawnScreenPKrayt(mob, spawnNumber)
+	local ScreenPSpawnKrayt = self.ScreenPSpawnsKrayt[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(ScreenPSpawnKrayt[1],self:spawnRandomMobScreenP(ScreenPSpawnKrayt[2]),-1,ScreenPSpawnKrayt[4],ScreenPSpawnKrayt[5],ScreenPSpawnKrayt[6],ScreenPSpawnKrayt[7],ScreenPSpawnKrayt[8])
+	if ScreenPSpawnKrayt[9] ~= nil and ScreenPSpawnKrayt[9] ~= 0 then
+		AiAgent(pMobile):addObjectFlag(ScreenPSpawnKrayt[9])
+	end
+	if ScreenPSpawnKrayt[10] ~= nil and ScreenPSpawnKrayt[10] ~= 0 then
+		self:setMoodString(pMobile, ScreenPSpawnKrayt[10])
+	end
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenPKrayt", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", ScreenPSpawnKrayt[3])
+	writeData(mobID .. ":mobID", spawnNumber)
+end
+
+function ScreenPlay:respawnScreenPJawa(mob, spawnNumber)
+	local ScreenPSpawnJawa = self.ScreenPSpawnsJawa[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(ScreenPSpawnJawa[1],self:spawnRandomMobScreenP(ScreenPSpawnJawa[2]),-1,ScreenPSpawnJawa[4],ScreenPSpawnJawa[5],ScreenPSpawnJawa[6],ScreenPSpawnJawa[7],ScreenPSpawnJawa[8])
+	if ScreenPSpawnJawa[9] ~= nil and ScreenPSpawnJawa[9] ~= 0 then
+		AiAgent(pMobile):addObjectFlag(ScreenPSpawnJawa[9])
+	end
+	if ScreenPSpawnJawa[10] ~= nil and ScreenPSpawnJawa[10] ~= 0 then
+		self:setMoodString(pMobile, ScreenPSpawnJawa[10])
+	end
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenPJawa", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", ScreenPSpawnJawa[3])
 	writeData(mobID .. ":mobID", spawnNumber)
 end
 
@@ -213,12 +367,14 @@ function ScreenPlay:respawnRoriGiantBarkMite(mob, spawnNumber)
 end
 
 function ScreenPlay:spawnImperialMobiles(pBuilding)
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
  	for i = 1, #self.ScreenImperialSpawns, 1 do
 		local ScreenImperialSpawn = self.ScreenImperialSpawns[i]
-		local pMobile = spawnMobile(ScreenImperialSpawn[1],self:spawnRandomMobScreenP(ScreenImperialSpawn[2]),-1,ScreenImperialSpawn[4],ScreenImperialSpawn[5],ScreenImperialSpawn[6],ScreenImperialSpawn[7],ScreenImperialSpawn[8])
+		local pMobile = BuildingObject(pBuilding):spawnChildCreature(self:spawnRandomMobScreenP(ScreenImperialSpawn[1]),-1,ScreenImperialSpawn[3],ScreenImperialSpawn[4],ScreenImperialSpawn[5],ScreenImperialSpawn[6],ScreenImperialSpawn[7])
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
 		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnImperialScreenP", pMobile)
 		local mobID = SceneObject(pMobile):getObjectID()
-		writeData(mobID .. ":respawnTimer", ScreenImperialSpawn[3])
+		writeData(mobID .. ":respawnTimer", ScreenImperialSpawn[2])
 		writeData(mobID .. ":mobID", i)
 	end
 end
@@ -226,18 +382,20 @@ end
 
 
 function ScreenPlay:spawnRebelMobiles(pBuilding)
-	for i = 1, #self.ScreenRebelSpawns, 1 do
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
+ 	for i = 1, #self.ScreenRebelSpawns, 1 do
 		local ScreenRebelSpawn = self.ScreenRebelSpawns[i]
-		local pMobile = spawnMobile(ScreenRebelSpawn[1],self:spawnRandomMobScreenP(ScreenRebelSpawn[2]),-1,ScreenRebelSpawn[4],ScreenRebelSpawn[5],ScreenRebelSpawn[6],ScreenRebelSpawn[7],ScreenRebelSpawn[8])
+		local pMobile = BuildingObject(pBuilding):spawnChildCreature(self:spawnRandomMobScreenP(ScreenRebelSpawn[1]),-1,ScreenRebelSpawn[3],ScreenRebelSpawn[4],ScreenRebelSpawn[5],ScreenRebelSpawn[6],ScreenRebelSpawn[7])
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
 		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnRebelScreenP", pMobile)
 		local mobID = SceneObject(pMobile):getObjectID()
-		writeData(mobID .. ":respawnTimer", ScreenRebelSpawn[3])
+		writeData(mobID .. ":respawnTimer", ScreenRebelSpawn[2])
 		writeData(mobID .. ":mobID", i)
 	end
 end
 
 
-function ScreenPlay:onDespawnRebelScreenP(pMobile, p, pBuilding)
+function ScreenPlay:onDespawnRebelScreenP(pMobile)
 	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
 		return
 	end
@@ -250,12 +408,13 @@ function ScreenPlay:onDespawnRebelScreenP(pMobile, p, pBuilding)
 	return 1
 end
 
-function ScreenPlay:onDespawnImperialScreenP(pMobile, p, pBuilding)
+function ScreenPlay:onDespawnImperialScreenP(pMobile)
 	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
 		return
 	end
 	local mobID = SceneObject(pMobile):getObjectID()
 	local mobNum = readData(mobID .. ":mobID")
+	local pBuildingID
 	local respawnTimer = readData(mobID .. ":respawnTimer")
 	createEvent(respawnTimer * 1000, self.screenplayName, "respawnImperialScreenP", nil, mobNum)
 	deleteData(mobID .. ":mobID")
@@ -265,19 +424,21 @@ end
 
 function ScreenPlay:respawnRebelScreenP(mob, spawnNumber)
 	local ScreenRebelSpawn = self.ScreenRebelSpawns[tonumber(spawnNumber)]
-	local pMobile = spawnMobile(ScreenRebelSpawn[1],self:spawnRandomMobScreenP(ScreenRebelSpawn[2]),-1,ScreenRebelSpawn[4],ScreenRebelSpawn[5],ScreenRebelSpawn[6],ScreenRebelSpawn[7],ScreenRebelSpawn[8])
+	local pBuilding = getSceneObject(ScreenRebelSpawn[8])
+	local pMobile = BuildingObject(pBuilding):spawnChildCreature(self:spawnRandomMobScreenP(ScreenRebelSpawn[1]),-1,ScreenRebelSpawn[3],ScreenRebelSpawn[4],ScreenRebelSpawn[5],ScreenRebelSpawn[6],ScreenRebelSpawn[7])
 	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnRebelScreenP", pMobile)
 	local mobID = SceneObject(pMobile):getObjectID()
-	writeData(mobID .. ":respawnTimer", ScreenRebelSpawn[3])
+	writeData(mobID .. ":respawnTimer", ScreenRebelSpawn[2])
 	writeData(mobID .. ":mobID", spawnNumber)
 end
 
 function ScreenPlay:respawnImperialScreenP(mob, spawnNumber)
 	local ScreenImperialSpawn = self.ScreenImperialSpawns[tonumber(spawnNumber)]
-	local pMobile = spawnMobile(ScreenImperialSpawn[1],self:spawnRandomMobScreenP(ScreenImperialSpawn[2]),-1,ScreenImperialSpawn[4],ScreenImperialSpawn[5],ScreenImperialSpawn[6],ScreenImperialSpawn[7],ScreenImperialSpawn[8])
+	local pBuilding = getSceneObject(ScreenImperialSpawn[8])
+	local pMobile = BuildingObject(pBuilding):spawnChildCreature(self:spawnRandomMobScreenP(ScreenImperialSpawn[1]),-1,ScreenImperialSpawn[3],ScreenImperialSpawn[4],ScreenImperialSpawn[5],ScreenImperialSpawn[6],ScreenImperialSpawn[7])
 	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnImperialScreenP", pMobile)
 	local mobID = SceneObject(pMobile):getObjectID()
-	writeData(mobID .. ":respawnTimer", ScreenImperialSpawn[3])
+	writeData(mobID .. ":respawnTimer", ScreenImperialSpawn[2])
 	writeData(mobID .. ":mobID", spawnNumber)
 end
 
