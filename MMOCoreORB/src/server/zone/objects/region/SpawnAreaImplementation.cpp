@@ -118,7 +118,7 @@ Vector3 SpawnAreaImplementation::getRandomPosition(SceneObject* player) {
 
 	const auto worldPosition = player->getWorldPosition();
 
-	position = areaShape->getRandomPosition(worldPosition, 32.0f, ZoneServer::CLOSEOBJECTRANGE);
+	position = areaShape->getRandomPosition(worldPosition, globalVariables::creatureWildSpawnDensity, ZoneServer::CLOSEOBJECTRANGE);
 
 	return position;
 }

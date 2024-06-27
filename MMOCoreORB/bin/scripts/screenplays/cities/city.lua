@@ -383,3 +383,66 @@ function CityScreenPlay:respawnCity(mob, spawnNumber)
 	writeData(mobID .. ":respawnTimer", citySpawn[2])
 	writeData(mobID .. ":mobID", spawnNumber)
 end
+
+function CityScreenPlay:spawnStaticMobiles()
+	for i = 1, #self.mobiles, 1 do
+		local StaticMobile = self.mobiles[i]
+		local pMobile = spawnMobile(self.planet,self:spawnRandomMob(StaticMobile[1]),-1,StaticMobile[3],StaticMobile[4],StaticMobile[5],StaticMobile[6],StaticMobile[7])
+		if (pMobile ~= nil) then
+			if StaticMobile[8] ~= nil and StaticMobile[8] ~= "" then
+				CreatureObject(pMobile):setMoodString(StaticMobile[8])
+			end
+			AiAgent(pMobile):addObjectFlag(AI_STATIC)
+			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
+				CreatureObject(pMobile):clearOptionBit(AIENABLED)
+			end
+			if StaticMobile[9] ~= nil and StaticMobile[9] ~= 0 then
+				self:setCustomName(pMobile, StaticMobile[9])
+			end
+			if StaticMobile[10] ~= nil and StaticMobile[10] ~= "" then
+				CreatureObject(pMobile):setPvpStatusBitmask(StaticMobile[10])
+			end
+		end
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnStatic", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", StaticMobile[2])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function CityScreenPlay:onDespawnStatic(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnStatic", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function CityScreenPlay:respawnStatic(mob, spawnNumber)
+	local StaticMobile = self.mobiles[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(self.planet,self:spawnRandomMob(StaticMobile[1]),-1,StaticMobile[3],StaticMobile[4],StaticMobile[5],StaticMobile[6],StaticMobile[7])
+	if (pMobile ~= nil) then
+			if StaticMobile[8] ~= nil and StaticMobile[8] ~= "" then
+				CreatureObject(pMobile):setMoodString(StaticMobile[8])
+			end
+			AiAgent(pMobile):addObjectFlag(AI_STATIC)
+			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
+				CreatureObject(pMobile):clearOptionBit(AIENABLED)
+			end
+			if StaticMobile[9] ~= nil and StaticMobile[9] ~= 0 then
+				self:setCustomName(pMobile, StaticMobile[9])
+			end
+			if StaticMobile[10] ~= nil and StaticMobile[10] ~= "" then
+				CreatureObject(pMobile):setPvpStatusBitmask(StaticMobile[10])
+			end
+	end
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnStatic", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", StaticMobile[2])
+	writeData(mobID .. ":mobID", spawnNumber)
+end

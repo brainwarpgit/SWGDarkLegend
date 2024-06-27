@@ -71,7 +71,7 @@ DantooineAgroOutpostScreenPlay = CityScreenPlay:new {
 		{"ytzosh", 60, 1636.98, 4, -6402.56, 322, 0, ""},
 		{"ussox", 60, 1635.07, 4, -6402.37, 322, 0, ""},
 		{"yras_shen_jen",60,1572.26,4,-6417.06,75.0582,0, "neutral"},
-		{"junk_dealer", 0, 1579.04, 4, -6374.52, 48, 0, ""}
+		{"junk_quich", 0, 1579.04, 4, -6374.52, 48, 0, ""}
 	}
 }
 
@@ -79,31 +79,8 @@ registerScreenPlay("DantooineAgroOutpostScreenPlay", true)
 
 function DantooineAgroOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
-	end
-end
-
-function DantooineAgroOutpostScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
 	end
 end

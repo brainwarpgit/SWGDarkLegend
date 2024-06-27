@@ -207,7 +207,7 @@ LokNymStrongholdScreenPlay = CityScreenPlay:new {
 		{"pilot",60,18.2791,-0.894996,-14.4794,0,8145379, "conversation"},
 		{"pilot",60,-23.8096,1.6,-6.26968,0,8145362, "conversation"},
 		{"junk_dealer", 0, 366, 12, 5202.8, -178, 0, ""},
-		{"junk_dealer", 0, 443.925, 12, 4879.41, 145, 0, ""},
+		{"junk_reggi", 0, 443.925, 12, 4879.41, 145, 0, ""},
 		{"rifea_eicik", 60, -23.1848, 1.58812, 1.95072, 180.005, 8145358, "conversation"},
 		{"rorha_wahe", 60, 7.54821, -0.894991, -8.57564, 0, 8145378, "conversation"},
 		{"scientist",60,-13.3486,0.26,5.66362,360.011,2745870, "conversation"},
@@ -227,7 +227,14 @@ LokNymStrongholdScreenPlay = CityScreenPlay:new {
 		{"entertainer",60,-3.37845,0.999956,6.45641,44.9954,8145356, "happy"},
 		{"vendor",60,29.5658,13.25,9.61881,360.011,2745876, "nervous"},
 		{"vendor",60,32.2502,7.25,-1.46477,179.999,2745874, "conversation"},
-		{"vixur_webb", 60, -13.2, -0.9, -20.2, 22, 8145383, "npc_sitting_chair"}
+		{"vixur_webb", 60, -13.2, -0.9, -20.2, 22, 8145383, "npc_sitting_chair"},
+		
+		{"junk_dealer", 0, 345.73, 12, 5139.45, -177, 0, ""},
+		{"nym_kusak_guardian", 60, -3.62, 3.27819, -25.44, 39.0011, 6595511, calm, "Scourge"},
+		{"nym_kusak_guardian", 60, 3.62, 3.27819, -25.44, 325.01, 6595511, bored, "Razor"},
+		
+		{"trainer_shipwright",60,466.6,3.0,5446,-90,0,""},
+		{"chassis_dealer",60,463.0,3.0,5446.1,90,0,""},
 	}
 }
 
@@ -235,7 +242,7 @@ registerScreenPlay("LokNymStrongholdScreenPlay", true)
 
 function LokNymStrongholdScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
@@ -248,52 +255,3 @@ function LokNymStrongholdScreenPlay:spawnSceneObjects()
 	--spawnSceneObject(self.planet, "object/tangible/crafting/station/public_space_station.iff", 456.6, 3.0, 5451.8, 0, math.rad(145) )
 end
 
-function LokNymStrongholdScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	--outside tents near starport when evidence is found to confirm
-	--pNpc = spawnMobile(self.planet, "trainer_shipwright",60,466.6,3.0,5446,-90,0)
-	--self:setMoodString(pNpc, "conversation")
-	--pNpc = spawnMobile(self.planet, "chassis_dealer",60,463.0,3.0,5446.1,90,0)
-	--self:setMoodString(pNpc, "conversation")
-
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 345.73, 12, 5139.45, -177, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-
-	pNpc = spawnMobile(self.planet, "nym_kusak_guardian", 60, -3.62, 3.27819, -25.44, 39.0011, 6595511)
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "calm")
-		self:setCustomName(pNpc, "Scourge")
-
-		CreatureObject(pNpc):clearOptionBit(AIENABLED)
-	end
-
-	pNpc = spawnMobile(self.planet, "nym_kusak_guardian", 60, 3.62, 3.27819, -25.44, 325.01, 6595511)
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "bored")
-		self:setCustomName(pNpc, "Razor")
-
-		CreatureObject(pNpc):clearOptionBit(AIENABLED)
-	end
-end

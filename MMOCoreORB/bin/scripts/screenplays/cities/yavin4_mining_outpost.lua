@@ -33,6 +33,11 @@ Yavin4MiningOutpostScreenPlay = CityScreenPlay:new {
 		{"rebel_commando", 460, -255.5, 35.0, 4859.2, 81, 0},
 		{"rebel_commando", 460, -250.5, 35.0, 4854.2, 86, 0},
 		{"rebel_commando", 460, -260.5, 35.0, 4864.2, 76, 0},
+	},
+	
+	mobiles = {
+		{"bartender",60,3.4,0.6,5.6,173,7925449, "conversation"},
+		{"junk_dealer", 0, -294, 35, 4896, 270, 0, ""},
 	}
 }
 
@@ -40,27 +45,10 @@ registerScreenPlay("Yavin4MiningOutpostScreenPlay", true)
 
 function Yavin4MiningOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnCityMobiles()
 	end
 end
 
-function Yavin4MiningOutpostScreenPlay:spawnMobiles()
-	--tavern b
-	local pNpc = spawnMobile("yavin4", "bartender",60,3.4,0.6,5.6,173,7925449)
-
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "conversation")
-	end
-
-	--outside tavern area
-	--[[spawnMobile("yavin4", "rebel_commando", 460, -255.5, 35.0, 4859.2, 81, 0)
-	spawnMobile("yavin4", "rebel_commando", 460, -250.5, 35.0, 4854.2, 86, 0)
-	spawnMobile("yavin4", "rebel_commando", 460, -260.5, 35.0, 4864.2, 76, 0)]]
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -294, 35, 4896, 270, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-end

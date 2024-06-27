@@ -126,7 +126,9 @@ NabooKerenScreenPlay = CityScreenPlay:new {
 		{"trainer_weaponsmith",0,1905,12,2767,180,0, ""},
 		{"trainer_bountyhunter",0,2087,30,2575,180,0, ""},
 		{"junk_dealer", 0, 1274.18, 13, 2787.07, -96, 0, ""},
-		{"junk_dealer", 0, 1372.26, 13, 2705.58, -173, 0, ""}
+		{"junk_dealer", 0, 1372.26, 13, 2705.58, -173, 0, ""},
+		{"junk_dealer", 0, 1242.11, 13, 2732.43, 48, 0, ""},
+		{"junk_dealer", 0, 1286.34, 13, 2676.88, -166, 0, ""},
 	},
 
 	citySpawns = {
@@ -152,7 +154,7 @@ registerScreenPlay("NabooKerenScreenPlay", true)
 
 function NabooKerenScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
 		self:spawnCityMobiles()
@@ -165,50 +167,3 @@ function NabooKerenScreenPlay:spawnSceneObjects()
 	spawnSceneObject(self.planet, "object/tangible/crafting/station/public_space_station.iff", 1436.71, 13, 2778.92, 0, math.rad(90) )
 end
 
-function NabooKerenScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 1242.11, 13, 2732.43, 48, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-	pNpc = spawnMobile(self.planet, "junk_dealer", 0, 1286.34, 13, 2676.88, -166, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-
-	--newb grind starter spawns
-	--[[spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 1360, 13.3, getRandomNumber(10) + 2941, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "flewt", 300, getRandomNumber(10) + 1216, 6.1, getRandomNumber(10) + 2878, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "chuba", 300, getRandomNumber(10) + 1328, 11.9, getRandomNumber(10) + 2604, getRandomNumber(360), 0)]]
-end

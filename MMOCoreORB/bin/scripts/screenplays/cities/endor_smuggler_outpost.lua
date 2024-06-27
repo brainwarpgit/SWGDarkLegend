@@ -55,34 +55,19 @@ EndorSmugglerOutpostScreenPlay = CityScreenPlay:new {
 		{1, -845.301, 79.5, 1599.49, 197.393, 0, ""},
 		{1, -829.243, 76, 1567.61, 95.886, 0, ""},
 	},
+	
+	mobiles = {
+		{"junk_dealer", 0, -913, 80, 1604, 135, 0, ""},
+	}
 }
 
 registerScreenPlay("EndorSmugglerOutpostScreenPlay", true)
 
 function EndorSmugglerOutpostScreenPlay:start()
 	if (isZoneEnabled("endor")) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
-function EndorSmugglerOutpostScreenPlay:spawnMobiles()
-	--mission term building
-	local pNpc = spawnMobile("endor", "commoner_technician",60,3.5,0.1,3.9,0,3605972)
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "sad")
-		CreatureObject(pNpc):setOptionsBitmask(0)
-	end
-
-	--tavern
-	local pNpc = spawnMobile("endor", "commoner_old",60,1.0,0.7,-4.4,0,6645605)
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "npc_sitting_chair")
-		CreatureObject(pNpc):setOptionsBitmask(0)
-	end
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -913, 80, 1604, 135, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-end

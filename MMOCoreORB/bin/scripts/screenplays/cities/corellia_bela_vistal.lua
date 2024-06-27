@@ -167,8 +167,9 @@ CorelliaBelaVistalScreenPlay = CityScreenPlay:new {
 		{"info_broker",60,21.6023,-0.894996,-17.4913,180.012,3375356, "conversation"},
 		{"medic",60,-43.4991,0.105009,-23.2411,135.007,3375367, "conversation"},
 		{"mercenary",300,-5.46842,-0.894998,20.8012,0,3375361, "conversation"},
-		{"junk_dealer", 0, 6969.06, 330, -5588.66, 105, 0, ""},
-		{"junk_dealer", 0, 6756.79, 315, -5779.1, 96, 0, ""}
+		{"junk_malik", 0, 6969.06, 330, -5588.66, 105, 0, ""},
+		{"junk_dealer", 0, 6756.79, 315, -5779.1, 96, 0, ""},
+		{"junk_dealer", 0, 6840.98, 315, -5630.49, -47, 0, ""},
 	}
 }
 
@@ -176,7 +177,7 @@ registerScreenPlay("CorelliaBelaVistalScreenPlay", true)
 
 function CorelliaBelaVistalScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnSceneObjects()
 		self:spawnStationaryMobiles()
 		self:spawnPatrolMobiles()
@@ -189,32 +190,4 @@ function CorelliaBelaVistalScreenPlay:spawnSceneObjects()
 	spawnSceneObject("corellia", "object/tangible/loot/simple_kit/paint_cartridge.iff", 5.3, 2.3, 10.2, 2365923, math.rad(-19) )
 	--Hotel
 	spawnSceneObject("corellia", "object/static/structure/general/droid_r4_powerdown.iff", 6.0, 1.0, 20.2, 2365805, math.rad(143) )
-end
-
-function CorelliaBelaVistalScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	local pNpc = spawnMobile("corellia", "junk_dealer", 0, 6840.98, 315, -5630.49, -47, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
 end

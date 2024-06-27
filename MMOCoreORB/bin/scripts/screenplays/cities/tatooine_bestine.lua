@@ -232,7 +232,10 @@ TatooineBestineScreenPlay = CityScreenPlay:new {
 		{"wlinc_tchrr",60,-1288.15,12,-3588.42,276.296,0, "neutral"},
 
 		{"imperial_recruiter",60,-1072.7,12,-3594,220,0, ""},
-		{"imperial_recruiter",60,-1275.75,12,-3594.28,-73,0, ""}
+		{"imperial_recruiter",60,-1275.75,12,-3594.28,-73,0, ""},
+	
+		{"junk_dealer", 0, -1136.25, 12, -3683.56, 40, 0, ""},
+		{"junk_dealer", 0, -1117.39, 12, -3686.64, -144, 0, ""},
 	},
 
 	citySpawns = {
@@ -272,7 +275,7 @@ registerScreenPlay("TatooineBestineScreenPlay", true)
 
 function TatooineBestineScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
@@ -290,70 +293,3 @@ function TatooineBestineScreenPlay:spawnSceneObjects()
 	spawnSceneObject(self.planet, "object/tangible/furniture/all/frn_all_tiki_torch_s1.iff", -0.7, -4.0, 1.7, 1528401, math.rad(0) )
 end
 
-function TatooineBestineScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -1136.25, 12, -3683.56, 40, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-	pNpc = spawnMobile(self.planet, "junk_dealer", 0, -1117.39, 12, -3686.64, -144, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-
-	--Creatures
-	
-	--[[spawnMobile(self.planet, "lesser_desert_womp_rat",300,-1062.1,23.7,-3451.8,-110,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,-1068.2,23.2,-3452.5,98,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,-1064.3,22.7,-3455.2,27,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,-1057.7,23.8,-3452.7,-92,0)
-
-	spawnMobile(self.planet, "minor_worrt",300,-927.86,27.7005,-3784.58,229.599,0)
-	spawnMobile(self.planet, "minor_worrt",300,-922.653,26.6572,-3778.35,225.778,0)
-	spawnMobile(self.planet, "minor_worrt",300,-923.222,25.6505,-3774.92,187.309,0)
-	spawnMobile(self.planet, "minor_worrt",300,-910.093,26.277,-3783.93,117.558,0)
-	spawnMobile(self.planet, "minor_worrt",300,-913.601,27.1392,-3784.15,69.6335,0)
-	spawnMobile(self.planet, "minor_worrt",300,-912.848,25.8267,-3794.42,276.507,0)
-	spawnMobile(self.planet, "worrt",300,-930.225,29.785,-3796.81,106.152,0)
-	spawnMobile(self.planet, "worrt",300,-939.612,24.6046,-3781.1,308.507,0)
-
-	spawnMobile(self.planet, "minor_worrt",300,-1150.79,22.8276,-3410.77,286.41,0)
-	spawnMobile(self.planet, "minor_worrt",300,-1148.52,28.0683,-3402.47,295.148,0)
-	spawnMobile(self.planet, "minor_worrt",300,-1158.11,29.9266,-3393.44,290.62,0)
-	spawnMobile(self.planet, "minor_worrt",300,-1152.38,31.805,-3390,28.2254,0)
-	spawnMobile(self.planet, "minor_worrt",300,-1144.7,30.4,-3395.4,-121,0)
-	spawnMobile(self.planet, "minor_worrt",300,-1158.7,26.2,-3403.5,68,0)
-
-	spawnMobile(self.planet, "rill",300,-907.188,18.3242,-3573.35,360.011,0)
-	spawnMobile(self.planet, "rill",300,-901.808,18.7395,-3570.88,360.011,0)
-	spawnMobile(self.planet, "rill",300,-908.624,18.0014,-3571.89,0,0)
-	spawnMobile(self.planet, "rill",300,-903.859,19.9334,-3579.55,0,0)
-	spawnMobile(self.planet, "rockmite",300,-895.802,10.7364,-3546.49,145.129,0)
-	spawnMobile(self.planet, "rockmite",300,-904.8,14.6023,-3552.38,322.681,0)
-
-	spawnMobile(self.planet, "worrt",300,-1337.3,16.2,-3430.4,-152,0)
-	spawnMobile(self.planet, "worrt",300,-1340.4,16,-3431.5,-152,0)
-	spawnMobile(self.planet, "worrt",300,-1341.43,15.3175,-3434.23,284.1,0)
-	spawnMobile(self.planet, "worrt",300,-1337.28,15.0418,-3434.8,360.011,0)]]
-	
-end

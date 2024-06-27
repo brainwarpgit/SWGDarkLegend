@@ -114,52 +114,9 @@ registerScreenPlay("RoriRebelOutpostScreenPlay", true)
 
 function RoriRebelOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnCityMobiles()
 	end
 end
 
-function RoriRebelOutpostScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	--Patrols outside the walls
-	--[[spawnMobile(self.planet, "rebel_army_captain", 360, getRandomNumber(16) + 3618.3, 96.1, getRandomNumber(24) + -6469.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3618.3, 96.1, getRandomNumber(24) + -6469.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_medic", 360, getRandomNumber(16) + 3618.3, 96.1, getRandomNumber(24) + -6469.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3618.3, 96.1, getRandomNumber(24) + -6469.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3618.3, 96.1, getRandomNumber(24) + -6469.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_first_lieutenant", 360, getRandomNumber(16) + 3618.3, 96.1, getRandomNumber(24) + -6469.6, getRandomNumber(360), 0)
-
-	spawnMobile(self.planet, "rebel_army_captain", 360, getRandomNumber(16) + 3708.4, 96.1, getRandomNumber(24) + -6429.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3708.4, 96.1, getRandomNumber(24) + -6429.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3708.4, 96.1, getRandomNumber(24) + -6429.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3708.4, 96.1, getRandomNumber(24) + -6429.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3708.4, 96.1, getRandomNumber(24) + -6429.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "rebel_trooper", 360, getRandomNumber(16) + 3708.4, 96.1, getRandomNumber(24) + -6429.6, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "specforce_wilderness_operative", 360, 3696.0, 85.0, -6566.6, -110, 0)
-	spawnMobile(self.planet, "specforce_wilderness_operative", 360, 3685.3, 86.8, -6573.1, 10, 0)
-	spawnMobile(self.planet, "specforce_wilderness_operative", 360, 3664.1, 86.4, -6574.7, 160, 0)
-	spawnMobile(self.planet, "specforce_wilderness_operative", 360, 3629.9, 83.8, -6570.1, -90, 0)
-	spawnMobile(self.planet, "specforce_marine", 360, 3654.9, 96.0, -6499.0, 180, 0)
-	spawnMobile(self.planet, "specforce_marine", 360, 3674.4, 96.0, -6499.0, 180, 0)]]
-end

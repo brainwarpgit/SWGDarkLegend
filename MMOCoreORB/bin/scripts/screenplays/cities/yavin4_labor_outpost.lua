@@ -13,22 +13,18 @@ Yavin4LaborOutpostScreenPlay = CityScreenPlay:new {
 		{1, 7.3, 0.6, -6.7, -149, 3035379, "npc_standing_drinking"}, {1, 5.8, 0.6, -6.2, -141, 3035379, "angry"}, {1, -6.8, 0.6, 6.3, 179, 3035377, "npc_sitting_chair"}, {1, -6.8, 0.6, 5.0, 1, 3035377, "happy"},
 		{1, -6.1, 0.6, -3.8, -102, 3035374, "sad"}, {1, -6.1, 0.6, -4.8, -10, 3035374, "npc_consoling"},
 	},
+	
+	mobiles = {
+		{"junk_dealer", 0, -6982, 73, -5751, 20, 0, ""},
+	}
 }
 
 registerScreenPlay("Yavin4LaborOutpostScreenPlay", true)
 
 function Yavin4LaborOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
-function Yavin4LaborOutpostScreenPlay:spawnMobiles()
-
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -6982, 73, -5751, 20, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-	
-end

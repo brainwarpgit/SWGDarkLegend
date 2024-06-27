@@ -67,24 +67,9 @@ registerScreenPlay("EndorResearchOutpostScreenPlay", true)
 
 function EndorResearchOutpostScreenPlay:start()
 	if (isZoneEnabled("endor")) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
-function EndorResearchOutpostScreenPlay:spawnMobiles()
-	--tavern building
-	pNpc = spawnMobile("endor", "kilnstrider",60,-3.44448,0.624999,-6.82681,331.362,9925367)
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "npc_imperial")
-
-		if CreatureObject(pNpc):getPvpStatusBitmask() == 0 and CreatureObject(pNpc):getOptionsBitmask() > 0 then
-			CreatureObject(pNpc):clearOptionBit(AIENABLED)
-		end
-	end
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 3198, 24, -3485, 270, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerGenericConvoTemplate")
-	end
-end
