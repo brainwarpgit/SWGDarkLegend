@@ -1,4 +1,4 @@
-JUNKNOTSELLABLE = 0
+FJUNKNOTSELLABLE = 0
 JUNKGENERIC = 1
 JUNKFINERY = 2
 JUNKARMS = 4
@@ -949,7 +949,7 @@ includeFile("items/weapon/rifle_cdef.lua")
 includeFile("items/weapon/rifle_dlt20.lua")
 includeFile("items/weapon/rifle_dlt20a.lua")
 includeFile("items/weapon/rifle_e11.lua")
---includeFile("items/weapon/rifle_ewok_crossbow.lua")
+includeFile("items/weapon/rifle_ewok_crossbow.lua")
 includeFile("items/weapon/rifle_flame_thrower.lua")
 includeFile("items/weapon/rifle_jawa_ion.lua")
 includeFile("items/weapon/rifle_laser.lua")

@@ -61,6 +61,10 @@ EndorResearchOutpostScreenPlay = CityScreenPlay:new {
 		{1, 3221.86, 24, -3473.87, 251.839, 0, ""},
 		{1, 3228.48, 24, -3510.48, 15.5858, 0, ""},
 	},
+	
+	mobiles = {
+		{"kilnstrider",60,-3.44448,0.624999,-6.82681,331.362,9925367,"npc_imperial"},
+	}
 }
 
 registerScreenPlay("EndorResearchOutpostScreenPlay", true)
