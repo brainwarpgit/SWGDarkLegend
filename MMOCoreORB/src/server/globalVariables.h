@@ -165,6 +165,12 @@ namespace globalVariables {
 	extern float creatureModBaseHAMMaxModifier;
 	extern float creatureModBaseResistsModifier;
 
+//Dungeon
+	extern float dungeonCorellianCorvetteMultiplier;
+	extern float dungeonDeathWatchBunkerMultiplier;
+	extern float dungeonGeonosianBioLabMultiplier;
+	extern float dungeonWarrenMultiplier;
+
 //Faction
 	extern int factionMaxRank;
 	extern float factionCapMultiplier;

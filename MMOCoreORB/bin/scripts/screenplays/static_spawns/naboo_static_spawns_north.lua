@@ -25,30 +25,29 @@ NabooStaticSpawnsNorthScreenPlay = ScreenPlay:new {
 		}
 	},
 
-	lootContainerRespawn = 1800 -- 30 minutes
+	lootContainerRespawn = 1800, -- 30 minutes
 
+
+	ScreenPSpawns = {
+		--Beach Location (400, 6900},
+		{"naboo", "veermok_pygmy", 900, getRandomNumber(5) + 421, -209.8, getRandomNumber(5) + 6969, getRandomNumber(360), 0},
+		{"naboo", "veermok_pygmy", 900, getRandomNumber(5) + 421, -209.8, getRandomNumber(5) + 6969, getRandomNumber(360), 0},
+
+		--Beach Gungan Ruins by Hill (7600, 7000}, - researched wp is wrong
+		{"naboo", "veermok_pygmy", 900, getRandomNumber(5) + 7584, -210.1, getRandomNumber(5) + 6952, getRandomNumber(360), 0},
+		{"naboo", "veermok_pygmy", 900, getRandomNumber(5) + 7584, -210.1, getRandomNumber(5) + 6952, getRandomNumber(360), 0},
+
+		--Statue Head near Hills (3400, 5000}, - researched wp is wrong
+		{"naboo", "giant_fanned_rawl", 900, getRandomNumber(5) + 3431, -198.1, getRandomNumber(5) + 5086, getRandomNumber(360), 0},
+		{"naboo", "giant_fanned_rawl", 900, getRandomNumber(5) + 3431, -198.1, getRandomNumber(5) + 5086, getRandomNumber(360), 0},
+	}
 }
 registerScreenPlay("NabooStaticSpawnsNorthScreenPlay", true)
 
 function NabooStaticSpawnsNorthScreenPlay:start()
 	if (isZoneEnabled("naboo")) then
 		self:initializeLootContainers()
-		self:spawnMobiles()
+		self:spawnScreenPMobiles()
 	end
 end
 
-function NabooStaticSpawnsNorthScreenPlay:spawnMobiles()
-
-	--Beach Location (400, 6900)
-	spawnMobile("naboo", "veermok_pygmy", 900, getRandomNumber(5) + 421, -209.8, getRandomNumber(5) + 6969, getRandomNumber(360), 0)
-	spawnMobile("naboo", "veermok_pygmy", 900, getRandomNumber(5) + 421, -209.8, getRandomNumber(5) + 6969, getRandomNumber(360), 0)
-
-	--Beach Gungan Ruins by Hill (7600, 7000) - researched wp is wrong
-	spawnMobile("naboo", "veermok_pygmy", 900, getRandomNumber(5) + 7584, -210.1, getRandomNumber(5) + 6952, getRandomNumber(360), 0)
-	spawnMobile("naboo", "veermok_pygmy", 900, getRandomNumber(5) + 7584, -210.1, getRandomNumber(5) + 6952, getRandomNumber(360), 0)
-
-	--Statue Head near Hills (3400, 5000) - researched wp is wrong
-	spawnMobile("naboo", "giant_fanned_rawl", 900, getRandomNumber(5) + 3431, -198.1, getRandomNumber(5) + 5086, getRandomNumber(360), 0)
-	spawnMobile("naboo", "giant_fanned_rawl", 900, getRandomNumber(5) + 3431, -198.1, getRandomNumber(5) + 5086, getRandomNumber(360), 0)
-
-end

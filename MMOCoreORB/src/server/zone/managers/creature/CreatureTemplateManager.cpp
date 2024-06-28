@@ -294,6 +294,10 @@ std::unordered_map<std::string, float> createCaveMultipliers() {
 	caveMultipliers["poiYavin4BlueleafTemple"] = globalVariables::poiYavin4BlueleafTempleMultiplier;
 	caveMultipliers["poiYavin4ImperialBase"] = globalVariables::poiYavin4ImperialBaseMultiplier;
 	caveMultipliers["poiYavin4WoolamanderTemple"] = globalVariables::poiYavin4WoolamanderTempleMultiplier;
+	caveMultipliers["dungeonCorellianCorvette"] = globalVariables::dungeonCorellianCorvetteMultiplier;
+	caveMultipliers["dungeonDeathWatchBunker"] = globalVariables::dungeonDeathWatchBunkerMultiplier;
+	caveMultipliers["dungeonGeonosianBioLab"] = globalVariables::dungeonGeonosianBioLabMultiplier;
+	caveMultipliers["dungeonWarren"] = globalVariables::dungeonWarrenMultiplier;
 	// Add more caves and their corresponding multipliers as needed
 	return caveMultipliers;
 }
@@ -326,6 +330,7 @@ int CreatureTemplateManager::addTemplate(lua_State* L) {
 			if (i > 1) templateName += "_" + std::to_string(i);
 			difficulty = i;
 		}
+		//Logger::console.info("CreatureTemplate: " + templateName,true);
 		String templateN = templateName;		
 		uint32 crc = (uint32) templateN.hashCode();
 		newTemp->setTemplateName(templateName);

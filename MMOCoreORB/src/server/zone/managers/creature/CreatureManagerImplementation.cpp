@@ -596,7 +596,10 @@ int CreatureManagerImplementation::notifyDestruction(TangibleObject* destructor,
 
 		ManagedReference<CreatureObject*> player = copyThreatMap.getHighestDamageGroupLeader();
 
-		int luckSkill = std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30);
+		int luckSkill = 0;
+		if (player != nullptr) {
+			luckSkill = std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30);
+		}
 		
 		uint64 ownerID = 0;
 

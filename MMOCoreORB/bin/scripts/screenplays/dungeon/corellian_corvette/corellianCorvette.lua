@@ -308,7 +308,7 @@ function CorellianCorvette:spawnNpcs(pCorvette)
 
 		if (pCell ~= nil) then
 			local cellID = SceneObject(pCell):getObjectID()
-			local pMobile = spawnMobile("dungeon1", spawnData[1], 0, spawnData[2], spawnData[3], spawnData[4], spawnData[5], cellID)
+			local pMobile = spawnMobile("dungeon1", ScreenPlay:spawnRandomMobScreenP(spawnData[1]), 0, spawnData[2], spawnData[3], spawnData[4], spawnData[5], cellID)
 
 			if (pMobile == nil) then
 				printLuaError("CorellianCorvette:setupSceneObjects unable to spawn mobile " .. spawnData[1] .. " for " .. corvetteFaction .. " corvette ID " .. corvetteID)
@@ -684,11 +684,11 @@ function CorellianCorvette:spawnComputerEnemies(pCorvette, pComputer)
 	local spawnTemplate
 
 	if (corvetteFaction == "neutral") then
-		spawnTemplate = "corsec_super_battle_droid"
+		spawnTemplate = "corsec_super_battle_droid_dungeonCorellianCorvette_3"
 	elseif (corvetteFaction == "imperial") then
-		spawnTemplate = "rebel_super_battle_droid"
+		spawnTemplate = "rebel_super_battle_droid_dungeonCorellianCorvette_3"
 	elseif (corvetteFaction == "rebel") then
-		spawnTemplate = "imperial_super_battle_droid"
+		spawnTemplate = "imperial_super_battle_droid_dungeonCorellianCorvette_3"
 	else
 		return
 	end
@@ -834,11 +834,11 @@ function CorellianCorvette:onCrateLooted(pCrate)
 		local spawnTemplate
 
 		if (faction == "neutral") then
-			spawnTemplate = "corsec_super_battle_droid"
+			spawnTemplate = "corsec_super_battle_droid_dungeonCorellianCorvette_3"
 		elseif (faction == "imperial") then
-			spawnTemplate = "rebel_super_battle_droid"
+			spawnTemplate = "rebel_super_battle_droid_dungeonCorellianCorvette_3"
 		elseif (faction == "rebel") then
-			spawnTemplate =  "imperial_super_battle_droid"
+			spawnTemplate =  "imperial_super_battle_droid_dungeonCorellianCorvette_3"
 		end
 		-- TODO: pick random spot in room for spawn loc once we can find random good room location
 		local pMobile = spawnMobile("dungeon1", spawnTemplate, 0, SceneObject(pCrate):getPositionX(), SceneObject(pCrate):getPositionZ(), SceneObject(pCrate):getPositionY(), 0, SceneObject(pCrate):getParentID())

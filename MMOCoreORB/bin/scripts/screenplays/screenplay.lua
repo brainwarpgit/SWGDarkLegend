@@ -100,6 +100,53 @@ function ScreenPlay:setCustomName(pObj, name)
 	SceneObject(pObj):setCustomObjectName(name)
 end
 
+function ScreenPlay:spawnDungeonMobiles()
+	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
+	for i = 1, #self.dungeonSpawns, 1 do
+		local dungeonSpawn = self.dungeonSpawns[i]
+		local pMobile = spawnMobile(dungeonSpawn[1],self:spawnRandomMobScreenP(dungeonSpawn[2]),-1,dungeonSpawn[4],dungeonSpawn[5],dungeonSpawn[6],dungeonSpawn[7],dungeonSpawn[8])
+		if dungeonSpawn[9] ~= nil and dungeonSpawn[9] ~= 0 then
+			AiAgent(pMobile):addObjectFlag(dungeonSpawn[9])
+		end
+		if dungeonSpawn[10] ~= nil and dungeonSpawn[10] ~= 0 then
+			self:setMoodString(pMobile, dungeonSpawn[10])
+		end
+		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i, LT_INFO)
+		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenDungeon", pMobile)
+		local mobID = SceneObject(pMobile):getObjectID()
+		writeData(mobID .. ":respawnTimer", dungeonSpawn[3])
+		writeData(mobID .. ":mobID", i)
+	end
+end
+
+function ScreenPlay:onDespawnScreenDungeon(pMobile)
+	if pMobile == nil or not SceneObject(pMobile):isAiAgent() then
+		return
+	end
+	local mobID = SceneObject(pMobile):getObjectID()
+	local mobNum = readData(mobID .. ":mobID")
+	local respawnTimer = readData(mobID .. ":respawnTimer")
+	createEvent(respawnTimer * 1000, self.screenplayName, "respawnScreenDungeon", nil, mobNum)
+	deleteData(mobID .. ":mobID")
+	deleteData(mobID .. ":respawnTimer")
+	return 1
+end
+
+function ScreenPlay:respawnScreenDungeon(mob, spawnNumber)
+	local dungeonSpawn = self.dungeonSpawns[tonumber(spawnNumber)]
+	local pMobile = spawnMobile(dungeonSpawn[1],self:spawnRandomMobScreenP(dungeonSpawn[2]),-1,dungeonSpawn[4],dungeonSpawn[5],dungeonSpawn[6],dungeonSpawn[7],dungeonSpawn[8])
+	if dungeonSpawn[9] ~= nil and dungeonSpawn[9] ~= 0 then
+		AiAgent(pMobile):addObjectFlag(dungeonSpawn[9])
+	end
+	if dungeonSpawn[10] ~= nil and dungeonSpawn[10] ~= 0 then
+		self:setMoodString(pMobile, dungeonSpawn[10])
+	end
+	createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnScreenDungeon", pMobile)
+	local mobID = SceneObject(pMobile):getObjectID()
+	writeData(mobID .. ":respawnTimer", dungeonSpawn[3])
+	writeData(mobID .. ":mobID", spawnNumber)
+end
+
 function ScreenPlay:spawnScreenPMobiles()
 	Logger:log("ScreenPlay " .. self.screenplayName, LT_INFO)
 	for i = 1, #self.ScreenPSpawns, 1 do

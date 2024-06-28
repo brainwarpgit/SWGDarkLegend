@@ -165,6 +165,12 @@ namespace globalVariables {
 	float creatureModBaseHAMMaxModifier = 0;
 	float creatureModBaseResistsModifier = 0;
 
+//Dungeon
+	float dungeonCorellianCorvetteMultiplier = 1;
+	float dungeonDeathWatchBunkerMultiplier = 1;
+	float dungeonGeonosianBioLabMultiplier = 1; 
+	float dungeonWarrenMultiplier = 1;
+
 //Faction
 	int factionMaxRank = 15;
 	float factionCapMultiplier = 1.0f;
@@ -524,6 +530,12 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("creatureModBaseHAMMaxModifier") >= 0) creatureModBaseHAMMaxModifier = lua->getGlobalFloat("creatureModBaseHAMMaxModifier");
 			if (lua->getGlobalFloat("creatureModBaseResistsModifier") >= 0) creatureModBaseResistsModifier = lua->getGlobalFloat("creatureModBaseResistsModifier");
 
+			//Dungeon
+			if (lua->getGlobalFloat("dungeonCorellianCorvetteMultiplier") > 0) dungeonCorellianCorvetteMultiplier = lua->getGlobalFloat("dungeonCorellianCorvetteMultiplier");
+			if (lua->getGlobalFloat("dungeonDeathWatchBunkerMultiplier") > 0) dungeonDeathWatchBunkerMultiplier = lua->getGlobalFloat("dungeonDeathWatchBunkerMultiplier");
+			if (lua->getGlobalFloat("dungeonGeonosianBioLabMultiplier") > 0) dungeonGeonosianBioLabMultiplier = lua->getGlobalFloat("dungeonGeonosianBioLabMultiplier");
+			if (lua->getGlobalFloat("dungeonWarrenMultiplier") > 0) dungeonWarrenMultiplier = lua->getGlobalFloat("dungeonWarrenMultiplier");
+						
 			//Faction
 			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 			if (lua->getGlobalFloat("factionCapMultiplier") > 0) factionCapMultiplier = lua->getGlobalFloat("factionCapMultiplier");

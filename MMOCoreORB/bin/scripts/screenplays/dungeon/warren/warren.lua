@@ -26,6 +26,139 @@ Warren = ScreenPlay:new {
 		{ 8465597, "warren_core_control_rod_s02" },
 		{ 8465580, "warren_inquisitor_letter" }
 	},
+
+	screenplayName = "Warren",
+	dungeonSpawns = {
+		{"dantooine", "oevitt_piboi_dungeonWarren", 1, -558, 0, -3736, 0, 0},
+		{"dantooine", "mirla_dungeonWarren", 1, -58.56, -76, -35.24, 26, 8575725},
+		{"dantooine", "manx_try_dungeonWarren", 1, 29.68, -54, -116.8, -62, 8575714},
+		{"dantooine", "dirk_maggin_dungeonWarren", 1, -57.54, -28, -91.04, -140, 8575700, 0, "scared"},
+		{"dantooine", "phy_hudgen_dungeonWarren", 1, -7.47, -20, -61.61, -140, 8575680},
+		{"naboo", "captain_heff_dungeonWarren", 1, 7.6, 12, 84.2, -180, 1688852},
+		--First Room
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -7.8, -20, -9.9, 53, 8575677},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, 5.9, -20, -8.5, -83, 8575677},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -21.8, -20, -6.8, 91, 8575677},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -19, -20, -24.4, 57, 8575677},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, 1.6, -20, -24.9, -45, 8575677},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, 12.7, -20, -19.6, 67, 8575677},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -25.8, -20, -28.2, 55, 8575677},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -2.3, -20, -21.7, -34, 8575677},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, 1.5, -20, -12.6, 88, 8575677},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -14.9, -20, -3.8, 174, 8575677},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -19.1, -20, -23.5, -136, 8575677},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -3.6, -20, -19.9, -140, 8575677},
+		--Second Room
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -23.6, -20, -50.2, 29, 8575678},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -28.2, -20, -47.8, 38, 8575678},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -26.1, -20, -36.7, 157, 8575678},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -5, -20, -48, -51, 8575678},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -15.9, -20, -39.5, -144, 8575678},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -22.5, -20, -39.4, -177, 8575678},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -16.6, -20, -48.9, 57, 8575678},
+		--Barracks
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -67.9, -18, -96.7, 78, 8575684},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -79.6, -18, -97.9, 18, 8575684},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -82, -18, -79.6, 41, 8575684},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -82.8, -18, -107, 153, 8575684},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -61.9, -18, -111.7, -44, 8575684},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -64.4, -18, -112.9, -42, 8575684},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -69.9, -18, -105.7, -14, 8575684},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -60.8, -18, -86.4, -14, 8575684},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -69.8, -18, -73.2, 110, 8575684},
+		--Droid Room
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -23.8, -28, -40.2, 23, 8575689},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -23.2, -28, -42.3, 95, 8575689},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -25.6, -28, -45.8, 124, 8575689},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -1.2, -28, -39.4, 65, 8575689},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -0.3, -28, -41.9, 133, 8575689},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -2.3, -28, -44.6, -141, 8575689},
+		{"dantooine", "warren_agro_droid_dungeonWarren", 300, 6.8, -28, -52.3, -96, 8575689},
+		{"dantooine", "warren_agro_droid_dungeonWarren", 300, 9.1, -28, -37.1, -112, 8575689},
+		{"dantooine", "warren_agro_droid_dungeonWarren", 300, -14.6, -28, -31.7, -164, 8575689},
+		{"dantooine", "warren_agro_droid_dungeonWarren", 300, -33.4, -28, -38.4, 143, 8575689},
+		{"dantooine", "warren_agro_droid_boss_dungeonWarren", 300, 3.6, -28, -69, 0, 8575692},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -59.6, -52, -71.7, -13, 8575709},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -61.4, -52, -70, -131, 8575709},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -65, -52, -72.5, 61, 8575709},
+		{"dantooine", "warren_imperial_worker_dungeonWarren", 300, -65.5, -52, -67.6, 150, 8575709},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -71.8, -52, -11.9, 6, 8575719},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -73.6, -52, -7.8, 170, 8575719},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -60.9, -52, -9.8, -159, 8575719},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -62.3, -52, -7.4, -173, 8575719},
+		--Inquisitor Cell Room
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -16, -54, -140, -45, 8575716},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -19.3, -54, -138.6, 60, 8575716},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -20.9, -54, -132.8, 109, 8575716},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -32.1, -54, -141.2, 45, 8575716},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -30, -54, -143, 17, 8575716},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -30.4, -54, -138.3, 131, 8575716},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, -16.7, -54, -140.3, 25, 8575716},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, -16, -54, -145.6, -72, 8575716},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, -16.2, -54, -139.2, -136, 8575716},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -26.1, -54, -127.4, 100, 8575716},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -26.3, -54, -129.4, 58, 8575716},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -23.2, -54, -127.5, -47, 8575716},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -26, -54, -154.3, 18, 8575716},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -28.2, -54, -153.1, 39, 8575716},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -23, -54, -153.2, -9, 8575716},
+		--Evidence Room 1
+		{"dantooine", "teraud_loyalist_cyborg_dungeonWarren", 300, 75.6, -68, 19.1, -2, 8575736},
+		--Evidence Room 2
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, 6.3, -60, 36.6, 58, 8575731},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, 9.6, -60, 39.3, -166, 8575731},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, 5.3, -60, 29.4, 46, 8575731},
+		{"dantooine", "cyborg_slice_hound_dungeonWarren", 300, -11.7, -60, 37.7, 89, 8575731},
+		{"dantooine", "cyborg_slice_hound_dungeonWarren", 300, -13.3, -60, 34.1, 121, 8575731},
+		{"dantooine", "cyborg_slice_hound_dungeonWarren", 300, -7.3, -60, 28.2, 71, 8575731},
+		{"dantooine", "cyborg_bol_dungeonWarren", 300, -52.6, -52, 17, -90, 8575726},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -46.4, -52, 16.7, 0, 8575726},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -84.7, -52, 0, 3, 8575727},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -84.6, -52, 2.6, 2, 8575727},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -100.5, -52, 13.4, 78, 8575727},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -98.5, -52, 20.9, 22, 8575727},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -87.5, -52, 30.2, 139, 8575727},
+		{"dantooine", "warren_scientist_dungeonWarren", 300, -79.4, -52, 28.3, 90, 8575727},
+		--Evidence Room 3
+		{"dantooine", "cyborg_dune_lizard_dungeonWarren", 300, -48.8, -52, 50.5, 0, 8575729},
+		{"dantooine", "cyborg_dune_lizard_dungeonWarren", 300, -62.4, -52, 51.7, 0, 8575729},
+		--At St room
+		{"dantooine", "warren_altered_atst_dungeonWarren", 300, 25.7, -84, -28.8, 0, 8575745},
+		--4 locks room
+		{"dantooine", "warren_agro_droid_dungeonWarren", 300, 16.9, -20, -95.4, 0, 8575696},
+		{"dantooine", "warren_agro_droid_dungeonWarren", 300, 23, -20, -105.2, 0, 8575696},
+		{"dantooine", "computer_scientist_dungeonWarren", 300, 40, -20, -109.5, -50, 8575696},
+		--Big room in middle
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -28.3, -52, -38.8, -48, 8575740},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -32.6, -52, -41.9, -28, 8575740},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, -36.3, -52, -40.5, 32, 8575740},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, 2.4, -52, -65.3, 112, 8575740},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, 2.2, -52, -68.6, 102, 8575740},
+		{"dantooine", "teraud_loyalist_dungeonWarren", 300, 5.6, -52, -73, 49, 8575740},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -25.1, -52, -50.2, 143, 8575740},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -29.6, -52, -52.7, 107, 8575740},
+		{"dantooine", "warren_stormtrooper_dungeonWarren", 300, -26.2, -52, -55.5, -1, 8575740},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -23.1, -52, -67.5, 176, 8575740},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -22.5, -52, -69.2, -129, 8575740},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, -29.1, -52, -71.3, 127, 8575740},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, 16.6, -52, -35.4, 53, 8575740},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, 20.1, -52, -37.6, -3, 8575740},
+		{"dantooine", "hostile_huurton_dungeonWarren", 300, 24.4, -52, -36.5, -30, 8575740},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, -17.7, -52, -41.2, 50, 8575740},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, -15.5, -52, -44, 18, 8575740},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, -12.5, -52, -42.5, -48, 8575740},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, 29, -52, -56.4, 121, 8575740},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, 30.9, -52, -53.3, 126, 8575740},
+		{"dantooine", "warren_imperial_officer_dungeonWarren", 300, 34.4, -52, -50.7, 153, 8575740},
+		{"dantooine", "teraud_loyalist_cyborg_dungeonWarren", 300, 11.7, -52, -57.7, 33, 8575740},
+		{"dantooine", "teraud_loyalist_cyborg_dungeonWarren", 300, 14.1, -52, -58.6, 0, 8575740},
+		{"dantooine", "teraud_loyalist_cyborg_dungeonWarren", 300, 15.7, -52, -55.5, -51, 8575740},
+		--Irradiated Workers
+		{"dantooine", "warren_irradiated_worker_dungeonWarren", 300, 56.6, -54, -121.6, -13, 8575715},
+		{"dantooine", "warren_irradiated_worker_dungeonWarren", 300, 64, -54, -128.7, 140, 8575715},
+		--Bors Teraud
+		{"dantooine", "bors_teraud_dungeonWarren", 300, 119.5, -52, 41.7, -171, 8575758},
+	}
 }
 
 registerScreenPlay("Warren", true)
@@ -41,7 +174,7 @@ function Warren:start()
 		createObserver(ENTEREDBUILDING, "Warren", "notifyEnteredWarren", pWarren)
 		createObserver(EXITEDBUILDING, "Warren", "notifyExitedWarren", pWarren)
 
-		self:spawnMobiles()
+		self:spawnDungeonMobiles()
 		self:spawnTurret()
 		self:resetPasswords()
 		self:spawnDebris()
@@ -92,7 +225,7 @@ function Warren:spawnKitchenOfficer()
 		return
 	end
 
-	pMobile = spawnMobile("dantooine", "warren_imperial_officer", 0, -36.97, -52, -94.43, 90, 8575712)
+	pMobile = spawnMobile("dantooine", "warren_imperial_officer_dungeonWarren_3", 0, -36.97, -52, -94.43, 90, 8575712)
 
 	if (pMobile == nil) then
 		return
@@ -148,7 +281,7 @@ function Warren:spawnDoctorKnag()
 		return
 	end
 
-	pMobile = spawnMobile("dantooine", "doctor_knag", 0, 77.47, -68, 38.95, 90, 8575737)
+	pMobile = spawnMobile("dantooine", "doctor_knag_dungeonWarren_3", 0, 77.47, -68, 38.95, 90, 8575737)
 
 	if (pMobile == nil) then
 		return
@@ -205,7 +338,7 @@ function Warren:spawnCellGuard()
 		return
 	end
 
-	pMobile = spawnMobile("dantooine", "jerrd_sonclim", 0, 27.35, -50, -149.01, -140, 8575717)
+	pMobile = spawnMobile("dantooine", "jerrd_sonclim_dungeonWarren_3", 0, 27.35, -50, -149.01, -140, 8575717)
 
 	if (pMobile == nil) then
 		return
@@ -944,163 +1077,6 @@ function Warren:spawnTurret()
 	end
 
 	writeData("warren:turretID", SceneObject(pTurret):getObjectID())
-end
-
-function Warren:spawnMobiles()
-	spawnMobile("dantooine", "oevitt_piboi", 1, -558, 0, -3736, 0, 0)
-	spawnMobile("dantooine", "mirla", 1, -58.56, -76, -35.24, 26, 8575725)
-	spawnMobile("dantooine", "manx_try", 1, 29.68, -54, -116.8, -62, 8575714)
-	local pMobile = spawnMobile("dantooine", "dirk_maggin", 1, -57.54, -28, -91.04, -140, 8575700)
-
-	if (pMobile ~= nil) then
-		CreatureObject(pMobile):setMoodString("scared")
-	end
-
-	spawnMobile("dantooine", "phy_hudgen", 1, -7.47, -20, -61.61, -140, 8575680)
-	spawnMobile("naboo", "captain_heff", 1, 7.6, 12, 84.2, -180, 1688852)
-
-	--First Room
-	spawnMobile("dantooine", "hostile_huurton", 300, -7.8, -20, -9.9, 53, 8575677)
-	spawnMobile("dantooine", "hostile_huurton", 300, 5.9, -20, -8.5, -83, 8575677)
-	spawnMobile("dantooine", "hostile_huurton", 300, -21.8, -20, -6.8, 91, 8575677)
-	spawnMobile("dantooine", "hostile_huurton", 300, -19, -20, -24.4, 57, 8575677)
-	spawnMobile("dantooine", "hostile_huurton", 300, 1.6, -20, -24.9, -45, 8575677)
-	spawnMobile("dantooine", "hostile_huurton", 300, 12.7, -20, -19.6, 67, 8575677)
-	spawnMobile("dantooine", "hostile_huurton", 300, -25.8, -20, -28.2, 55, 8575677)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -2.3, -20, -21.7, -34, 8575677)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, 1.5, -20, -12.6, 88, 8575677)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -14.9, -20, -3.8, 174, 8575677)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -19.1, -20, -23.5, -136, 8575677)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -3.6, -20, -19.9, -140, 8575677)
-
-	--Second Room
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -23.6, -20, -50.2, 29, 8575678)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -28.2, -20, -47.8, 38, 8575678)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -26.1, -20, -36.7, 157, 8575678)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -5, -20, -48, -51, 8575678)
-	spawnMobile("dantooine", "hostile_huurton", 300, -15.9, -20, -39.5, -144, 8575678)
-	spawnMobile("dantooine", "hostile_huurton", 300, -22.5, -20, -39.4, -177, 8575678)
-	spawnMobile("dantooine", "hostile_huurton", 300, -16.6, -20, -48.9, 57, 8575678)
-
-	--Barracks
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -67.9, -18, -96.7, 78, 8575684)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -79.6, -18, -97.9, 18, 8575684)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -82, -18, -79.6, 41, 8575684)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -82.8, -18, -107, 153, 8575684)
-	spawnMobile("dantooine", "hostile_huurton", 300, -61.9, -18, -111.7, -44, 8575684)
-	spawnMobile("dantooine", "hostile_huurton", 300, -64.4, -18, -112.9, -42, 8575684)
-	spawnMobile("dantooine", "hostile_huurton", 300, -69.9, -18, -105.7, -14, 8575684)
-	spawnMobile("dantooine", "hostile_huurton", 300, -60.8, -18, -86.4, -14, 8575684)
-	spawnMobile("dantooine", "hostile_huurton", 300, -69.8, -18, -73.2, 110, 8575684)
-
-	--Droid Room
-	spawnMobile("dantooine", "warren_scientist", 300, -23.8, -28, -40.2, 23, 8575689)
-	spawnMobile("dantooine", "warren_scientist", 300, -23.2, -28, -42.3, 95, 8575689)
-	spawnMobile("dantooine", "warren_scientist", 300, -25.6, -28, -45.8, 124, 8575689)
-	spawnMobile("dantooine", "warren_scientist", 300, -1.2, -28, -39.4, 65, 8575689)
-	spawnMobile("dantooine", "warren_scientist", 300, -0.3, -28, -41.9, 133, 8575689)
-	spawnMobile("dantooine", "warren_scientist", 300, -2.3, -28, -44.6, -141, 8575689)
-	spawnMobile("dantooine", "warren_agro_droid", 300, 6.8, -28, -52.3, -96, 8575689)
-	spawnMobile("dantooine", "warren_agro_droid", 300, 9.1, -28, -37.1, -112, 8575689)
-	spawnMobile("dantooine", "warren_agro_droid", 300, -14.6, -28, -31.7, -164, 8575689)
-	spawnMobile("dantooine", "warren_agro_droid", 300, -33.4, -28, -38.4, 143, 8575689)
-	spawnMobile("dantooine", "warren_agro_droid_boss", 300, 3.6, -28, -69, 0, 8575692)
-
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -59.6, -52, -71.7, -13, 8575709)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -61.4, -52, -70, -131, 8575709)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -65, -52, -72.5, 61, 8575709)
-	spawnMobile("dantooine", "warren_imperial_worker", 300, -65.5, -52, -67.6, 150, 8575709)
-
-
-	spawnMobile("dantooine", "hostile_huurton", 300, -71.8, -52, -11.9, 6, 8575719)
-	spawnMobile("dantooine", "hostile_huurton", 300, -73.6, -52, -7.8, 170, 8575719)
-	spawnMobile("dantooine", "hostile_huurton", 300, -60.9, -52, -9.8, -159, 8575719)
-	spawnMobile("dantooine", "hostile_huurton", 300, -62.3, -52, -7.4, -173, 8575719)
-
-	--Inquisitor Cell Room
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -16, -54, -140, -45, 8575716)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -19.3, -54, -138.6, 60, 8575716)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -20.9, -54, -132.8, 109, 8575716)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -32.1, -54, -141.2, 45, 8575716)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -30, -54, -143, 17, 8575716)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -30.4, -54, -138.3, 131, 8575716)
-
-	spawnMobile("dantooine", "warren_imperial_officer", 300, -16.7, -54, -140.3, 25, 8575716)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, -16, -54, -145.6, -72, 8575716)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, -16.2, -54, -139.2, -136, 8575716)
-
-	spawnMobile("dantooine", "teraud_loyalist", 300, -26.1, -54, -127.4, 100, 8575716)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -26.3, -54, -129.4, 58, 8575716)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -23.2, -54, -127.5, -47, 8575716)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -26, -54, -154.3, 18, 8575716)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -28.2, -54, -153.1, 39, 8575716)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -23, -54, -153.2, -9, 8575716)
-
-	--Evidence Room 1
-	spawnMobile("dantooine", "teraud_loyalist_cyborg", 300, 75.6, -68, 19.1, -2, 8575736)
-
-	--Evidence Room 2
-	spawnMobile("dantooine", "warren_imperial_officer", 300, 6.3, -60, 36.6, 58, 8575731)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, 9.6, -60, 39.3, -166, 8575731)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, 5.3, -60, 29.4, 46, 8575731)
-	spawnMobile("dantooine", "cyborg_slice_hound", 300, -11.7, -60, 37.7, 89, 8575731)
-	spawnMobile("dantooine", "cyborg_slice_hound", 300, -13.3, -60, 34.1, 121, 8575731)
-	spawnMobile("dantooine", "cyborg_slice_hound", 300, -7.3, -60, 28.2, 71, 8575731)
-
-	spawnMobile("dantooine", "cyborg_bol", 300, -52.6, -52, 17, -90, 8575726)
-	spawnMobile("dantooine", "warren_scientist", 300, -46.4, -52, 16.7, 0, 8575726)
-
-	spawnMobile("dantooine", "warren_scientist", 300, -84.7, -52, 0, 3, 8575727)
-	spawnMobile("dantooine", "warren_scientist", 300, -84.6, -52, 2.6, 2, 8575727)
-	spawnMobile("dantooine", "warren_scientist", 300, -100.5, -52, 13.4, 78, 8575727)
-	spawnMobile("dantooine", "warren_scientist", 300, -98.5, -52, 20.9, 22, 8575727)
-	spawnMobile("dantooine", "warren_scientist", 300, -87.5, -52, 30.2, 139, 8575727)
-	spawnMobile("dantooine", "warren_scientist", 300, -79.4, -52, 28.3, 90, 8575727)
-
-	--Evidence Room 3
-	spawnMobile("dantooine", "cyborg_dune_lizard", 300, -48.8, -52, 50.5, 0, 8575729)
-	spawnMobile("dantooine", "cyborg_dune_lizard", 300, -62.4, -52, 51.7, 0, 8575729)
-
-	--At St room
-	spawnMobile("dantooine", "warren_altered_atst", 300, 25.7, -84, -28.8, 0, 8575745)
-
-	--4 locks room
-	spawnMobile("dantooine", "warren_agro_droid", 300, 16.9, -20, -95.4, 0, 8575696)
-	spawnMobile("dantooine", "warren_agro_droid", 300, 23, -20, -105.2, 0, 8575696)
-	spawnMobile("dantooine", "computer_scientist", 300, 40, -20, -109.5, -50, 8575696)
-
-	--Big room in middle
-	spawnMobile("dantooine", "teraud_loyalist", 300, -28.3, -52, -38.8, -48, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -32.6, -52, -41.9, -28, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist", 300, -36.3, -52, -40.5, 32, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist", 300, 2.4, -52, -65.3, 112, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist", 300, 2.2, -52, -68.6, 102, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist", 300, 5.6, -52, -73, 49, 8575740)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -25.1, -52, -50.2, 143, 8575740)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -29.6, -52, -52.7, 107, 8575740)
-	spawnMobile("dantooine", "warren_stormtrooper", 300, -26.2, -52, -55.5, -1, 8575740)
-	spawnMobile("dantooine", "hostile_huurton", 300, -23.1, -52, -67.5, 176, 8575740)
-	spawnMobile("dantooine", "hostile_huurton", 300, -22.5, -52, -69.2, -129, 8575740)
-	spawnMobile("dantooine", "hostile_huurton", 300, -29.1, -52, -71.3, 127, 8575740)
-	spawnMobile("dantooine", "hostile_huurton", 300, 16.6, -52, -35.4, 53, 8575740)
-	spawnMobile("dantooine", "hostile_huurton", 300, 20.1, -52, -37.6, -3, 8575740)
-	spawnMobile("dantooine", "hostile_huurton", 300, 24.4, -52, -36.5, -30, 8575740)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, -17.7, -52, -41.2, 50, 8575740)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, -15.5, -52, -44, 18, 8575740)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, -12.5, -52, -42.5, -48, 8575740)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, 29, -52, -56.4, 121, 8575740)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, 30.9, -52, -53.3, 126, 8575740)
-	spawnMobile("dantooine", "warren_imperial_officer", 300, 34.4, -52, -50.7, 153, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist_cyborg", 300, 11.7, -52, -57.7, 33, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist_cyborg", 300, 14.1, -52, -58.6, 0, 8575740)
-	spawnMobile("dantooine", "teraud_loyalist_cyborg", 300, 15.7, -52, -55.5, -51, 8575740)
-
-	--Irradiated Workers
-	spawnMobile("dantooine", "warren_irradiated_worker", 300, 56.6, -54, -121.6, -13, 8575715)
-	spawnMobile("dantooine", "warren_irradiated_worker", 300, 64, -54, -128.7, 140, 8575715)
-
-	--Bors Teraud
-	spawnMobile("dantooine", "bors_teraud", 300, 119.5, -52, 41.7, -171, 8575758)
 end
 
 function Warren:getBuildingObject()

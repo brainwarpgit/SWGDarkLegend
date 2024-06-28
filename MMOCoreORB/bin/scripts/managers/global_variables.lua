@@ -165,6 +165,12 @@ creatureModBaseHAMModifier = .25 --default 0 Adds to creatureBaseMultiplier base
 creatureModBaseHAMMaxModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
 creatureModBaseResistsModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
 
+--Dungeons
+dungeonCorellianCorvetteMultiplier = 5 --default 1
+dungeonDeathWatchBunkerMultiplier = 5 --default 1
+dungeonGeonosianBioLabMultiplier = 5 --default 1
+dungeonWarrenMultiplier = 5 --default 1
+
 --Faction
 factionMaxRank = 21 --default 15  max 21
 factionCapMultiplier = 100 --default 1

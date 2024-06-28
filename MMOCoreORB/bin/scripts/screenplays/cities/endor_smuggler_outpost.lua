@@ -58,6 +58,7 @@ EndorSmugglerOutpostScreenPlay = CityScreenPlay:new {
 	
 	mobiles = {
 		{"junk_dealer", 0, -913, 80, 1604, 135, 0, ""},
+		{"boba_fett", 0, -875, 76, 1630, 45, 0, ""},
 	}
 }
 
@@ -70,4 +71,6 @@ function EndorSmugglerOutpostScreenPlay:start()
 		self:spawnStationaryMobiles()
 	end
 end
+
+
 
