@@ -11,7 +11,7 @@
 #include "server/zone/packets/scene/AttributeListMessage.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/loot/LootValues.h"
 
 void AttachmentImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -21,36 +21,46 @@ void AttachmentImplementation::initializeTransientMembers() {
 }
 
 void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool firstUpdate) {
-	int level = values->getMaxValue("creatureLevel");
-	int roll = System::random(100);
+	auto zoneServer = getZoneServer();
+
+	if (zoneServer == nullptr) {
+		return;
+	}
+
+	auto lootManager = zoneServer->getLootManager();
+
+	if (lootManager == nullptr) {
+		return;
+	}
+
+	float level = values->hasExperimentalAttribute("creatureLevel") ? values->getCurrentValue("creatureLevel") : 1;
+	float bonus = values->hasExperimentalAttribute("modifier") ? values->getCurrentValue("modifier") : 1;
+	float rank = LootValues::getLevelRankValue(level, 0.2f, 0.9f);
+
+	int chance = rank * bonus * 100.f;
+	int roll = System::random(1000);
 	int modCount = 1;
 
-	if(roll > 99)
-		modCount += 2;
+	int pivot = chance - roll;
 
-	if(roll < 5)
-		modCount += 1;
-
-	if (modCount > globalVariables::lootAttachmentModCount) modCount = globalVariables::lootAttachmentModCount;
+	if (pivot < 40) {
+		modCount = 1;
+	} else if (pivot < 70) {
+		modCount = System::random(1) + 1;
+	} else if (pivot < 100) {
+		modCount = System::random(2) + 1;
+	} else {
+		modCount = System::random(1) + 2;
+	}
 
 	for(int i = 0; i < modCount; ++i) {
-		//Mods can't be lower than -1 or greater than 25
-		int max = 0;
-		int min = 0;
-		int mod = 0;
-		if (level >= globalVariables::lootAttachmentMaxLevel) {
-			mod = globalVariables::lootAttachmentMax;
-		} else {	
-			max = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round(((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) * level + 2)));
-			min = (int) Math::max((float)globalVariables::lootAttachmentMin, Math::min((float)globalVariables::lootAttachmentMax, (float) round((((float)globalVariables::lootAttachmentMax / (float)globalVariables::lootAttachmentMaxLevel) ) * level - 2)));
-			mod = System::random(max - min) + min;
-		}
-		if(mod <= 0)
-			mod = 1;
+		float step = 1.f - ((i / (float)modCount) * 0.5f);
+		int min = Math::clamp(-1, (int)round(0.075f * level) - 1, 25) * step;
+		int max = Math::clamp(-1, (int)round(0.125f * level) + 1, 25);
+		int mod = System::random(max - min) + min;
 
-		String modName = server->getZoneServer()->getLootManager()->getRandomLootableMod(gameObjectType);
-
-		skillModMap.put(modName, mod);
+		String modName = lootManager->getRandomLootableMod(gameObjectType);
+		skillModMap.put(modName, mod == 0 ? 1 : mod);
 	}
 }
 
@@ -85,20 +95,7 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 		msg->insertAttribute(name.toString(), value);
 
-		if (globalVariables::lootAttachmentNameEnabled == true) {
-			StringId SEAName;
-			SEAName.setStringId("stat_n", key);
-			setCustomObjectName("", false);
-			setObjectName(SEAName, false);
-			setCustomObjectName(getDisplayedName() + " +" + String::valueOf(value), true);
-			StringId originalName;
-			if (isArmorAttachment())
-			    originalName.setStringId("item_n", "socket_gem_armor");
-			else
-			    originalName.setStringId("item_n", "socket_gem_clothing");
-			setObjectName(originalName, true);
-        	}
-        	name.deleteAll();
+		name.deleteAll();
 	}
 
 }
