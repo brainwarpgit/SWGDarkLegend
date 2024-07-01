@@ -105,7 +105,7 @@ public:
 		ManagedReference<TangibleObject*> prototype = nullptr;
 
 		if (itemTemplate->isRandomResourceContainer()) {
-			prototype = lootManager->createLootResource(lootName, zone->getZoneName());
+			prototype = lootManager->createLootResource(lootName, zone->getZoneName(), 1, 1);
 		} else {
 			prototype = lootManager->createLootObject(trx, itemTemplate, level, false);
 		}
@@ -184,7 +184,7 @@ public:
 		ManagedReference<TangibleObject*> prototype = nullptr;
 
 		if (itemTemplate->isRandomResourceContainer()) {
-			prototype = lootManager->createLootResource(lootName, zone->getZoneName());
+			prototype = lootManager->createLootResource(lootName, zone->getZoneName(), 1, 1);
 		} else {
 			prototype = lootManager->createLootObject(trx, itemTemplate, level, false);
 		}

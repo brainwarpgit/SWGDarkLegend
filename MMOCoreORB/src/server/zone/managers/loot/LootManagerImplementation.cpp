@@ -375,7 +375,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 #endif
 
 	if (templateObject->isRandomResourceContainer()) {
-		return createLootResource(templateObject->getTemplateName(), "tatooine");
+		return createLootResource(templateObject->getTemplateName(), "tatooine", level, creatureDifficulty);
 	}
 
 	ManagedReference<TangibleObject*> prototype = zoneServer->createObject(directTemplateObject.hashCode(), 2).castTo<TangibleObject*>();
@@ -451,7 +451,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	return prototype;
 }
 
-TangibleObject* LootManagerImplementation::createLootResource(const String& resourceDataName, const String& resourceZoneName) {
+TangibleObject* LootManagerImplementation::createLootResource(const String& resourceDataName, const String& resourceZoneName, int level, int creatureDifficulty) {
 	auto lootItemTemplate = lootGroupMap->getLootItemTemplate(resourceDataName);
 
 	if (lootItemTemplate == nullptr || lootItemTemplate->getObjectType() != SceneObjectType::RESOURCECONTAINER) {
@@ -509,11 +509,14 @@ TangibleObject* LootManagerImplementation::createLootResource(const String& reso
 			if (!valueMap.hasExperimentalAttribute("quantity")) {
 				return nullptr;
 			}
+			
+			float scalingLevel = (float)level / globalVariables::creatureMaxLevel;
+			float adjustedCreatureDifficulty = (float)(scalingLevel * creatureDifficulty) + 1;
 
-			float min = Math::max(1.f, valueMap.getMinValue("quantity"));
-			float max = Math::max(min, valueMap.getMaxValue("quantity"));
+			float min = (Math::max(1.f, valueMap.getMinValue("quantity")) + level) * adjustedCreatureDifficulty;
+			float max = (Math::max(min, valueMap.getMaxValue("quantity")) + level) * adjustedCreatureDifficulty;
 
-			ManagedReference<ResourceContainer*> resourceContainer = resourceEntry->createResource(System::random(max - min) + min);
+			ManagedReference<ResourceContainer*> resourceContainer = resourceEntry->createResource((System::random(max - min) + min) * globalVariables::lootResourceMultiplier);
 
 			return resourceContainer;
 		}
@@ -749,7 +752,7 @@ uint64 LootManagerImplementation::createLoot(TransactionLog& trx, SceneObject* c
 			return 0;
 		}
 
-		obj = createLootResource(lootEntry, zone->getZoneName());
+		obj = createLootResource(lootEntry, zone->getZoneName(), level, creatureDifficulty);
 	} else {
 		obj = createLootObject(trx, itemTemplate, level, maxCondition, creatureDifficulty, luckSkill);
 	}

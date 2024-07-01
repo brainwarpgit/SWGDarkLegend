@@ -199,6 +199,7 @@ lootShowForceCostDecimalEnabled = true --default false
 lootRareColorCrystalsEnabled = true --default false
 lootGroupCreditsSplitEnabled = false --default true
 lootChanceMultiplier = 5 --default 1
+lootResourceMultiplier = 2 --default 1
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

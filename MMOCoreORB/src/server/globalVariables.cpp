@@ -199,6 +199,7 @@ namespace globalVariables {
 	bool lootRareColorCrystalsEnabled = false;
 	bool lootGroupCreditsSplitEnabled = true;
 	float lootChanceMultiplier = 1;
+	float lootResourceMultiplier = 1;
 	
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -564,6 +565,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == true || lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == false) lootRareColorCrystalsEnabled = lua->getGlobalBoolean("lootRareColorCrystalsEnabled");
 			if (lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == true || lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == false) lootGroupCreditsSplitEnabled = lua->getGlobalBoolean("lootGroupCreditsSplitEnabled");
 			if (lua->getGlobalFloat("lootChanceMultiplier") > 0) lootChanceMultiplier = lua->getGlobalFloat("lootChanceMultiplier");
+			if (lua->getGlobalFloat("lootResourceMultiplier") > 0) lootResourceMultiplier = lua->getGlobalFloat("lootResourceMultiplier");
 
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
