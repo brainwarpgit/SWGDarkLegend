@@ -567,19 +567,26 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 		}
 	}
 
+	if (randomMods > globalVariables::lootAttachmentModCount) randomMods = globalVariables::lootAttachmentModCount;
+	if (randomMods < 0) randomMods = 0;
+
 	for (int i = 0; i < randomMods; ++i) {
 		String modName = getRandomLootableMod(prototype->getGameObjectType());
-
 		if (modName.isEmpty()) {
 			continue;
 		}
 
-		float step = 1.f - ((i / (float)randomMods) * 0.5f);
-		int min = Math::clamp(-1, (int)round(0.075f * level) - 1, 25) * step;
-		int max = Math::clamp(-1, (int)round(0.125f * level) + 1, 25);
-		int mod = System::random(max - min) + min;
-
-		skillMods.add(skillMods.size(), VectorMapEntry<String,int>(modName, mod == 0 ? 1 : mod));
+		int mod = 0;
+		if (level >= globalVariables::lootAttachmentMaxLevel) {
+			mod = globalVariables::lootAttachmentMax;
+		} else {
+			float scalingFactor = (float)level / globalVariables::lootAttachmentMaxLevel;
+			int adjustedStats = (int)(scalingFactor * globalVariables::lootAttachmentMax);
+			int minStat = adjustedStats - round(adjustedStats * 0.075f);
+			int maxStat = adjustedStats + round(adjustedStats * 0.125f);
+			mod = System::random(maxStat - minStat) + minStat;
+		}
+		skillMods.add(skillMods.size(), VectorMapEntry<String,int>(modName, mod <= 0 ? 1 : mod));
 	}
 
 	if (skillMods.size() == 0) {
@@ -589,7 +596,6 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 	for (int i = 0; i < skillMods.size(); i++) {
 		const String& key = skillMods.elementAt(i).getKey();
 		int value = skillMods.elementAt(i).getValue();
-
 		prototype->addSkillMod(SkillModManager::WEARABLE, key, value);
 	}
 

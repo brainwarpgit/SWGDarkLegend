@@ -12,6 +12,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
+#include "server/globalVariables.h"
 
 void AttachmentImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -53,14 +54,22 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 		modCount = System::random(1) + 2;
 	}
 
-	for(int i = 0; i < modCount; ++i) {
-		float step = 1.f - ((i / (float)modCount) * 0.5f);
-		int min = Math::clamp(-1, (int)round(0.075f * level) - 1, 25) * step;
-		int max = Math::clamp(-1, (int)round(0.125f * level) + 1, 25);
-		int mod = System::random(max - min) + min;
+	if (modCount > globalVariables::lootAttachmentModCount) modCount = globalVariables::lootAttachmentModCount;
+	if (modCount < 0) modCount = 0;
 
+	for(int i = 0; i < modCount; ++i) {
+		int mod = 0;
+		if (level >= globalVariables::lootAttachmentMaxLevel) {
+			mod = globalVariables::lootAttachmentMax;
+		} else {
+			float scalingFactor = float(level / globalVariables::lootAttachmentMaxLevel);
+			int adjustedStats = (int)(scalingFactor * globalVariables::lootAttachmentMax);
+			int minStat = adjustedStats - round(adjustedStats * 0.075f);
+			int maxStat = adjustedStats + round(adjustedStats * 0.125f);
+			mod = System::random(maxStat - minStat) + minStat;
+		}
 		String modName = lootManager->getRandomLootableMod(gameObjectType);
-		skillModMap.put(modName, mod == 0 ? 1 : mod);
+		skillModMap.put(modName, mod <= 0 ? 1 : mod);
 	}
 }
 
@@ -95,7 +104,20 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 		msg->insertAttribute(name.toString(), value);
 
-		name.deleteAll();
+		if (globalVariables::lootAttachmentNameEnabled == true) {
+			StringId SEAName;
+			SEAName.setStringId("stat_n", key);
+			setCustomObjectName("", false);
+			setObjectName(SEAName, false);
+			setCustomObjectName(getDisplayedName() + " +" + String::valueOf(value), true);
+			StringId originalName;
+			if (isArmorAttachment())
+			    originalName.setStringId("item_n", "socket_gem_armor");
+			else
+			    originalName.setStringId("item_n", "socket_gem_clothing");
+			setObjectName(originalName, true);
+        	}
+        	name.deleteAll();
 	}
 
 }
