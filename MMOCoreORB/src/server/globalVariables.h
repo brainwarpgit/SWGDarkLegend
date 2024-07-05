@@ -192,6 +192,7 @@ namespace globalVariables {
 	extern int lootAttachmentMaxLevel;
 	extern bool lootAttachmentNameEnabled;
 	extern int lootAttachmentModCount;
+	extern int lootDropAttachmentModCount;
 	extern bool lootCreditLuckModifier;
 	extern int lootMaxLevel;
 	extern int lootMinLevel;
@@ -200,7 +201,9 @@ namespace globalVariables {
 	extern bool lootGroupCreditsSplitEnabled;
 	extern float lootChanceMultiplier;
 	extern float lootResourceMultiplier;
-
+	extern bool lootYellowModifierNameEnabled;
+	extern std::string lootYellowModifierName;
+	
 //Mission
 	extern int missionBountyExpirationTime;
 	extern int missionExpirationTime;

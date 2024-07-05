@@ -264,10 +264,16 @@ void LootManagerImplementation::setCustomObjectName(TangibleObject* object, cons
 
 	String suffixName = "";
 
-	if (excMod >= legendaryModifier) {
-		suffixName = " (Legendary)";
-	} else if (excMod >= exceptionalModifier) {
-		suffixName = " (Exceptional)";
+	if (object->isWeaponObject() || object->isArmorObject() || object->isComponent()) {
+		if (excMod >= legendaryModifier) {
+			suffixName = " (Legendary)";
+		} else if (excMod >= exceptionalModifier) {
+			suffixName = " (Exceptional)";
+		} else if (excMod >= yellowModifier && globalVariables::lootYellowModifierNameEnabled == true) {
+			suffixName = " (" + globalVariables::lootYellowModifierName + ")";
+		} else {
+			object->removeMagicBit(false);
+		}
 	}
 
 	if (suffixName != "") {
@@ -288,9 +294,11 @@ void LootManagerImplementation::setJunkValue(TangibleObject* prototype, const Lo
 	}
 
 	if (excMod >= legendaryModifier) {
-		junkValue *= 2.5f;
+		junkValue *= 3.0f;
+	} else if (excMod >= exceptionalModifier) {
+		junkValue *= 2.0f;
 	} else if (excMod >= yellowModifier) {
-		junkValue *= 1.25;
+		junkValue *= 1.25f;
 	}
 
 	prototype->setJunkDealerNeeded(junkType);
@@ -406,6 +414,8 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 		excMod = legendaryModifier;
 	} else if (System::random(exceptionalChance) <= chance) {
 		excMod = exceptionalModifier;
+	} else if (System::random(yellowChance) <= chance && globalVariables::lootYellowModifierNameEnabled == true) {
+		excMod = yellowModifier;
 	}
 
 #ifdef DEBUG_LOOT_MAN
@@ -570,7 +580,7 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 		}
 	}
 
-	if (randomMods > globalVariables::lootAttachmentModCount) randomMods = globalVariables::lootAttachmentModCount;
+	if (randomMods > globalVariables::lootDropAttachmentModCount) randomMods = globalVariables::lootDropAttachmentModCount;
 	if (randomMods < 0) randomMods = 0;
 
 	for (int i = 0; i < randomMods; ++i) {
@@ -588,6 +598,7 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 			int minStat = adjustedStats - round(adjustedStats * 0.075f);
 			int maxStat = adjustedStats + round(adjustedStats * 0.125f);
 			mod = System::random(maxStat - minStat) + minStat;
+			if (mod > globalVariables::lootAttachmentMax) mod = globalVariables::lootAttachmentMax;
 		}
 		skillMods.add(skillMods.size(), VectorMapEntry<String,int>(modName, mod <= 0 ? 1 : mod));
 	}

@@ -192,6 +192,7 @@ namespace globalVariables {
 	int lootAttachmentMaxLevel = 250;
 	bool lootAttachmentNameEnabled = false;
 	int lootAttachmentModCount = 2;
+	int lootDropAttachmentModCount = 2;
 	bool lootCreditLuckModifier = false;
 	int lootMaxLevel = 300;
 	int lootMinLevel = 1;
@@ -200,6 +201,8 @@ namespace globalVariables {
 	bool lootGroupCreditsSplitEnabled = true;
 	float lootChanceMultiplier = 1;
 	float lootResourceMultiplier = 1;
+	bool lootYellowModifierNameEnabled = false;
+	std::string lootYellowModifierName = "Enhanced";
 	
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -549,7 +552,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("harvestMilkTime") >= 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
 			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
 
-			//Loot 
+			//Loot
 			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
 			if (lua->getGlobalBoolean("lootAreaEnabled") == true || lua->getGlobalBoolean("lootAreaEnabled") == false) lootAreaEnabled = lua->getGlobalBoolean("lootAreaEnabled");
 			if (lua->getGlobalInt("lootCreditMultiplier") > 0) lootCreditMultiplier = lua->getGlobalInt("lootCreditMultiplier");
@@ -557,6 +560,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("lootAttachmentMin") > 0) lootAttachmentMin = lua->getGlobalInt("lootAttachmentMin");
 			if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0 && lua->getGlobalInt("lootAttachmentMaxLevel") <= lua->getGlobalInt("creatureMaxLevel")) lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
 			if (lua->getGlobalInt("lootAttachmentModCount") > 0) lootAttachmentModCount = lua->getGlobalInt("lootAttachmentModCount");
+			if (lua->getGlobalInt("lootDropAttachmentModCount") > 0) lootDropAttachmentModCount = lua->getGlobalInt("lootDropAttachmentModCount");
 			if (lua->getGlobalBoolean("lootAttachmentNameEnabled") == true || lua->getGlobalBoolean("lootAttachmentNameEnabled") == false) lootAttachmentNameEnabled = lua->getGlobalBoolean("lootAttachmentNameEnabled");
 			if (lua->getGlobalBoolean("lootCreditLuckModifier") == true || lua->getGlobalBoolean("lootCreditLuckModifier") == false) lootCreditLuckModifier = lua->getGlobalBoolean("lootCreditLuckModifier");
 			if (lua->getGlobalInt("lootMaxLevel") > 0 && lua->getGlobalInt("lootMaxLevel") <= 450 && lua->getGlobalInt("lootMaxLevel") > lua->getGlobalInt("lootMinLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
@@ -566,6 +570,8 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == true || lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == false) lootGroupCreditsSplitEnabled = lua->getGlobalBoolean("lootGroupCreditsSplitEnabled");
 			if (lua->getGlobalFloat("lootChanceMultiplier") > 0) lootChanceMultiplier = lua->getGlobalFloat("lootChanceMultiplier");
 			if (lua->getGlobalFloat("lootResourceMultiplier") > 0) lootResourceMultiplier = lua->getGlobalFloat("lootResourceMultiplier");
+			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true || lua->getGlobalBoolean("lootYellowModifierNameEnabled") == false) lootYellowModifierNameEnabled = lua->getGlobalBoolean("lootYellowModifierNameEnabled");
+			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true && lua->getGlobalString("lootYellowModifierName") !=  "") lootYellowModifierName = lua->getGlobalString("lootYellowModifierName");
 
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");

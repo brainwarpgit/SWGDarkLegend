@@ -187,11 +187,12 @@ harvestDNASampleDistance = 64 --default 16
 lootDistance = 64 --default 16 (Distance does not affect menu options.   They are still greyed out past the default..  must use /loot all)
 lootAreaEnabled = true --default false
 lootCreditMultiplier = 1 --default 1
-lootAttachmentMax = 25 --default 25
+lootAttachmentMax = 50 --default 25
 lootAttachmentMin = 1 --default 1
-lootAttachmentMaxLevel = 400 --default 250  maxCorresponds to creatureMaxLevel
+lootAttachmentMaxLevel = 400 --default 250  max Corresponds to creatureMaxLevel
 lootAttachmentNameEnabled = true --default false
 lootAttachmentModCount = 1 --default 2
+lootDropAttachmentModCount = 3 --default 2
 lootCreditLuckModifier = true --default false
 lootMaxLevel = 450 --default 300
 lootMinLevel = 1 --default 1
@@ -200,6 +201,8 @@ lootRareColorCrystalsEnabled = true --default false
 lootGroupCreditsSplitEnabled = false --default true
 lootChanceMultiplier = 5 --default 1
 lootResourceMultiplier = 2 --default 1
+lootYellowModifierNameEnabled = true --default false
+lootYellowModifierName = "Enhanced" --default Enhanced
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

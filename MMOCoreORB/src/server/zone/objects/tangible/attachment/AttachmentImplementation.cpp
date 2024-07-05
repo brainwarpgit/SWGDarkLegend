@@ -67,6 +67,7 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 			int minStat = adjustedStats - round(adjustedStats * 0.075f);
 			int maxStat = adjustedStats + round(adjustedStats * 0.125f);
 			mod = System::random(maxStat - minStat) + minStat;
+			if (mod > globalVariables::lootAttachmentMax) mod = globalVariables::lootAttachmentMax;
 		}
 		String modName = lootManager->getRandomLootableMod(gameObjectType);
 		skillModMap.put(modName, mod <= 0 ? 1 : mod);
