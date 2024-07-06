@@ -56,7 +56,7 @@ void LootValues::setModifier(const LootItemTemplate* lootTemplate, float lootMod
 	}
 
 	if (levelMin >= 1 && lootModifier == STATIC) {
-		lootModifier = EXPERIMENTAL;
+		lootModifier = globalVariables::lootBaseDamageModifier;
 	}
 
 	setModifier(lootModifier);
@@ -113,7 +113,7 @@ void LootValues::setRandomValues() {
 
 	dynamicValues = attributeIndex.size();
 
-	if (modifier <= BonusType::ENHANCED) {
+	if (modifier <= globalVariables::lootYellowDamageModifier) {
 		dynamicValues = getDistributedValue(1, attributeIndex.size(), level, DISTMIN, DISTMAX) * modifier;
 		dynamicValues = Math::min(dynamicValues, attributeIndex.size());
 	}

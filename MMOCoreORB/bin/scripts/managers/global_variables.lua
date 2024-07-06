@@ -203,6 +203,7 @@ lootChanceMultiplier = 5 --default 1
 lootResourceMultiplier = 2 --default 1
 lootYellowModifierNameEnabled = true --default false
 lootYellowModifierName = "Enhanced" --default Enhanced
+lootUseLootModifiersForDamageModifiersEnabled = true --default false forces modifer max for damage to match loot_manager modifiers.
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

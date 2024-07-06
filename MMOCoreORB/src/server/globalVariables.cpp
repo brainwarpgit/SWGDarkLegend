@@ -203,7 +203,12 @@ namespace globalVariables {
 	float lootResourceMultiplier = 1;
 	bool lootYellowModifierNameEnabled = false;
 	std::string lootYellowModifierName = "Enhanced";
-	
+	float lootLegendaryDamageModifier = 9;
+	float lootExceptionalDamageModifier = 8;
+	float lootYellowDamageModifier = 2;
+	float lootBaseDamageModifier = 1;
+	bool lootUseLootModifiersForDamageModifiersEnabled = false;
+
 //Mission
 	int missionBountyExpirationTime = 48;
 	int missionExpirationTime = 48;
@@ -572,7 +577,8 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("lootResourceMultiplier") > 0) lootResourceMultiplier = lua->getGlobalFloat("lootResourceMultiplier");
 			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true || lua->getGlobalBoolean("lootYellowModifierNameEnabled") == false) lootYellowModifierNameEnabled = lua->getGlobalBoolean("lootYellowModifierNameEnabled");
 			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true && lua->getGlobalString("lootYellowModifierName") !=  "") lootYellowModifierName = lua->getGlobalString("lootYellowModifierName");
-
+			if (lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled") == true || lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled") == false) lootUseLootModifiersForDamageModifiersEnabled = lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled");
+			
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
 			if (lua->getGlobalInt("missionExpirationTime") > 0) missionExpirationTime = lua->getGlobalInt("missionExpirationTime");

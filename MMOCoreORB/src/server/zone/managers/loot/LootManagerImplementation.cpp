@@ -86,6 +86,13 @@ bool LootManagerImplementation::loadConfigData() {
 	diseaseDotChance = lua->getGlobalFloat("diseaseDotChance");
 	poisonDotChance = lua->getGlobalFloat("poisonDotChance");
 
+	if (globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true) {
+		globalVariables::lootLegendaryDamageModifier = lua->getGlobalFloat("legendaryModifier");
+		globalVariables::lootExceptionalDamageModifier = lua->getGlobalFloat("exceptionalModifier");
+		globalVariables::lootYellowDamageModifier = lua->getGlobalFloat("yellowModifier");
+		globalVariables::lootBaseDamageModifier = lua->getGlobalFloat("baseModifier");
+	}
+	
 	if (fabs((fireDotChance + diseaseDotChance + poisonDotChance) - 1.f) > 0.01f) {
 		error() << "Weapon DOT Type chance is not properly distributed. Chances need to equate to 1 - Current Value: " << (fireDotChance + diseaseDotChance + poisonDotChance);
 	}

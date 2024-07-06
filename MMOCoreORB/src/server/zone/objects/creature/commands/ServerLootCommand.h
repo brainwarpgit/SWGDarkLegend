@@ -121,7 +121,7 @@ public:
 		prototype->setCraftersName(craftersName);
 		prototype->setCraftersID(craftersOID);
 
-		if (modifier >= LootValues::EXPERIMENTAL) {
+		if (modifier >= globalVariables::lootBaseDamageModifier) {
 			auto lootValues = LootValues(itemTemplate, 0, 0);
 			lootValues.setLevel(level);
 			lootValues.setModifier(modifier);
@@ -200,7 +200,7 @@ public:
 		prototype->setCraftersName(craftersName);
 		prototype->setCraftersID(craftersOID);
 
-		if (modifier >= LootValues::EXPERIMENTAL) {
+		if (modifier >= globalVariables::lootBaseDamageModifier) {
 			auto lootValues = LootValues(itemTemplate, 0, 0);
 			lootValues.setLevel(level);
 			lootValues.setModifier(modifier);

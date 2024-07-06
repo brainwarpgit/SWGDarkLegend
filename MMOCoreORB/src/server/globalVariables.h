@@ -203,7 +203,12 @@ namespace globalVariables {
 	extern float lootResourceMultiplier;
 	extern bool lootYellowModifierNameEnabled;
 	extern std::string lootYellowModifierName;
-	
+	extern float lootLegendaryDamageModifier;
+	extern float lootExceptionalDamageModifier;
+	extern float lootYellowDamageModifier;
+	extern float lootBaseDamageModifier;
+	extern bool lootUseLootModifiersForDamageModifiersEnabled;
+
 //Mission
 	extern int missionBountyExpirationTime;
 	extern int missionExpirationTime;
