@@ -20,6 +20,7 @@
 #include "server/zone/managers/creature/DisseminateExperienceTask.h"
 #include "server/zone/managers/creature/LairRepopulateTask.h"
 #include "server/zone/managers/creature/SpawnLairMobileTask.h"
+#include "server/globalVariables.h"
 
 int LairObserverImplementation::notifyObserverEvent(unsigned int eventType, Observable* observable, ManagedObject* arg1, int64 arg2) {
 	int i = 0;
@@ -385,7 +386,14 @@ void LairObserverImplementation::spawnLairMobile(TangibleObject* lair, int spawn
 	}
 
 	if (creature == nullptr) {
-		creature = creatureManager->spawnCreatureWithAi(lairTemplateCRC, x, z, y);
+		String templateName = creatureTemplate->getTemplateName();
+		int creatureRoll = System::random(1000);
+		int creatureDifficulty = 1;
+		if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
+		if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+		if (creatureDifficulty == 2) templateName += "_2";
+		if (creatureDifficulty == 3) templateName += "_3";
+		creature = creatureManager->spawnCreatureWithAi(templateName.hashCode(), x, z, y);
 	}
 
 	if (creature == nullptr || !creature->isAiAgent()) {
