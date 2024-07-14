@@ -6,7 +6,7 @@ kashyyykian_ceremonial_armor_chest_plate = {
 	craftingValues = {
 		{"armor_rating",1,1,0},
 		--{"kineticeffectiveness",10,40,10},
-		{"armor_effectiveness",4,24,10},
+		{"armor_effectiveness",10,50,10},
 		{"armor_integrity",18750, 31250,0},
 		{"armor_health_encumbrance",135,85,0},
 		{"armor_action_encumbrance",48,33,0},

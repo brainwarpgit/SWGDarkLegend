@@ -112,7 +112,7 @@ object_tangible_wearables_armor_kashyyykian_ceremonial_armor_kashyyykian_ceremon
 	kinetic = 15,
 	energy = 15,
 	electricity = 15,
-	stun = 0,
+	stun = 15,
 	blast = 15,
 	heat = 15,
 	cold = 15,

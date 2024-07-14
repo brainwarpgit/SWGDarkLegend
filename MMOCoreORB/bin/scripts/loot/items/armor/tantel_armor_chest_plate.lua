@@ -6,7 +6,7 @@ tantel_armor_chest_plate = {
 	craftingValues = {
 		{"armor_rating",1,1,0},
 		--{"energyeffectiveness",10,30,10},
-		{"armor_effectiveness",4,19,10},
+		{"armor_effectiveness",10,50,10},
 		{"armor_integrity",11250, 18750,0},
 		{"armor_health_encumbrance",95,56,0},
 		{"armor_action_encumbrance",33,20,0},

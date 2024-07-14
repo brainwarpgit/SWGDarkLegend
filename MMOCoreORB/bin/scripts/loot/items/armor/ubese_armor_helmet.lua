@@ -6,7 +6,7 @@ ubese_armor_helmet = {
 	craftingValues = {
 		{"armor_rating",1,1,0},
 		--{"kineticeffectiveness",10,40,10},
-		{"armor_effectiveness",4,29,10},
+		{"armor_effectiveness",10,50,10},
 		{"armor_integrity",18750, 31250,0},
 		{"armor_health_encumbrance",11,7,0},
 		{"armor_action_encumbrance",14,8,0},

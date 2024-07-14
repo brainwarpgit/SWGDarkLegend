@@ -6,7 +6,7 @@ bone_armor_leggings = {
 	craftingValues = {
 		{"armor_rating",1,1,0},
 		--{"energyeffectiveness",10,35,10},
-		{"armor_effectiveness",4,19,10},
+		{"armor_effectiveness",10,50,10},
 		{"armor_integrity",7500, 12500,0},
 		{"armor_health_encumbrance",18,10,0},
 		{"armor_action_encumbrance",60,36,0},
