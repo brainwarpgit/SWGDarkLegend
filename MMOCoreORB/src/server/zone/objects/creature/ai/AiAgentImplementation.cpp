@@ -4365,8 +4365,9 @@ void AiAgentImplementation::setCombatState() {
 
 	ManagedReference<SceneObject*> home = homeObject.get();
 
-	if (home != nullptr)
+	if (home != nullptr) {
 		home->notifyObservers(ObserverEventType::AIMESSAGE, asAiAgent(), ObserverEventType::STARTCOMBAT);
+	}
 
 	notifyObservers(ObserverEventType::STARTCOMBAT, asAiAgent());
 

@@ -150,6 +150,7 @@ SceneObject* CreatureManagerImplementation::spawnLair(unsigned int lairTemplate,
  	building->setDespawnOnNoPlayersInRange(true);
 
  	ManagedReference<LairObserver*> lairObserver = new LairObserver();
+
  	lairObserver->deploy();
  	lairObserver->setLairTemplate(lairTmpl);
  	lairObserver->setDifficulty(lairBuildingLevel);
@@ -161,6 +162,7 @@ SceneObject* CreatureManagerImplementation::spawnLair(unsigned int lairTemplate,
  	building->registerObserver(ObserverEventType::AIMESSAGE, lairObserver);
  	building->registerObserver(ObserverEventType::OBJECTREMOVEDFROMZONE, lairObserver);
 	building->registerObserver(ObserverEventType::NOPLAYERSINRANGE, lairObserver);
+	building->registerObserver(ObserverEventType::CREATUREDESPAWNED, lairObserver);
 
  	zone->transferObject(building, -1, true);
 
