@@ -120,6 +120,18 @@ namespace globalVariables {
 	extern bool craftingNewRepairEnabled;
 	extern bool craftingRepairBrokenEnabled;
 	extern float craftingRepairMaxMod;
+	extern bool craftingCraftedItemsBetterThanLootEnabled;
+	extern float craftingCraftedItemsBetterThanLootModifier;
+	extern float craftingKineticMaxResists;
+	extern float craftingEnergyMaxResists;
+	extern float craftingBlastMaxResists;
+	extern float craftingHeatMaxResists;
+	extern float craftingColdMaxResists;
+	extern float craftingElectricityMaxResists;
+	extern float craftingAcidMaxResists;
+	extern float craftingStunMaxResists;
+	extern float craftingLightsaberMaxResists;
+
 
 // Creature
 	extern bool creatureRandomDifficultyEnabled;
@@ -208,6 +220,7 @@ namespace globalVariables {
 	extern float lootYellowDamageModifier;
 	extern float lootBaseDamageModifier;
 	extern bool lootUseLootModifiersForDamageModifiersEnabled;
+	extern float lootArmorMaxResists;
 
 //Mission
 	extern int missionBountyExpirationTime;

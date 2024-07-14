@@ -4,24 +4,27 @@
 #include "templates/LootItemTemplate.h"
 #include "server/globalVariables.h"
 
-LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
+LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
 	setLoggingName("LootValues: " + lootTemplate->getTemplateName());
 
 	staticValues = lootTemplate->getAttributesMapCopy();
 	objectType = lootTemplate->getObjectType();
 
 	dynamicValues = 0;
-	modifier = 0.f;
 	level = 0;
-
 	setLevel(lootTemplate, lootLevel);
-	setModifier(lootTemplate, lootModifier);
-
-	recalculateValues(true);
+	
+	if (globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true) {
+		modifier = lootModifier;
+	} else {
+		modifier = 0.f;
+		setModifier(lootTemplate, lootModifier);
+	}
+	
+	recalculateValues(true, lootTemplate, prototype);
 
 	addExperimentalAttribute("creatureLevel", "null", level, level, 0, true, RandomType::STATIC);
 	setCurrentValue("creatureLevel", level);
-
 	addExperimentalAttribute("modifier", "null", modifier, modifier, 0, true, RandomType::STATIC);
 	setCurrentValue("modifier", modifier);
 }
@@ -62,10 +65,11 @@ void LootValues::setModifier(const LootItemTemplate* lootTemplate, float lootMod
 	setModifier(lootModifier);
 }
 
-void LootValues::recalculateValues(bool initial) {
+void LootValues::recalculateValues(bool initial, const LootItemTemplate* lootTemplate, TangibleObject* prototype) {
 	setStaticValues();
 	setRandomValues();
 	setDamageValues();
+	setLootCraftingValues(lootTemplate, prototype);
 }
 
 void LootValues::setStaticValues() {
@@ -118,7 +122,7 @@ void LootValues::setRandomValues() {
 		dynamicValues = Math::min(dynamicValues, attributeIndex.size());
 	}
 
-	float bonusValue = Math::max(1, modifier);
+	float bonusValue = Math::max(1.0f, modifier);
 
 	for (int i = dynamicValues; -1 < --i;) {
 		int key = System::random(attributeIndex.size()-1);
@@ -137,7 +141,7 @@ void LootValues::setRandomValues() {
 		}
 
 		if (fabs(min) > EPSILON && fabs(max) > EPSILON) {
-			bonusValue = getDistributedValue(1, modifier, level, DISTMIN, DISTMAX);
+			bonusValue = getDistributedValue(1.0f, modifier, (float)level, DISTMIN, DISTMAX);
 		}
 
 		attributeIndex.remove(key);
@@ -149,7 +153,7 @@ void LootValues::setDamageValues() {
 		return;
 	}
 
-	if (objectType & SceneObjectType::WEAPON) {
+	if (objectType & SceneObjectType::WEAPON && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == false) {
 		float maxPercent = getCurrentPercentage("maxdamage");
 		float minPercent = getCurrentPercentage("mindamage");
 
@@ -165,6 +169,23 @@ void LootValues::setDamageValues() {
 
 			setCurrentPercentage("mindamage", percent, percentMax);
 			setModifierValue("mindamage", percentMax);
+		}
+	} else if (objectType & SceneObjectType::WEAPON) {
+		float maxValue = getCurrentValue("maxdamage");
+		float minValue = getCurrentValue("mindamage");
+
+		if (maxValue < minValue) {
+			float maxPercent = getCurrentPercentage("maxdamage");
+			float maxPercentMax = getMaxPercentage("maxdamage");
+
+			float minPercent = getCurrentPercentage("mindamage");
+			float minPercentMax = getMaxPercentage("mindamage");
+
+			setCurrentValue("maxdamage", minValue);
+			setCurrentPercentage("maxdamage", minPercent, minPercentMax);
+
+			setCurrentValue("mindamage", maxValue);
+			setCurrentPercentage("mindamage", maxPercent, maxPercentMax);
 		}
 	} else if (objectType & SceneObjectType::COMPONENT) {
 		float maxValue = getCurrentValue("maxdamage");
@@ -184,6 +205,124 @@ void LootValues::setDamageValues() {
 			setCurrentPercentage("mindamage", maxPercent, maxPercentMax);
 		}
 	}
+}
+
+void LootValues::setLootCraftingValues(const LootItemTemplate* lootTemplate, TangibleObject* prototype) {
+	for (int i = 0; i < getTotalExperimentalAttributes(); ++i) {
+		const String& attribute = getAttribute(i);
+		float minValue = getMinValue(attribute);
+		float maxValue = getMaxValue(attribute);
+		float value = 0.f;
+		
+		if (attribute == "useCount" || attribute == "quantity" || attribute == "charges" || attribute == "uses") {
+			minValue += modifier;
+			maxValue += modifier;
+			setMinValue(attribute, round(minValue));
+			setMaxValue(attribute, round(maxValue));
+			if (minValue > maxValue) {
+				value = System::random(minValue - maxValue) + maxValue;
+			} else {
+				value = System::random(maxValue - minValue) + minValue;
+			}
+			setCurrentValue(attribute, value);
+			continue;
+		}
+		if (prototype->isArmorObject() && attribute == "armor_effectiveness" && globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
+			float resistAdjust = getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier;
+			if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
+			setCurrentValue(attribute, resistAdjust);
+		}
+		if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled  == true && (attribute == "mindamage" || attribute == "maxdamage")) {
+			if (globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
+				setCurrentValue(attribute, getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier);
+			}
+		}
+		/*
+		if (attribute == "power" || attribute == "mindamage" || attribute == "maxdamage" || attribute == "armor_effectiveness") {
+			Logger::console.info(lootTemplate->getTemplateName() + ": " + attribute,true);
+			minValue *= modifier;
+			maxValue *= modifier;
+			setMinValue(attribute, round(minValue));
+			setMaxValue(attribute, round(maxValue));
+			if (minValue > maxValue) {
+				value = System::random(minValue - maxValue) + maxValue;
+			} else {
+				value = System::random(maxValue - minValue) + minValue;
+			}
+			Logger::console.info("minValue: " + std::to_string(minValue) + " maxValue: " + std::to_string(maxValue) + " value: " + std::to_string(value) + " modifier: " + std::to_string(modifier),true);
+			setCurrentValue(attribute, value);
+			continue;
+		}
+		if (attribute == "hitpoints" || attribute == "armor_rating" || attribute == "armor_integrity" || attribute == "woundchance" || attribute == "roundsused" || attribute == "zerorange" || attribute == "zerorangemod" || attribute == "midrange" || attribute == "midrangemod" || attribute == "maxrange" || attribute == "maxrangemod") {
+			Logger::console.info(lootTemplate->getTemplateName() + ": " + attribute,true);
+			//float minValue = round(getMinValue(attribute));
+			//float maxValue = round(getMaxValue(attribute));
+			setMinValue(attribute, minValue);
+			setMaxValue(attribute, maxValue);
+			if (minValue > maxValue) {
+				value = System::random(minValue - maxValue) + maxValue;
+			} else {
+				value = System::random(maxValue - minValue) + minValue;
+			}
+			Logger::console.info("minValue: " + std::to_string(minValue) + " maxValue: " + std::to_string(maxValue) + " value: " + std::to_string(value) + " modifier: " + std::to_string(modifier),true);
+			setCurrentValue(attribute, value);
+			continue;
+		}
+		if (attribute == "attackspeed") {
+			Logger::console.info(lootTemplate->getTemplateName() + ": " + attribute,true);
+			minValue /= modifier;
+			if (minValue < 1) minValue = 1;
+			maxValue /= modifier;
+			if (maxValue < 1) maxValue = 1;
+			setMinValue(attribute, round(minValue));
+			setMaxValue(attribute, round(maxValue));
+			if (minValue > maxValue) {
+				value = System::random(minValue - maxValue) + maxValue;
+			} else {
+				value = System::random(maxValue - minValue) + minValue;
+			}
+			Logger::console.info("minValue: " + std::to_string(minValue) + " maxValue: " + std::to_string(maxValue) + " value: " + std::to_string(value) + " modifier: " + std::to_string(modifier),true);
+			setCurrentValue(attribute, value);
+			continue;
+		}
+		if (attribute == "armor_health_encumbrance" || attribute == "armor_action_encumbrance" || attribute == "armor_mind_encumbrance" || attribute == "attackhealthcost" || attribute == "attackactioncost" || attribute == "attackmindcost") {
+			Logger::console.info(lootTemplate->getTemplateName() + ": " + attribute,true);
+			if (minValue < 0) minValue *= modifier;
+			if (minValue > 0) minValue /= modifier;
+			if (minValue > 0 && minValue < 1) minValue = 1;
+			if (maxValue < 0) maxValue *= modifier;
+			if (maxValue > 0) maxValue /= modifier;
+			if (maxValue > 0 && maxValue < 1) maxValue = 1;
+			setMinValue(attribute, round(minValue));
+			setMaxValue(attribute, round(maxValue));
+			if (minValue > maxValue) {
+				value = System::random(minValue - maxValue) + maxValue;
+			} else {
+				value = System::random(maxValue - minValue) + minValue;
+			}
+			Logger::console.info("minValue: " + std::to_string(minValue) + " maxValue: " + std::to_string(maxValue) + " value: " + std::to_string(value) + " modifier: " + std::to_string(modifier),true);
+			setCurrentValue(attribute, value);
+			continue;
+		}*/
+	}
+	/*if (prototype->isWeaponObject()) {
+		String subtitle;
+		for (int i = 0; i < staticValues.getSize(); i++) {
+			subtitle = staticValues.getAttribute(i);
+			if (subtitle == "useCount" || subtitle == "quantity" || subtitle == "charges" || subtitle == "uses" || subtitle == "charge") {
+				Logger::console.info(subtitle + ": " + std::to_string(getCurrentValue(subtitle)),true);
+				setCurrentValue(subtitle,round(getCurrentValue(subtitle) + modifier));
+			}
+			if (subtitle == "mindamage" || subtitle == "maxdamage" || subtitle == "power") {
+				Logger::console.info(subtitle + ": " + std::to_string(getCurrentValue(subtitle)),true);
+				setCurrentValue(subtitle,round(getCurrentValue(subtitle) * modifier));
+			}
+			if (subtitle == "armor_effectiveness" || subtitle.contains("encumbrance")) {
+				Logger::console.info(subtitle + ": " + std::to_string(getCurrentValue(subtitle)),true);
+				setCurrentValue(subtitle,round(getCurrentValue(subtitle) * modifier));
+			}
+		}
+	}*/		
 }
 
 void LootValues::setStaticValue(const String& attribute) {

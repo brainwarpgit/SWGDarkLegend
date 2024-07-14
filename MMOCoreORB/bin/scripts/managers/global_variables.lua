@@ -120,6 +120,17 @@ craftingNewExperimentEnabled= true --default false   Skill based Experimentation
 craftingNewRepairEnabled = true --default false Skill based Repair
 craftingRepairBrokenEnabled = true -- default false
 craftingRepairMaxMod = 0.8 --default 0.8   You must choose between > 0 and < 1
+craftingCraftedItemsBetterThanLootEnabled = true --default false
+craftingCraftedItemsBetterThanLootModifier = .5 --default 1
+craftingKineticMaxResists = 80 --default 100
+craftingEnergyMaxResists = 80 --default 100
+craftingBlastMaxResists = 80 --default 100
+craftingHeatMaxResists = 80 --default 100
+craftingColdMaxResists = 80 --default 100
+craftingElectricityMaxResists = 80 --default 100
+craftingAcidMaxResists = 80 --default 100
+craftingStunMaxResists = 80 --default 100
+craftingLightsaberMaxResists = 40 --default 100
 
 --Creature
 creatureRandomDifficultyEnabled = true --default false
@@ -204,6 +215,7 @@ lootResourceMultiplier = 2 --default 1
 lootYellowModifierNameEnabled = true --default false
 lootYellowModifierName = "Enhanced" --default Enhanced
 lootUseLootModifiersForDamageModifiersEnabled = true --default false forces modifer max for damage to match loot_manager modifiers.
+lootArmorMaxResists = 60 --default 60
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

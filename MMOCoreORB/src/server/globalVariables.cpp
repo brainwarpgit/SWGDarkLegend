@@ -120,7 +120,18 @@ namespace globalVariables {
 	bool craftingNewRepairEnabled = false;
 	bool craftingRepairBrokenEnabled = false;
 	float craftingRepairMaxMod = 0.8f;
-
+	bool craftingCraftedItemsBetterThanLootEnabled = false;
+	float craftingCraftedItemsBetterThanLootModifier = 1.f;
+	float craftingKineticMaxResists = 100.0f;
+	float craftingEnergyMaxResists = 100.0f;
+	float craftingBlastMaxResists = 100.0f;
+	float craftingHeatMaxResists = 100.0f;
+	float craftingColdMaxResists = 100.0f;
+	float craftingElectricityMaxResists = 100.0f;
+	float craftingAcidMaxResists = 100.0f;
+	float craftingStunMaxResists = 100.0f;
+	float craftingLightsaberMaxResists = 100.0f;
+	
 //Creature
 	bool creatureRandomDifficultyEnabled = false;
 	int creatureMaxLevel = 336;
@@ -208,7 +219,8 @@ namespace globalVariables {
 	float lootYellowDamageModifier = 2;
 	float lootBaseDamageModifier = 1;
 	bool lootUseLootModifiersForDamageModifiersEnabled = false;
-
+	float lootArmorMaxResists = 50;
+	
 //Mission
 	int missionBountyExpirationTime = 48;
 	int missionExpirationTime = 48;
@@ -494,7 +506,18 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("craftingNewRepairEnabled") == true || lua->getGlobalBoolean("craftingNewRepairEnabled") == false) craftingNewRepairEnabled = lua->getGlobalBoolean("craftingNewRepairEnabled");
 			if (lua->getGlobalBoolean("craftingRepairBrokenEnabled") == true || lua->getGlobalBoolean("craftingRepairBrokenEnabled") == false) craftingRepairBrokenEnabled = lua->getGlobalBoolean("craftingRepairBrokenEnabled");
 			if (lua->getGlobalFloat("craftingRepairMaxMod") > 0 && lua->getGlobalFloat("craftingRepairMaxMod") < 1) craftingRepairMaxMod = lua->getGlobalFloat("craftingRepairMaxMod");
-
+			if (lua->getGlobalBoolean("craftingCraftedItemsBetterThanLootEnabled") == true || lua->getGlobalBoolean("craftingCraftedItemsBetterThanLootEnabled") == false) craftingCraftedItemsBetterThanLootEnabled = lua->getGlobalBoolean("craftingCraftedItemsBetterThanLootEnabled");
+			if (lua->getGlobalFloat("craftingCraftedItemsBetterThanLootModifier") > 0 && lua->getGlobalFloat("craftingCraftedItemsBetterThanLootModifier") <= 1) craftingCraftedItemsBetterThanLootModifier = lua->getGlobalFloat("craftingCraftedItemsBetterThanLootModifier");
+			if (lua->getGlobalFloat("craftingKineticMaxResists") >= 0 && lua->getGlobalFloat("craftingKineticMaxResists") <= 100) craftingKineticMaxResists = lua->getGlobalFloat("craftingKineticMaxResists");
+			if (lua->getGlobalFloat("craftingEnergyMaxResists") >= 0 && lua->getGlobalFloat("craftingEnergyMaxResists") <= 100) craftingEnergyMaxResists = lua->getGlobalFloat("craftingEnergyMaxResists");
+			if (lua->getGlobalFloat("craftingBlastMaxResists") >= 0 && lua->getGlobalFloat("craftingBlastMaxResists") <= 100) craftingBlastMaxResists = lua->getGlobalFloat("craftingBlastMaxResists");
+			if (lua->getGlobalFloat("craftingHeatMaxResists") >= 0 && lua->getGlobalFloat("craftingHeatMaxResists") <= 100) craftingHeatMaxResists = lua->getGlobalFloat("craftingHeatMaxResists");
+			if (lua->getGlobalFloat("craftingColdMaxResists") >= 0 && lua->getGlobalFloat("craftingColdMaxResists") <= 100) craftingColdMaxResists = lua->getGlobalFloat("craftingColdMaxResists");
+			if (lua->getGlobalFloat("craftingElectricityMaxResists") >= 0 && lua->getGlobalFloat("craftingElectricityMaxResists") <= 100) craftingElectricityMaxResists = lua->getGlobalFloat("craftingElectricityMaxResists");
+			if (lua->getGlobalFloat("craftingAcidMaxResists") >= 0 && lua->getGlobalFloat("craftingAcidMaxResists") <= 100) craftingAcidMaxResists = lua->getGlobalFloat("craftingAcidMaxResists");
+			if (lua->getGlobalFloat("craftingStunMaxResists") >= 0 && lua->getGlobalFloat("craftingStunMaxResists") <= 100) craftingStunMaxResists = lua->getGlobalFloat("craftingStunMaxResists");
+			if (lua->getGlobalFloat("craftingLightsaberMaxResists") >= 0 && lua->getGlobalFloat("craftingLightsaberMaxResists") <= 100) craftingLightsaberMaxResists = lua->getGlobalFloat("craftingLightsaberMaxResists");
+			
 			//Creature 
 			if (lua->getGlobalBoolean("creatureRandomDifficultyEnabled") == true || lua->getGlobalBoolean("creatureRandomDifficultyEnabled") == false) creatureRandomDifficultyEnabled = lua->getGlobalBoolean("creatureRandomDifficultyEnabled");
 			if (lua->getGlobalInt("creatureMaxLevel") > 0) creatureMaxLevel = lua->getGlobalInt("creatureMaxLevel");
@@ -512,15 +535,15 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("creatureBaseHAMMultiplier") > 0) creatureBaseHAMMultiplier = lua->getGlobalFloat("creatureBaseHAMMultiplier");
 			if (lua->getGlobalFloat("creatureBaseHAMMaxMultiplier") > 0) creatureBaseHAMMaxMultiplier = lua->getGlobalFloat("creatureBaseHAMMaxMultiplier");
 			if (lua->getGlobalFloat("creatureBaseResistsMultiplier") > 0) creatureBaseResistsMultiplier = lua->getGlobalFloat("creatureBaseResistsMultiplier");
-			if (lua->getGlobalFloat("creatureKineticMaxResists") > 0) creatureKineticMaxResists = lua->getGlobalFloat("creatureKineticMaxResists");
-			if (lua->getGlobalFloat("creatureEnergyMaxResists") > 0) creatureEnergyMaxResists = lua->getGlobalFloat("creatureEnergyMaxResists");
-			if (lua->getGlobalFloat("creatureBlastMaxResists") > 0) creatureBlastMaxResists = lua->getGlobalFloat("creatureBlastMaxResists");
-			if (lua->getGlobalFloat("creatureHeatMaxResists") > 0) creatureHeatMaxResists = lua->getGlobalFloat("creatureHeatMaxResists");
-			if (lua->getGlobalFloat("creatureColdMaxResists") > 0) creatureColdMaxResists = lua->getGlobalFloat("creatureColdMaxResists");
-			if (lua->getGlobalFloat("creatureElectricityMaxResists") > 0) creatureElectricityMaxResists = lua->getGlobalFloat("creatureElectricityMaxResists");
-			if (lua->getGlobalFloat("creatureAcidMaxResists") > 0) creatureAcidMaxResists = lua->getGlobalFloat("creatureAcidMaxResists");
-			if (lua->getGlobalFloat("creatureStunMaxResists") > 0) creatureStunMaxResists = lua->getGlobalFloat("creatureStunMaxResists");
-			if (lua->getGlobalFloat("creatureLightsaberMaxResists") > 0) creatureLightsaberMaxResists = lua->getGlobalFloat("creatureLightsaberMaxResists");
+			if (lua->getGlobalFloat("creatureKineticMaxResists") >= 0 && lua->getGlobalFloat("creatureKineticMaxResists") <= 100) creatureKineticMaxResists = lua->getGlobalFloat("creatureKineticMaxResists");
+			if (lua->getGlobalFloat("creatureEnergyMaxResists") >= 0 && lua->getGlobalFloat("creatureEnergyMaxResists") <= 100) creatureEnergyMaxResists = lua->getGlobalFloat("creatureEnergyMaxResists");
+			if (lua->getGlobalFloat("creatureBlastMaxResists") >= 0 && lua->getGlobalFloat("creatureBlastMaxResists") <= 100) creatureBlastMaxResists = lua->getGlobalFloat("creatureBlastMaxResists");
+			if (lua->getGlobalFloat("creatureHeatMaxResists") >= 0 && lua->getGlobalFloat("creatureHeatMaxResists") <= 100) creatureHeatMaxResists = lua->getGlobalFloat("creatureHeatMaxResists");
+			if (lua->getGlobalFloat("creatureColdMaxResists") >= 0 && lua->getGlobalFloat("creatureColdMaxResists") <= 100) creatureColdMaxResists = lua->getGlobalFloat("creatureColdMaxResists");
+			if (lua->getGlobalFloat("creatureElectricityMaxResists") >= 0 && lua->getGlobalFloat("creatureElectricityMaxResists") <= 100) creatureElectricityMaxResists = lua->getGlobalFloat("creatureElectricityMaxResists");
+			if (lua->getGlobalFloat("creatureAcidMaxResists") >= 0 && lua->getGlobalFloat("creatureAcidMaxResists") <= 100) creatureAcidMaxResists = lua->getGlobalFloat("creatureAcidMaxResists");
+			if (lua->getGlobalFloat("creatureStunMaxResists") >= 0 && lua->getGlobalFloat("creatureStunMaxResists") <= 100) creatureStunMaxResists = lua->getGlobalFloat("creatureStunMaxResists");
+			if (lua->getGlobalFloat("creatureLightsaberMaxResists") >= 0 && lua->getGlobalFloat("creatureLightsaberMaxResists") <= 100) creatureLightsaberMaxResists = lua->getGlobalFloat("creatureLightsaberMaxResists");
 			if (lua->getGlobalFloat("creatureWildSpawnDensity") >= 0) creatureWildSpawnDensity = lua->getGlobalFloat("creatureWildSpawnDensity");
 			if (lua->getGlobalFloat("creatureSpawnElitePercentage") >= 0 && lua->getGlobalFloat("creatureSpawnElitePercentage") <= 100 && lua->getGlobalFloat("creatureSpawnElitePercentage") + lua->getGlobalFloat("creatureSpawnHeroicPercentage") <= 100) creatureSpawnElitePercentage = 1000 - (lua->getGlobalFloat("creatureSpawnElitePercentage") * 10);
 			if (lua->getGlobalFloat("creatureSpawnHeroicPercentage") >= 0 && lua->getGlobalFloat("creatureSpawnHeroicPercentage") <= 100 && lua->getGlobalFloat("creatureSpawnElitePercentage") + lua->getGlobalFloat("creatureSpawnHeroicPercentage") <= 100) creatureSpawnHeroicPercentage = (1000 - lua->getGlobalFloat("creatureSpawnElitePercentage")) - (lua->getGlobalFloat("creatureSpawnHeroicPercentage") * 10);
@@ -578,6 +601,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true || lua->getGlobalBoolean("lootYellowModifierNameEnabled") == false) lootYellowModifierNameEnabled = lua->getGlobalBoolean("lootYellowModifierNameEnabled");
 			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true && lua->getGlobalString("lootYellowModifierName") !=  "") lootYellowModifierName = lua->getGlobalString("lootYellowModifierName");
 			if (lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled") == true || lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled") == false) lootUseLootModifiersForDamageModifiersEnabled = lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled");
+			if (lua->getGlobalFloat("lootArmorMaxResists") > 0 && lua->getGlobalFloat("lootArmorMaxResists") <= lua->getGlobalFloat("playerMaxArmorUnSliced")) lootArmorMaxResists = lua->getGlobalFloat("lootArmorMaxResists");
 			
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");

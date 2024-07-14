@@ -173,7 +173,7 @@ class LootManager extends ManagedService implements Logger {
 	private native void setCustomizationData(final LootItemTemplate templateObject, TangibleObject prototype);
 
 	@local
-	private native void setSkillMods(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
+	private native void setSkillMods(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 
 	@local
 	private native void setCustomObjectName(TangibleObject object, final LootItemTemplate templateObject, float excMod);
@@ -182,7 +182,7 @@ class LootManager extends ManagedService implements Logger {
 	private native void setJunkValue(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
 
 	@local
-	private native void addRandomDots(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
+	private native void addRandomDots(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 
 	@local
 	private native void addStaticDots(TangibleObject object, final LootItemTemplate templateObject, int level);
@@ -194,13 +194,13 @@ class LootManager extends ManagedService implements Logger {
 	private native void loadLootableMods( LuaObject modTable, SortedVector<string> mods );
 
 	@local
-	public native void setRandomLootValues(@dereferenced TransactionLog trx, TangibleObject prototype, final LootItemTemplate templateObject, int level, float excMod);
+	public native void setRandomLootValues(@dereferenced TransactionLog trx, TangibleObject prototype, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 
 	@local
 	public native TangibleObject createLootObject(@dereferenced TransactionLog trx, final LootItemTemplate templateObject, int level, boolean maxCondition = false, int creatureDifficulty = 1, int luckSkill = 0);
 
 	@local
-	public native TangibleObject createLootResource(@dereferenced final string resourceTypeName, @dereferenced final string resourceZoneName, int level, int creatureDifficulty);
+	public native TangibleObject createLootResource(@dereferenced final string resourceTypeName, @dereferenced final string resourceZoneName, int level, int creatureDifficulty, int luckSkill);
 
 	@local
 	public native string getRandomLootableMod( unsigned int sceneObjectType );
@@ -247,5 +247,5 @@ class LootManager extends ManagedService implements Logger {
 	}
 
 	@local
-	private native float getRandomModifier(final LootItemTemplate templateObject, int level, float excMod);
+	private native float getRandomModifier(final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 }

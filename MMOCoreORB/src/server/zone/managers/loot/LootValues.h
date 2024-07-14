@@ -32,11 +32,11 @@ protected:
 	uint32 objectType;
 
 	int dynamicValues;
-	int modifier;
+	float modifier;
 	int level;
 
 public:
-	LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier);
+	LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype);
 
 	uint32 getObjectType() const {
 		return objectType;
@@ -54,8 +54,8 @@ public:
 		return level;
 	}
 
-	void setModifier(int lootModifier) {
-		modifier = Math::clamp((int)(STATIC), lootModifier, (int)(globalVariables::lootLegendaryDamageModifier + globalVariables::lootBaseDamageModifier));
+	void setModifier(float lootModifier) {
+		modifier = Math::clamp((float)(STATIC), lootModifier, (float)(globalVariables::lootLegendaryDamageModifier + globalVariables::lootBaseDamageModifier));
 	}
 
 	void setLevel(int lootLevel) {
@@ -66,7 +66,7 @@ public:
 
 	void setLevel(const LootItemTemplate* lootTemplate, int lootLevel);
 
-	void recalculateValues(bool initial);
+	void recalculateValues(bool initial, const LootItemTemplate* lootTemplate, TangibleObject* prototype);
 
 private:
 	inline void setStaticValues();
@@ -74,6 +74,8 @@ private:
 	inline void setRandomValues();
 
 	inline void setDamageValues();
+	
+	inline void setLootCraftingValues(const LootItemTemplate* lootTemplate, TangibleObject* prototype);
 
 	inline void setStaticValue(const String& attribute);
 
@@ -118,7 +120,7 @@ public:
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Legendary)", false);
 		} else if (modifier > globalVariables::lootYellowDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Exceptional)", false);
-		} else if (modifier > globalVariables::lootBaseDamageModifier +1 ) {
+		} else if (modifier > globalVariables::lootBaseDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Enhanced)", false);
 		} else if (modifier > STATIC) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Experimental)", false);

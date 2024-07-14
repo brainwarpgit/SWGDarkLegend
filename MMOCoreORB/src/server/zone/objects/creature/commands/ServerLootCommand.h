@@ -105,7 +105,7 @@ public:
 		ManagedReference<TangibleObject*> prototype = nullptr;
 
 		if (itemTemplate->isRandomResourceContainer()) {
-			prototype = lootManager->createLootResource(lootName, zone->getZoneName(), 1, 1);
+			prototype = lootManager->createLootResource(lootName, zone->getZoneName(), 1, 1, 1);
 		} else {
 			prototype = lootManager->createLootObject(trx, itemTemplate, level, false);
 		}
@@ -122,10 +122,10 @@ public:
 		prototype->setCraftersID(craftersOID);
 
 		if (modifier >= globalVariables::lootBaseDamageModifier) {
-			auto lootValues = LootValues(itemTemplate, 0, 0);
+			auto lootValues = LootValues(itemTemplate, 0, 0, 1, 1, prototype);
 			lootValues.setLevel(level);
 			lootValues.setModifier(modifier);
-			lootValues.recalculateValues(true);
+			lootValues.recalculateValues(true, itemTemplate, prototype);
 
 			prototype->updateCraftingValues(&lootValues, true);
 
@@ -184,7 +184,7 @@ public:
 		ManagedReference<TangibleObject*> prototype = nullptr;
 
 		if (itemTemplate->isRandomResourceContainer()) {
-			prototype = lootManager->createLootResource(lootName, zone->getZoneName(), 1, 1);
+			prototype = lootManager->createLootResource(lootName, zone->getZoneName(), 1, 1, 1);
 		} else {
 			prototype = lootManager->createLootObject(trx, itemTemplate, level, false);
 		}
@@ -201,10 +201,10 @@ public:
 		prototype->setCraftersID(craftersOID);
 
 		if (modifier >= globalVariables::lootBaseDamageModifier) {
-			auto lootValues = LootValues(itemTemplate, 0, 0);
+			auto lootValues = LootValues(itemTemplate, 0, 0, 1, 1, prototype);
 			lootValues.setLevel(level);
 			lootValues.setModifier(modifier);
-			lootValues.recalculateValues(true);
+			lootValues.recalculateValues(true, itemTemplate, prototype);
 
 			prototype->updateCraftingValues(&lootValues, true);
 
