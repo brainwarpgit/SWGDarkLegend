@@ -338,11 +338,9 @@ function CityScreenPlay:spawnStationaryMobile(num)
 end
 
 function CityScreenPlay:spawnCityMobiles()
-	Logger:log("ScreenPlay " .. self.screenplayName .. " spawnCityMobiles", LT_INFO)
 	for i = 1, #self.citySpawns, 1 do
 		local citySpawn = self.citySpawns[i]
 		local pMobile = spawnMobile(self.planet,self:spawnRandomMob(citySpawn[1]),-1,citySpawn[3],citySpawn[4],citySpawn[5],citySpawn[6],citySpawn[7])
-		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i .. " MobName" .. citySpawn[1], LT_INFO)
 		createObserver(CREATUREDESPAWNED, self.screenplayName, "onDespawnCity", pMobile)
 		local mobID = SceneObject(pMobile):getObjectID()
 		writeData(mobID .. ":respawnTimer", citySpawn[2])
@@ -389,11 +387,9 @@ function CityScreenPlay:respawnCity(mob, spawnNumber)
 end
 
 function CityScreenPlay:spawnStaticMobiles()
-	Logger:log("ScreenPlay " .. self.screenplayName .. " spawnStaticMobiles", LT_INFO)
 	for i = 1, #self.mobiles, 1 do
 		local StaticMobile = self.mobiles[i]
 		local pMobile = spawnMobile(self.planet,self:spawnRandomMob(StaticMobile[1]),-1,StaticMobile[3],StaticMobile[4],StaticMobile[5],StaticMobile[6],StaticMobile[7])
-		Logger:log("MobileTemplate " .. tostring(pMobile) .. " MobID " .. i .. " MobName" .. StaticMobile[1], LT_INFO)
 		if (pMobile ~= nil) then
 			if StaticMobile[8] ~= nil and StaticMobile[8] ~= "" then
 				CreatureObject(pMobile):setMoodString(StaticMobile[8])
