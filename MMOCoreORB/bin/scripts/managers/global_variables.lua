@@ -216,6 +216,11 @@ lootYellowModifierNameEnabled = true --default false
 lootYellowModifierName = "Enhanced" --default Enhanced
 lootUseLootModifiersForDamageModifiersEnabled = true --default false forces modifer max for damage to match loot_manager modifiers.
 lootArmorMaxResists = 60 --default 60
+lootNewLootQualityNamingEnabled = true --default false
+lootModifiersAffectLightsaberCrystalsEnabled = true --default false Also works with Krayt Pearls
+lootLevelToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
+lootModifierToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
+lootQualityToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

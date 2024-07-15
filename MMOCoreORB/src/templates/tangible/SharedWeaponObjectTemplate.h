@@ -19,6 +19,10 @@ protected:
 	int damageType;
 
 	int armorPiercing;
+	
+	int level;
+	float modifier;
+	int lootQuality;
 
 	int healthAttackCost;
 	int actionAttackCost;
@@ -120,7 +124,11 @@ public:
 
 	SharedWeaponObjectTemplate() {
 		damageType = 0;
-
+		
+		level = 0;
+		modifier = 0.0;
+		lootQuality = 1;
+		
 		armorPiercing = 0;
 
 		healthAttackCost = 0;
@@ -161,6 +169,18 @@ public:
 
 	void parseFileData(IffStream* iffStream);
 
+	inline int getLevel() const {
+		return level;
+	}
+	
+	float getModifier() const {
+		return modifier;
+	}
+	
+	inline int getLootQuality() const {
+		return lootQuality;
+	}	
+	
 	inline String getXpType() const {
 		return xpType;
 	}
@@ -229,6 +249,18 @@ public:
 		return woundsRatio;
 	}
 
+	void setLevel(int level) {
+		this->level = level;
+	}
+	
+	void setModifier(float modifier) {
+		this->modifier = modifier;
+	}
+	
+	void setLootQuality(int lootQuality) {
+		this->lootQuality = lootQuality;
+	}
+	
 	void setActionAttackCost(int actionAttackCost) {
 		this->actionAttackCost = actionAttackCost;
 	}

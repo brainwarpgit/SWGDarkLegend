@@ -220,6 +220,11 @@ namespace globalVariables {
 	float lootBaseDamageModifier = 1;
 	bool lootUseLootModifiersForDamageModifiersEnabled = false;
 	float lootArmorMaxResists = 50;
+	bool lootNewLootQualityNamingEnabled = false;
+	bool lootModifiersAffectLightsaberCrystalsEnabled = false;
+	bool lootLevelToItemDescriptionEnabled = false;
+	bool lootModifierToItemDescriptionEnabled = false;
+	bool lootQualityToItemDescriptionEnabled = false;
 	
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -602,7 +607,12 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootYellowModifierNameEnabled") == true && lua->getGlobalString("lootYellowModifierName") !=  "") lootYellowModifierName = lua->getGlobalString("lootYellowModifierName");
 			if (lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled") == true || lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled") == false) lootUseLootModifiersForDamageModifiersEnabled = lua->getGlobalBoolean("lootUseLootModifiersForDamageModifiersEnabled");
 			if (lua->getGlobalFloat("lootArmorMaxResists") > 0 && lua->getGlobalFloat("lootArmorMaxResists") <= lua->getGlobalFloat("playerMaxArmorUnSliced")) lootArmorMaxResists = lua->getGlobalFloat("lootArmorMaxResists");
-			
+			if (lua->getGlobalBoolean("lootNewLootQualityNamingEnabled") == true || lua->getGlobalBoolean("lootNewLootQualityNamingEnabled") == false) lootNewLootQualityNamingEnabled = lua->getGlobalBoolean("lootNewLootQualityNamingEnabled");
+			if (lua->getGlobalBoolean("lootModifiersAffectLightsaberCrystalsEnabled") == true || lua->getGlobalBoolean("lootModifiersAffectLightsaberCrystalsEnabled") == false) lootModifiersAffectLightsaberCrystalsEnabled = lua->getGlobalBoolean("lootModifiersAffectLightsaberCrystalsEnabled");
+			if (lua->getGlobalBoolean("lootLevelToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootNewLootQualityNaminlootLevelToItemDescriptionEnabledgEnabled") == false) lootLevelToItemDescriptionEnabled = lua->getGlobalBoolean("lootLevelToItemDescriptionEnabled");
+			if (lua->getGlobalBoolean("lootModifierToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootModifierToItemDescriptionEnabled") == false) lootModifierToItemDescriptionEnabled = lua->getGlobalBoolean("lootModifierToItemDescriptionEnabled");
+			if (lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled") == false) lootQualityToItemDescriptionEnabled = lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled");
+
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
 			if (lua->getGlobalInt("missionExpirationTime") > 0) missionExpirationTime = lua->getGlobalInt("missionExpirationTime");

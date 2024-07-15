@@ -59,7 +59,10 @@ void WeaponObjectImplementation::loadTemplateData(SharedObjectTemplate* template
 	weaponEffectIndex = weaponTemplate->getWeaponEffectIndex();
 
 	damageType = weaponTemplate->getDamageType();
-
+	level = weaponTemplate->getLevel();
+	modifier = weaponTemplate->getModifier();
+	lootQuality = weaponTemplate->getLootQuality();
+	
 	armorPiercing = weaponTemplate->getArmorPiercing();
 
 	healthAttackCost = weaponTemplate->getHealthAttackCost();
@@ -227,7 +230,7 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 
 	/*if (usesRemaining > 0)
 		alm->insertAttribute("count", usesRemaining);*/
-
+	
 	for(int i = 0; i < wearableSkillMods.size(); ++i) {
 		const String& key = wearableSkillMods.elementAt(i).getKey();
 		String statname = "cat_skill_mod_bonus.@stat_n:" + key;
@@ -465,6 +468,17 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 			}
 		}
 	}
+	if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", level);
+	if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+	String lootQualityString = "Base";
+	if (lootQuality == 4 ) {
+		lootQualityString = "Legendary";
+	} else if (lootQuality == 3) {
+		lootQualityString = "Exceptional";
+	} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
+		lootQualityString = globalVariables::lootYellowModifierName;
+	}
+	if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
 }
 
 int WeaponObjectImplementation::getPointBlankAccuracy(bool withPup) const {
@@ -614,6 +628,9 @@ void WeaponObjectImplementation::updateCraftingValues(CraftingValues* values, bo
 	float value = 0.f;
 	setMinDamage(Math::max(values->getCurrentValue("mindamage"), 0.f));
 	setMaxDamage(Math::max(values->getCurrentValue("maxdamage"), 0.f));
+	setLevel(values->getCurrentValue("level"));
+	setModifier(values->getCurrentValue("modifier"));
+	setLootQuality(values->getCurrentValue("lootQuality"));
 
 	setAttackSpeed(values->getCurrentValue("attackspeed"));
 	setHealthAttackCost((int)values->getCurrentValue("attackhealthcost"));

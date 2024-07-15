@@ -221,6 +221,11 @@ namespace globalVariables {
 	extern float lootBaseDamageModifier;
 	extern bool lootUseLootModifiersForDamageModifiersEnabled;
 	extern float lootArmorMaxResists;
+	extern bool lootNewLootQualityNamingEnabled;
+	extern bool lootModifiersAffectLightsaberCrystalsEnabled;
+	extern bool lootLevelToItemDescriptionEnabled;
+	extern bool lootModifierToItemDescriptionEnabled;
+	extern bool lootQualityToItemDescriptionEnabled;
 
 //Mission
 	extern int missionBountyExpirationTime;

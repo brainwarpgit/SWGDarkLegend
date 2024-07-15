@@ -56,7 +56,7 @@ exceptionalModifier = 15 --default 8
 legendaryModifier = 20 --default 9
 
 --The chance for random skill mods to be on looted weapons/wearables
-skillModChance = 750 -- 1 in 1000 default 1000
+skillModChance = 1000 -- 1 in 1000 default 1000
 
 -- Dot Distribution chance by DOT type. They must equate to 1.0
 poisonDotChance = 0.50

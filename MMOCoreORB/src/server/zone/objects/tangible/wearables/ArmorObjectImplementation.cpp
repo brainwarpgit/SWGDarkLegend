@@ -271,6 +271,19 @@ void ArmorObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cre
 
 	if (sliced)
 		alm->insertAttribute("arm_attr", "@obj_attr_n:hacked");
+
+	if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", level);
+	if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+	String lootQualityString = "Base";
+	if (lootQuality == 4 ) {
+		lootQualityString = "Legendary";
+	} else if (lootQuality == 3) {
+		lootQualityString = "Exceptional";
+	} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
+		lootQualityString = globalVariables::lootYellowModifierName;
+	}
+	if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
+
 }
 
 bool ArmorObjectImplementation::isVulnerable(int type) const {
@@ -420,6 +433,17 @@ void ArmorObjectImplementation::updateCraftingValues(CraftingValues* values, boo
 		specialProtection = values->getCurrentValue("armor_effectiveness");
 	else
 		specialProtection = values->getCurrentValue("armor_special_effectiveness");
+		
+	if (values->hasExperimentalAttribute("level")) {
+		level = values->getCurrentValue("level");
+	}
+	if (values->hasExperimentalAttribute("modifier")) {
+		modifier = values->getCurrentValue("modifier");
+	}
+	if (values->hasExperimentalAttribute("lootQuality")) {
+		lootQuality = values->getCurrentValue("lootQuality");
+	}
+
 }
 
 void ArmorObjectImplementation::calculateSpecialProtection(CraftingValues* craftingValues) {

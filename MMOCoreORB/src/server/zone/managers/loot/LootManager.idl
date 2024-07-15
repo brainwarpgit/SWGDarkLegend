@@ -179,6 +179,9 @@ class LootManager extends ManagedService implements Logger {
 	private native void setCustomObjectName(TangibleObject object, final LootItemTemplate templateObject, float excMod);
 
 	@local
+	private native void setCustomObjectNameNew(TangibleObject object, final LootItemTemplate templateObject, float modifier);
+
+	@local
 	private native void setJunkValue(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
 
 	@local
@@ -194,7 +197,7 @@ class LootManager extends ManagedService implements Logger {
 	private native void loadLootableMods( LuaObject modTable, SortedVector<string> mods );
 
 	@local
-	public native void setRandomLootValues(@dereferenced TransactionLog trx, TangibleObject prototype, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
+	public native float setRandomLootValues(@dereferenced TransactionLog trx, TangibleObject prototype, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 
 	@local
 	public native TangibleObject createLootObject(@dereferenced TransactionLog trx, final LootItemTemplate templateObject, int level, boolean maxCondition = false, int creatureDifficulty = 1, int luckSkill = 0);

@@ -34,7 +34,7 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 		return;
 	}
 
-	float level = values->hasExperimentalAttribute("creatureLevel") ? values->getCurrentValue("creatureLevel") : 1;
+	float level = values->hasExperimentalAttribute("level") ? values->getCurrentValue("level") : 1;
 	float bonus = values->hasExperimentalAttribute("modifier") ? values->getCurrentValue("modifier") : 1;
 	float rank = LootValues::getLevelRankValue(level, 0.2f, 0.9f);
 

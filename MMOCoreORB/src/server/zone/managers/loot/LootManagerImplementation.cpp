@@ -287,6 +287,37 @@ void LootManagerImplementation::setCustomObjectName(TangibleObject* object, cons
 	}
 }
 
+void LootManagerImplementation::setCustomObjectNameNew(TangibleObject* object, const LootItemTemplate* templateObject, float modifier) {
+	const String& customName = templateObject->getCustomObjectName();
+
+	if (!customName.isEmpty()) {
+		if (customName.charAt(0) == '@') {
+			StringId stringId(customName);
+
+			object->setObjectName(stringId, false);
+		} else {
+			object->setCustomObjectName(customName, false);
+		}
+	}
+
+	String suffixName = "";
+
+	if (object->isWeaponObject() || object->isArmorObject() || object->isComponent()) {
+		if (modifier >= legendaryModifier) {
+			suffixName = " (Legendary)";
+		} else if (modifier >= exceptionalModifier) {
+			suffixName = " (Exceptional)";
+		} else if (modifier >= yellowModifier && globalVariables::lootYellowModifierNameEnabled == true) {
+			suffixName = " (" + globalVariables::lootYellowModifierName + ")";
+		}
+	}
+
+	if (suffixName != "") {
+		object->setCustomObjectName(object->getDisplayedName() + suffixName, false);
+		object->addMagicBit(false);
+	}
+}
+
 void LootManagerImplementation::setJunkValue(TangibleObject* prototype, const LootItemTemplate* itemTemplate, int level, float excMod) {
 	float valueMin = itemTemplate->getJunkMinValue() * junkValueModifier;
 	float valueMax = itemTemplate->getJunkMaxValue() * junkValueModifier;
@@ -324,14 +355,15 @@ int LootManagerImplementation::calculateLootCredits(int level, int luckSkill) {
 	return credits * globalVariables::lootCreditMultiplier;
 }
 
-void LootManagerImplementation::setRandomLootValues(TransactionLog& trx, TangibleObject* prototype, const LootItemTemplate* itemTemplate, int level, float excMod, int creatureDifficulty, int luckSkill) {
+float LootManagerImplementation::setRandomLootValues(TransactionLog& trx, TangibleObject* prototype, const LootItemTemplate* itemTemplate, int level, float excMod, int creatureDifficulty, int luckSkill) {
 	auto debugAttributes = ConfigManager::instance()->getLootDebugAttributes();
 
 	float modifier = getRandomModifier(itemTemplate, level, excMod, creatureDifficulty, luckSkill);
 
 	auto lootValues = LootValues(itemTemplate, level, modifier, creatureDifficulty, luckSkill, prototype);
 	prototype->updateCraftingValues(&lootValues, true);
-	prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
+	//prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
+	return modifier;
 
 #ifdef LOOTVALUES_DEBUG
 	lootValues.debugAttributes(prototype, itemTemplate);
@@ -430,11 +462,17 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
 	// Set loot item customization and object name
 	setCustomizationData(templateObject, prototype);
-	setCustomObjectName(prototype, templateObject, excMod);
+	if (globalVariables::lootNewLootQualityNamingEnabled == false) {
+		setCustomObjectName(prototype, templateObject, excMod);
+	}
 
 	// Set the values for the random attributes to be modified if there are any
-	setRandomLootValues(trx, prototype, templateObject, level, excMod, creatureDifficulty, luckSkill);
+	float modifier = setRandomLootValues(trx, prototype, templateObject, level, excMod, creatureDifficulty, luckSkill);
 
+	if (globalVariables::lootNewLootQualityNamingEnabled == true) {
+		setCustomObjectNameNew(prototype, templateObject, modifier);
+	}
+	
 	// Set the value for those items that can be sold at a junk dealer
 	setJunkValue(prototype, templateObject, level, excMod);
 
@@ -568,12 +606,12 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 	VectorMap<String,int> skillMods = *templateObject->getSkillMods();
 
 	float modifier = Math::max(getRandomModifier(templateObject, level, excMod, creatureDifficulty, luckSkill), baseModifier);
-	int chance = LootValues::getLevelRankValue(level, 0.2f, 0.9f) * modifier * levelChance;
+	/*int chance = LootValues::getLevelRankValue(level, 0.2f, 0.9f) * modifier * levelChance;
 	int roll = System::random(skillModChance);
 	int randomMods = 0;
-
+	int pivot = 0;
 	if (roll <= chance) {
-		int pivot = chance - roll;
+		pivot = chance - roll;
 
 		if (pivot < 40) {
 			randomMods = 1;
@@ -585,8 +623,22 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 			randomMods = System::random(1) + 2;
 		}
 	}
-
-	if (randomMods > globalVariables::lootDropAttachmentModCount) randomMods = globalVariables::lootDropAttachmentModCount;
+Logger::console.info("modifier: " + std::to_string(modifier) + " chance: " + std::to_string(chance) + " roll: " + std::to_string(roll) + " skillModChance: " + std::to_string(skillModChance) + " pivot: " + std::to_string(pivot) + " randomMods: " + std::to_string(randomMods),true);*/
+	int roll = System::random(skillModChance + luckSkill);
+	int randomMods = 0;
+	if (modifier >= globalVariables::lootLegendaryDamageModifier) {
+		randomMods = 3;
+	} else if (modifier >= globalVariables::lootExceptionalDamageModifier) {
+		randomMods = 2;
+	} else if (modifier >= globalVariables::lootYellowDamageModifier) {
+		randomMods = 1;
+	}
+	if (roll < (skillModChance * .1) && randomMods >= 1) {
+		randomMods -= 1;
+	} else if (roll > (skillModChance * .95) && randomMods < globalVariables::lootDropAttachmentModCount) {
+		randomMods += 1;
+	}
+	if (randomMods > (globalVariables::lootDropAttachmentModCount + 1)) randomMods = (globalVariables::lootDropAttachmentModCount + 1);
 	if (randomMods < 0) randomMods = 0;
 
 	for (int i = 0; i < randomMods; ++i) {
@@ -617,9 +669,8 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 		const String& key = skillMods.elementAt(i).getKey();
 		int value = skillMods.elementAt(i).getValue();
 		prototype->addSkillMod(SkillModManager::WEARABLE, key, value);
+		prototype->addMagicBit(false);
 	}
-
-	prototype->addMagicBit(false);
 }
 
 String LootManagerImplementation::getRandomLootableMod(uint32 sceneObjectType) {
