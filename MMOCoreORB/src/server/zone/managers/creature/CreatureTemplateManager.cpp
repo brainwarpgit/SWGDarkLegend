@@ -10,6 +10,9 @@
 #include "conf/ConfigManager.h"
 #include "server/zone/managers/name/NameManager.h"
 #include "server/zone/objects/creature/ai/AiAgent.h"
+#include <unordered_map>
+#include <string>
+#include "server/globalVariables.h"
 
 AtomicInteger CreatureTemplateManager::loadedMobileTemplates;
 
@@ -199,39 +202,150 @@ int CreatureTemplateManager::includeFile(lua_State* L) {
 	return 0;
 }
 
+std::unordered_map<std::string, float> createCaveMultipliers() {
+	std::unordered_map<std::string, float> caveMultipliers;
+	caveMultipliers["caveCorelliaAfarathuCave"] = globalVariables::caveCorelliaAfarathuCaveMultiplier;
+	caveMultipliers["caveCorelliaDrallCave"] = globalVariables::caveCorelliaDrallCaveMultiplier;
+	caveMultipliers["caveCorelliaLordNyaxCult"] = globalVariables::caveCorelliaLordNyaxCultMultiplier;
+	caveMultipliers["caveDantooineForceCrystalHunterCave"] = globalVariables::caveDantooineForceCrystalHunterCaveMultiplier;
+	caveMultipliers["caveDantooineJantaCave"] = globalVariables::caveDantooineJantaCaveMultiplier;
+	caveMultipliers["caveDantooineKungaStronghold"] = globalVariables::caveDantooineKungaStrongholdMultiplier;
+	caveMultipliers["caveDantooineLizardCave"] = globalVariables::caveDantooineLizardCaveMultiplier;
+	caveMultipliers["caveDathomirRancorCave"] = globalVariables::caveDathomirRancorCaveMultiplier;
+	caveMultipliers["caveDathomirSpiderClanCave"] = globalVariables::caveDathomirSpiderClanCaveMultiplier;
+	caveMultipliers["caveEndorJindaRitualistCave"] = globalVariables::caveEndorJindaRitualistCaveMultiplier;
+	caveMultipliers["caveEndorKorgaCave"] = globalVariables::caveEndorKorgaCaveMultiplier;
+	caveMultipliers["caveEndorOrphanedMarauderCave"] = globalVariables::caveEndorOrphanedMarauderCaveMultiplier;
+	caveMultipliers["caveLokDroidEngineerCave"] = globalVariables::caveLokDroidEngineerCaveMultiplier;
+	caveMultipliers["caveLokGasMine"] = globalVariables::caveLokGasMineMultiplier;
+	caveMultipliers["caveLokImperialResearchFacility"] = globalVariables::caveLokImperialResearchFacilityMultiplier;
+	caveMultipliers["caveLokNymPirateCave"] = globalVariables::caveLokNymPirateCaveMultiplier;
+	caveMultipliers["caveNabooNarglatchCave"] = globalVariables::caveNabooNarglatchCaveMultiplier;
+	caveMultipliers["caveNabooPirateBunker"] = globalVariables::caveNabooPirateBunkerMultiplier;
+	caveMultipliers["caveNabooVeermokCave"] = globalVariables::caveNabooVeermokCaveMultiplier;
+	caveMultipliers["caveRoriBlackSunOutpostBunker"] = globalVariables::caveRoriBlackSunOutpostBunkerMultiplier;
+	caveMultipliers["caveRoriBorgleBatCave"] = globalVariables::caveRoriBorgleBatCaveMultiplier;
+	caveMultipliers["caveRoriGiantBarkMiteCave"] = globalVariables::caveRoriGiantBarkMiteCaveMultiplier;
+	caveMultipliers["caveRoriKobolaBunker"] = globalVariables::caveRoriKobolaBunkerMultiplier;
+	caveMultipliers["caveRoriPygmyTortonCave"] = globalVariables::caveRoriPygmyTortonCaveMultiplier;
+	caveMultipliers["caveTalusAakuanCave"] = globalVariables::caveTalusAakuanCaveMultiplier;
+	caveMultipliers["caveTalusBinayrePirateBunker"] = globalVariables::caveTalusBinayrePirateBunkerMultiplier;
+	caveMultipliers["caveTalusChunkerBunker"] = globalVariables::caveTalusChunkerBunkerMultiplier;
+	caveMultipliers["caveTalusDetainmentCenter"] = globalVariables::caveTalusDetainmentCenterMultiplier;
+	caveMultipliers["caveTalusErranSif"] = globalVariables::caveTalusErranSifMultiplier;
+	caveMultipliers["caveTalusGiantDecayMiteCave"] = globalVariables::caveTalusGiantDecayMiteCaveMultiplier;
+	caveMultipliers["caveTalusGiantFynockCave"] = globalVariables::caveTalusGiantFynockCaveMultiplier;
+	caveMultipliers["caveTalusKaymurraBiogenticResearchStation"] = globalVariables::caveTalusKaymurraBiogenticResearchStationMultiplier;
+	caveMultipliers["caveTalusLostAqualishCave"] = globalVariables::caveTalusLostAqualishCaveMultiplier;
+	caveMultipliers["caveTalusWeaponsDepot"] = globalVariables::caveTalusWeaponsDepotMultiplier;
+	caveMultipliers["caveTatooineHuttHideout"] = globalVariables::caveTatooineHuttHideoutMultiplier;
+	caveMultipliers["caveTatooineSennexCave"] = globalVariables::caveTatooineSennexCaveMultiplier;
+	caveMultipliers["caveTatooineSquillCave"] = globalVariables::caveTatooineSquillCaveMultiplier;
+	caveMultipliers["caveTatooineTuskenBunker"] = globalVariables::caveTatooineTuskenBunkerMultiplier;
+	caveMultipliers["poiCorelliaRebelHideout"] = globalVariables::poiCorelliaRebelHideoutMultiplier;
+	caveMultipliers["poiCorelliaRogueCorsecBase"] = globalVariables::poiCorelliaRogueCorsecBaseMultiplier;
+	caveMultipliers["poiCorelliaStronghold"] = globalVariables::poiCorelliaStrongholdMultiplier;
+	caveMultipliers["poiDantooineAbandonedRebelBase"] = globalVariables::poiDantooineAbandonedRebelBaseMultiplier;
+	caveMultipliers["poiDantooineDantariVillage"] = globalVariables::poiDantooineDantariVillageMultiplier;
+	caveMultipliers["poiDantooineMokkStronghold"] = globalVariables::poiDantooineMokkStrongholdMultiplier;
+	caveMultipliers["poiDathomirCrashSite"] = globalVariables::poiDathomirCrashSiteMultiplier;
+	caveMultipliers["poiDathomirImperialPrison"] = globalVariables::poiDathomirImperialPrisonMultiplier;
+	caveMultipliers["poiDathomirNightsisterLaborCamp"] = globalVariables::poiDathomirNightsisterLaborCampMultiplier;
+	caveMultipliers["poiDathomirNightsisterStronghold"] = globalVariables::poiDathomirNightsisterStrongholdMultiplier;
+	caveMultipliers["poiDathomirNightsisterVsSingingMountain"] = globalVariables::poiDathomirNightsisterVsSingingMountainMultiplier;
+	caveMultipliers["poiDathomirSarlacc"] = globalVariables::poiDathomirSarlaccMultiplier;
+	caveMultipliers["poiDathomirSingingMountainClan"] = globalVariables::poiDathomirSingingMountainClanMultiplier;
+	caveMultipliers["poiEndorDulokVillageNorth"] = globalVariables::poiEndorDulokVillageNorthMultiplier;
+	caveMultipliers["poiEndorDulokVillageSouth"] = globalVariables::poiEndorDulokVillageSouthMultiplier;
+	caveMultipliers["poiEndorEwokLakeVillage1"] = globalVariables::poiEndorEwokLakeVillage1Multiplier;
+	caveMultipliers["poiEndorEwokLakeVillage2"] = globalVariables::poiEndorEwokLakeVillage2Multiplier;
+	caveMultipliers["poiEndorEwokTreeVillage1"] = globalVariables::poiEndorEwokTreeVillage1Multiplier;
+	caveMultipliers["poiEndorEwokTreeVillage2"] = globalVariables::poiEndorEwokTreeVillage2Multiplier;
+	caveMultipliers["poiEndorMarauderStronghold"] = globalVariables::poiEndorMarauderStrongholdMultiplier;
+	caveMultipliers["poiLokCanyonCorsairsStronghold"] = globalVariables::poiLokCanyonCorsairsStrongholdMultiplier;
+	caveMultipliers["poiLokDownedBloodRazorTransport"] = globalVariables::poiLokDownedBloodRazorTransportMultiplier;
+	caveMultipliers["poiLokImperialOutpost"] = globalVariables::poiLokImperialOutpostMultiplier;
+	caveMultipliers["poiLokKimogilaTown"] = globalVariables::poiLokKimogilaTownMultiplier;
+	caveMultipliers["poiNabooAbandonedImperialOutpost"] = globalVariables::poiNabooAbandonedImperialOutpostMultiplier;
+	caveMultipliers["poiNabooGunganSacredPlace"] = globalVariables::poiNabooGunganSacredPlaceMultiplier;
+	caveMultipliers["poiNabooGunganTemple"] = globalVariables::poiNabooGunganTempleMultiplier;
+	caveMultipliers["poiNabooImperialVsGungan"] = globalVariables::poiNabooImperialVsGunganMultiplier;
+	caveMultipliers["poiNabooMaulerStronghold"] = globalVariables::poiNabooMaulerStrongholdMultiplier;
+	caveMultipliers["poiNabooMordran"] = globalVariables::poiNabooMordranMultiplier;
+	caveMultipliers["poiNabooWeaponTestingFacility"] = globalVariables::poiNabooWeaponTestingFacilityMultiplier;
+	caveMultipliers["poiRoriCobralHideout"] = globalVariables::poiRoriCobralHideoutMultiplier;
+	caveMultipliers["poiRoriGarynRaidersBunker"] = globalVariables::poiRoriGarynRaidersBunkerMultiplier;
+	caveMultipliers["poiRoriGungansSwampTown"] = globalVariables::poiRoriGungansSwampTownMultiplier;
+	caveMultipliers["poiRoriHyperdriveResearchFacility"] = globalVariables::poiRoriHyperdriveResearchFacilityMultiplier;
+	caveMultipliers["poiRoriImperialEncampment"] = globalVariables::poiRoriImperialEncampmentMultiplier;
+	caveMultipliers["poiRoriPoacherVsCreatureBattle"] = globalVariables::poiRoriPoacherVsCreatureBattleMultiplier;
+	caveMultipliers["poiRoriRebelMilitaryBase"] = globalVariables::poiRoriRebelMilitaryBaseMultiplier;
+	caveMultipliers["poiTalusCorsecVsFlailBattle"] = globalVariables::poiTalusCorsecVsFlailBattleMultiplier;
+	caveMultipliers["poiTalusImperialVsRebelBattle"] = globalVariables::poiTalusImperialVsRebelBattleMultiplier;
+	caveMultipliers["poiTalusLostVillageOfDurbin"] = globalVariables::poiTalusLostVillageOfDurbinMultiplier;
+	caveMultipliers["poiTatooineAncientKraytDragonSkeleton"] = globalVariables::poiTatooineAncientKraytDragonSkeletonMultiplier;
+	caveMultipliers["poiTatooineFortTusken"] = globalVariables::poiTatooineFortTuskenMultiplier;
+	caveMultipliers["poiTatooineImperialDetachmentHq"] = globalVariables::poiTatooineImperialDetachmentHqMultiplier;
+	caveMultipliers["poiTatooineImperialOasisBase"] = globalVariables::poiTatooineImperialOasisBaseMultiplier;
+	caveMultipliers["poiTatooineJawaTraders"] = globalVariables::poiTatooineJawaTradersMultiplier;
+	caveMultipliers["poiTatooineKraytGraveyard"] = globalVariables::poiTatooineKraytGraveyardMultiplier;
+	caveMultipliers["poiTatooineSandcrawlerNe"] = globalVariables::poiTatooineSandcrawlerNeMultiplier;
+	caveMultipliers["poiTatooineVillageRuins"] = globalVariables::poiTatooineVillageRuinsMultiplier;
+	caveMultipliers["poiYavin4BlueleafTemple"] = globalVariables::poiYavin4BlueleafTempleMultiplier;
+	caveMultipliers["poiYavin4ImperialBase"] = globalVariables::poiYavin4ImperialBaseMultiplier;
+	caveMultipliers["poiYavin4WoolamanderTemple"] = globalVariables::poiYavin4WoolamanderTempleMultiplier;
+	caveMultipliers["dungeonCorellianCorvette"] = globalVariables::dungeonCorellianCorvetteMultiplier;
+	caveMultipliers["dungeonDeathWatchBunker"] = globalVariables::dungeonDeathWatchBunkerMultiplier;
+	caveMultipliers["dungeonGeonosianBioLab"] = globalVariables::dungeonGeonosianBioLabMultiplier;
+	caveMultipliers["dungeonWarren"] = globalVariables::dungeonWarrenMultiplier;
+	// Add more caves and their corresponding multipliers as needed
+	return caveMultipliers;
+}
+
 int CreatureTemplateManager::addTemplate(lua_State* L) {
 	if (checkArgumentCount(L, 2) == 1) {
 		instance()->error("incorrect number of arguments passed to CreatureTemplateManager::addTemplate");
 		ERROR_CODE = INCORRECT_ARGUMENTS;
 		return 0;
 	}
-
 	String ascii =  lua_tostring(L, -2);
-	uint32 crc = (uint32) ascii.hashCode();
-
+	float cdpMultiplier = 1.0f;
+	int difficulty = 1;
 	LuaObject obj(L);
-	CreatureTemplate* newTemp = new CreatureTemplate();
-	newTemp->setTemplateName(ascii);
-	newTemp->readObject(&obj);
-
-	if (instance()->hashTable.containsKey(crc)) {
-		luaL_where (L, 2);
-		String luaMethodName = lua_tostring(L, -1);
-
-		lua_pop(L, 1);
-
-		instance()->error("overwriting mobile " + ascii + " with " + luaMethodName);
-
-		ERROR_CODE = DUPLICATE_MOBILE;
-	}
-
-	CreatureTemplateManager::instance()->hashTable.put(crc, newTemp);
-
-	int count = loadedMobileTemplates.increment();
-
-	if (ConfigManager::instance()->isProgressMonitorActivated() && !DEBUG_MODE)
+	auto caveMultipliers = createCaveMultipliers();
+	for (int i = 1; i <= 3; ++i) {
+		CreatureTemplate* newTemp = new CreatureTemplate();
+		std::string templateName = ascii;
+		bool caveFound = false;
+		for (const auto& entry : caveMultipliers) {
+			if (templateName.find(entry.first) != std::string::npos) {
+				difficulty = i + 3;
+				cdpMultiplier = entry.second;
+				if (i > 1) templateName += "_" + std::to_string(i);
+				caveFound = true;
+				break;
+			}
+		}
+		if (!caveFound) {
+			if (i > 1) templateName += "_" + std::to_string(i);
+			difficulty = i;
+		}
+		//Logger::console.info("CreatureTemplate: " + templateName,true);
+		String templateN = templateName;		
+		uint32 crc = (uint32) templateN.hashCode();
+		newTemp->setTemplateName(templateName);
+		newTemp->readObject(&obj, difficulty, cdpMultiplier);
+		if (instance()->hashTable.containsKey(crc)) {
+			luaL_where (L, 2);
+			String luaMethodName = lua_tostring(L, -1);
+			lua_pop(L, 1);
+			instance()->error("overwriting mobile " + ascii + " with " + luaMethodName);
+			ERROR_CODE = DUPLICATE_MOBILE;
+		}
+		CreatureTemplateManager::instance()->hashTable.put(crc, newTemp);
+		int count = loadedMobileTemplates.increment();
 		printf("\r\tLoading mobile templates: [%d] / [?]\t", count);
-
+	}
 	return 0;
 }
 
@@ -425,3 +539,5 @@ int CreatureTemplateManager::addDressGroup(lua_State* L) {
 
 	return 0;
 }
+
+

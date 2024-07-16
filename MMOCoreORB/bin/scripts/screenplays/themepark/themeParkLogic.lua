@@ -2132,7 +2132,7 @@ function ThemeParkLogic:followPlayer(pConversingNpc, pConversingPlayer)
 		return
 	end
 
-	local playerFaction = CreatureObject(pConversingPlayer)
+	local playerFaction = CreatureObject(pConversingPlayer):getFaction()
 	if (playerFaction == FACTIONREBEL or playerFaction == FACTIONIMPERIAL) and not CreatureObject(pConversingPlayer):isOnLeave() then
 		CreatureObject(pConversingNpc):setFaction(playerFaction)
 
@@ -2178,7 +2178,9 @@ function ThemeParkLogic:escortedNpcCloseEnough(pConversingPlayer)
 	local objectID = readData(CreatureObject(pConversingPlayer):getObjectID() .. ":missionSpawn:no1")
 	local pNpc = getSceneObject(objectID)
 
-	return pNpc ~= nil and SceneObject(pConversingPlayer):getDistanceTo(pNpc) < 64
+	--return pNpc ~= nil and SceneObject(pConversingPlayer):getDistanceTo(pNpc) < 64
+	if pNpc == nil then return end
+	return true
 end
 
 function ThemeParkLogic:resetThemePark(pConversingPlayer)

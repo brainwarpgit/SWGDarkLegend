@@ -63,13 +63,16 @@ function JunkDealer:getEligibleJunk(pPlayer, dealerType, skipItem)
 			local tano = TangibleObject(pItem)
 			local sceno = SceneObject(pItem)
 
-			if sceno:getObjectID() ~= skipItem then
-				if tano:getJunkDealerNeeded() & dealerNum > 0 and tano:getCraftersName() == "" and not tano:isBroken() and not tano:isSliced() and not tano:isNoTrade() and sceno:getContainerObjectsSize() == 0 then
-					local name = sceno:getDisplayedName()
-					local value = tano:getJunkValue()
-					local textTable = {"[" .. value .. "] " .. name, sceno:getObjectID()}
-					table.insert(junkList, textTable)
+			if tano:getJunkDealerNeeded() and dealerNum > 0 and not tano:isNoTrade() and sceno:getContainerObjectsSize() == 0 then
+				local name = sceno:getDisplayedName()
+				local value = tano:getJunkValue()
+				if (value == 0) then
+					value = 100
+				else
+					value = value * 5
 				end
+				local textTable = {"[" .. value .. "] " .. name, sceno:getObjectID()}
+				table.insert(junkList, textTable)
 			end
 		end
 	end
@@ -118,7 +121,11 @@ function JunkDealer:sellAllItems(pPlayer, pSui, pInventory)
 		if pItem ~= nil then
 			local value = TangibleObject(pItem):getJunkValue()
 			createEvent(10, "JunkDealer", "destroyItem", pItem, "")
-
+			if value == 0 then
+				value = 100
+			else
+				value = value * 5
+			end
 			amount = amount + value
 		end
 	end
@@ -155,6 +162,11 @@ function JunkDealer:sellItem(pPlayer, pSui, rowIndex, pInventory)
 	local skipItem = item:getObjectID()
 	local name = item:getDisplayedName()
 	local value = TangibleObject(pItem):getJunkValue()
+	if value == 0 then
+		value = 100
+	else
+		value = value * 5
+	end
 
 	createEvent(10, "JunkDealer", "destroyItem", pItem, "")
 

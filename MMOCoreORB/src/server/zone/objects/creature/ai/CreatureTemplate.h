@@ -26,6 +26,24 @@ protected:
 	String customName;
 
 	unsigned int armor;
+	
+	int creatureDifficulty;
+	float baseCreatureScale;
+	float baseCreatureXp;
+	float baseCreatureMeatAmount;
+	float baseCreatureHideAmount;
+	float baseCreatureBoneAmount;
+	float baseCreatureMilk;
+	float baseCreatureLevel;
+	float baseCreatureChanceHit;
+	float baseCreatureFerocity;
+	float baseCreatureDamageMax;
+	float baseCreatureDamageMin;
+	float baseCreatureHAM;
+	float baseCreatureHAMmax;
+	float baseCreatureResists;
+	
+	float cdpMultiplier;
 
 	float kinetic;
 	float energy;
@@ -124,7 +142,7 @@ public:
 
 	virtual ~CreatureTemplate();
 
-	void readObject(LuaObject* templateData);
+	void readObject(LuaObject* templateData, int creatureDifficulty, float cdpMultiplier);
 
 	inline float getKinetic() const {
 		if (isSpecialProtection(SharedWeaponObjectTemplate::KINETIC))
@@ -233,6 +251,14 @@ public:
 		return milkType;
 	}
 
+	inline unsigned int getCreatureDifficulty() const {
+		return creatureDifficulty;
+	}	
+	
+	inline float getCDPMultiplier() const {
+		return cdpMultiplier;
+	}	
+	
 	inline const String& getCustomName() const {
 		return customName;
 	}

@@ -20,6 +20,7 @@
 #include "server/zone/packets/creature/CreatureObjectDeltaMessage4.h"
 #include "server/zone/managers/mission/MissionManager.h"
 #include "server/zone/managers/frs/FrsManager.h"
+#include "server/globalVariables.h"
 
 SkillManager::SkillManager()
 	: Logger("SkillManager") {
@@ -392,6 +393,13 @@ bool SkillManager::awardSkill(const String& skillName, CreatureObject* creature,
 
 	SkillModManager::instance()->verifySkillBoxSkillMods(creature);
 
+	if (skill->getSkillName() == "social_politician_novice" && globalVariables::skillsInstantMasterPoliticianEnabled == true) { 
+		awardSkill("social_politician_master", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "crafting_merchant_novice" && globalVariables::skillsInstantMasterMerchantEnabled == true) { 
+		awardSkill("crafting_merchant_master", creature, true, true, true);
+	}
+    
 	return true;
 }
 

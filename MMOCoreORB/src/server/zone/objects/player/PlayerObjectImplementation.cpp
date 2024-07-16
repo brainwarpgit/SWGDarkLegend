@@ -82,6 +82,7 @@
 #include "server/ServerCore.h"
 #include "server/zone/managers/gcw/GCWManager.h"
 #include "server/zone/objects/ship/ShipObject.h"
+#include "server/globalVariables.h"
 
 #ifdef WITH_SESSION_API
 #include "server/login/SessionAPIClient.h"
@@ -1401,12 +1402,15 @@ void PlayerObjectImplementation::setTitle(const String& characterTitle, bool not
 void PlayerObjectImplementation::notifyOnline() {
 	ManagedReference<SceneObject*> parent = getParent().get();
 
-	if (parent == nullptr)
+	if (parent == nullptr) {
 		return;
+	}
 
 	CreatureObject* playerCreature = parent->asCreatureObject();
-	if (playerCreature == nullptr)
+
+	if (playerCreature == nullptr) {
 		return;
+	}
 
 	miliSecsSession = 0;
 
@@ -2806,8 +2810,13 @@ void PlayerObjectImplementation::deleteAllWaypoints() {
 int PlayerObjectImplementation::getLotsRemaining() {
 	Locker locker(asPlayerObject());
 
-	int lotsRemaining = maximumLots;
-
+	int lotsRemaining = globalVariables::playerMaxLots;
+	
+	if(lotsRemaining != globalVariables::playerMaxLots) {
+		setMaximumLots(globalVariables::playerMaxLots);
+		lotsRemaining = globalVariables::playerMaxLots;
+	}
+	
 	for (int i = 0; i < ownedStructures.size(); ++i) {
 		auto oid = ownedStructures.get(i);
 
@@ -3396,7 +3405,7 @@ bool PlayerObjectImplementation::isInPvpArea(bool checkTimer) {
 	for (int i = 0; i < areas.size(); ++i) {
 		ManagedReference<ActiveArea*>& area = areas.get(i);
 
-		if (area->isPvpArea()) {
+		if (area != nullptr && area->isPvpArea()) {
 			return true;
 		}
 	}

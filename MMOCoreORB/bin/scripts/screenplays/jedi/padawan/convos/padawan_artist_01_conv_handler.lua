@@ -38,6 +38,7 @@ function padawan_artist_01_conv_handler:runScreenHandlers(pConvTemplate, pPlayer
 		PadawanTrials:failTrial(pPlayer)
 	elseif (screenID == "not_first_time" or screenID == "spoke_hastily") then
 		PadawanTrials:passTrial(pPlayer)
+		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
 	elseif (screenID == "meet_assistant") then
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)
 		writeData(SceneObject(pNpc):getObjectID() .. ":destroyNpcOnExit", 1)

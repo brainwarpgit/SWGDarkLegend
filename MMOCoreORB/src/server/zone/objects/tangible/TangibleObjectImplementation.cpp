@@ -36,6 +36,7 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
+#include "server/globalVariables.h"
 
 void TangibleObjectImplementation::initializeTransientMembers() {
 	SceneObjectImplementation::initializeTransientMembers();
@@ -1135,7 +1136,7 @@ Reference<FactoryCrate*> TangibleObjectImplementation::createFactoryCrate(int ma
 
 	Locker locker(crate);
 
-	crate->setMaxCapacity(maxSize);
+	crate->setMaxCapacity(globalVariables::craftingFactoryCrateMaxSize);
 
 
 	if (insertSelf) {
@@ -1257,11 +1258,14 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 	}
 
 	//Condition is unrepairable
-	if ((getMaxCondition() - getConditionDamage()) <= 0) {
+	float repairMaxMod = 1.0f;	
+	if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled == false) {
 		StringIdChatParameter cantrepair("error_message", "sys_repair_unrepairable");
 		cantrepair.setTT(getDisplayedName());
 		player->sendSystemMessage(cantrepair); //%TT's condition is beyond repair even for your skills.
 		return;
+	} else if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled == true) {
+		repairMaxMod = globalVariables::craftingRepairMaxMod;
 	}
 
 	Reference<RepairToolTemplate*> repairTemplate = nullptr;
@@ -1305,49 +1309,82 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 		error ("No RepairTool given or found. Aborting");
 		return;
 	}
+	String result = "";
 
-	/// Luck Roll + Profession Mod(25) + Luck Tapes
-	/// + Station Mod - BF
+	if (globalVariables::craftingNewRepairEnabled == false) {
+		/// Luck Roll + Profession Mod(25) + Luck Tapes
+		/// + Station Mod - BF
 
-	/// Luck Roll
-	int roll = System::random(100);
-	int repairChance = roll;
+		/// Luck Roll
+		int roll = System::random(100);
+		int repairChance = roll;
 
-	/// Profession Bonus
-	if (player->hasSkill(repairTemplate->getSkill()))
-		repairChance += 35;
+		/// Profession Bonus
+		if (player->hasSkill(repairTemplate->getSkill()))
+			repairChance += 35;
 
-	/// Get Skill mods
-	repairChance += player->getSkillMod(repairTemplate->getSkillMod());
-	repairChance += player->getSkillMod("crafting_repair");
-	repairChance += player->getSkillMod("force_repair_bonus");
+		/// Get Skill mods
+		repairChance += player->getSkillMod(repairTemplate->getSkillMod());
+		repairChance += player->getSkillMod("crafting_repair");
+		repairChance += player->getSkillMod("force_repair_bonus");
 
-	/// use tool quality to lower chances if bad tool
-	float quality = 1.f - (((100.f - repairTool->getQuality()) / 2) / 100.f);
-	repairChance *= quality;
+		/// use tool quality to lower chances if bad tool
+		float quality = 1.f - (((100.f - repairTool->getQuality()) / 2) / 100.f);
+		repairChance *= quality;
 
-	ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
+		ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
 
-	/// Increase if near station
-	if (playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType()) != nullptr) {
-		repairChance += 15;
+		/// Increase if near station
+		if (playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType()) != nullptr) {
+			repairChance += 15;
+		}
+
+		/// Subtract battle fatigue
+		repairChance -= (player->getShockWounds() / 2);
+
+		/// Subtract complexity
+		repairChance -= (getComplexity() / 3);
+
+		/// 5% random failure
+		if (getMaxCondition() < 20 || roll < 5)
+			repairChance = 0;
+
+		if (roll > 95)
+			repairChance = 100;
+		
+		int luckSkill = 0;
+		repairMaxMod = 1;
+
+		result = repairAttempt(repairChance, luckSkill, repairMaxMod);
+	} else {
+		int repairChance = 0;
+		int repairmod = 0;
+		int forceBonus = 0;
+		int stationBonus = 0;
+		int toolQuality = 0;
+		int luckSkill = 0;
+		if (player->hasSkill("crafting_tailor_novice") && repairTemplate->getRepairType() == 16777216) {
+			repairmod = std::min(player->getSkillMod("clothing_repair"),125);
+		}
+		if (player->hasSkill("crafting_armorsmith_novice") && repairTemplate->getRepairType() == 256) {
+			repairmod = std::min(player->getSkillMod("armor_repair"),125);
+		}
+		if (player->hasSkill("crafting_weaponsmith_novice") && repairTemplate->getRepairType() == 131072) {
+			repairmod = std::min(player->getSkillMod("weapon_repair"),125);
+		}
+		int luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));	
+		forceBonus += std::min(player->getSkillMod("force_repair_bonus"),45);
+		toolQuality = repairTool->getQuality();
+		ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
+
+		/// Increase if near station
+		if (playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType()) != nullptr) {
+			stationBonus = 15;
+		}
+		repairChance = repairmod + forceBonus + luckRoll + toolQuality + stationBonus;
+		luckSkill = System::random(150) + forceBonus + luckRoll + toolQuality + stationBonus;
+		result = repairAttempt(repairChance, luckSkill, repairMaxMod);
 	}
-
-	/// Subtract battle fatigue
-	repairChance -= (player->getShockWounds() / 2);
-
-	/// Subtract complexity
-	repairChance -= (getComplexity() / 3);
-
-	/// 5% random failure
-	if (getMaxCondition() < 20 || roll < 5)
-		repairChance = 0;
-
-	if (roll > 95)
-		repairChance = 100;
-
-	String result = repairAttempt(repairChance);
-
 	Locker locker(repairTool);
 
 	repairTool->decreaseUseCount(1, true);
@@ -1463,6 +1500,25 @@ void TangibleObjectImplementation::sendTo(SceneObject* player, bool doClose, boo
 	SceneObjectImplementation::sendTo(player, doClose, forceLoadContainer);
 }
 
+void TangibleObjectImplementation::notifyInsert(TreeEntry* object) {
+	if (object == nullptr)
+		return;
+
+	SceneObjectImplementation::notifyInsert(object);
+
+	if (isCreatureObject()) {
+		return;
+	}
+
+	auto sceneO = static_cast<SceneObject*>(object);
+
+	if (sceneO == nullptr || !sceneO->isPlayerCreature()) {
+		return;
+	}
+
+	sendTo(sceneO, true, false);
+}
+
 bool TangibleObjectImplementation::isCityStreetLamp() const {
 	return (templateObject != nullptr && templateObject->getFullTemplateString().contains("object/tangible/furniture/city/streetlamp"));
 }
@@ -1507,6 +1563,16 @@ bool TangibleObjectImplementation::isInNavMesh() {
 	}
 
 	return false;
+}
+
+bool TangibleObjectImplementation::isVendor() {
+	auto data = getDataObjectComponent()->get();
+
+	if (data == nullptr || !data->isVendorData() || (isAiAgent() && !(getOptionsBitmask() & OptionBitmask::VENDOR))) {
+		return false;
+	}
+
+	return true;
 }
 
 TangibleObject* TangibleObject::asTangibleObject() {

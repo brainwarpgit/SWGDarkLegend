@@ -18,6 +18,7 @@
 #include "server/zone/packets/object/SpatialChat.h"
 #include "server/zone/objects/tangible/tasks/VendorReturnToPositionTask.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 VendorDataComponent::VendorDataComponent() : AuctionTerminalDataComponent(), adBarkingMutex() {
 	ownerId = 0;
@@ -148,6 +149,30 @@ void VendorDataComponent::runVendorUpdate() {
 	} else {
 		vendor->setConditionDamage(0, true);
 		vendor->setMaxCondition(1000, true);
+	}
+
+	// Aprox 24 hours of maint warnings.
+	if (globalVariables::vendorLowMaintenanceEmailEnabled == true) {
+		if (maintAmount < globalVariables::vendorLowMaintenanceEmailWarningThreshold && maintAmount > globalVariables::vendorLowMaintenanceEmailWarningThreshold * -1) {
+			ManagedReference<ChatManager*> cman = strongParent->getZoneServer()->getChatManager();
+
+			String sender = strongParent->getDisplayedName();
+			UnicodeString subject("@auction:vendor_status_subject");
+			StringBuffer body;
+			
+			if (maintAmount > 0){
+				body << strongParent->getDisplayedName() << " is running low on maintenance. There are currently only " << maintAmount << " credits available. ";
+			} else {
+				body << strongParent->getDisplayedName() << " is disabled, because it ran out of credits. The maintenance is overdrawn by " << abs(maintAmount) << " credits. ";
+				body << "You will only receive this warning for approximately 24 hours. ";
+			}
+			
+			body << "The maintenance rate is " << getMaintenanceRate() << " credits / hour. You can check the status of all your vendors by using the command: /tarkin aboutme\n\n";
+			body << "Vendor Location: " << int(vendor->getWorldPositionX()) << ", " << int(vendor->getWorldPositionY()) << " " << strongParent->getZone()->getZoneName();
+			
+			if (cman)
+				cman->sendMail(sender, subject, body.toString(), owner->getFirstName());
+		}
 	}
 
 	if (isEmpty()) {
@@ -368,52 +393,78 @@ void VendorDataComponent::setVendorSearchEnabled(bool enabled) {
 
 
 void VendorDataComponent::performVendorBark(SceneObject* target) {
-	if (isOnStrike()) {
+	ManagedReference<CreatureObject*> vendor = cast<CreatureObject*>(parent.get().get());
+
+	if (vendor == nullptr) {
 		return;
 	}
 
-	ManagedReference<CreatureObject*> vendor = cast<CreatureObject*>(parent.get().get());
-	if (vendor == nullptr)
+	if ((vendor->getOptionsBitmask() & OptionBitmask::VENDOR) && isOnStrike()) {
 		return;
+	}
 
 	ManagedReference<CreatureObject*> player = cast<CreatureObject*>(target);
+
 	if (player == nullptr || !player->isPlayerCreature() || player->isInvisible())
 		return;
 
 	resetLastBark();
-	addBarkTarget(target);
+	addBarkTarget(target->getObjectID());
 
-	Core::getTaskManager()->executeTask([=] () {
-		Locker locker(vendor);
+	Reference<CreatureObject*> vendorRef = vendor;
+	Reference<CreatureObject*> playerRef = player;
 
-		VendorDataComponent* data = cast<VendorDataComponent*>(vendor->getDataObjectComponent()->get());
+	Core::getTaskManager()->executeTask([vendorRef, playerRef] () {
+		if (vendorRef == nullptr || playerRef == nullptr) {
+			return;
+		}
+
+		Locker locker(vendorRef);
+
+		VendorDataComponent* data = cast<VendorDataComponent*>(vendorRef->getDataObjectComponent()->get());
 
 		if (data == nullptr)
 			return;
 
-		vendor->faceObject(player);
-		vendor->updateDirection(Math::deg2rad(vendor->getDirectionAngle()));
+		vendorRef->faceObject(playerRef);
+		vendorRef->updateDirection(Math::deg2rad(vendorRef->getDirectionAngle()));
+
+		auto zoneServer = vendorRef->getZoneServer();
+
+		if (zoneServer == nullptr) {
+			return;
+		}
+
+		auto chatManager = zoneServer->getChatManager();
+
+		if (chatManager == nullptr) {
+			return;
+		}
 
 		SpatialChat* chatMessage = nullptr;
 		String barkMessage = data->getAdPhrase();
-		ChatManager* chatManager = vendor->getZoneServer()->getChatManager();
 
 		if (barkMessage.beginsWith("@")) {
 			StringIdChatParameter message;
 			message.setStringId(barkMessage);
-			message.setTT(player->getObjectID());
-			chatMessage = new SpatialChat(vendor->getObjectID(), player->getObjectID(), player->getObjectID(), message, 50, 0, chatManager->getMoodID(data->getAdMood()), 0, 0);
+			message.setTT(playerRef->getObjectID());
 
+			chatMessage = new SpatialChat(vendorRef->getObjectID(), playerRef->getObjectID(), playerRef->getObjectID(), message, 50, 0, chatManager->getMoodID(data->getAdMood()), 0, 0);
 		} else {
 			UnicodeString uniMessage(barkMessage);
-			chatMessage = new SpatialChat(vendor->getObjectID(), player->getObjectID(), player->getObjectID(), uniMessage, 50, 0, chatManager->getMoodID(data->getAdMood()), 0, 0);
+
+			chatMessage = new SpatialChat(vendorRef->getObjectID(), playerRef->getObjectID(), playerRef->getObjectID(), uniMessage, 50, 0, chatManager->getMoodID(data->getAdMood()), 0, 0);
 		}
 
-		vendor->broadcastMessage(chatMessage, true);
-		vendor->doAnimation(data->getAdAnimation());
+		vendorRef->broadcastMessage(chatMessage, true);
+		vendorRef->doAnimation(data->getAdAnimation());
 
-		Reference<VendorReturnToPositionTask*> returnTask = new VendorReturnToPositionTask(vendor, data->getOriginalDirection());
-		vendor->addPendingTask("vendorreturn", returnTask, 3000);
+		Reference<VendorReturnToPositionTask*> returnTask = new VendorReturnToPositionTask(vendorRef, data->getOriginalDirection());
+
+		if (returnTask != nullptr) {
+			vendorRef->addPendingTask("vendorreturn", returnTask, 3000);
+		}
+
 	}, "VendorBarkLambda");
 }
 

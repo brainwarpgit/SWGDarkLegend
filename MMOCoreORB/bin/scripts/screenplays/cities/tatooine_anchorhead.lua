@@ -81,6 +81,29 @@ TatooineAnchorheadScreenPlay = CityScreenPlay:new {
 
 		--Outside
 		{"junk_dealer", 0, 110.87, 52, -5428.19, 53, 0, ""}
+	},
+
+	citySpawns = {
+		--Outside
+		{"bantha",300,216.9,11.7,-5425.4,-121,0},
+		{"cu_pa",300,75.5625,88.9439,-5217.41,276.531,0},
+		{"cu_pa",300,81.1976,85.0672,-5200.6,174.759,0},
+		{"cu_pa",300,14.564,23.6794,-5543.66,99.0125,0},
+		{"cu_pa",300,26.8762,12.236,-5564.46,284.743,0},
+		{"cu_pa",300,163.943,12.072,-5473.22,272.381,0},
+		{"cu_pa",300,210.837,16.4247,-5464.01,32.0514,0},
+		{"cu_pa",300,188.14,9.71503,-5485.52,63.2364,0},
+		{"cu_pa",300,186.305,14.9233,-5467.36,145.471,0},
+		{"cu_pa",300,166.736,4.42212,-5483.28,304.088,0},
+		{"rebel_recruiter",60,69.6872,52,-5349.47,360.011,0},
+		{"rill",300,3.34558,86.6525,-5245.25,82.0905,0},
+		{"rill",300,-26.4483,85.5717,-5227.67,257.612,0},
+		{"rill",300,-4.51558,88.9463,-5226.49,314.221,0},
+		{"rill",300,16.8025,87.749,-5249.62,280.51,0},
+		{"zucca_boar",300,176.37,29.6614,-5228.44,23.7572,0},
+		{"zucca_boar",300,177.37,29.3367,-5227.44,202.645,0},
+		{"zucca_boar",300,171.993,33.695,-5229.99,181.173,0},
+		{"zucca_boar",300,-35.6792,30,-5439.35,11.3066,0},
 	}
 }
 
@@ -88,11 +111,12 @@ registerScreenPlay("TatooineAnchorheadScreenPlay", true)
 
 function TatooineAnchorheadScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -102,46 +126,3 @@ function TatooineAnchorheadScreenPlay:spawnSceneObjects()
 	spawnSceneObject("tatooine", "object/mobile/le_repair_droid.iff", -0.3, -4.0, -3.7, 1213349, math.rad(90) )
 end
 
-function TatooineAnchorheadScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	--Outside
-	--[[spawnMobile("tatooine", "bantha",300,216.9,11.7,-5425.4,-121,0)
-	spawnMobile("tatooine", "cu_pa",300,75.5625,88.9439,-5217.41,276.531,0)
-	spawnMobile("tatooine", "cu_pa",300,81.1976,85.0672,-5200.6,174.759,0)
-	spawnMobile("tatooine", "cu_pa",300,14.564,23.6794,-5543.66,99.0125,0)
-	spawnMobile("tatooine", "cu_pa",300,26.8762,12.236,-5564.46,284.743,0)
-	spawnMobile("tatooine", "cu_pa",300,163.943,12.072,-5473.22,272.381,0)
-	spawnMobile("tatooine", "cu_pa",300,210.837,16.4247,-5464.01,32.0514,0)
-	spawnMobile("tatooine", "cu_pa",300,188.14,9.71503,-5485.52,63.2364,0)
-	spawnMobile("tatooine", "cu_pa",300,186.305,14.9233,-5467.36,145.471,0)
-	spawnMobile("tatooine", "cu_pa",300,166.736,4.42212,-5483.28,304.088,0)
-	spawnMobile("tatooine", "rebel_recruiter",60,69.6872,52,-5349.47,360.011,0)
-	spawnMobile("tatooine", "rill",300,3.34558,86.6525,-5245.25,82.0905,0)
-	spawnMobile("tatooine", "rill",300,-26.4483,85.5717,-5227.67,257.612,0)
-	spawnMobile("tatooine", "rill",300,-4.51558,88.9463,-5226.49,314.221,0)
-	spawnMobile("tatooine", "rill",300,16.8025,87.749,-5249.62,280.51,0)
-	spawnMobile("tatooine", "zucca_boar",300,176.37,29.6614,-5228.44,23.7572,0)
-	spawnMobile("tatooine", "zucca_boar",300,177.37,29.3367,-5227.44,202.645,0)
-	spawnMobile("tatooine", "zucca_boar",300,171.993,33.695,-5229.99,181.173,0)
-	spawnMobile("tatooine", "zucca_boar",300,-35.6792,30,-5439.35,11.3066,0)]]
-end

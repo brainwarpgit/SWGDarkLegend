@@ -27,6 +27,7 @@ include system.lang.ref.Reference;
 include system.util.VectorMap;
 include server.zone.objects.creature.variables.CooldownTimerMap;
 import system.lang.Time;
+import server.zone.objects.creature.CreatureObject;
 
 @json
 class BuildingObject extends StructureObject {
@@ -201,7 +202,7 @@ class BuildingObject extends StructureObject {
 	public native void notifyInsertToZone(Zone zone);
 
 	@local
-	public native void notifyDissapear(TreeEntry obj);
+	public abstract native void notifyDissapear(TreeEntry obj);
 
 	@dirty
 	@local
@@ -419,7 +420,7 @@ class BuildingObject extends StructureObject {
 
 	@local
 	@preLocked
-	public native void spawnChildCreature(string mobile, int respawnTimer, float x, float z, float y, float heading, unsigned long cellID);
+	public native CreatureObject spawnChildCreature(string mobile, int respawnTimer, float x, float z, float y, float heading, unsigned long cellID);
 
 	@read
 	public native boolean hasTemplateChildCreatures();

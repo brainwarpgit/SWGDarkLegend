@@ -13,6 +13,7 @@
 #include "server/zone/packets/scene/AttributeListMessage.h"
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/player/sui/callbacks/RepairToolSuiCallback.h"
+#include "server/globalVariables.h"
 
 void RepairToolImplementation::loadTemplateData(SharedObjectTemplate* templateData) {
 	TangibleObjectImplementation::loadTemplateData(templateData);
@@ -68,7 +69,12 @@ void RepairToolImplementation::sendRepairListTo(CreatureObject* player) {
 
 		if (tano != nullptr ) {
 			// Not broken (1/1) but still damaged.
-			bool inNeedOfRepair = (!(tano -> isBroken()) && (tano -> getConditionDamage() > 0));
+			bool inNeedOfRepair = false;			
+			if (globalVariables::craftingRepairBrokenEnabled == false) {
+				bool inNeedOfRepair = (!(tano -> isBroken()) && (tano -> getConditionDamage() > 0));
+			} else {
+				bool inNeedOfRepair = (tano -> getConditionDamage() > 0);
+			}
 			if (inNeedOfRepair) {
 				listbox->addMenuItem( tano->getDisplayedName(), tano->getObjectID());
 			}

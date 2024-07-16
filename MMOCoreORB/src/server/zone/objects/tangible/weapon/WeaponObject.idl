@@ -27,6 +27,10 @@ class WeaponObject extends TangibleObject {
 	protected boolean certified;
 
 	protected int armorPiercing;
+	
+	protected int level;
+	protected float modifier;
+	protected int lootQuality;
 
 	protected int pointBlankAccuracy;
 	protected int pointBlankRange;
@@ -83,6 +87,10 @@ class WeaponObject extends TangibleObject {
 	protected VectorMap<string, int> wearableSkillMods;
 
 	public WeaponObject() {
+		level = 0;
+		modifier = 0.0;
+		lootQuality = 1;
+		
 		certified = false;
 		armorPiercing = 0;
 
@@ -281,6 +289,41 @@ class WeaponObject extends TangibleObject {
 		idealAccuracy = value;
 	}
 
+	@dirty
+	public void setArmorPiercing(int value) {
+                armorPiercing = value;
+        }
+
+	@dirty
+	public void setLevel(int value) {
+		level = value;
+	}
+
+	@dirty
+	public void setModifier(float value) {
+		modifier = value;
+	}
+
+	@read
+	public int getLevel() {
+		return level;
+	}
+
+	@dirty
+	public void setLootQuality(int value) {
+		lootQuality = value;
+	}
+
+	@read
+	public int getLootQuality() {
+		return lootQuality;
+	}
+	
+	@read
+	public float getModifier() {
+		return modifier;
+	}
+	
 	@read
 	public int getArmorPiercing() {
 		return armorPiercing;
@@ -565,7 +608,7 @@ class WeaponObject extends TangibleObject {
 
 	public native void decreasePowerupUses(CreatureObject player);
 
-	public native string repairAttempt(int repairChance);
+	public native string repairAttempt(int repairChance, int luckSkill, float repairMaxMod);
 
 	public native void decay(CreatureObject user);
 
@@ -595,5 +638,10 @@ class WeaponObject extends TangibleObject {
 	@read
 	public final VectorMap<string, int> getWearableSkillMods() {
 		return wearableSkillMods;
+	}
+
+	@read
+	public int getTotalWearableSkillMods() {
+		return wearableSkillMods.size();
 	}
 }

@@ -38,6 +38,7 @@
 #include "server/zone/objects/building/components/DestructibleBuildingDataComponent.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/objects/player/FactionStatus.h"
+#include "server/globalVariables.h"
 
 void BuildingObjectImplementation::initializeTransientMembers() {
 	cooldownTimerMap = new CooldownTimerMap();
@@ -1038,7 +1039,7 @@ void BuildingObjectImplementation::onExit(CreatureObject* player, uint64 parenti
 
 uint32 BuildingObjectImplementation::getMaximumNumberOfPlayerItems() {
 	if (isCivicStructure() )
-		return 250;
+		return globalVariables::structureMaxCivicBuildingItems;
 
 	SharedStructureObjectTemplate* ssot = dynamic_cast<SharedStructureObjectTemplate*> (templateObject.get());
 
@@ -1050,11 +1051,14 @@ uint32 BuildingObjectImplementation::getMaximumNumberOfPlayerItems() {
 
 	//Buildings that don't cost lots have MAXPLAYERITEMS storage space.
 	if (lots == 0)
-		return MAXPLAYERITEMS;
+		return globalVariables::structureMaxZeroLotBuildingItems;
 
-	auto maxItems = MAXPLAYERITEMS;
-
-	return Math::min(maxItems, lots * 100);
+	if (globalVariables::structureMaxItemsEnabled == true) {
+		auto maxItems = globalVariables::structureMaxItemsPerStructure;
+		return Math::min(maxItems, lots * globalVariables::structureMaxItemsPerLot);
+	} else {
+		return lots * globalVariables::structureMaxItemsPerLot;
+	}	
 }
 
 int BuildingObjectImplementation::notifyObjectInsertedToChild(SceneObject* object, SceneObject* child, SceneObject* oldParent) {
@@ -1714,16 +1718,16 @@ void BuildingObjectImplementation::spawnChildCreaturesFromTemplate() {
 	}
 }
 
-void BuildingObjectImplementation::spawnChildCreature(String& mobile, int respawnTimer, float x, float z, float y, float heading, unsigned long long cellID) {
+CreatureObject* BuildingObjectImplementation::spawnChildCreature(String& mobile, int respawnTimer, float x, float z, float y, float heading, unsigned long long cellID) {
 	CreatureManager* creatureManager = zone->getCreatureManager();
 
 	if (creatureManager == nullptr)
-		return;
+		return nullptr;
 
 	CreatureObject* creature = creatureManager->spawnCreatureWithAi(mobile.hashCode(), x, z, y, cellID, false);
 
 	if (creature == nullptr)
-		return;
+		return nullptr;
 
 	Locker clocker(creature, asBuildingObject());
 
@@ -1735,6 +1739,8 @@ void BuildingObjectImplementation::spawnChildCreature(String& mobile, int respaw
 	}
 
 	childCreatureObjects.put(creature);
+	
+	return creature;
 }
 
 bool BuildingObjectImplementation::hasTemplateChildCreatures() const {

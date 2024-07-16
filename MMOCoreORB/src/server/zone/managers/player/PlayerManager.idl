@@ -634,7 +634,11 @@ class PlayerManager extends Observer implements Logger {
 		logOnlinePlayers(!onlinePlayersLogOnSessionChange);
 	}
 
-	public native void stopOnlinePlayerLogTask();
+	public native void enhanceSelfDance(CreatureObject player);
+	
+	public native void enhanceSelfMusic(CreatureObject player);    
+    	
+    	public native void stopOnlinePlayerLogTask();
 
 	@local
 	public native void iteratePlayerNames(@dereferenced final PlayerNameIterator iterator);

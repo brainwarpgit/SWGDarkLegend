@@ -8,6 +8,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "engine/engine.h"
+#include "server/zone/managers/player/PlayerManager.h"
+#include "server/globalVariables.h"
 
 class MilkCreatureTask : public Task {
 
@@ -63,7 +65,7 @@ public:
 			} else {
 				currentPhase = ONEFAILURE;
 			}
-			this->reschedule(10000);
+			this->reschedule(globalVariables::harvestMilkTime * 1000);
 			break;
 		case ONESUCCESS:
 			if (success) {
@@ -72,14 +74,14 @@ public:
 			} else {
 					player->sendSystemMessage("@skl_use:milk_continue"); // You continue to milk the creature.
 					currentPhase = FINAL;
-					this->reschedule(10000);
+					this->reschedule(globalVariables::harvestMilkTime * 1000);
 			}
 			break;
 		case ONEFAILURE:
 			if (success) {
 				player->sendSystemMessage("@skl_use:milk_continue"); // You continue to milk the creature.
 				currentPhase = FINAL;
-				this->reschedule(10000);
+				this->reschedule(globalVariables::harvestMilkTime * 1000);
 			} else {
 				updateMilkState(CreatureManager::NOTMILKED);
 				clearStationary();
@@ -130,10 +132,28 @@ public:
 			quantityExtracted = int(quantityExtracted * 0.50f);
 		}
 
+		quantityExtracted *= globalVariables::harvestMultiplier;
+
 		TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 		resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);
 
 		updateMilkState(CreatureManager::ALREADYMILKED);
+
+		if (globalVariables::playerMilkingXPEnabled == true) {
+			// Grant Wilderness Survival XP
+			const CreatureTemplate* creatureTemplate = creature->getCreatureTemplate();
+			
+			int xp = ((125 < player->getSkillMod("foraging")) ? 125 : player->getSkillMod("foraging"));
+			
+			if (creatureTemplate != NULL)
+				xp += creatureTemplate->getLevel() + quantityExtracted;
+			else
+				xp += quantityExtracted;
+			
+			ZoneServer* zoneServer = player->getZoneServer();
+			PlayerManager* playerManager = zoneServer->getPlayerManager();
+			playerManager->awardExperience(player, "camp", xp);
+		}
 	}
 
 	void clearStationary() {

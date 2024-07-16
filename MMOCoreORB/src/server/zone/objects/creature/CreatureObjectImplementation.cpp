@@ -94,6 +94,7 @@
 #include "server/zone/managers/director/ScreenPlayObserver.h"
 #include "server/zone/objects/player/events/SpawnHelperDroidTask.h"
 #include "server/zone/packets/object/StartNpcConversation.h"
+#include "server/globalVariables.h"
 
 float CreatureObjectImplementation::DEFAULTRUNSPEED = 5.376f;
 
@@ -1268,28 +1269,37 @@ int CreatureObjectImplementation::addWounds(int type, int value, bool notifyClie
 		return 0;
 	}
 
-	if (isInvulnerable())
+	if (isInvulnerable()) {
 		return 0;
+	}
 
+	// Value we are returning from function
 	int returnValue = value;
 
+	// Current wounds value for the given HAM attribute
 	int currentValue = wounds.get(type);
 
+	// The expected new wound amount
 	int newValue = currentValue + value;
 
-	if (newValue < 0)
+	// New Wound value is less than zero return the negated currentValue
+	if (newValue < 0) {
 		returnValue = -currentValue;
+	}
 
-	if (newValue >= baseHAM.get(type))
+	if (newValue >= baseHAM.get(type)) {
 		returnValue = baseHAM.get(type) - 1 - currentValue;
+	}
 
-	if (value > 0 && asCreatureObject()->isPlayerCreature())
+	if (value > 0 && isPlayerCreature()) {
 		sendStateCombatSpam("cbt_spam", "wounded", 1, value, false);
+	}
 
 	setWounds(type, newValue, notifyClient);
 
-	if (doShockWounds)
+	if (doShockWounds) {
 		addShockWounds(1, true);
+	}
 
 	return returnValue;
 }
@@ -2249,7 +2259,7 @@ void CreatureObjectImplementation::notifyInsert(TreeEntry* obj) {
 	if (linkedCreature != nullptr && linkedCreature->getParent() == asCreatureObject() && linkedCreature->getObjectID() != obj->getObjectID()) {
 #if DEBUG_COV
 		if (entryObject->isPlayerCreature())
-			info(true) << "linkedCreature: " << linkedCreature->getDisplayedName() << " -- proxy notifyInsert for - " << entryObject->getDisplayedName() << " ID: " << obj->getObjectID();
+			info(true) << "linkedCreature: " << linkedCreature->getDisplayedName() << " -- proxy notifyInsert for - " << entryObject->getDisplayedName() << " ID: " << entryObject->getObjectID() << " Template: " << entryObject->getObjectTemplate()->getAppearanceFilename();
 #endif // DEBUG_COV
 
 		if (linkedCreature->getCloseObjects() != nullptr) {
@@ -2258,6 +2268,8 @@ void CreatureObjectImplementation::notifyInsert(TreeEntry* obj) {
 
 		if (entryObject->getCloseObjects() != nullptr) {
 			entryObject->addInRangeObject(linkedCreature);
+		} else {
+			entryObject->notifyInsert(linkedCreature);
 		}
 	}
 }
@@ -2454,8 +2466,10 @@ void CreatureObjectImplementation::feignDeath() {
 	observerTypes.add(ObserverEventType::COMBATCOMMANDENQUEUED);
 
 	buff->init(&observerTypes);
+
 	buff->setSkillModifier("private_damage_divisor", 4);
 	buff->setSkillModifier("private_damage_multiplier", 5);
+
 	creo->addBuff(buff);
 
 	// forcePeace is a scheduledLambda in the CombatManager so should delay until combat action is complete
@@ -2572,8 +2586,7 @@ void CreatureObjectImplementation::setStunnedState(int durationSeconds) {
 
 		Locker blocker(multBuff);
 
-		multBuff->setSkillModifier("private_damage_divisor", 5);
-		multBuff->setSkillModifier("private_damage_multiplier", 4);
+		multBuff->setSkillModifier("private_damage_divisor_stun", 20);
 
 		addBuff(multBuff);
 	}
@@ -2628,7 +2641,7 @@ void CreatureObjectImplementation::setIntimidatedState(int durationSeconds) {
 
 		Locker blocker(multBuff);
 
-		multBuff->setSkillModifier("private_damage_divisor", 2);
+		multBuff->setSkillModifier("private_damage_divisor_intimidate", 50);
 
 		addBuff(multBuff);
 	}
@@ -2934,9 +2947,9 @@ void CreatureObjectImplementation::activateHAMRegeneration(int latency) {
 	float modifier = (float)latency/1000.f;
 
 	if (isKneeling())
-		modifier *= 1.25f;
+		modifier *= 1.25f * globalVariables::playerHAMRegenKneelingMultiplier;
 	else if (isSitting())
-		modifier *= 1.75f;
+		modifier *= 1.75f* globalVariables::playerHAMRegenSittingMultiplier;
 
 	// this formula gives the amount of regen per second
 	uint32 healthTick = (uint32) ceil((float) Math::max(0, getHAM(

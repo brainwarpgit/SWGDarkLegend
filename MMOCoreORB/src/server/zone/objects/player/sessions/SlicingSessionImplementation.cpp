@@ -28,6 +28,7 @@
 
 #include "server/zone/Zone.h"
 #include "server/zone/objects/scene/SceneObjectType.h"
+#include "server/globalVariables.h"
 
 int SlicingSessionImplementation::initializeSession() {
 	firstCable = System::random(1);
@@ -39,6 +40,9 @@ int SlicingSessionImplementation::initializeSession() {
 	usedNode = false;
 	usedClamp = false;
 
+	selectSlice = false;
+	firstRun = true;
+	sliceOption = 0;
 	relockEvent = nullptr;
 
 	baseSlice = false;
@@ -115,6 +119,8 @@ void SlicingSessionImplementation::generateSliceMenu(SuiListBox* suiBox) {
 	ManagedReference<CreatureObject*> player = this->player.get();
 	ManagedReference<TangibleObject*> tangibleObject = this->tangibleObject.get();
 
+	int slicingmod = player->getSkillMod("slicing");
+
 	if (player == nullptr || tangibleObject == nullptr)
 		return;
 
@@ -133,14 +139,58 @@ void SlicingSessionImplementation::generateSliceMenu(SuiListBox* suiBox) {
 		else
 			prompt << progress;
 
-		suiBox->addMenuItem("@slicing/slicing:blue_cable", 0);
-		suiBox->addMenuItem("@slicing/slicing:red_cable", 1);
+		if (globalVariables::slicingNewSliceEnabled == false) {	
+			suiBox->addMenuItem("@slicing/slicing:blue_cable", 0);
+				suiBox->addMenuItem("@slicing/slicing:red_cable", 1);
 
-		if (!usedClamp && !usedNode) {
-			suiBox->addMenuItem("@slicing/slicing:use_clamp", 2);
-			suiBox->addMenuItem("@slicing/slicing:use_analyzer", 3);
+				if (!usedClamp && !usedNode) {
+					suiBox->addMenuItem("@slicing/slicing:use_clamp", 2);
+					suiBox->addMenuItem("@slicing/slicing:use_analyzer", 3);
+				}
+		} else {
+			if (slicingmod < 100) {
+				suiBox->addMenuItem("@slicing/slicing:blue_cable", 0);
+				suiBox->addMenuItem("@slicing/slicing:red_cable", 1);
+				if (!usedClamp && !usedNode) {
+					suiBox->addMenuItem("@slicing/slicing:use_clamp", 2);
+					suiBox->addMenuItem("@slicing/slicing:use_analyzer", 3);
+				}
+			} else if (slicingmod >= 100 ) {
+				if(firstRun && !tangibleObject->isArmorObject() && !tangibleObject->isWeaponObject()) {
+					suiBox->addMenuItem("@slicing/slicing:blue_cable", 0);
+					suiBox->addMenuItem("@slicing/slicing:red_cable", 1);
+					if (!usedClamp && !usedNode) {
+						suiBox->addMenuItem("@slicing/slicing:use_clamp", 2);
+						suiBox->addMenuItem("@slicing/slicing:use_analyzer", 3);
+					}
+				}
+				if(!firstRun) {
+					suiBox->addMenuItem("@slicing/slicing:blue_cable", 0);
+					suiBox->addMenuItem("@slicing/slicing:red_cable", 1);
+					if (!usedClamp && !usedNode) {
+						suiBox->addMenuItem("@slicing/slicing:use_clamp", 2);
+						suiBox->addMenuItem("@slicing/slicing:use_analyzer", 3);
+					}
+				}
+				if(!selectSlice && !tangibleObject->isContainerObject() && !tangibleObject->isMissionTerminal() && firstRun){
+					if(tangibleObject->isArmorObject()){
+						suiBox->addMenuItem("Slice For Base Effectiveness.", 4);
+						suiBox->addMenuItem("Slice For Encumbrance.", 5);
+						if (globalVariables::slicingArmorPierceSliceEnabled == true) {						
+							suiBox->addMenuItem("Slice For Armor Piercing.", 10);
+						}
+						suiBox->addMenuItem("Random Slice.", 8);				
+					} else if(tangibleObject->isWeaponObject()){
+						suiBox->addMenuItem("Slice For Speed.", 6);
+						suiBox->addMenuItem("Slice For Damage.", 7);
+						if (globalVariables::slicingWeaponPierceSliceEnabled == true) {						
+							suiBox->addMenuItem("Slice For Weapon Armor Piercing.", 9);
+						}
+						suiBox->addMenuItem("Random Slice.", 8);				
+					}
+				}
+			}
 		}
-
 	} else if (progress == 1) {
 		prompt << progress;
 
@@ -204,6 +254,46 @@ void SlicingSessionImplementation::handleMenuSelect(CreatureObject* pl, byte men
 			handleUseFlowAnalyzer(); // Handle Use of Flow Analyzer
 			break;
 		}
+		case 4: {
+			selectSlice = true;
+			sliceOption = 1;
+			firstRun = false;
+			break;
+		}
+		case 5: {
+			selectSlice = true;
+			sliceOption = 2;
+			firstRun = false;
+			break;
+		}
+		case 6: {
+			selectSlice = true;
+			sliceOption = 1;
+			firstRun = false;
+			break;
+		}
+		case 7: {
+			selectSlice = true;
+			sliceOption = 2;
+			firstRun = false;
+			break;
+		}
+		case 8: {
+			firstRun = false;
+			break;
+		}
+		case 9: {
+			selectSlice = true;
+			sliceOption = 3;
+			firstRun = false;
+			break;
+		}
+		case 10: {
+			selectSlice = true;
+			sliceOption = 3;
+			firstRun = false;
+			break;
+		}
 		default:
 			cancelSession();
 			break;
@@ -233,7 +323,7 @@ void SlicingSessionImplementation::endSlicing() {
 	}
 
 	if (tangibleObject->isMissionTerminal())
-		player->addCooldown("slicing.terminal", (2 * (60 * 1000))); // 2min Cooldown
+		player->addCooldown("slicing.terminal", (globalVariables::slicingTerminalSliceCooldown * (60 * 1000))); // 2min Cooldown
 
 	cancelSession();
 
@@ -241,25 +331,42 @@ void SlicingSessionImplementation::endSlicing() {
 
 int SlicingSessionImplementation::getSlicingSkill(CreatureObject* slicer) {
 
-	String skill0 = "combat_smuggler_novice";
-	String skill1 = "combat_smuggler_slicing_01";
-	String skill2 = "combat_smuggler_slicing_02";
-	String skill3 = "combat_smuggler_slicing_03";
-	String skill4 = "combat_smuggler_slicing_04";
-	String skill5 = "combat_smuggler_master";
+	if (globalVariables::slicingNewSliceEnabled == false) {	
+		String skill0 = "combat_smuggler_novice";
+		String skill1 = "combat_smuggler_slicing_01";
+		String skill2 = "combat_smuggler_slicing_02";
+		String skill3 = "combat_smuggler_slicing_03";
+		String skill4 = "combat_smuggler_slicing_04";
+		String skill5 = "combat_smuggler_master";
 
-	if (slicer->hasSkill(skill5))
-		return 5;
-	else if (slicer->hasSkill(skill4))
-		return 4;
-	else if (slicer->hasSkill(skill3))
-		return 3;
-	else if (slicer->hasSkill(skill2))
-		return 2;
-	else if (slicer->hasSkill(skill1))
-		return 1;
-	else if (slicer->hasSkill(skill0))
-		return 0;
+		if (slicer->hasSkill(skill5))
+			return 5;
+		else if (slicer->hasSkill(skill4))
+			return 4;
+		else if (slicer->hasSkill(skill3))
+			return 3;
+		else if (slicer->hasSkill(skill2))
+			return 2;
+		else if (slicer->hasSkill(skill1))
+			return 1;
+		else if (slicer->hasSkill(skill0))
+			return 0;
+	} else {
+		int slicemod = std::min(slicer->getSkillMod("slicing"),125);
+
+		if (slicemod >= 100)
+			return 5;
+		else if (slicemod >= 80)
+			return 4;
+		else if (slicemod >= 60)
+			return 3;
+		else if (slicemod >= 40)
+			return 2;
+		else if (slicemod >= 20)
+			return 1;
+		else if (slicemod >= 10)
+			return 0;
+	}
 
 	return -1;
 
@@ -515,32 +622,84 @@ void SlicingSessionImplementation::handleWeaponSlice() {
 	uint8 min = 0;
 	uint8 max = 0;
 
-	switch (sliceSkill) {
-	case 5:
-		min += 5;
-		max += 5;
-	case 4:
-		min += 5;
-		max += 5;
-	case 3:
-	case 2:
-		min += 10;
-		max += 25;
-		break;
-	default:
-		return;
+	if (globalVariables::slicingNewSliceEnabled == false) {
+		switch (sliceSkill) {
+			case 5:
+				min += 5;
+				max += 5;
+			case 4:
+				min += 5;
+				max += 5;
+			case 3:
+			case 2:
+				min += 10;
+				max += 25;
+				break;
+			default:
+				return;
+		}
+		uint8 percentage = System::random(max - min) + min;
+		switch(System::random(1)) {
+		case 0:
+			handleSliceDamage(percentage);
+			break;
+		case 1:
+			handleSliceSpeed(percentage);
+			break;
+		}
+	} else {
+		switch (sliceSkill) {
+			case 5:
+				min += 10;
+				max += 5;
+			case 4:
+				min += 10;
+				max += 5;
+			case 3:
+				min += 5;
+				max += 5;
+			case 2:
+				min += 5;
+				max += 20;
+				break;
+			default:
+				return;
 
-	}
-
-	uint8 percentage = System::random(max - min) + min;
-
-	switch(System::random(1)) {
-	case 0:
-		handleSliceDamage(percentage);
-		break;
-	case 1:
-		handleSliceSpeed(percentage);
-		break;
+		}
+		float luckSkill = std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30);
+		float luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+		float luckSuccess = 0.85;
+		if (luckRoll >= (std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30)) * luckSuccess) {
+			min += 10;
+			max += 5;
+			player->sendSystemMessage("The force was with you on this slice....");
+		}
+		uint8 percentage = System::random(max - min) + min;
+		if(!selectSlice){
+			switch(System::random(1)) {
+				case 0:
+					handleSliceDamage(percentage);
+					break;
+				case 1:
+					handleSliceSpeed(percentage);
+					break;
+				case 2:
+					handleSliceAp();
+					break;
+			}
+		}else{
+			switch(sliceOption) {
+				case 2:
+					handleSliceDamage(percentage);
+					break;
+				case 1:
+					handleSliceSpeed(percentage);
+					break;
+				case 3:
+					handleSliceAp();
+					break;
+			}
+		}
 	}
 }
 
@@ -584,7 +743,37 @@ void SlicingSessionImplementation::handleSliceDamage(uint8 percent) {
 	params.setStringId("@slicing/slicing:dam_mod");
 
 	player->sendSystemMessage(params);
+}
 
+void SlicingSessionImplementation::handleSliceAp() {
+	ManagedReference<CreatureObject*> player = this->player.get();
+	ManagedReference<TangibleObject*> tangibleObject = this->tangibleObject.get();
+ 	int apslice = System::random(3);
+	apslice += round((System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck")) * 2) / 100);
+	if (apslice > 3) {
+		apslice = 3;
+	}	
+	if (tangibleObject == nullptr || player == nullptr || !tangibleObject->isWeaponObject())
+		return;
+
+	WeaponObject* weap = cast<WeaponObject*>(tangibleObject.get());
+
+	Locker locker(weap);
+	int weappierce = weap->getArmorPiercing();
+
+	if (weap->hasPowerup())
+		this->detachPowerUp(player, weap);
+	
+	if (apslice <= weappierce) {
+		player->sendSystemMessage("Your Armor Piercing Slice Failed!");
+		weap->setSliced(true);
+		return;
+	} else {
+		weap->setArmorPiercing(apslice);
+		weap->setSliced(true);
+		player->sendSystemMessage("Your Armor Piercing Slice Was Successful!");
+		return;
+	}		
 }
 
 void SlicingSessionImplementation::handleSliceSpeed(uint8 percent) {
@@ -622,35 +811,91 @@ void SlicingSessionImplementation::handleArmorSlice() {
 	int sliceSkill = getSlicingSkill(player);
 	uint8 min = 0;
 	uint8 max = 0;
+	int sockets = round(System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 10);
 
-	switch (sliceSkill) {
-	case 5:
-		min += (sliceType == 0) ? 6 : 5;
-		max += 5;
-	case 4:
-		min += (sliceType == 0) ? 0 : 10;
-		max += 10;
-	case 3:
-		min += 5;
-		max += (sliceType == 0) ? 20 : 30;
-		break;
-	default:
-		return;
-	}
 
-	uint8 percent = System::random(max - min) + min;
+	if (globalVariables::slicingNewSliceEnabled == false) {
+		switch (sliceSkill) {
+		case 5:
+			min += (sliceType == 0) ? 6 : 5;
+			max += 5;
+		case 4:
+			min += (sliceType == 0) ? 0 : 10;
+			max += 10;
+		case 3:
+			min += 5;
+			max += (sliceType == 0) ? 20 : 30;
+			break;
+		default:
+			return;
+		}
 
-	switch (sliceType) {
-	case 0:
-		handleSliceEffectiveness(percent);
-		break;
-	case 1:
-		handleSliceEncumbrance(percent);
-		break;
+		uint8 percent = System::random(max - min) + min;
+
+		switch (sliceType) {
+		case 0:
+			handleSliceEffectiveness(percent, sockets);
+			break;
+		case 1:
+			handleSliceEncumbrance(percent, sockets);
+			break;
+		}
+	} else {
+		switch (sliceSkill) {
+		case 5:
+			min += 10;
+			max += 5;
+			sockets += globalVariables::craftingMaxSockets * .25;
+		case 4:
+			min += 10;
+			max += 5;
+			sockets += globalVariables::craftingMaxSockets * .5;
+		case 3:
+			min += 10;
+			max += 25;
+			sockets += globalVariables::craftingMaxSockets * .75;
+			break;
+		case 2:
+
+		case 1:
+
+		case 0:
+
+		default:
+			return;
+		}
+
+		uint8 percent = System::random(max - min) + min;
+
+		if(!selectSlice){
+			switch (sliceType) {
+				case 0:
+					handleSliceEffectiveness(percent, sockets);
+					break;
+				case 1:
+					handleSliceEncumbrance(percent, sockets);
+					break;
+				case 2:
+					handleSliceArmorAp(sockets);
+					break;
+			}
+		}else{
+			switch (sliceOption) {
+				case 1:
+					handleSliceEffectiveness(percent, sockets);
+					break;
+				case 2:
+					handleSliceEncumbrance(percent, sockets);
+					break;
+				case 3:
+					handleSliceArmorAp(sockets);
+					break;
+			}
+		}
 	}
 }
 
-void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent) {
+void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent, int sockets) {
 	ManagedReference<CreatureObject*> player = this->player.get();
 	ManagedReference<TangibleObject*> tangibleObject = this->tangibleObject.get();
 
@@ -659,9 +904,17 @@ void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent) {
 
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 
+	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+		if (armor->getMaxSockets() + sockets > globalVariables::craftingMaxSockets) {
+			sockets = globalVariables::craftingMaxSockets;
+		}
+	}
 	Locker locker(armor);
 
 	armor->setEncumbranceSlice(percent / 100.f);
+	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+		armor->setMaxSockets(sockets);
+	}
 	armor->setSliced(true);
 
 	StringIdChatParameter params;
@@ -671,7 +924,7 @@ void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent) {
 	player->sendSystemMessage(params);
 }
 
-void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent) {
+void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent, int sockets) {
 	ManagedReference<CreatureObject*> player = this->player.get();
 	ManagedReference<TangibleObject*> tangibleObject = this->tangibleObject.get();
 
@@ -680,9 +933,17 @@ void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent) {
 
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 
+	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+		if (armor->getMaxSockets() + sockets > globalVariables::craftingMaxSockets) {
+			sockets = globalVariables::craftingMaxSockets;
+		}
+	}
 	Locker locker(armor);
 
 	armor->setEffectivenessSlice(percent / 100.f);
+	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+		armor->setMaxSockets(sockets);
+	}
 	armor->setSliced(true);
 
 	StringIdChatParameter params;
@@ -690,6 +951,43 @@ void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent) {
 	params.setStringId("@slicing/slicing:eff_mod");
 
 	player->sendSystemMessage(params);
+}
+
+void SlicingSessionImplementation::handleSliceArmorAp(int sockets) {
+	ManagedReference<CreatureObject*> player = this->player.get();
+	ManagedReference<TangibleObject*> tangibleObject = this->tangibleObject.get();
+ 	int apslice = System::random(3);
+ 	apslice += round((System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck")) * 2) / 100);
+	if (apslice > 3) {
+		apslice = 3;
+	}	
+	
+	if (tangibleObject == nullptr || player == nullptr || !tangibleObject->isArmorObject())
+		return;
+
+	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
+	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+		if (armor->getMaxSockets() + sockets > globalVariables::craftingMaxSockets) {
+			sockets = globalVariables::craftingMaxSockets;
+		}
+	}
+	int armorrating = armor->getRating();
+
+	Locker locker(armor);
+	
+	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+		armor->setMaxSockets(sockets);
+	}
+	if (apslice <= armorrating) {
+		player->sendSystemMessage("Your Armor Rating Slice Failed!");
+		armor->setSliced(true);
+		return;
+	} else {
+		armor->setRating(apslice);
+		armor->setSliced(true);
+		player->sendSystemMessage("Your Armor Rating Slice Was Successful!");
+		return;
+	}		
 }
 
 void SlicingSessionImplementation::handleContainerSlice() {

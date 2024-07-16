@@ -18,6 +18,7 @@
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/player/sessions/survey/SurveySession.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
+#include "server/globalVariables.h"
 
 ResourceSpawner::ResourceSpawner(ManagedReference<ZoneServer*> serv,
 		ZoneProcessServer* impl) {
@@ -595,6 +596,9 @@ String ResourceSpawner::makeResourceName(const String& randomNameClass) {
 }
 
 int ResourceSpawner::randomizeValue(int min, int max) {
+	min = globalVariables::resourcesMinimumQuality;
+	max = globalVariables::resourcesMaximumQuality;
+	
 	if (min == 0 && max == 0)
 		return 0;
 
@@ -996,31 +1000,33 @@ void ResourceSpawner::sendSampleResults(TransactionLog& trx, CreatureObject* pla
 
 	float cityMultiplier = 1.f + player->getSkillMod("private_spec_samplesize") / 100.f;
 
-	int unitsExtracted = maxUnitsExtracted * (float(surveySkill) / 100.0f) * samplingMultiplier * cityMultiplier;
+	int unitsExtracted = maxUnitsExtracted * (float(surveySkill) / 100.0f) * globalVariables::playerSamplingMultiplier * cityMultiplier;
 	int xpcap = 40;
 
-	if (session->tryGamble()) {
-		if (System::random(2) == 1) {
-			player->sendSystemMessage("@survey:gamble_success");
-			unitsExtracted *= 5;
-		} else {
-			player->sendSystemMessage("@survey:gamble_fail");
-		}
-		session->clearGamble();
-		xpcap = 50;
-	}
-
-	if (richSampleLocation != nullptr && richSampleLocation->getPosition() != Vector3(0, 0, 0)) {
-		if (player->getDistanceTo(richSampleLocation) < 10) {
-			player->sendSystemMessage("@survey:node_recovery");
-			unitsExtracted *= 5;
-
-		} else {
-			player->sendSystemMessage("@survey:node_not_close");
+	if (globalVariables::playerSamplingMiniGameEnabled == true) {
+		if (session->tryGamble()) {
+			if (System::random(2) == 1) {
+				player->sendSystemMessage("@survey:gamble_success");
+				unitsExtracted *= 5;
+			} else {
+				player->sendSystemMessage("@survey:gamble_fail");
+			}
+			session->clearGamble();
+			xpcap = 50;
 		}
 
-		session->clearRichSampleLocation();
-		xpcap = 50;
+		if (richSampleLocation != nullptr && richSampleLocation->getPosition() != Vector3(0, 0, 0)) {
+			if (player->getDistanceTo(richSampleLocation) < 10) {
+				player->sendSystemMessage("@survey:node_recovery");
+				unitsExtracted *= 5;
+
+			} else {
+				player->sendSystemMessage("@survey:node_not_close");
+			}
+
+			session->clearRichSampleLocation();
+			xpcap = 50;
+		}
 	}
 
 	if (unitsExtracted < 2) {
@@ -1058,13 +1064,15 @@ void ResourceSpawner::sendSampleResults(TransactionLog& trx, CreatureObject* pla
 	player->notifyObservers(ObserverEventType::SAMPLE, resourceSpawn, density * 100);
 	player->notifyObservers(ObserverEventType::SAMPLETAKEN, resourceSpawn, unitsExtracted);
 
-	if (resourceSpawn->isType("radioactive")) {
-		int wound = int((sampleRate / 30) - System::random(7));
+	if (globalVariables::playerSamplingRadioactiveWarningEnabled == true) {
+		if (resourceSpawn->isType("radioactive")) {
+			int wound = int((sampleRate / 30) - System::random(7));
 
-		if (wound > 0) {
-			player->addWounds(CreatureAttribute::HEALTH, wound, true);
-			player->addWounds(CreatureAttribute::ACTION, wound, true);
-			player->addWounds(CreatureAttribute::MIND, wound, true);
+			if (wound > 0) {
+				player->addWounds(CreatureAttribute::HEALTH, wound, true);
+				player->addWounds(CreatureAttribute::ACTION, wound, true);
+				player->addWounds(CreatureAttribute::MIND, wound, true);
+			}
 		}
 	}
 }
@@ -1083,8 +1091,8 @@ bool ResourceSpawner::addResourceToPlayerInventory(TransactionLog& trx, Creature
 					cast<ResourceContainer*>( object.get());
 
 			if (resource->getSpawnName() == resourceSpawn->getName() &&
-					resource->getQuantity() < ResourceContainer::MAXSIZE) {
-				if  ((resource->getQuantity() + unitsExtracted) <= ResourceContainer::MAXSIZE ){
+					resource->getQuantity() < globalVariables::resourcesContainerSize) {
+				if  ((resource->getQuantity() + unitsExtracted) <= globalVariables::resourcesContainerSize){
 					trx.addRelatedObject(resource);
 					trx.addState("resourceType", resourceSpawn->getType());
 					trx.addState("resourceID", resourceSpawn->getObjectID());
@@ -1095,8 +1103,8 @@ bool ResourceSpawner::addResourceToPlayerInventory(TransactionLog& trx, Creature
 					resource->setQuantity(newStackSize);
 					return true;
 				}else{
-					unitsExtracted = unitsExtracted - (ResourceContainer::MAXSIZE - resource->getQuantity());
-					resource->setQuantity(ResourceContainer::MAXSIZE);
+					unitsExtracted = unitsExtracted - (globalVariables::resourcesContainerSize - resource->getQuantity());
+					resource->setQuantity(globalVariables::resourcesContainerSize);
 				}
 			}
 		}

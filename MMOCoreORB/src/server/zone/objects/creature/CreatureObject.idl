@@ -46,6 +46,7 @@ import server.zone.managers.auction.AuctionSearchTask;
 import server.zone.objects.tangible.Instrument;
 include server.zone.objects.creature.CommandQueue;
 include server.zone.objects.ship.ShipObject;
+include server.globalVariables;
 
 @mock
 @json
@@ -757,6 +758,21 @@ class CreatureObject extends TangibleObject {
 		return creatureBuffs.getModifierByName(skillMod);
 	}
 
+	@read
+	public boolean hasBuff(unsigned int buffcrc) {
+		return creatureBuffs.hasBuff(buffcrc);
+	}
+
+	@read
+	public boolean hasSpice() {
+		return creatureBuffs.hasSpice();
+	}
+
+	@read
+	public boolean hasTrapBuff() {
+		return creatureBuffs.hasTrapBuff();
+	}
+
 	@preLocked
 	public abstract int addDotState(CreatureObject attacker,
 				unsigned long dotType,
@@ -793,11 +809,6 @@ class CreatureObject extends TangibleObject {
 	@local
 	public DamageOverTimeList getDamageOverTimeList() {
 		return damageOverTimeList;
-	}
-
-	@read
-	public boolean hasBuff(unsigned int buffcrc) {
-		return creatureBuffs.hasBuff(buffcrc);
 	}
 
 	@preLocked
@@ -1221,7 +1232,7 @@ class CreatureObject extends TangibleObject {
 	public native void notifyInsert(TreeEntry obj);
 
 	@local
-	public native void notifyDissapear(TreeEntry obj);
+	public abstract native void notifyDissapear(TreeEntry obj);
 
 	@dirty
 	@local
@@ -1386,11 +1397,6 @@ class CreatureObject extends TangibleObject {
 	@local
 	public CooldownTimerMap getCooldownTimerMap() {
 		return cooldownTimerMap;
-	}
-
-	@read
-	public boolean hasSpice() {
-		return creatureBuffs.hasSpice();
 	}
 
 	public void updateLastSuccessfulCombatAction() {
@@ -1661,7 +1667,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getAccelerationMultiplierMod() {
-		return accelerationMultiplierMod;
+		return accelerationMultiplierMod * globalVariables.playerSpeedMultiplier;
 	}
 
 	@read
@@ -1671,7 +1677,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getSpeedMultiplierMod() {
-		return speedMultiplierMod;
+		return speedMultiplierMod * globalVariables.playerSpeedMultiplier;
 	}
 
 	@mock
@@ -1738,7 +1744,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getTurnScale() {
-		return turnScale;
+		return turnScale + (turnScale / globalVariables.playerSpeedMultiplier);
 	}
 
 	@read

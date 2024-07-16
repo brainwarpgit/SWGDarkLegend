@@ -59,7 +59,37 @@ DantooineImperialOutpostScreenPlay = CityScreenPlay:new {
 		{"bek_rabor", 60, -4223.5, 3, -2386, 115, 0, ""},
 		{"juntah_herm", 60, -4222, 3, -2386.5, 300, 0, ""},
 		{"imperial_recruiter", 0, -4197, 3, -2411, 270, 0, ""},
-		{"insurgent",60,0,0,-5.7,0,1365878, "npc_imperial"}
+		{"insurgent",60,0,0,-5.7,0,1365878, "npc_imperial"},
+		{"junk_dealer", 0, -4203, 3, -2346, 225, 0, ""}
+	},
+
+	citySpawns = {
+		--outside
+		{"at_st", 900, -4230, 3, -2330, 80, 0},
+		{"at_st", 900, -4230, 3, -2475, 0, 0},
+		{"stormtrooper", 450, -4212, 3, -2380, 300, 0},
+		{"stormtrooper", 450, -4217, 3, -2389, 330, 0},
+		{"stormtrooper", 450, -4232, 3, -2390, 40, 0},
+		{"stormtrooper", 450, -4234, 3, -2382, 330, 0},
+		{"stormtrooper", 450, -4222, 3, -2398, 340, 0},
+		{"stormtrooper", 450, -4228, 3, -2398, 10, 0},
+		{"stormtrooper", 450, -4249, 3, -2395, 160, 0},
+		{"stormtrooper", 450, -4267, 3, -2388, 120, 0},
+		{"stormtrooper", 450, -4275, 3, -2404, 80, 0},
+		{"stormtrooper", 450, -4275, 3, -2412, 60, 0},
+		{"stormtrooper", 450, -4266, 3, -2431, 20, 0},
+		{"stormtrooper", 450, -4287, 3, -2414, 230, 0},
+		{"stormtrooper", 450, -4293, 3, -2397, 320, 0},
+		{"stormtrooper", 450, -4199, 3, -2342, 40, 0},
+		{"stormtrooper", 450, -4164, 3, -2400, 10, 0},
+		{"stormtrooper", 450, -4167, 3, -2410, 0, 0},
+		{"stormtrooper", 450, -4180, 3, -2408, 90, 0},
+		{"stormtrooper", 450, -4228, 3, -2410, 190, 0},
+		{"stormtrooper", 450, -4240, 3, -2421, 350, 0},
+		{"imperial_corporal", 450, -4229, 3, -2431, 20, 0},
+		{"imperial_corporal", 450, -4204, 3, -2421, 0, 0},
+		{"imperial_private", 450, -4241, 3, -2403, 300, 0},
+		{"imperial_private", 450, -4198, 3, -2404, 240, 0},
 	}
 }
 
@@ -67,58 +97,10 @@ registerScreenPlay("DantooineImperialOutpostScreenPlay", true)
 
 function DantooineImperialOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
-function DantooineImperialOutpostScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	--outside
-	spawnMobile(self.planet, "at_st", 900, -4230, 3, -2330, 80, 0)
-	spawnMobile(self.planet, "at_st", 900, -4230, 3, -2475, 0, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4212, 3, -2380, 300, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4217, 3, -2389, 330, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4232, 3, -2390, 40, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4234, 3, -2382, 330, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4222, 3, -2398, 340, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4228, 3, -2398, 10, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4249, 3, -2395, 160, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4267, 3, -2388, 120, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4275, 3, -2404, 80, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4275, 3, -2412, 60, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4266, 3, -2431, 20, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4287, 3, -2414, 230, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4293, 3, -2397, 320, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4199, 3, -2342, 40, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4164, 3, -2400, 10, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4167, 3, -2410, 0, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4180, 3, -2408, 90, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4228, 3, -2410, 190, 0)
-	spawnMobile(self.planet, "stormtrooper", 450, -4240, 3, -2421, 350, 0)
-	spawnMobile(self.planet, "imperial_corporal", 450, -4229, 3, -2431, 20, 0)
-	spawnMobile(self.planet, "imperial_corporal", 450, -4204, 3, -2421, 0, 0)
-	spawnMobile(self.planet, "imperial_private", 450, -4241, 3, -2403, 300, 0)
-	spawnMobile(self.planet, "imperial_private", 450, -4198, 3, -2404, 240, 0)
-end

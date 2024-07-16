@@ -88,7 +88,7 @@ object_tangible_wearables_armor_marauder_armor_marauder_s02_bicep_l = object_tan
 				"object/mobile/vendor/zabrak_male.iff" },
 	
 	-- Damage types in WeaponObject
-	vulnerability = ELECTRICITY + COLD + STUN + LIGHTSABER,
+	vulnerability = LIGHTSABER,
 
 	-- These are default Blue Frog stats
 	healthEncumbrance = 13,
@@ -101,7 +101,7 @@ object_tangible_wearables_armor_marauder_armor_marauder_s02_bicep_l = object_tan
 	kinetic = 25,
 	energy = 15,
 	electricity = 0,
-	stun = 0,
+	stun = 15,
 	blast = 15,
 	heat = 15,
 	cold = 0,

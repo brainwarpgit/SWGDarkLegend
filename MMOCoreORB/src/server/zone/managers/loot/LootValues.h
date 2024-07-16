@@ -5,6 +5,7 @@
 #include "server/zone/objects/tangible/TangibleObject.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
 #include "templates/LootItemTemplate.h"
+#include "server/globalVariables.h"
 
 #ifndef LOOTVALUES_DEBUG
 //#define LOOTVALUES_DEBUG
@@ -18,24 +19,24 @@ public:
 	constexpr static float LEVELMAX = 350;
 	constexpr static float LEVELMIN = 0;
 
-	enum BonusType : int {
+	/*enum BonusType : int {
 		LEGENDARY = 9,
 		EXCEPTIONAL = 8,
 		ENHANCED = 2,
 		EXPERIMENTAL = 1,
 		STATIC = 0,
-	};
+	};*/
 
 protected:
 	AttributesMap staticValues;
 	uint32 objectType;
 
 	int dynamicValues;
-	int modifier;
+	float modifier;
 	int level;
 
 public:
-	LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier);
+	LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype);
 
 	uint32 getObjectType() const {
 		return objectType;
@@ -53,19 +54,19 @@ public:
 		return level;
 	}
 
-	void setModifier(int lootModifier) {
-		modifier = Math::clamp((int)(STATIC), lootModifier, (int)(LEGENDARY+EXPERIMENTAL));
+	void setModifier(float lootModifier) {
+		modifier = Math::clamp((float)(STATIC), lootModifier, (float)(globalVariables::lootLegendaryDamageModifier + globalVariables::lootBaseDamageModifier));
 	}
 
 	void setLevel(int lootLevel) {
-		level = Math::clamp((int)(LEVELMIN), lootLevel, (int)(LEVELMAX));
+		level = Math::clamp((int)(globalVariables::lootMinLevel), lootLevel, (int)(globalVariables::lootMaxLevel));
 	}
 
 	void setModifier(const LootItemTemplate* lootTemplate, float lootModifier);
 
 	void setLevel(const LootItemTemplate* lootTemplate, int lootLevel);
 
-	void recalculateValues(bool initial);
+	void recalculateValues(bool initial, const LootItemTemplate* lootTemplate, TangibleObject* prototype);
 
 private:
 	inline void setStaticValues();
@@ -73,6 +74,8 @@ private:
 	inline void setRandomValues();
 
 	inline void setDamageValues();
+	
+	inline void setLootCraftingValues(const LootItemTemplate* lootTemplate, TangibleObject* prototype);
 
 	inline void setStaticValue(const String& attribute);
 
@@ -87,7 +90,11 @@ private:
 public:
 	static float getModifierValue(float min, float max, float percentageMax);
 
+	static int getModifierValue(int min, int max, float percentageMax);
+
 	static float getPercentageValue(float min, float max, float percentage);
+
+	static int getPercentageValue(int min, int max, float percentage);
 
 	static float getValuePercentage(float min, float max, float value);
 
@@ -109,11 +116,11 @@ public:
 
 		prototype->setCustomObjectName(itemTemplate->getCustomObjectName(), false);
 
-		if (modifier > EXCEPTIONAL+1) {
+		if (modifier > globalVariables::lootExceptionalDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Legendary)", false);
-		} else if (modifier > ENHANCED+1) {
+		} else if (modifier > globalVariables::lootYellowDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Exceptional)", false);
-		} else if (modifier > EXPERIMENTAL+1) {
+		} else if (modifier > globalVariables::lootBaseDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Enhanced)", false);
 		} else if (modifier > STATIC) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Experimental)", false);

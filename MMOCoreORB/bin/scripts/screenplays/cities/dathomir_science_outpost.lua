@@ -61,7 +61,8 @@ DathomirScienceOutpostScreenPlay = CityScreenPlay:new {
 		--Outside
 		{"mercenary", 300, -43.9919, 18, -1585.86, 220.77, 0, ""},
 		{"informant_npc_lvl_3", 0,-68,18,-1565,270,0, ""},
-		{"arnecio_ulvaw_op",60,4.06465,0.624999,2.34456,30.9406,2835570, "neutral"}
+		{"arnecio_ulvaw_op",60,4.06465,0.624999,2.34456,30.9406,2835570, "neutral"},
+		{"junk_dealer", 0,-68,18,-1644,270,0, ""}
 	}
 }
 
@@ -69,31 +70,9 @@ registerScreenPlay("DathomirScienceOutpostScreenPlay", true)
 
 function DathomirScienceOutpostScreenPlay:start()
 	if (isZoneEnabled("dathomir")) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
-function DathomirScienceOutpostScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-end

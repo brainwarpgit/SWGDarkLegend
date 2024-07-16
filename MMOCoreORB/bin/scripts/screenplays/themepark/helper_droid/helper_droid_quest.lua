@@ -109,6 +109,7 @@ function HelperDroidQuest:startCallback(pPlayer, pSui, eventIndex, ...)
 
 	if (eventIndex == 0 and pDroid ~= nil) then
 		if ((profession == "brawler" or profession == "marksman")) then
+			HelperDroidQuest:giveProfessionItem(pPlayer, profession)
 			createEvent(100, "HelperDroidQuest", "chooseWeapon", pPlayer, "")
 			writeData(playerID .. ":" .. profession .. ":HelperDroid:questStatus:", 1)
 			return
@@ -117,6 +118,9 @@ function HelperDroidQuest:startCallback(pPlayer, pSui, eventIndex, ...)
 		setQuestStatus(playerID .. ":" .. profession .. ":HelperDroid:completeQuests:", 0)
 		self:professionQuestSui(pDroid, pPlayer, profession)
 	end
+	
+	HelperDroidQuest:giveProfessionItem(pPlayer, profession)
+	
 end
 
 function HelperDroidQuest:professionQuestSui(pDroid, pPlayer, profession)
@@ -235,7 +239,7 @@ function HelperDroidQuest:professionCallback(pPlayer, pSui, eventIndex, ...)
 	if (eventIndex == 0) then
 		-- Player has accepted to start quest. Set their status, completed will be set when task is finished
 		writeData(playerID .. ":" .. profession .. ":HelperDroid:questStatus:", questStatus + 1)
-
+		
 		if (questStatus == 0 and (profession == "scout" or profession == "medic")) then
 			setQuestStatus(playerID .. ":" .. profession .. ":HelperDroid:completeQuests:", 1)
 
@@ -574,6 +578,22 @@ function HelperDroidQuest:giveProfessionItem(pPlayer, profession)
 		if (pInstrument ~= nil) then
 			CreatureObject(pPlayer):sendSystemMessage("@new_player:given_slitherhorn")
 		end
+	elseif (profession == "brawler") then
+		local pWeaponKnife = giveItem(pInventory, "object/weapon/melee/knife/knife_survival.iff", -1)
+		local pWeaponStaff = giveItem(pInventory, "object/weapon/melee/polearm/lance_staff_wood_s1.iff", -1)
+		local pWeaponAxe = giveItem(pInventory, "object/weapon/melee/axe/axe_heavy_duty.iff", -1)
+		
+		if (pWeaponKnife ~= nil and pWeaponStaff ~= nil and pWeaponAxe ~= nil) then
+			CreatureObject(pPlayer):sendSystemMessage("Beginning Brawler Weapons have been place in your inventory")
+		end	
+	elseif (profession == "marksman") then
+		local pWeaponPistol = giveItem(pInventory, "object/weapon/ranged/pistol/pistol_cdef.iff", -1)
+		local pWeaponCarbine = giveItem(pInventory, "object/weapon/ranged/carbine/carbine_cdef.iff", -1)
+		local pWeaponRifle = giveItem(pInventory, "object/weapon/ranged/rifle/rifle_cdef.iff", -1)
+		
+		if (pWeaponPistol ~= nil and pWeaponCarbine ~= nil and pWeaponRifle ~= nil) then
+			CreatureObject(pPlayer):sendSystemMessage("Beginning Marksman Weapons have been place in your inventory")
+		end	
 	end
 end
 
@@ -670,18 +690,18 @@ function HelperDroidQuest:givePlayerWeapon(pPlayer, weapon)
 		return
 	end
 
-	local pWeapon = giveItem(pInventory, weaponTemp, -1)
+	--local pWeapon = giveItem(pInventory, weaponTemp, -1)
 
-	if (pWeapon ~= nil) then
+	--if (pWeapon ~= nil) then
 		local profession = readStringData(playerID .. ":HelperDroid:profession:")
 
 		setQuestStatus(playerID .. ":" .. profession .. ":HelperDroid:completeQuests:", 1)
 
-		local message = "You received a " .. SceneObject(pWeapon):getDisplayedName()
-		CreatureObject(pPlayer):sendSystemMessage(message)
+		--local message = "You received a " .. SceneObject(pWeapon):getDisplayedName()
+		--CreatureObject(pPlayer):sendSystemMessage(message)
 
 		createEvent(1000, "HelperDroidQuest", "giveReward", pPlayer, profession)
-	end
+	--end
 end
 
 function HelperDroidQuest:grantMedicResources(pPlayer)
@@ -689,8 +709,8 @@ function HelperDroidQuest:grantMedicResources(pPlayer)
 		return
 	end
 
-	givePlayerResource(pPlayer, "organic", 8)
-	givePlayerResource(pPlayer, "inorganic", 8)
+	givePlayerResource(pPlayer, "organic", 32)
+	givePlayerResource(pPlayer, "inorganic", 32)
 end
 
 -- ========= END New Player Item Choice and Creation ==========
@@ -837,7 +857,7 @@ function HelperDroidQuest:notifyAbilityUsed(pPlayer, pTarget, abilityHash)
 					end
 				end
 
-				if (#tendedPatients + 1 < 5) then
+				if (#tendedPatients + 1 < 1) then
 					tendedPatients[#tendedPatients + 1] = tostring(targetID)
 
 					writeStringVectorSharedMemory(playerID .. ":" .. profession .. ":HelperDroid:tendedPatients:", tendedPatients)
@@ -1046,7 +1066,7 @@ function HelperDroidQuest:notifySampleTaken(pPlayer, pResourceSpawn, unitsSample
 				local totalMineral = readData(playerID .. ":" .. profession .. ":HelperDroid:mineralSampled:")
 				totalMineral = totalMineral + unitsSampled
 
-				if (totalMineral > 7) then
+				if (totalMineral > 34) then
 					setQuestStatus(playerID .. ":" .. profession .. ":HelperDroid:completeQuests:", 2)
 					deleteData(playerID .. ":" .. profession .. ":HelperDroid:mineralSampled:")
 
@@ -1059,7 +1079,7 @@ function HelperDroidQuest:notifySampleTaken(pPlayer, pResourceSpawn, unitsSample
 				local totalMetal = readData(playerID .. ":" .. profession .. ":HelperDroid:metalSampled:")
 				totalMetal = totalMetal + unitsSampled
 
-				if (totalMetal > 18) then
+				if (totalMetal > 99) then
 					setQuestStatus(playerID .. ":" .. profession .. ":HelperDroid:completeQuests:", 3)
 					deleteData(playerID .. ":" .. profession .. ":HelperDroid:metalSampled:")
 
@@ -1178,7 +1198,7 @@ function HelperDroidQuest:notifyNewPatron(pPlayer, pPatron)
 
 		local totalPatrons = readData(playerID .. ":" .. profession .. ":HelperDroid:totalPatrons:") + 1
 
-		if (totalPatrons >= 7) then
+		if (totalPatrons >= 1) then
 			setQuestStatus(playerID .. ":" .. profession .. ":HelperDroid:completeQuests:", 6)
 
 			createEvent(100, "HelperDroidQuest", "giveReward", pPlayer, profession)
@@ -1237,10 +1257,22 @@ function HelperDroidQuest:giveReward(pPlayer, profession)
 	local ttString = ""
 	local DI = 0
 
-	local credits = 100
-	local experience = 50
+	local credits = 1000
+	local experience = 500
+	local comexperience = 50
 	local xpType = "combat_general"
-
+	local xpTypecom = "combat_general"
+	local xpTypess = "scout"
+	local xpTypest = "trapping"
+	local xpTypesc = "camp"
+	local xpTypeeh = "entertainer_healing"
+	local xpTypeem = "music"
+	local xpTypeed = "dance"
+	local xpTypeac = "crafting_general"
+	local xpTypeas = "resource_harvesting_inorganic"
+	local xpTypemm = "medical"
+	local xpTypemc = "crafting_medicine_general"
+	
 	if (profession == "brawler" or profession == "marksman") then
 		local weaponType = CreatureObject(pPlayer):getWeaponType()
 
@@ -1254,19 +1286,29 @@ function HelperDroidQuest:giveReward(pPlayer, profession)
 			xpType = "combat_meleespecialize_polearm"
 		elseif (weaponType == 256) then
 			xpType = "combat_rangedspecialize_pistol"
+			xpTypecom = "combat_general"
 		elseif (weaponType == 512) then
 			xpType = "combat_rangedspecialize_carbine"
+			xpTypecom = "combat_general"
 		elseif (weaponType == 1024) then
 			xpType = "combat_rangedspecialize_rifle"
+			xpTypecom = "combat_general"
 		end
 	elseif (profession == "scout") then
-		xpType = "scout"
+		xpTypess = "scout"
+		xpTypest = "trapping"
+		xpTypesc = "camp"
 	elseif (profession == "artisan") then
-		xpType = "crafting_general"
+		xpTypeac = "crafting_general"
+		xpTypeas = "resource_harvesting_inorganic"
 	elseif (profession == "medic") then
-		xpType = "medical"
+		xpTypemm = "medical"
+		xpTypemc = "crafting_medicine_general"
 	elseif (profession == "entertainer") then
-		xpType = "entertainer_healing"
+		xpTypeeh = "entertainer_healing"
+		xpTypeem = "music"
+		xpTypeed = "dance"
+		xpTypeid = "imagedesigner"
 	end
 
 	--[[ Total Quests:
@@ -1279,7 +1321,22 @@ function HelperDroidQuest:giveReward(pPlayer, profession)
 	]]
 
 	if (questsComplete == 1) then
-		CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+		if (profession == "artisan") then
+			CreatureObject(pPlayer):awardExperience(xpTypeas, experience, true)
+		elseif (profession == "entertainer") then
+			CreatureObject(pPlayer):awardExperience(xpTypeed, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeeh, 250, true)
+		elseif (profession == "medic") then
+			CreatureObject(pPlayer):awardExperience(xpTypemm, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypemc, 250, true)
+		elseif (profession == "scout") then
+			CreatureObject(pPlayer):awardExperience(xpTypess, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypest, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypesc, 250, true)
+		else
+			CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+			CreatureObject(pPlayer):awardExperience(xpTypecom, comexperience, true)
+		end
 		CreatureObject(pPlayer):addCashCredits(credits, true)
 
 		self:grantFireWorksReward(pDroid, pPlayer)
@@ -1288,15 +1345,39 @@ function HelperDroidQuest:giveReward(pPlayer, profession)
 		message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
 		ttString = "1st"
 	elseif (questsComplete == 2) then
-		CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+		if (profession == "artisan") then
+			CreatureObject(pPlayer):awardExperience(xpTypeas, experience, true)
+		elseif (profession == "entertainer") then
+			CreatureObject(pPlayer):awardExperience(xpTypeeh, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeem, 250, true)
+		elseif (profession == "medic") then
+			CreatureObject(pPlayer):awardExperience(xpTypemm, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypemc, 250, true)
+		elseif (profession == "scout") then
+			CreatureObject(pPlayer):awardExperience(xpTypess, experience, true)
+		else
+			CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+			CreatureObject(pPlayer):awardExperience(xpTypecom, comexperience, true)
+		end
 		CreatureObject(pPlayer):addCashCredits(credits, true)
 
 		ttString = "2nd"
 	elseif (questsComplete == 3) then
-		CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+		if (profession == "artisan") then
+			CreatureObject(pPlayer):awardExperience(xpTypeas, experience, true)
+		elseif (profession == "entertainer") then
+			CreatureObject(pPlayer):awardExperience(xpTypeid, experience, true)
+		elseif (profession == "medic") then
+			CreatureObject(pPlayer):awardExperience(xpTypemm, experience, true)
+		elseif (profession == "scout") then
+			CreatureObject(pPlayer):awardExperience(xpTypess, experience, true)
+		else
+			CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+			CreatureObject(pPlayer):awardExperience(xpTypecom, comexperience, true)
+		end
 		CreatureObject(pPlayer):addCashCredits(credits, true)
 
-		if ((profession == "marksman" or profession == "artisan") and not self:checkHasReward(pPlayer, "cloning")) then
+		if ((profession == "marksman" or profession == "artisan")) then --and not self:checkHasReward(pPlayer, "cloning")) then
 			self:grantCouponReward(pDroid, pPlayer, "cloning")
 			DI = credits
 			message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
@@ -1306,54 +1387,125 @@ function HelperDroidQuest:giveReward(pPlayer, profession)
 
 		ttString = "3rd"
 	elseif (questsComplete == 4) then
-		CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+		if (profession == "artisan") then
+			CreatureObject(pPlayer):awardExperience(xpTypeac, experience, true)
+		elseif (profession == "entertainer") then
+			CreatureObject(pPlayer):awardExperience(xpTypeeh, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeem, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeed, 250, true)
+		elseif (profession == "medic") then
+			CreatureObject(pPlayer):awardExperience(xpTypemm, experience, true)
+		elseif (profession == "scout") then
+			CreatureObject(pPlayer):awardExperience(xpTypest, experience, true)
+		else
+			CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+			CreatureObject(pPlayer):awardExperience(xpTypecom, comexperience, true)
+		end
 		CreatureObject(pPlayer):addCashCredits(credits, true)
 
-		if ((profession == "marksman" or profession == "artisan") and not self:checkHasReward(pPlayer, "travel")) then
+		if ((profession == "marksman" or profession == "artisan")) then --and not self:checkHasReward(pPlayer, "travel")) then
 			self:grantCouponReward(pDroid, pPlayer, "travel")
 			DI = credits
 			message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
-		elseif (not self:checkHasReward(pPlayer, "cloning")) then
+		end --elseif (not self:checkHasReward(pPlayer, "cloning")) then
 			self:grantCouponReward(pDroid, pPlayer, "cloning")
 			DI = credits
 			message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
-		end
+		--end
 
 		ttString = "4th"
 	elseif (questsComplete == 5) then
 		if (profession == "marksman" or profession == "artisan") then
-			experience = 200
+			experience = 1000
+			comexperience = 100
 			credits = 2000
 
-			if (not self:checkHasReward(pPlayer, "vehicle")) then
+			if (profession == "artisan") then
+				self:grantSurveyReward(pDroid,pPlayer)
+			end
+			if (profession == "marksman") then
+				self:grantArmorReward(pDroid,pPlayer)
+			end
+			--if (not self:checkHasReward(pPlayer, "vehicle")) then
 				self:grantCouponReward(pDroid, pPlayer, "vehicle")
 				DI = credits
 				message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
-			end
-		elseif (not self:checkHasReward(pPlayer, "travel")) then
+			--end
+		else --if (not self:checkHasReward(pPlayer, "travel")) then
 			self:grantCouponReward(pDroid, pPlayer, "travel")
 			DI = credits
 			message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
 		end
 
-		CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+		if (profession == "artisan") then
+			CreatureObject(pPlayer):awardExperience(xpTypeac, experience, true)
+		elseif (profession == "entertainer") then
+			CreatureObject(pPlayer):awardExperience(xpTypeeh, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeem, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeed, 250, true)
+		elseif (profession == "medic") then
+			CreatureObject(pPlayer):awardExperience(xpTypemm, 250, true)
+			CreatureObject(pPlayer):awardExperience(xpTypemc, 250, true)
+		elseif (profession == "scout") then
+			CreatureObject(pPlayer):awardExperience(xpTypesc, experience, true)
+		else
+			CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+			CreatureObject(pPlayer):awardExperience(xpTypecom, comexperience, true)
+		end
 		CreatureObject(pPlayer):addCashCredits(credits, true)
 
 		ttString = "5th"
 	elseif (questsComplete == 6) then
-		experience = 200
+		experience = 1000
+		comexperience = 100
 		credits = 2000
 
-		if (not self:checkHasReward(pPlayer, "vehicle")) then
+		if (profession == "brawler") then
+			self:grantSwoopReward(pDroid,pPlayer)
+		end
+		if (profession == "scout") then
+			self:grantBagReward(pDroid,pPlayer)
+		end
+		if (profession == "entertainer") then
+			self:grantHouseReward(pDroid,pPlayer)
+		end
+		if (profession == "medic") then
+			self:grantDroidReward(pDroid,pPlayer)
+		end
+		if (profession == "marksman") then
+			self:grantArmorReward(pDroid,pPlayer)
+		end
+		if (profession == "artisan") then
+			self:grantSurveyReward(pDroid,pPlayer)
+		end
+		
+		--if (not self:checkHasReward(pPlayer, "vehicle")) then
 			self:grantCouponReward(pDroid, pPlayer, "vehicle")
 			DI = credits
 			message = "@new_player:task_complete_reward_0" .. tostring(randomMessage)
-		end
+		--end
 
-		CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+		if (profession == "entertainer") then
+			CreatureObject(pPlayer):awardExperience(xpTypeeh, 500, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeem, 500, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeed, 500, true)
+			CreatureObject(pPlayer):awardExperience(xpTypeid, 500, true)
+		elseif (profession == "medic") then
+			CreatureObject(pPlayer):awardExperience(xpTypemm, 500, true)
+			CreatureObject(pPlayer):awardExperience(xpTypemc, 500, true)
+		elseif (profession == "scout") then
+			CreatureObject(pPlayer):awardExperience(xpTypess, 500, true)
+			CreatureObject(pPlayer):awardExperience(xpTypest, 500, true)
+			CreatureObject(pPlayer):awardExperience(xpTypesc, 500, true)
+		else
+			CreatureObject(pPlayer):awardExperience(xpType, experience, true)
+			CreatureObject(pPlayer):awardExperience(xpTypecom, comexperience, true)
+		end
 		CreatureObject(pPlayer):addCashCredits(credits, true)
 
 		ttString = "6th"
+	elseif (questsComplete > 6) then
+		ttString = "5th"
 	end
 
 	local rewardString = LuaStringIdChatParameter(message)
@@ -1435,8 +1587,154 @@ function HelperDroidQuest:grantCouponReward(pDroid, pPlayer, couponString)
 			message2 = message2 .. "completed_first_profession"
 		end
 
-		CreatureObject(pPlayer):sendSystemMessage(message2)
-		CreatureObject(pPlayer):sendSystemMessage(message)
+		--CreatureObject(pPlayer):sendSystemMessage(message2)
+		--CreatureObject(pPlayer):sendSystemMessage(message)
+	end
+end
+
+function HelperDroidQuest:grantBagReward(pDroid, pPlayer)
+	if (pDroid == nil or pPlayer == nil) then
+		return
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		spatialChat(pDroid, "@new_player:inventory_full")
+		return
+	end
+
+	local BagReward = giveItem(pInventory, "object/tangible/wearables/backpack/backpack_s01.iff", -1)
+
+	if (BagReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a Travel Bag!")
+	end
+end
+
+function HelperDroidQuest:grantSwoopReward(pDroid, pPlayer)
+	if (pDroid == nil or pPlayer == nil) then
+		return
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		spatialChat(pDroid, "@new_player:inventory_full")
+		return
+	end
+
+	local SwoopReward = giveItem(pInventory, "object/tangible/deed/vehicle_deed/speederbike_swoop_deed.iff", -1)
+
+	if (SwoopReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a Swoop Speeder!")
+	end
+end
+
+function HelperDroidQuest:grantHouseReward(pDroid, pPlayer)
+	if (pDroid == nil or pPlayer == nil) then
+		return
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		spatialChat(pDroid, "@new_player:inventory_full")
+		return
+	end
+
+	local HouseReward = giveItem(pInventory, "object/tangible/deed/player_house_deed/generic_house_small_deed.iff", -1)
+
+	if (HouseReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a House!")
+	end
+end
+
+function HelperDroidQuest:grantSurveyReward(pDroid, pPlayer)
+	if (pDroid == nil or pPlayer == nil) then
+		return
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		spatialChat(pDroid, "@new_player:inventory_full")
+		return
+	end
+
+	local SurveyReward = giveItem(pInventory, "object/tangible/survey_tool/survey_tool_inorganic.iff", -1)
+
+	if (SurveyReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a Inorganic Survey device!")
+	end
+end
+
+function HelperDroidQuest:grantDroidReward(pDroid, pPlayer)
+	if (pDroid == nil or pPlayer == nil) then
+		return
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		spatialChat(pDroid, "@new_player:inventory_full")
+		return
+	end
+
+	local DroidReward = giveItem(pInventory, "object/tangible/deed/pet_deed/deed_r2_advanced_basic.iff", -1)
+
+	if (DroidReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a R2 Droid!")
+	end
+end
+
+function HelperDroidQuest:grantArmorReward(pDroid, pPlayer)
+	if (pDroid == nil or pPlayer == nil) then
+		return
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		spatialChat(pDroid, "@new_player:inventory_full")
+		return
+	end
+
+	local ArmorReward1 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_bicep_l.iff", -1)
+	local ArmorReward2 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_bicep_r.iff", -1)
+	local ArmorReward3 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_boots.iff", -1)
+	local ArmorReward4 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_bracer_r.iff", -1)
+	local ArmorReward5 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_bracer_l.iff", -1)
+	local ArmorReward6 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_chest_plate.iff", -1)
+	local ArmorReward7 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_gloves.iff", -1)
+	local ArmorReward8 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_helmet.iff", -1)
+	local ArmorReward9 = giveItem(pInventory, "object/tangible/wearables/armor/bone/armor_bone_s01_leggings.iff", -1)
+
+	if (ArmorReward1 ~= nil and ArmorReward2 ~= nil and ArmorReward3 ~= nil and ArmorReward4 ~= nil and ArmorReward5 ~= nil and ArmorReward6 ~= nil and ArmorReward7 ~= nil and ArmorReward8 ~= nil and ArmorReward9 ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a set of bone armor!")
 	end
 end
 

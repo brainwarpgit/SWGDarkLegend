@@ -327,6 +327,21 @@ class AiAgent extends CreatureObject {
 		return Logger.getLogLevel();
 	}
 
+	@read
+	public unsigned int getCreatureDifficulty() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getCreatureDifficulty();    
+	}
+ 	
+ 	public float getCDPMultiplier() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getCDPMultiplier();    
+	}
+    
 	/**
 	 * Schedules the next recovery event
 	 * @pre { at least this is locked }
@@ -924,7 +939,7 @@ class AiAgent extends CreatureObject {
 	 * will overwrite the current wait timer
 	 **/
 	@preLocked
-	public native void setWait(int wait);
+	public native void setWait(unsigned long wait);
 
 	/**
 	 * Sets the wait timer to current time and removes
@@ -1631,7 +1646,7 @@ class AiAgent extends CreatureObject {
 	}
 
 	@read
-	public int getMaxDaamge() {
+	public int getMaxDamage() {
 		return maxDamage;
 	}
 

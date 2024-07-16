@@ -3,14 +3,14 @@
 krayt_composite_segment = {
 	minimumLevel = 0,
 	maximumLevel = -1,
-	customObjectName = "",
+	customObjectName = "Armor Segments",
 	directObjectTemplate = "object/tangible/component/armor/armor_segment_composite_krayt.iff",
 	craftingValues = {
 		{"hit_points",1000,1000,0, true},
-		{"armor_effectiveness",10,25,10},
+		{"armor_effectiveness",5,15,10},
 		{"armor_integrity",5000,10000,0},
 		{"armor_rating",1,1,0, true},
-		{"useCount",1,11,0},
+		{"useCount",5,15,0},
 	},
 	customizationStringNames = {},
 	customizationValues = {}

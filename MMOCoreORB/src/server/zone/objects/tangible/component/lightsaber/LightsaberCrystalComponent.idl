@@ -27,6 +27,8 @@ class LightsaberCrystalComponent extends Component {
 	protected int color;
 	protected int quality;
 	protected float attackSpeed;
+	protected float modifier;
+	protected int lootQuality;
 	protected int sacHealth;
 	protected int sacAction;
 	protected int sacMind;
@@ -46,6 +48,8 @@ class LightsaberCrystalComponent extends Component {
 
 	public LightsaberCrystalComponent() {
 		attackSpeed = 0.0;
+		modifier = 1.0;
+		lootQuality = 1.0;
 		sacHealth = 0;
 		sacAction = 0;
 		sacMind = 0;
@@ -98,7 +102,7 @@ class LightsaberCrystalComponent extends Component {
 
 	public native int inflictDamage(TangibleObject attacker, int damageType, float damage, boolean destroy, boolean notifyClient = true);
 
-	public native void generateCrystalStats();
+	public native void generateCrystalStats(float modifier, int lootQuality);
 	public native void validateCrystalStats();
 	public native int getRandomizedStat(int min, int max, int itemLevel);
 	public native float getRandomizedStat(float min, float max, int itemLevel);

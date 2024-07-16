@@ -123,7 +123,7 @@ registerScreenPlay("NabooDeejaPeakScreenPlay", true)
 
 function NabooDeejaPeakScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
 	end
@@ -156,25 +156,3 @@ function NabooDeejaPeakScreenPlay:spawnSceneObjects()
 	spawnSceneObject(self.planet, "object/static/structure/general/droid_r3_powerdown.iff", -3.8, 1.1, 2.4, 1685121, math.rad(104) )
 end
 
-function NabooDeejaPeakScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-end

@@ -83,8 +83,6 @@ public:
 	}
 
 	void awardXp(CreatureObject* creature, const String& type, int power) const {
-		if (!creature->isPlayerCreature())
-			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 

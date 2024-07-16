@@ -115,6 +115,7 @@
 #include "server/zone/objects/tangible/deed/ship/ShipDeed.h"
 
 #include "server/zone/managers/statistics/StatisticsManager.h"
+#include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl,
 					bool trackOnlineUsers) : Logger("PlayerManager") {
@@ -1780,10 +1781,10 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 	ManagedReference<SceneObject*> preDesignatedFacility = server->getObject(preDesignatedFacilityOid);
 
 	if (preDesignatedFacility == nullptr || preDesignatedFacility != cloner) {
-		player->addWounds(CreatureAttribute::HEALTH, 100, true, false);
-		player->addWounds(CreatureAttribute::ACTION, 100, true, false);
-		player->addWounds(CreatureAttribute::MIND, 100, true, false);
-		player->addShockWounds(100, true);
+		player->addWounds(CreatureAttribute::HEALTH, globalVariables::playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::ACTION, globalVariables::playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::MIND, globalVariables::playerWoundsonDeath, true, false);
+		player->addShockWounds(globalVariables::playerWoundsonDeath, true);
 	}
 
 	if (ConfigManager::instance()->useCovertOvertSystem()) {
@@ -1855,7 +1856,7 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 		int xpLoss = (int)(jediXpCap * -0.05);
 		int curExp = ghost->getExperience("jedi_general");
 
-		int negXpCap = -10000000; // Cap on negative jedi experience
+		int negXpCap = globalVariables::playerJediNegativeXPCap; // Cap on negative jedi experience
 
 		if ((curExp + xpLoss) < negXpCap)
 			xpLoss = negXpCap - curExp;
@@ -2116,7 +2117,11 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 				float xpAmount = baseXp;
 				int playerLevel = calculatePlayerLevel(attackerCreo, xpType);
 
-				xpAmount *= (float) damage / totalDamage;
+				if (globalVariables::playerAwardXPWeaponSplitEnabled == false) {
+					xpAmount *= (float) damage / totalDamage;
+				} else {
+					xpAmount *= (float) 1 / entry->size();
+				}
 
 				//Cap xp based on level
 				xpAmount = Math::min(xpAmount, playerLevel * 300.f);
@@ -2438,6 +2443,46 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 
 	if (player->hasBuff(BuffCRC::FOOD_XP_INCREASE) && !player->containsActiveSession(SessionFacadeType::CRAFTING))
 		buffMultiplier += player->getSkillModFromBuffs("xp_increase") / 100.f;
+
+	if (xpType == "bio_engineer_dna_harvesting") buffMultiplier *= globalVariables::playerDNASamplingXPMultiplier;
+	if (xpType == "bountyhunter") buffMultiplier *= globalVariables::playerBountyHunterXPMultiplier;
+	if (xpType == "camp") buffMultiplier *= globalVariables::playerWildernessSurvivalXPMultiplier;
+	if (xpType == "combat_general") buffMultiplier *= globalVariables::playerCombatXPMultiplier;
+	if (xpType == "combat_meleespecialize_onehand") buffMultiplier *= globalVariables::playerOnehandedWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_polearm") buffMultiplier *= globalVariables::playerPolearmWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_twohand") buffMultiplier *= globalVariables::playerTwohandedWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_unarmed") buffMultiplier *= globalVariables::playerUnarmedCombatXPMultiplier;
+	if (xpType == "combat_rangedspecialize_carbine") buffMultiplier *= globalVariables::playerCarbineWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_heavy") buffMultiplier *= globalVariables::playerHeavyWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_pistol") buffMultiplier *= globalVariables::playerPistolWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_rifle") buffMultiplier *= globalVariables::playerRifleWeaponsXPMultiplier;
+	if (xpType == "crafting_bio_engineer_creature") buffMultiplier *= globalVariables::playerBioEngineerCraftingXPMultiplier;
+	if (xpType == "crafting_clothing_armor") buffMultiplier *= globalVariables::playerArmorCraftingXPMultiplier;
+	if (xpType == "crafting_clothing_general") buffMultiplier *= globalVariables::playerTailoringXPMultiplier;
+	if (xpType == "crafting_droid_general") buffMultiplier *= globalVariables::playerDroidCraftingXPMultiplier;
+	if (xpType == "crafting_food_general") buffMultiplier *= globalVariables::playerFoodCraftingXPMultiplier;
+	if (xpType == "crafting_general") buffMultiplier *= globalVariables::playerGeneralCraftingXPMultiplier;
+	if (xpType == "crafting_medicine_general") buffMultiplier *= globalVariables::playerMedicineCraftingXPMultiplier;
+	if (xpType == "crafting_spice") buffMultiplier *= globalVariables::playerSpiceCraftingXPMultiplier;
+	if (xpType == "crafting_structure_general") buffMultiplier *= globalVariables::playerStructureCraftingXPMultiplier;
+	if (xpType == "crafting_weapons_general") buffMultiplier *= globalVariables::playerWeaponCraftingXPMultiplier;
+	if (xpType == "creaturehandler") buffMultiplier *= globalVariables::playerCreatureHandlingXPMultiplier;
+	if (xpType == "dance") buffMultiplier *= globalVariables::playerDancingXPMultiplier;
+	if (xpType == "entertainer_healing") buffMultiplier *= globalVariables::playerEntertainerHealingXPMultiplier;
+	if (xpType == "force_rank_xp") buffMultiplier *= globalVariables::playerForceRankXPMultiplier;
+	if (xpType == "imagedesigner") buffMultiplier *= globalVariables::playerImageDesignerXPMultiplier;
+	if (xpType == "jedi_general") buffMultiplier *= globalVariables::playerJediXPMultiplier;
+	if (xpType == "medical") buffMultiplier *= globalVariables::playerMedicalXPMultiplier;
+	if (xpType == "merchant") buffMultiplier *= globalVariables::playerMerchantXPMultiplier;
+	if (xpType == "music") buffMultiplier *= globalVariables::playerMusicianXPMultiplier;
+	if (xpType == "political") buffMultiplier *= globalVariables::playerPoliticalXPMultiplier;
+	if (xpType == "resource_harvesting_inorganic") buffMultiplier *= globalVariables::playerSurveyingXPMultiplier;
+	if (xpType == "scout") buffMultiplier *= globalVariables::playerScoutingXPMultiplier;
+	if (xpType == "shipwright") buffMultiplier *= globalVariables::playerShipwrightXPMultiplier;
+	if (xpType == "slicing") buffMultiplier *= globalVariables::playerSlicingXPMultiplier;
+	if (xpType == "space_combat_general") buffMultiplier *= globalVariables::playerStarshipCombatXPMultiplier;
+	if (xpType == "squadleader") buffMultiplier *= globalVariables::playerSquadLeadershipXPMultiplier;
+	if (xpType == "trapping") buffMultiplier *= globalVariables::playerTrappingXPMultiplier;
 
 	int xp = 0;
 
@@ -3105,7 +3150,7 @@ int PlayerManagerImplementation::healEnhance(CreatureObject* enhancer, CreatureO
 	uint32 buffdiff = buffvalue;
 
 	//If a stronger buff already exists, then we don't buff the patient.
-	if (patient->hasBuff(buffcrc)) {
+	if (patient->hasBuff(buffcrc) && globalVariables::playerOverwriteBuffEnabled == false) {
 		Buff* buff = patient->getBuff(buffcrc);
 
 		if (buff != nullptr) {
@@ -3798,6 +3843,7 @@ void PlayerManagerImplementation::updateSwimmingState(CreatureObject* player, fl
 }
 
 int PlayerManagerImplementation::checkSpeedHackFirstTest(CreatureObject* player, float parsedSpeed, ValidatedPosition& teleportPosition, float errorMultiplier) {
+	return 0;
 	float allowedSpeedMod = player->getSpeedMultiplierMod();
 	float allowedSpeedBase = player->getRunSpeed();
 
@@ -4076,10 +4122,18 @@ void PlayerManagerImplementation::addInsurableItemsRecursive(SceneObject* obj, S
 		if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 			continue;
 
-		if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
-			items->put(item);
-		} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
-			items->put(item);
+		if (globalVariables::playerInsureWeaponsEnabled == false) {		
+			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
+				items->put(item);
+			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
+				items->put(item);
+			}
+		} else {
+			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject())) {
+				items->put(item);
+			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject()) && !onlyInsurable) {
+				items->put(item);
+			}
 		}
 
 		if (object->isContainerObject())
@@ -4110,10 +4164,18 @@ SortedVector<ManagedReference<SceneObject*> > PlayerManagerImplementation::getIn
 			if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 				continue;
 
-			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
-				insurableItems.put(item);
-			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
-				insurableItems.put(item);
+			if (globalVariables::playerInsureWeaponsEnabled == false) {		
+				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
+					insurableItems.put(item);
+				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
+					insurableItems.put(item);
+				}
+			} else {
+				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject())) {
+					insurableItems.put(item);
+				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject()) && !onlyInsurable) {
+					insurableItems.put(item);
+				}
 			}
 		}
 
@@ -4318,7 +4380,7 @@ String PlayerManagerImplementation::banAccount(PlayerObject* admin, Account* acc
 
 	Time expireTime;
 
-	expireTime.addMiliTime(seconds * 1000);
+	expireTime.addMiliTime((uint64)seconds * 1000);
 
 	banResult << "Account \"" + account->getUsername() + "\" successfully banned until " << expireTime.getFormattedTime() + " server time";
 
@@ -5892,7 +5954,7 @@ void PlayerManagerImplementation::disconnectAllPlayers() {
 		}
 	}
 
-	auto elapsedMs = profile.stopMs();
+	auto elapsedMs = Math::max((uint64)1, profile.stopMs());
 	auto ps = countDisconnected / (elapsedMs / 1000.0f);
 	info(true) << "Finished disconnecting " << commas << countDisconnected << " players (" << ps << "/s)";
 }
@@ -6247,6 +6309,62 @@ void PlayerManagerImplementation::enhanceCharacter(CreatureObject* player) {
 
 	if (message && player->isPlayerCreature())
 		player->sendSystemMessage("An unknown force strengthens you for battles yet to come.");
+}
+
+void PlayerManagerImplementation::enhanceSelfDance(CreatureObject* player) {
+	if (player == nullptr)
+		return;
+
+	bool message = true;
+
+	float skillmod = (player->getSkillMod("healing_dance_mind") * .005 );
+
+	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
+	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
+	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
+
+	int selfDuration = (120.0f + (10.0f / 60.0f));
+	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	}
+	
+	message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
+	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+		message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
+		message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
+	}
+
+	if (message && player->isPlayerCreature())
+		player->sendSystemMessage("You receive Mind buffs.");
+
+}
+
+void PlayerManagerImplementation::enhanceSelfMusic(CreatureObject* player) {
+	if (player == nullptr)
+        	return;
+
+	bool message = true;
+
+	float skillmod = (player->getSkillMod("healing_music_mind") * .005);
+
+	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
+	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
+	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
+
+	int selfDuration = (120.0f + (10.0f / 60.0f));
+	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	}
+	
+	message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
+	message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
+	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+		message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
+	}
+
+	if (message && player->isPlayerCreature())
+		player->sendSystemMessage("You receive Mind buffs.");
+
 }
 
 void PlayerManagerImplementation::sendAdminJediList(CreatureObject* player) {

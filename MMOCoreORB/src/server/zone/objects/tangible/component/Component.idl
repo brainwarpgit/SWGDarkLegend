@@ -16,6 +16,11 @@ import server.zone.objects.creature.CreatureObject;
 @json
 class Component extends TangibleObject {
 
+	protected int level;
+	protected float modifier;
+	protected int lootQuality;
+	protected int useCountOnly;
+	
 	@dereferenced
 	protected VectorMap<string, float> attributeMap;
 

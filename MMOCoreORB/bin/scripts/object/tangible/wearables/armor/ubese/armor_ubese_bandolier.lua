@@ -43,6 +43,7 @@
 
 object_tangible_wearables_armor_ubese_armor_ubese_bandolier = object_tangible_wearables_armor_ubese_shared_armor_ubese_bandolier:new {
 	templateType = ARMOROBJECT,
+	objectMenuComponent = "ArmorObjectMenuComponent",
 	gameObjectType = 259,
 
 	playerRaces = { "object/creature/player/bothan_male.iff",
@@ -110,7 +111,7 @@ object_tangible_wearables_armor_ubese_armor_ubese_bandolier = object_tangible_we
 	kinetic = 0,
 	energy = 0,
 	electricity = 0,
-	stun = 0,
+	stun = 15,
 	blast = 0,
 	heat = 0,
 	cold = 0,

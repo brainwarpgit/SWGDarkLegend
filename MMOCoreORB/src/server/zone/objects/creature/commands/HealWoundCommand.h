@@ -12,6 +12,7 @@
 #include "server/zone/objects/creature/events/InjuryTreatmentTask.h"
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+#include "server/globalVariables.h"
 
 class HealWoundCommand : public QueueCommand {
 	int mindCost;
@@ -58,8 +59,6 @@ public:
 	}
 
 	void awardXp(CreatureObject* creature, const String& type, int power) const {
-		if (!creature->isPlayerCreature())
-			return;
 
 		CreatureObject* player = cast<CreatureObject*>(creature);
 
@@ -112,7 +111,7 @@ public:
 		}
 
 		int medicalRatingNotIncludingCityBonus = creature->getSkillMod("private_medical_rating") - creature->getSkillModOfType("private_medical_rating", SkillModManager::CITY);
-		if (medicalRatingNotIncludingCityBonus <= 0) {
+		if (medicalRatingNotIncludingCityBonus <= 0 && globalVariables::playerWoundHealingAnywhereEnabled == false) {
 			creature->sendSystemMessage("@healing_response:must_be_near_droid"); //You must be in a hospital, at a campsite, or near a surgical droid to do that.
 			return false;
 		} else {
@@ -120,7 +119,7 @@ public:
 			ManagedReference<SceneObject*> root = creature->getRootParent();
 
 			if (root != nullptr && root->isClientObject()) {
-				if (creature->getSkillModOfType("private_medical_rating", SkillModManager::STRUCTURE) == 0) {
+				if (creature->getSkillModOfType("private_medical_rating", SkillModManager::STRUCTURE) == 0 && globalVariables::playerWoundHealingAnywhereEnabled == false) {
 					creature->sendSystemMessage("@healing_response:must_be_in_hospital"); // You must be in a hospital or at a campsite to do that.
 					return false;
 				}
@@ -326,7 +325,7 @@ public:
 
 		uint32 woundPower = woundPack->calculatePower(creature, creatureTarget);
 
-		int woundHealed = creatureTarget->healWound(creature, attribute, woundPower);
+		int woundHealed = creatureTarget->healWound(creature, attribute, woundPower * globalVariables::playerWoundHealingMultiplier);
 
 		woundHealed = abs(woundHealed);
 
@@ -344,8 +343,11 @@ public:
 		Locker locker(woundPack);
 		woundPack->decreaseUseCount();
 
-		if (creatureTarget != creature && !creatureTarget->isPet())
+		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", woundHealed); //No experience for healing yourself or pets.
+		} else if (creatureTarget != creature && !creatureTarget->isPet()) {
+			awardXp(creature, "medical", woundHealed); //No experience for healing yourself or pets.
+		}
 
 		doAnimations(creature, creatureTarget);
 

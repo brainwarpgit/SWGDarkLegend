@@ -241,7 +241,7 @@ TatooineMosEnthaScreenPlay = CityScreenPlay:new {
 
 		--Guild Hall 1377 3011
 		{"trainer_brawler",0,-11,1.1,-14,0,1153566, ""},
-		{"trainer_marksman",0,0,0,-13,0,1153565, ""},
+		{"trainer_marksman", 0, 0, 1.133, -13, 0, 1153565, ""},
 		{"trainer_scout",0,-13,1.1,4.8,180,1153563, ""},
 		{"brawler",300,-14.01,1.13306,-8.53,120.004,1153566, ""},
 		{"businessman",60,3.32,1.13306,-8.49,228.007,1153565, ""},
@@ -391,7 +391,210 @@ TatooineMosEnthaScreenPlay = CityScreenPlay:new {
 		{"jawa_warlord",300,1572.44,7,3337.29,83.3917,0, ""},
 
 		-- Phase 4 Gadget Specialist
-		{"gadget_specialist", 1, 1209.57, 7, 2923.54, 58, 0, ""}
+		{"gadget_specialist", 1, 1209.57, 7, 2923.54, 58, 0, ""},
+
+		{"junk_dealer", 0, 1471.19, 7.6, 3325.8, 0, 0, ""},
+	},
+
+	citySpawns = {
+		--Creatures
+		{"desert_razorback",300,1085.48,5.82507,3065.96,107.775,0},
+		{"desert_razorback",300,1083.59,6.13166,3075.94,41.0805,0},
+		{"desert_razorback",300,1094.58,5.57916,3087.09,213.896,0},
+		{"desert_razorback",300,1203.76,7,2929.8,177.768,0},
+		{"desert_razorback",300,1208.79,7,2949.24,22.6418,0},
+		{"giant_sand_beetle",360,1846.71,9.40988,2982.52,304.053,0},
+		{"giant_sand_beetle",360,1848.87,9.71876,2972.28,198.153,0},
+		{"tatooine_mynock",300,1044.5,7.0287,3032.47,235.314,0},
+		{"tatooine_mynock",300,1049.37,6.92825,3053.45,44.8166,0},
+		{"tatooine_mynock",300,1141.08,29.2815,3442.2,225.319,0},
+		{"tatooine_mynock",300,1159.34,26.0984,3455.89,2.15337,0},
+		{"tatooine_mynock",300,1267.7,8.63449,3561.35,89.6686,0},
+		{"tatooine_mynock",300,1284.04,8.57263,3570.14,42.417,0},
+		{"tatooine_mynock",300,1387.95,7.9817,3558.68,198.042,0},
+		{"tatooine_mynock",300,1381.66,9.90952,3574.83,289.828,0},
+		{"tatooine_mynock",300,1384.58,8.32903,3562.44,60.3494,0},
+		{"tatooine_mynock",300,1385.76,8.10126,3560.41,228.641,0},
+		{"tatooine_mynock",300,1475.43,9.2151,3551.59,342.411,0},
+		{"tatooine_mynock",300,1471.74,9.70389,3555.05,3.28598,0},
+		{"tatooine_mynock",300,1685.87,10.1713,2832.4,275.554,0},
+		{"tatooine_mynock",300,1693.1,10.2439,2830.06,333.897,0},
+		{"tatooine_mynock",300,1694.02,12,3450.08,124.813,0},
+		{"tatooine_mynock",300,1872.92,8.96768,2965.44,91.9334,0},
+		{"tatooine_mynock",300,1859.94,8.77464,2963.42,243.468,0},
+		{"tatooine_mynock",300,1736.14,7.40122,3265.29,238.497,0},
+		{"tatooine_mynock",300,1741.69,8.61579,3276.76,44.2833,0},
+		{"tatooine_mynock",300,1824,6.77883,3233.9,338.908,0},
+		{"tatooine_mynock",300,1834.6,5.40456,3238.51,72.0806,0},
+		{"dwarf_eopie",300,1905.04,14.1019,3085.49,62.9248,0},
+		{"dwarf_eopie",300,1904.71,13.5966,3075.98,152.726,0},
+		{"dwarf_eopie",300,1896.15,12.2618,3089.08,324.915,0},
+		{"dwarf_eopie",300,1897.89,12.4578,3080.4,322.632,0},
+		{"dwarf_eopie",300,1125.1,10.2579,3227.8,188.841,0},
+		{"dwarf_eopie",300,1128.07,13.6707,3250.95,327.357,0},
+		{"dwarf_eopie",300,1109.77,16.1342,3243.99,314.595,0},
+		{"dwarf_eopie",300,1136.03,9.90696,3239.44,67.0593,0},
+		{"dwarf_eopie",300,1113.09,16.5217,3247.43,260.633,0},
+		{"dwarf_eopie",300,1056,7.47361,2942.77,93.8727,0},
+		{"dwarf_eopie",300,1061.3,7.9681,2958.99,164.005,0},
+		{"dwarf_eopie",300,1091.72,7.68251,2909.81,310.6,0},
+		{"dwarf_eopie",300,1085.7,7.64405,2913.73,234.589,0},
+		{"dwarf_eopie",300,1088.35,7.36404,2903.8,301.961,0},
+		{"dwarf_eopie",300,1191.3,7.17686,2848.67,140.25,0},
+		{"dwarf_eopie",300,1193.17,7.38531,2867.31,340.572,0},
+		{"dwarf_eopie",300,1264.36,9.84013,2838.12,116.66,0},
+		{"dwarf_eopie",300,1640.38,6.72345,3534.31,113.55,0},
+		{"dwarf_eopie",300,1633.38,7.78232,3539.31,188.235,0},
+		{"dwarf_eopie",300,1632.38,7.78197,3533.31,310.834,0},
+		{"lesser_desert_womp_rat",300,1139.8,20.1201,3348.82,254.094,0},
+		{"lesser_desert_womp_rat",300,1271.46,7.96205,3555.45,300.241,0},
+		{"lesser_desert_womp_rat",300,1261.56,9.10267,3566,4.12381,0},
+		{"lesser_desert_womp_rat",300,1269.92,8.62089,3562.04,270.234,0},
+		{"lesser_desert_womp_rat",300,1473.29,10.0509,3556.92,34.6749,0},
+		{"lesser_desert_womp_rat",300,1557.92,10.1478,3573.36,113.494,0},
+		{"lesser_desert_womp_rat",300,1557.47,10.275,3569.88,199.46,0},
+		{"lesser_desert_womp_rat",300,1559.86,9.25833,3579.77,214.211,0},
+		{"lesser_desert_womp_rat",300,1554.99,6.26101,2910.7,118.92,0},
+		{"lesser_desert_womp_rat",300,1567.09,6.83359,2921.88,61.2095,0},
+		{"lesser_desert_womp_rat",300,1550.6,7.00186,2902.02,180.965,0},
+		{"lesser_desert_womp_rat",300,1553.41,6.45934,2915.5,11.0788,0},
+		{"lesser_desert_womp_rat",300,1687.02,12,3449.08,52.251,0},
+		{"lesser_desert_womp_rat",300,1852.49,9.74789,2961.32,296.304,0},
+		{"lesser_desert_womp_rat",300,1732.5,9.60921,3291.65,285.18,0},
+		{"lesser_desert_womp_rat",300,1634.85,6.91877,3545.88,331.39,0},
+		{"lesser_desert_womp_rat",300,1125.68,14.2323,3250.64,171.121,0},
+		{"lesser_desert_womp_rat",300,1133.35,12.6027,3255.11,14.7352,0},
+		{"lesser_desert_womp_rat",300,1118.72,14.0502,3239.14,181.525,0},
+		{"lesser_desert_womp_rat",300,1124.25,13.5159,3243.92,147.703,0},
+		{"lesser_desert_womp_rat",300,1085.13,6.61378,3185.82,85.7157,0},
+		{"lesser_desert_womp_rat",300,1106.19,5.94117,3187.6,354.975,0},
+		{"minor_worrt",300,1048.15,6.78693,3034.72,125.497,0},
+		{"minor_worrt",300,1052.19,6.63745,3042.47,49.4436,0},
+		{"minor_worrt",300,1145.96,28.8096,3450.07,184.995,0},
+		{"minor_worrt",300,1157.53,26.9318,3453.41,96.5022,0},
+		{"minor_worrt",300,1154.25,27.7183,3452.09,16.8607,0},
+		{"minor_worrt",300,1143.38,28.7819,3451.71,240.425,0},
+		{"minor_worrt",300,1134.66,22.3091,3354.39,53.2405,0},
+		{"minor_worrt",300,1130.02,22.1785,3341.24,255.212,0},
+		{"minor_worrt",300,1129.37,23.2358,3348.93,241.138,0},
+		{"minor_worrt",300,1373.72,22.8537,2912.15,277.837,0},
+		{"minor_worrt",300,1338.17,14.6409,2847.72,268.243,0},
+		{"minor_worrt",300,1376.97,7.32279,3555.79,227.135,0},
+		{"minor_worrt",300,1385.64,9.7947,3570.08,330.128,0},
+		{"minor_worrt",300,1470.89,9.14934,3551.91,42.0099,0},
+		{"minor_worrt",300,1713.52,9.79311,2825.23,95.6858,0},
+		{"minor_worrt",300,1553.18,6.46393,2915.57,3.89496,0},
+		{"minor_worrt",300,1557.59,6.25528,2908.24,200.587,0},
+		{"minor_worrt",300,1557.88,6.25405,2908.11,240.618,0},
+		{"minor_worrt",300,1689.02,12,3443.08,123.862,0},
+		{"minor_worrt",300,1687.02,12,3453.08,307.365,0},
+		{"minor_worrt",300,1685.02,12,3445.08,155.332,0},
+		{"minor_worrt",300,1746.96,10.0292,3284.7,128.519,0},
+		{"minor_worrt",300,1732.79,8.12792,3282.87,311.169,0},
+		{"minor_worrt",300,1724.92,7.1876,3273.25,253.983,0},
+		{"minor_worrt",300,1790.19,6.66465,2878.26,122.144,0},
+		{"minor_worrt",300,1789.47,7.95745,2890.23,34.2376,0},
+		{"minor_worrt",300,1805.9,6.94296,2871.32,98.6297,0},
+		{"minor_worrt",300,1828.47,6.59728,3244.79,322.076,0},
+		{"minor_worrt",300,1905.32,13.964,3081.04,129.902,0},
+		{"minor_worrt",300,1642.28,6.52379,3539.28,167.494,0},
+		{"minor_worrt",300,1339.88,14.8086,2842.88,87.1593,0},
+		{"minor_worrt",300,1140.5,10.3186,3249.19,94.1046,0},
+		{"minor_worrt",300,1123.3,14.8199,3250.77,279.351,0},
+		{"minor_worrt",300,1102.27,6.44548,3176.54,137.826,0},
+		{"minor_worrt",300,1088.37,6.60356,3183.72,327.561,0},
+		{"minor_worrt",300,1098.21,5.87219,3173.21,96.5256,0},
+		{"minor_worrt",300,1091.44,6.54552,3179.32,157.227,0},
+		{"minor_worrt",300,1047.59,6.90768,2963.04,151.58,0},
+		{"minor_worrt",300,1051.27,7.32262,2957.95,101.837,0},
+		{"minor_worrt",300,1045.6,6.79503,2962.48,253.676,0},
+		{"minor_worrt",300,1051.24,7.32455,2952.14,193.218,0},
+		{"minor_worrt",300,1184.51,6.74202,2871.48,304.186,0},
+		{"minor_worrt",300,1184.37,7.08161,2862.06,17.9303,0},
+		{"minor_worrt",300,1283.68,8.62574,2821.26,92.7292,0},
+		{"minor_worrt",300,1270.85,9.85368,2833.03,291.059,0},
+		{"minor_worrt",300,1640.27,6.57107,3539.44,346.945,0},
+		{"minor_worrt",300,1629.38,7.68618,3532.31,220.917,0},
+		{"mound_mite",300,1140.86,29.1388,3450.07,288.43,0},
+		{"mound_mite",300,1484.61,8.0894,3544.36,86.2885,0},
+		{"mound_mite",300,1698.56,9.80305,2823.97,335.034,0},
+		{"mound_mite",300,1563.08,8.26132,3583.36,24.8338,0},
+		{"mound_mite",300,1866.41,9.04205,2967.88,348.823,0},
+		{"mound_mite",300,1733.21,10.3787,2815.08,334.377,0},
+		{"mound_mite",300,1744.69,10.1734,2821.79,25.7853,0},
+		{"mound_mite",300,1124.01,13.4652,3243.27,293.084,0},
+		{"rill",300,1045.36,7.44404,3043.26,353.239,0},
+		{"rill",300,1047.33,7.22971,3046.76,216.586,0},
+		{"rill",300,1104.74,7.2345,2905.93,169.245,0},
+		{"rill",300,1139.62,29.4759,3443.99,213.674,0},
+		{"rill",300,1141.26,20.2478,3353.73,240.207,0},
+		{"rill",300,1261.2,9.14893,3567.29,163.425,0},
+		{"rill",300,1256.35,8.99928,3577.67,279.633,0},
+		{"rill",300,1372.52,7.29019,3556.73,318.067,0},
+		{"rill",300,1472.13,7,3537.17,112.684,0},
+		{"rill",300,1709.58,10.3179,2835.96,56.1244,0},
+		{"rill",300,1692.84,9.48024,2820.93,205.281,0},
+		{"rill",300,1562.12,9.0806,3579.43,38.7698,0},
+		{"rill",300,1558.79,7.75791,3583.97,303.77,0},
+		{"rill",300,1551.49,6.59957,2905.19,89.1702,0},
+		{"rill",300,1689.02,12,3444.08,234.952,0},
+		{"rill",300,1688.02,12,3442.08,7.2531,0},
+		{"rill",300,1870.24,9.20984,2966.54,107.762,0},
+		{"rill",300,1865.24,9.40373,2963.71,239.536,0},
+		{"rill",300,1743.22,7.82701,3265.36,183.529,0},
+		{"rill",300,1806.8,6.9809,2878.03,114.829,0},
+		{"rill",300,1784.51,7.62439,2885.12,294.467,0},
+		{"rill",300,1825.88,6.71469,3234.62,115.337,0},
+		{"rill",300,1824.45,6.63692,3238.38,149.541,0},
+		{"rill",300,1892.9,11.1802,3073.04,282.24,0},
+		{"rill",300,1119.93,15.3748,3249.16,141.279,0},
+		{"rill",300,1099.96,6.30891,3178.3,319.459,0},
+		{"rill",300,1063.48,8.35093,2954.38,22.9979,0},
+		{"rill",300,1057.78,7.45382,2963.84,323.174,0},
+		{"rill",300,1266.2,9.90717,2833.11,166.168,0},
+		{"rill",300,1194.97,7.15298,2848.67,61.3119,0},
+		{"rill",300,1261.62,9.82242,2831.13,304.142,0},
+		{"rockmite",300,1062.18,5.83524,3043.72,141.396,0},
+		{"rockmite",300,1181.18,9.76559,3555.94,245.342,0},
+		{"rockmite",300,1137.85,20.6419,3348.3,237.883,0},
+		{"rockmite",300,1438.47,15.7136,3604.36,128.279,0},
+		{"rockmite",300,1438.96,15.6977,3606.76,42.672,0},
+		{"rockmite",300,1376.56,6.93198,3548.19,266.629,0},
+		{"rockmite",300,1691.38,9.48584,2821.22,288.939,0},
+		{"rockmite",300,1552.99,10.3713,3574.25,306.608,0},
+		{"rockmite",300,1783.82,7.5651,2884.2,302.472,0},
+		{"rockmite",300,1819.31,6.57781,3240.37,109.61,0},
+		{"rockmite",300,1900.72,13.3004,3090.22,79.8598,0},
+		{"rockmite",300,1936.08,17.7986,3155.67,199.281,0},
+		{"rockmite",300,1098.6,6.37556,3180.33,37.4932,0},
+		{"rockmite",300,1088.19,7.39655,2905.09,2.99875,0},
+		{"rockmite",300,1098.67,7.61899,2907.07,122.347,0},
+		{"rockmite",300,1179.82,7.11622,2846.43,240.292,0},
+		{"rockmite",300,1274.94,9.5564,2826.91,283.549,0},
+		{"rockmite",300,1647.38,6.74919,3521.31,261.582,0},
+		{"womp_rat",300,1463.72,7,3527.25,202.052,0},
+		{"womp_rat",300,1486.47,8.07983,3544.04,2.8748,0},
+		{"womp_rat",300,1694.12,12,3445.83,88.1426,0},
+		{"womp_rat",300,1781.88,7.42814,2883.16,283.473,0},
+		{"womp_rat",300,1127.41,14.7718,3256.49,107.418,0},
+		{"womp_rat",300,1113.96,17.4101,3253.68,287.934,0},
+		{"worrt",300,1093.85,7.54313,2905.09,271.13,0},
+		{"worrt",300,1178.92,11.1815,3550.03,74.6936,0},
+		{"worrt",300,1177.47,10.4286,3561.08,352.574,0},
+		{"worrt",300,1142.64,19.2634,3347.08,281.135,0},
+		{"worrt",300,1136.69,21.8977,3355.96,89.2927,0},
+		{"worrt",300,1414.39,19.1584,3614.59,114.722,0},
+		{"worrt",300,1416.84,19.1847,3617.66,238.477,0},
+		{"worrt",300,1739.93,8.81984,3281.18,233.807,0},
+		{"worrt",300,1800.05,6.80464,2891.47,39.5455,0},
+		{"worrt",300,1844.89,6.26424,3232.27,46.7083,0},
+		{"worrt",300,1827.19,6.58123,3242.88,237.129,0},
+		{"worrt",300,1742.08,10.3631,2819.34,314.877,0},
+		{"worrt",300,1763.95,10.0345,2821.82,1.54764,0},
+		{"worrt",300,1930.25,16.8951,3152.15,175.678,0},
+		{"worrt",300,1113.08,18.0283,3257.68,318.548,0},
+		{"worrt",300,1191.12,7.30368,2862.36,37.9791,0},
+		{"worrt",300,1179.97,6.94709,2862.22,304.96,0},
 	}
 }
 
@@ -399,11 +602,12 @@ registerScreenPlay("TatooineMosEnthaScreenPlay", true)
 
 function TatooineMosEnthaScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -435,231 +639,3 @@ function TatooineMosEnthaScreenPlay:spawnSceneObjects()
 	spawnSceneObject(self.planet, "object/static/structure/general/droid_probedroid_powerdown.iff", 10.3, -9.5, 0.8, 1144145, math.rad(-145) )
 end
 
-function TatooineMosEnthaScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 1471.19, 7.6, 3325.8, 0, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
-	end
-
-	--Creatures
-	--[[
-	spawnMobile(self.planet, "desert_razorback",300,1085.48,5.82507,3065.96,107.775,0)
-	spawnMobile(self.planet, "desert_razorback",300,1083.59,6.13166,3075.94,41.0805,0)
-	spawnMobile(self.planet, "desert_razorback",300,1094.58,5.57916,3087.09,213.896,0)
-	spawnMobile(self.planet, "desert_razorback",300,1203.76,7,2929.8,177.768,0)
-	spawnMobile(self.planet, "desert_razorback",300,1208.79,7,2949.24,22.6418,0)
-	spawnMobile(self.planet, "giant_sand_beetle",360,1846.71,9.40988,2982.52,304.053,0)
-	spawnMobile(self.planet, "giant_sand_beetle",360,1848.87,9.71876,2972.28,198.153,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1044.5,7.0287,3032.47,235.314,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1049.37,6.92825,3053.45,44.8166,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1141.08,29.2815,3442.2,225.319,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1159.34,26.0984,3455.89,2.15337,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1267.7,8.63449,3561.35,89.6686,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1284.04,8.57263,3570.14,42.417,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1387.95,7.9817,3558.68,198.042,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1381.66,9.90952,3574.83,289.828,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1384.58,8.32903,3562.44,60.3494,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1385.76,8.10126,3560.41,228.641,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1475.43,9.2151,3551.59,342.411,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1471.74,9.70389,3555.05,3.28598,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1685.87,10.1713,2832.4,275.554,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1693.1,10.2439,2830.06,333.897,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1694.02,12,3450.08,124.813,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1872.92,8.96768,2965.44,91.9334,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1859.94,8.77464,2963.42,243.468,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1736.14,7.40122,3265.29,238.497,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1741.69,8.61579,3276.76,44.2833,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1824,6.77883,3233.9,338.908,0)
-	spawnMobile(self.planet, "tatooine_mynock",300,1834.6,5.40456,3238.51,72.0806,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1905.04,14.1019,3085.49,62.9248,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1904.71,13.5966,3075.98,152.726,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1896.15,12.2618,3089.08,324.915,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1897.89,12.4578,3080.4,322.632,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1125.1,10.2579,3227.8,188.841,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1128.07,13.6707,3250.95,327.357,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1109.77,16.1342,3243.99,314.595,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1136.03,9.90696,3239.44,67.0593,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1113.09,16.5217,3247.43,260.633,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1056,7.47361,2942.77,93.8727,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1061.3,7.9681,2958.99,164.005,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1091.72,7.68251,2909.81,310.6,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1085.7,7.64405,2913.73,234.589,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1088.35,7.36404,2903.8,301.961,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1191.3,7.17686,2848.67,140.25,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1193.17,7.38531,2867.31,340.572,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1264.36,9.84013,2838.12,116.66,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1640.38,6.72345,3534.31,113.55,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1633.38,7.78232,3539.31,188.235,0)
-	spawnMobile(self.planet, "dwarf_eopie",300,1632.38,7.78197,3533.31,310.834,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1139.8,20.1201,3348.82,254.094,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1271.46,7.96205,3555.45,300.241,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1261.56,9.10267,3566,4.12381,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1269.92,8.62089,3562.04,270.234,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1473.29,10.0509,3556.92,34.6749,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1557.92,10.1478,3573.36,113.494,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1557.47,10.275,3569.88,199.46,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1559.86,9.25833,3579.77,214.211,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1554.99,6.26101,2910.7,118.92,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1567.09,6.83359,2921.88,61.2095,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1550.6,7.00186,2902.02,180.965,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1553.41,6.45934,2915.5,11.0788,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1687.02,12,3449.08,52.251,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1852.49,9.74789,2961.32,296.304,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1732.5,9.60921,3291.65,285.18,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1634.85,6.91877,3545.88,331.39,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1125.68,14.2323,3250.64,171.121,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1133.35,12.6027,3255.11,14.7352,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1118.72,14.0502,3239.14,181.525,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1124.25,13.5159,3243.92,147.703,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1085.13,6.61378,3185.82,85.7157,0)
-	spawnMobile(self.planet, "lesser_desert_womp_rat",300,1106.19,5.94117,3187.6,354.975,0)
-	spawnMobile(self.planet, "minor_worrt",300,1048.15,6.78693,3034.72,125.497,0)
-	spawnMobile(self.planet, "minor_worrt",300,1052.19,6.63745,3042.47,49.4436,0)
-	spawnMobile(self.planet, "minor_worrt",300,1145.96,28.8096,3450.07,184.995,0)
-	spawnMobile(self.planet, "minor_worrt",300,1157.53,26.9318,3453.41,96.5022,0)
-	spawnMobile(self.planet, "minor_worrt",300,1154.25,27.7183,3452.09,16.8607,0)
-	spawnMobile(self.planet, "minor_worrt",300,1143.38,28.7819,3451.71,240.425,0)
-	spawnMobile(self.planet, "minor_worrt",300,1134.66,22.3091,3354.39,53.2405,0)
-	spawnMobile(self.planet, "minor_worrt",300,1130.02,22.1785,3341.24,255.212,0)
-	spawnMobile(self.planet, "minor_worrt",300,1129.37,23.2358,3348.93,241.138,0)
-	spawnMobile(self.planet, "minor_worrt",300,1373.72,22.8537,2912.15,277.837,0)
-	spawnMobile(self.planet, "minor_worrt",300,1338.17,14.6409,2847.72,268.243,0)
-	spawnMobile(self.planet, "minor_worrt",300,1376.97,7.32279,3555.79,227.135,0)
-	spawnMobile(self.planet, "minor_worrt",300,1385.64,9.7947,3570.08,330.128,0)
-	spawnMobile(self.planet, "minor_worrt",300,1470.89,9.14934,3551.91,42.0099,0)
-	spawnMobile(self.planet, "minor_worrt",300,1713.52,9.79311,2825.23,95.6858,0)
-	spawnMobile(self.planet, "minor_worrt",300,1553.18,6.46393,2915.57,3.89496,0)
-	spawnMobile(self.planet, "minor_worrt",300,1557.59,6.25528,2908.24,200.587,0)
-	spawnMobile(self.planet, "minor_worrt",300,1557.88,6.25405,2908.11,240.618,0)
-	spawnMobile(self.planet, "minor_worrt",300,1689.02,12,3443.08,123.862,0)
-	spawnMobile(self.planet, "minor_worrt",300,1687.02,12,3453.08,307.365,0)
-	spawnMobile(self.planet, "minor_worrt",300,1685.02,12,3445.08,155.332,0)
-	spawnMobile(self.planet, "minor_worrt",300,1746.96,10.0292,3284.7,128.519,0)
-	spawnMobile(self.planet, "minor_worrt",300,1732.79,8.12792,3282.87,311.169,0)
-	spawnMobile(self.planet, "minor_worrt",300,1724.92,7.1876,3273.25,253.983,0)
-	spawnMobile(self.planet, "minor_worrt",300,1790.19,6.66465,2878.26,122.144,0)
-	spawnMobile(self.planet, "minor_worrt",300,1789.47,7.95745,2890.23,34.2376,0)
-	spawnMobile(self.planet, "minor_worrt",300,1805.9,6.94296,2871.32,98.6297,0)
-	spawnMobile(self.planet, "minor_worrt",300,1828.47,6.59728,3244.79,322.076,0)
-	spawnMobile(self.planet, "minor_worrt",300,1905.32,13.964,3081.04,129.902,0)
-	spawnMobile(self.planet, "minor_worrt",300,1642.28,6.52379,3539.28,167.494,0)
-	spawnMobile(self.planet, "minor_worrt",300,1339.88,14.8086,2842.88,87.1593,0)
-	spawnMobile(self.planet, "minor_worrt",300,1140.5,10.3186,3249.19,94.1046,0)
-	spawnMobile(self.planet, "minor_worrt",300,1123.3,14.8199,3250.77,279.351,0)
-	spawnMobile(self.planet, "minor_worrt",300,1102.27,6.44548,3176.54,137.826,0)
-	spawnMobile(self.planet, "minor_worrt",300,1088.37,6.60356,3183.72,327.561,0)
-	spawnMobile(self.planet, "minor_worrt",300,1098.21,5.87219,3173.21,96.5256,0)
-	spawnMobile(self.planet, "minor_worrt",300,1091.44,6.54552,3179.32,157.227,0)
-	spawnMobile(self.planet, "minor_worrt",300,1047.59,6.90768,2963.04,151.58,0)
-	spawnMobile(self.planet, "minor_worrt",300,1051.27,7.32262,2957.95,101.837,0)
-	spawnMobile(self.planet, "minor_worrt",300,1045.6,6.79503,2962.48,253.676,0)
-	spawnMobile(self.planet, "minor_worrt",300,1051.24,7.32455,2952.14,193.218,0)
-	spawnMobile(self.planet, "minor_worrt",300,1184.51,6.74202,2871.48,304.186,0)
-	spawnMobile(self.planet, "minor_worrt",300,1184.37,7.08161,2862.06,17.9303,0)
-	spawnMobile(self.planet, "minor_worrt",300,1283.68,8.62574,2821.26,92.7292,0)
-	spawnMobile(self.planet, "minor_worrt",300,1270.85,9.85368,2833.03,291.059,0)
-	spawnMobile(self.planet, "minor_worrt",300,1640.27,6.57107,3539.44,346.945,0)
-	spawnMobile(self.planet, "minor_worrt",300,1629.38,7.68618,3532.31,220.917,0)
-	spawnMobile(self.planet, "mound_mite",300,1140.86,29.1388,3450.07,288.43,0)
-	spawnMobile(self.planet, "mound_mite",300,1484.61,8.0894,3544.36,86.2885,0)
-	spawnMobile(self.planet, "mound_mite",300,1698.56,9.80305,2823.97,335.034,0)
-	spawnMobile(self.planet, "mound_mite",300,1563.08,8.26132,3583.36,24.8338,0)
-	spawnMobile(self.planet, "mound_mite",300,1866.41,9.04205,2967.88,348.823,0)
-	spawnMobile(self.planet, "mound_mite",300,1733.21,10.3787,2815.08,334.377,0)
-	spawnMobile(self.planet, "mound_mite",300,1744.69,10.1734,2821.79,25.7853,0)
-	spawnMobile(self.planet, "mound_mite",300,1124.01,13.4652,3243.27,293.084,0)
-	spawnMobile(self.planet, "rill",300,1045.36,7.44404,3043.26,353.239,0)
-	spawnMobile(self.planet, "rill",300,1047.33,7.22971,3046.76,216.586,0)
-	spawnMobile(self.planet, "rill",300,1104.74,7.2345,2905.93,169.245,0)
-	spawnMobile(self.planet, "rill",300,1139.62,29.4759,3443.99,213.674,0)
-	spawnMobile(self.planet, "rill",300,1141.26,20.2478,3353.73,240.207,0)
-	spawnMobile(self.planet, "rill",300,1261.2,9.14893,3567.29,163.425,0)
-	spawnMobile(self.planet, "rill",300,1256.35,8.99928,3577.67,279.633,0)
-	spawnMobile(self.planet, "rill",300,1372.52,7.29019,3556.73,318.067,0)
-	spawnMobile(self.planet, "rill",300,1472.13,7,3537.17,112.684,0)
-	spawnMobile(self.planet, "rill",300,1709.58,10.3179,2835.96,56.1244,0)
-	spawnMobile(self.planet, "rill",300,1692.84,9.48024,2820.93,205.281,0)
-	spawnMobile(self.planet, "rill",300,1562.12,9.0806,3579.43,38.7698,0)
-	spawnMobile(self.planet, "rill",300,1558.79,7.75791,3583.97,303.77,0)
-	spawnMobile(self.planet, "rill",300,1551.49,6.59957,2905.19,89.1702,0)
-	spawnMobile(self.planet, "rill",300,1689.02,12,3444.08,234.952,0)
-	spawnMobile(self.planet, "rill",300,1688.02,12,3442.08,7.2531,0)
-	spawnMobile(self.planet, "rill",300,1870.24,9.20984,2966.54,107.762,0)
-	spawnMobile(self.planet, "rill",300,1865.24,9.40373,2963.71,239.536,0)
-	spawnMobile(self.planet, "rill",300,1743.22,7.82701,3265.36,183.529,0)
-	spawnMobile(self.planet, "rill",300,1806.8,6.9809,2878.03,114.829,0)
-	spawnMobile(self.planet, "rill",300,1784.51,7.62439,2885.12,294.467,0)
-	spawnMobile(self.planet, "rill",300,1825.88,6.71469,3234.62,115.337,0)
-	spawnMobile(self.planet, "rill",300,1824.45,6.63692,3238.38,149.541,0)
-	spawnMobile(self.planet, "rill",300,1892.9,11.1802,3073.04,282.24,0)
-	spawnMobile(self.planet, "rill",300,1119.93,15.3748,3249.16,141.279,0)
-	spawnMobile(self.planet, "rill",300,1099.96,6.30891,3178.3,319.459,0)
-	spawnMobile(self.planet, "rill",300,1063.48,8.35093,2954.38,22.9979,0)
-	spawnMobile(self.planet, "rill",300,1057.78,7.45382,2963.84,323.174,0)
-	spawnMobile(self.planet, "rill",300,1266.2,9.90717,2833.11,166.168,0)
-	spawnMobile(self.planet, "rill",300,1194.97,7.15298,2848.67,61.3119,0)
-	spawnMobile(self.planet, "rill",300,1261.62,9.82242,2831.13,304.142,0)
-	spawnMobile(self.planet, "rockmite",300,1062.18,5.83524,3043.72,141.396,0)
-	spawnMobile(self.planet, "rockmite",300,1181.18,9.76559,3555.94,245.342,0)
-	spawnMobile(self.planet, "rockmite",300,1137.85,20.6419,3348.3,237.883,0)
-	spawnMobile(self.planet, "rockmite",300,1438.47,15.7136,3604.36,128.279,0)
-	spawnMobile(self.planet, "rockmite",300,1438.96,15.6977,3606.76,42.672,0)
-	spawnMobile(self.planet, "rockmite",300,1376.56,6.93198,3548.19,266.629,0)
-	spawnMobile(self.planet, "rockmite",300,1691.38,9.48584,2821.22,288.939,0)
-	spawnMobile(self.planet, "rockmite",300,1552.99,10.3713,3574.25,306.608,0)
-	spawnMobile(self.planet, "rockmite",300,1783.82,7.5651,2884.2,302.472,0)
-	spawnMobile(self.planet, "rockmite",300,1819.31,6.57781,3240.37,109.61,0)
-	spawnMobile(self.planet, "rockmite",300,1900.72,13.3004,3090.22,79.8598,0)
-	spawnMobile(self.planet, "rockmite",300,1936.08,17.7986,3155.67,199.281,0)
-	spawnMobile(self.planet, "rockmite",300,1098.6,6.37556,3180.33,37.4932,0)
-	spawnMobile(self.planet, "rockmite",300,1088.19,7.39655,2905.09,2.99875,0)
-	spawnMobile(self.planet, "rockmite",300,1098.67,7.61899,2907.07,122.347,0)
-	spawnMobile(self.planet, "rockmite",300,1179.82,7.11622,2846.43,240.292,0)
-	spawnMobile(self.planet, "rockmite",300,1274.94,9.5564,2826.91,283.549,0)
-	spawnMobile(self.planet, "rockmite",300,1647.38,6.74919,3521.31,261.582,0)
-	spawnMobile(self.planet, "womp_rat",300,1463.72,7,3527.25,202.052,0)
-	spawnMobile(self.planet, "womp_rat",300,1486.47,8.07983,3544.04,2.8748,0)
-	spawnMobile(self.planet, "womp_rat",300,1694.12,12,3445.83,88.1426,0)
-	spawnMobile(self.planet, "womp_rat",300,1781.88,7.42814,2883.16,283.473,0)
-	spawnMobile(self.planet, "womp_rat",300,1127.41,14.7718,3256.49,107.418,0)
-	spawnMobile(self.planet, "womp_rat",300,1113.96,17.4101,3253.68,287.934,0)
-	spawnMobile(self.planet, "worrt",300,1093.85,7.54313,2905.09,271.13,0)
-	spawnMobile(self.planet, "worrt",300,1178.92,11.1815,3550.03,74.6936,0)
-	spawnMobile(self.planet, "worrt",300,1177.47,10.4286,3561.08,352.574,0)
-	spawnMobile(self.planet, "worrt",300,1142.64,19.2634,3347.08,281.135,0)
-	spawnMobile(self.planet, "worrt",300,1136.69,21.8977,3355.96,89.2927,0)
-	spawnMobile(self.planet, "worrt",300,1414.39,19.1584,3614.59,114.722,0)
-	spawnMobile(self.planet, "worrt",300,1416.84,19.1847,3617.66,238.477,0)
-	spawnMobile(self.planet, "worrt",300,1739.93,8.81984,3281.18,233.807,0)
-	spawnMobile(self.planet, "worrt",300,1800.05,6.80464,2891.47,39.5455,0)
-	spawnMobile(self.planet, "worrt",300,1844.89,6.26424,3232.27,46.7083,0)
-	spawnMobile(self.planet, "worrt",300,1827.19,6.58123,3242.88,237.129,0)
-	spawnMobile(self.planet, "worrt",300,1742.08,10.3631,2819.34,314.877,0)
-	spawnMobile(self.planet, "worrt",300,1763.95,10.0345,2821.82,1.54764,0)
-	spawnMobile(self.planet, "worrt",300,1930.25,16.8951,3152.15,175.678,0)
-	spawnMobile(self.planet, "worrt",300,1113.08,18.0283,3257.68,318.548,0)
-	spawnMobile(self.planet, "worrt",300,1191.12,7.30368,2862.36,37.9791,0)
-	spawnMobile(self.planet, "worrt",300,1179.97,6.94709,2862.22,304.96,0)
-	]]
-end

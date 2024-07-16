@@ -15,6 +15,7 @@
 #include "server/chat/StringIdChatParameter.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "templates/params/creature/CreatureAttribute.h"
+#include "server/globalVariables.h"
 
 class MeditateTask: public Task {
 	ManagedReference<CreatureObject*> player;
@@ -45,11 +46,11 @@ public:
 
 			if (player->isBleeding() || player->isPoisoned() || player->isDiseased()) {
 				if (player->isBleeding() && meditateMod >= 15)
-					player->healDot(CreatureState::BLEEDING, (15 + (meditateMod / 3)));
+					player->healDot(CreatureState::BLEEDING, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
 				else if (player->isPoisoned() && meditateMod >= 30)
-					player->healDot(CreatureState::POISONED, (15 + (meditateMod / 3)));
+					player->healDot(CreatureState::POISONED, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
 				else if (player->isDiseased() && meditateMod >= 45)
-					player->healDot(CreatureState::DISEASED, (15 + (meditateMod / 3)));
+					player->healDot(CreatureState::DISEASED, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
 
 			} else if (meditateMod >= 75) { // Meditate SkillMod +75 for wound Healing..
 
@@ -61,43 +62,53 @@ public:
 					if (player->getWounds(i) > 0)
 						woundedPools.add(i);
 				}
-
 				//Return without rescheduling because everything that can be healed has been?
-				if (woundedPools.size() <= 0)
-					return;
+				if (globalVariables::playerMeditateFatigueHealingEnabled == true) {
+					if (woundedPools.size() <= 0 && player->getShockWounds() <= 0) {
+						return;
+					}
+				} else {
+					if (woundedPools.size() <= 0) {
+						return;
+					}
+				}
 
-				int heal = 20 + System::random(10);
+				int heal = (20 * globalVariables::playerMeditateHealingMultiplier) + System::random(10);
+				int fatigueheal = 0;
 
-				if (meditateMod >= 100)
-					heal = 30 + System::random(20);
-
-				// Select a random Attribute that has wounds...
-				uint8 pool = woundedPools.get(System::random(woundedPools.size() - 1));
-
-				int wounds = player->getWounds(pool);
-
-				//Cap the heal at the amount of wounds the creature has.
-				heal = Math::min(wounds, heal);
-
-				player->healWound(player, pool, heal, true, false);
-
-				// Sending System healing Message (wounds)
-				healParams.setStringId("teraskasi", "prose_curewound"); // [meditation] Your %TO wounds heal by %DI points.
-				healParams.setTO(CreatureAttribute::getName(pool));
-				healParams.setDI(heal);
-				player->sendSystemMessage(healParams);
+				if (meditateMod >= 100) {
+					heal = (30 * globalVariables::playerMeditateHealingMultiplier) + System::random(20);
+					fatigueheal = (globalVariables::playerMeditateFatigueHealingAmount * globalVariables::playerMeditateHealingMultiplier) + System::random(20);
+				}
+				if (woundedPools.size() > 0) {				
+					// Select a random Attribute that has wounds...
+					uint8 pool = woundedPools.get(System::random(woundedPools.size() - 1));
+					int wounds = player->getWounds(pool);
+					//Cap the heal at the amount of wounds the creature has.
+					heal = Math::min(wounds, heal);
+					player->healWound(player, pool, heal, true, false);
+					// Sending System healing Message (wounds)
+					healParams.setStringId("teraskasi", "prose_curewound"); // [meditation] Your %TO wounds heal by %DI points.
+					healParams.setTO(CreatureAttribute::getName(pool));
+					healParams.setDI(heal);
+					player->sendSystemMessage(healParams);
+				}
+				if (globalVariables::playerMeditateFatigueHealingEnabled == true && player->getShockWounds() > 0) {
+						int fatigue = player->getShockWounds();
+						fatigueheal = Math::min(fatigue, fatigueheal / 2);
+						player->addShockWounds(-fatigueheal, true, false);
+						player->sendSystemMessage("Your Battle Fatigue recovers by " + std::to_string(fatigueheal) + " points.");
+				}
 			}
-
-			if (meditateTask != nullptr)
+			if (meditateTask != nullptr) {
 				meditateTask->reschedule(5000);
-			else
+			} else {
 				meditateTask->schedule(5000);
-
-		} catch (Exception& e) {
+			}
+		} catch ( Exception& e) {
 			player->error("unreported exception caught in MeditateTask::activate");
 		}
 	}
-
 };
 
 #endif /* MEDITATETASK_H_ */

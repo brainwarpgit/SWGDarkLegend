@@ -2,27 +2,53 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
 #include "templates/LootItemTemplate.h"
+#include "server/globalVariables.h"
 
-LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
+LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
 	setLoggingName("LootValues: " + lootTemplate->getTemplateName());
 
 	staticValues = lootTemplate->getAttributesMapCopy();
 	objectType = lootTemplate->getObjectType();
 
 	dynamicValues = 0;
-	modifier = 0.f;
 	level = 0;
-
 	setLevel(lootTemplate, lootLevel);
-	setModifier(lootTemplate, lootModifier);
+	
+	if (globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true) {
+		modifier = lootModifier;
+	} else {
+		modifier = 0.f;
+		setModifier(lootTemplate, lootModifier);
+	}
+	
+	recalculateValues(true, lootTemplate, prototype);
 
-	recalculateValues(true);
+	int useCountOnly = 0;
+	if (prototype->isComponent()) {
+		if (staticValues.getSize() <= 1 && staticValues.getAttribute(0) == "useCount") {
+			addExperimentalAttribute("useCountOnly", "null", 1, 1, 0, true, RandomType::STATIC);
+			setCurrentValue("useCountOnly", 1);
+			useCountOnly = 1;
+		}
+	}
+	
+	if (useCountOnly == 0) {
+		int lootQuality = 1;
+		if (modifier >= globalVariables::lootLegendaryDamageModifier) {
+			lootQuality = 4;
+		} else if (modifier >= globalVariables::lootExceptionalDamageModifier) {
+			lootQuality = 3;
+		} else if (modifier >= globalVariables::lootYellowDamageModifier) {
+			lootQuality = 2;
+		}
 
-	addExperimentalAttribute("creatureLevel", "null", level, level, 0, true, RandomType::STATIC);
-	setCurrentValue("creatureLevel", level);
-
-	addExperimentalAttribute("modifier", "null", modifier, modifier, 0, true, RandomType::STATIC);
-	setCurrentValue("modifier", modifier);
+		addExperimentalAttribute("lootQuality", "null", lootQuality, lootQuality, 0, true, RandomType::STATIC);
+		setCurrentValue("lootQuality", lootQuality);
+		addExperimentalAttribute("level", "null", level, level, 0, true, RandomType::STATIC);
+		setCurrentValue("level", level);
+		addExperimentalAttribute("modifier", "null", modifier, modifier, 0, true, RandomType::STATIC);
+		setCurrentValue("modifier", modifier);
+	}	
 }
 
 void LootValues::setLevel(const LootItemTemplate* lootTemplate, int lootLevel) {
@@ -33,12 +59,12 @@ void LootValues::setLevel(const LootItemTemplate* lootTemplate, int lootLevel) {
 		return;
 	}
 
-	if (levelMax > LEVELMAX || levelMax == -1) {
-		levelMax = LEVELMAX;
+	if (levelMax > globalVariables::lootMaxLevel || levelMax == -1) {
+		levelMax = globalVariables::lootMaxLevel;
 	}
 
-	if (levelMin < LEVELMIN) {
-		levelMin = LEVELMIN;
+	if (levelMin < globalVariables::lootMinLevel) {
+		levelMin = globalVariables::lootMinLevel;
 	}
 
 	float levelRank = getLevelRankValue(lootLevel);
@@ -54,31 +80,18 @@ void LootValues::setModifier(const LootItemTemplate* lootTemplate, float lootMod
 		return;
 	}
 
-	int modLvl = levelMin == 0 ? BonusType::STATIC : BonusType::EXPERIMENTAL;
-	int modMax = modLvl;
-	int modMin = modLvl;
-
-	if (lootModifier > EXCEPTIONAL) {
-		modMax = BonusType::LEGENDARY;
-		modMin = BonusType::EXCEPTIONAL;
-	} else if (lootModifier > ENHANCED) {
-		modMax = BonusType::EXCEPTIONAL;
-		modMin = BonusType::ENHANCED;
-	} else if (lootModifier > EXPERIMENTAL) {
-		modMax = BonusType::ENHANCED;
-		modMin = BonusType::EXPERIMENTAL;
-	} else if (lootModifier > STATIC) {
-		modMax = BonusType::EXPERIMENTAL;
-		modMin = BonusType::STATIC;
+	if (levelMin >= 1 && lootModifier == STATIC) {
+		lootModifier = globalVariables::lootBaseDamageModifier;
 	}
 
-	modifier = modMax == modMin ? modMin : getDistributedValue(modMin, modMax, level) + BonusType::EXPERIMENTAL;
+	setModifier(lootModifier);
 }
 
-void LootValues::recalculateValues(bool initial) {
+void LootValues::recalculateValues(bool initial, const LootItemTemplate* lootTemplate, TangibleObject* prototype) {
 	setStaticValues();
 	setRandomValues();
 	setDamageValues();
+	setLootCraftingValues(lootTemplate, prototype);
 }
 
 void LootValues::setStaticValues() {
@@ -126,17 +139,21 @@ void LootValues::setRandomValues() {
 
 	dynamicValues = attributeIndex.size();
 
-	if (modifier <= BonusType::ENHANCED) {
-		dynamicValues = getDistributedValue(1, attributeIndex.size(), level) * modifier;
+	if (modifier <= globalVariables::lootYellowDamageModifier) {
+		dynamicValues = getDistributedValue(1, attributeIndex.size(), level, DISTMIN, DISTMAX) * modifier;
 		dynamicValues = Math::min(dynamicValues, attributeIndex.size());
 	}
 
-	float bonusValue = Math::max(1, modifier);
+	float bonusValue = Math::max(1.0f, modifier);
 
 	for (int i = dynamicValues; -1 < --i;) {
 		int key = System::random(attributeIndex.size()-1);
 
 		String attribute = attributeIndex.get(key);
+
+		float min = getMinValue(attribute);
+		float max = getMaxValue(attribute);
+
 		int precision = getPrecision(attribute) % 10;
 
 		if (precision == 0) {
@@ -145,7 +162,10 @@ void LootValues::setRandomValues() {
 			setDynamicValue<float>(attribute, bonusValue);
 		}
 
-		bonusValue = getDistributedValue(1, modifier, level);
+		if (fabs(min) > EPSILON && fabs(max) > EPSILON) {
+			bonusValue = getDistributedValue(1.0f, modifier, (float)level, DISTMIN, DISTMAX);
+		}
+
 		attributeIndex.remove(key);
 	}
 }
@@ -155,7 +175,7 @@ void LootValues::setDamageValues() {
 		return;
 	}
 
-	if (objectType & SceneObjectType::WEAPON) {
+	if (objectType & SceneObjectType::WEAPON && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == false) {
 		float maxPercent = getCurrentPercentage("maxdamage");
 		float minPercent = getCurrentPercentage("mindamage");
 
@@ -163,14 +183,31 @@ void LootValues::setDamageValues() {
 			float maxPercentMax = getMaxPercentage("maxdamage");
 			float minPercentMax = getMaxPercentage("mindamage");
 
-			float percent = Math::max(minPercent, maxPercent);
-			float percentMax = Math::max(minPercentMax, maxPercentMax);
+			float percent = Math::clamp(0.f, (minPercent + maxPercent) * 0.5f, 1.f);
+			float percentMax = Math::max((minPercentMax + maxPercentMax) * 0.5f, 1.f);
 
 			setCurrentPercentage("maxdamage", percent, percentMax);
 			setModifierValue("maxdamage", percentMax);
 
 			setCurrentPercentage("mindamage", percent, percentMax);
 			setModifierValue("mindamage", percentMax);
+		}
+	} else if (objectType & SceneObjectType::WEAPON) {
+		float maxValue = getCurrentValue("maxdamage");
+		float minValue = getCurrentValue("mindamage");
+
+		if (maxValue < minValue) {
+			float maxPercent = getCurrentPercentage("maxdamage");
+			float maxPercentMax = getMaxPercentage("maxdamage");
+
+			float minPercent = getCurrentPercentage("mindamage");
+			float minPercentMax = getMaxPercentage("mindamage");
+
+			setCurrentValue("maxdamage", minValue);
+			setCurrentPercentage("maxdamage", minPercent, minPercentMax);
+
+			setCurrentValue("mindamage", maxValue);
+			setCurrentPercentage("mindamage", maxPercent, maxPercentMax);
 		}
 	} else if (objectType & SceneObjectType::COMPONENT) {
 		float maxValue = getCurrentValue("maxdamage");
@@ -188,6 +225,38 @@ void LootValues::setDamageValues() {
 
 			setCurrentValue("mindamage", maxValue);
 			setCurrentPercentage("mindamage", maxPercent, maxPercentMax);
+		}
+	}
+}
+
+void LootValues::setLootCraftingValues(const LootItemTemplate* lootTemplate, TangibleObject* prototype) {
+	for (int i = 0; i < getTotalExperimentalAttributes(); ++i) {
+		const String& attribute = getAttribute(i);
+		float minValue = getMinValue(attribute);
+		float maxValue = getMaxValue(attribute);
+		float value = 0.f;
+		if (attribute == "useCount" || attribute == "quantity" || attribute == "charges" || attribute == "uses") {
+			minValue += modifier;
+			maxValue += modifier;
+			setMinValue(attribute, round(minValue));
+			setMaxValue(attribute, round(maxValue));
+			if (minValue > maxValue) {
+				value = System::random(minValue - maxValue) + maxValue;
+			} else {
+				value = System::random(maxValue - minValue) + minValue;
+			}
+			setCurrentValue(attribute, value);
+			continue;
+		}
+		if (prototype->isArmorObject() && attribute == "armor_effectiveness" && globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
+			float resistAdjust = getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier;
+			if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
+			setCurrentValue(attribute, resistAdjust);
+		}
+		if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled  == true && (attribute == "mindamage" || attribute == "maxdamage")) {
+			if (globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
+				setCurrentValue(attribute, getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier);
+			}
 		}
 	}
 }
@@ -272,6 +341,10 @@ float LootValues::getModifierValue(float min, float max, float percentageMax) {
 	}
 }
 
+int LootValues::getModifierValue(int min, int max, float percentageMax) {
+	return round(getModifierValue((float)min, (float)max, percentageMax));
+}
+
 float LootValues::getPercentageValue(float min, float max, float percentage) {
 	if (fabs(max - min) < EPSILON) {
 		return min;
@@ -280,6 +353,10 @@ float LootValues::getPercentageValue(float min, float max, float percentage) {
 	float percent = Math::clamp(0.f, percentage, 1.f);
 
 	return ((max - min) * percent) + min;
+}
+
+int LootValues::getPercentageValue(int min, int max, float percentage) {
+	return round(getPercentageValue((float)min, (float)max, percentage));
 }
 
 float LootValues::getValuePercentage(float min, float max, float value) {
@@ -401,7 +478,7 @@ int LootValues::getDistributedValue(int min, int max, int level, float distMin, 
 }
 
 float LootValues::getLevelRankValue(int level, float distMin, float distMax) {
-	float rank = (level - LEVELMIN) / (float)(LEVELMAX - LEVELMIN);
+	float rank = Math::clamp(0.f, (level - globalVariables::lootMinLevel) / (float)(globalVariables::lootMaxLevel - globalVariables::lootMinLevel), 1.f);
 
-	return Math::clamp(distMin, rank, distMax);
+	return Math::linearInterpolate(distMin, distMax, rank);
 }

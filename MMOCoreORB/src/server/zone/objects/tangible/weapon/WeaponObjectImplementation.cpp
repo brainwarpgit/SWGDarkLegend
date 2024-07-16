@@ -20,7 +20,7 @@
 #include "server/zone/ZoneProcessServer.h"
 #include "server/zone/managers/player/PlayerMap.h"
 #include "server/chat/ChatManager.h"
-
+#include "server/globalVariables.h"
 
 void WeaponObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -59,7 +59,10 @@ void WeaponObjectImplementation::loadTemplateData(SharedObjectTemplate* template
 	weaponEffectIndex = weaponTemplate->getWeaponEffectIndex();
 
 	damageType = weaponTemplate->getDamageType();
-
+	level = weaponTemplate->getLevel();
+	modifier = weaponTemplate->getModifier();
+	lootQuality = weaponTemplate->getLootQuality();
+	
 	armorPiercing = weaponTemplate->getArmorPiercing();
 
 	healthAttackCost = weaponTemplate->getHealthAttackCost();
@@ -227,7 +230,7 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 
 	/*if (usesRemaining > 0)
 		alm->insertAttribute("count", usesRemaining);*/
-
+	
 	for(int i = 0; i < wearableSkillMods.size(); ++i) {
 		const String& key = wearableSkillMods.elementAt(i).getKey();
 		String statname = "cat_skill_mod_bonus.@stat_n:" + key;
@@ -465,6 +468,17 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 			}
 		}
 	}
+	if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", level);
+	if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+	String lootQualityString = "Base";
+	if (lootQuality == 4 ) {
+		lootQualityString = "Legendary";
+	} else if (lootQuality == 3) {
+		lootQualityString = "Exceptional";
+	} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
+		lootQualityString = globalVariables::lootYellowModifierName;
+	}
+	if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
 }
 
 int WeaponObjectImplementation::getPointBlankAccuracy(bool withPup) const {
@@ -614,6 +628,9 @@ void WeaponObjectImplementation::updateCraftingValues(CraftingValues* values, bo
 	float value = 0.f;
 	setMinDamage(Math::max(values->getCurrentValue("mindamage"), 0.f));
 	setMaxDamage(Math::max(values->getCurrentValue("maxdamage"), 0.f));
+	setLevel(values->getCurrentValue("level"));
+	setModifier(values->getCurrentValue("modifier"));
+	setLootQuality(values->getCurrentValue("lootQuality"));
 
 	setAttackSpeed(values->getCurrentValue("attackspeed"));
 	setHealthAttackCost((int)values->getCurrentValue("attackhealthcost"));
@@ -708,27 +725,55 @@ void WeaponObjectImplementation::decreasePowerupUses(CreatureObject* player) {
 	}
 }
 
-String WeaponObjectImplementation::repairAttempt(int repairChance) {
-	String message = "@error_message:";
-
-	if(repairChance < 25) {
-		message += "sys_repair_failed";
-		setMaxCondition(1, true);
-		setConditionDamage(0, true);
-	} else if(repairChance < 50) {
-		message += "sys_repair_imperfect";
-		setMaxCondition(getMaxCondition() * .65f, true);
-		setConditionDamage(0, true);
-	} else if(repairChance < 75) {
-		setMaxCondition(getMaxCondition() * .80f, true);
-		setConditionDamage(0, true);
-		message += "sys_repair_slight";
+String WeaponObjectImplementation::repairAttempt(int repairChance, int luckSkill, float repairMaxMod) {
+	String message = "";		
+	if (globalVariables::craftingNewRepairEnabled == false ) {
+		if(repairChance < 25) {
+			message += "sys_repair_failed";
+			setMaxCondition(1, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 50) {
+			message += "sys_repair_imperfect";
+			setMaxCondition(getMaxCondition() * .65f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 75) {
+			setMaxCondition(getMaxCondition() * .80f, true);
+			setConditionDamage(0, true);
+			message += "sys_repair_slight";
+		} else {
+			setMaxCondition(getMaxCondition() * .95f, true);
+			setConditionDamage(0, true);
+			message += "sys_repair_perfect";
+		}
 	} else {
-		setMaxCondition(getMaxCondition() * .95f, true);
-		setConditionDamage(0, true);
-		message += "sys_repair_perfect";
+		float repairMaxMod = globalVariables::craftingRepairMaxMod;
+		if ((getMaxCondition() - getConditionDamage()) <= 0 && repairMaxMod < 1) {
+			message += "This item was broken. Reducing Max Condition by " + std::to_string(repairMaxMod * 100) + "%! ";
+			setMaxCondition(getMaxCondition() * repairMaxMod, true);
+		}
+		if(repairChance < 50 || luckSkill < 50) {
+			message += "You barely repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .6f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 100 || luckSkill < 100) {
+			message += "You somewhat repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .7f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 150 || luckSkill < 150) {
+			message += "You almost repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .8f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 200 || luckSkill < 200) {
+			message += "You completely repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .9f, true);
+			setConditionDamage(0, true);
+		} else {
+			message += "You completely repaired this item to full condition.";
+			setMaxCondition(getMaxCondition(), true);
+			setConditionDamage(0, true);
+		}
 	}
-
+	return message;
 	return message;
 }
 

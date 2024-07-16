@@ -993,6 +993,8 @@ int DirectorManager::createLootFromCollection(lua_State* L) {
 		return 0;
 
 	int level = lua_tonumber(L, -1);
+	int creatureDifficulty = 1;
+	int luckSkill = 0;
 	lua_pop(L, 1);
 
 	LuaObject luaObject(L);
@@ -1017,7 +1019,7 @@ int DirectorManager::createLootFromCollection(lua_State* L) {
 	TransactionLog trx(TrxCode::LUALOOT, dst);
 	trx.addContextFromLua(L);
 	trx.addState("dstContainer", container->getObjectID());
-	if (lootManager->createLootFromCollection(trx, container, &lootCollection, level)) {
+	if (lootManager->createLootFromCollection(trx, container, &lootCollection, level, creatureDifficulty, luckSkill)) {
 		trx.commit(true);
 	} else {
 		trx.abort() << __FUNCTION__ << " failed: level=" << level;
@@ -3418,10 +3420,22 @@ Vector3 DirectorManager::generateSpawnPoint(String zoneName, float x, float y, f
 	bool found = false;
 	Vector3 position(0, 0, 0);
 	int retries = 40;
-	ZoneServer* zoneServer = ServerCore::getZoneServer();
-	Zone* zone = zoneServer->getZone(zoneName);
+
+	auto zoneServer = ServerCore::getZoneServer();
+
+	if (zoneServer == nullptr) {
+		return position;
+	}
+
+	auto zone = zoneServer->getZone(zoneName);
 
 	if (zone == nullptr) {
+		return position;
+	}
+
+	auto planetManager = zone->getPlanetManager();
+
+	if (planetManager == nullptr) {
 		return position;
 	}
 
@@ -3443,7 +3457,7 @@ Vector3 DirectorManager::generateSpawnPoint(String zoneName, float x, float y, f
 
 		position.set(newX, newZ, newY);
 
-		found = forceSpawn == true || (zone->getPlanetManager()->isSpawningPermittedAt(position.getX(), position.getY(), extraNoBuildRadius) &&
+		found = forceSpawn == true || (planetManager->isSpawningPermittedAt(position.getX(), position.getY(), extraNoBuildRadius) &&
 				!CollisionManager::checkSphereCollision(position, sphereCollision, zone));
 
 		retries--;
@@ -3493,22 +3507,26 @@ int DirectorManager::getSpawnPoint(lua_State* L) {
 	}
 
 	bool found = false;
-	Vector3 position;
 	int retries = 50;
+
+	Vector3 position;
+	Vector3 testPosition(0.f, 0.f, 0.f);
 
 	while (!found && retries > 0) {
 		position = generateSpawnPoint(zoneName, x, y, minimumDistance, maximumDistance, 5.0, 20, false);
 
-		if (position != Vector3(0, 0, 0))
+		if (fabs(position.getX() - testPosition.getX()) > 0.1 && fabs(position.getY() - testPosition.getY()) > 0.1) {
 			found = true;
+		}
 
 		retries--;
 	}
 
-	if (!found && forceSpawn)
+	if (!found && forceSpawn) {
 		position = generateSpawnPoint(zoneName, x, y, minimumDistance, maximumDistance, 5.0, 20, true);
+	}
 
-	if (position != Vector3(0, 0, 0)) {
+	if (fabs(position.getX() - testPosition.getX()) > 0.1 && fabs(position.getY() - testPosition.getY()) > 0.1) {
 		lua_newtable(L);
 		lua_pushnumber(L, position.getX());
 		lua_pushnumber(L, position.getZ());
@@ -3519,9 +3537,10 @@ int DirectorManager::getSpawnPoint(lua_State* L) {
 
 		return 1;
 	} else {
-		String err = "Unable to generate spawn point in DirectorManager::getSpawnPoint, x: " + String::valueOf(x) + ", y: " + String::valueOf(y) +
-				", zone: " + zoneName + ", minDist: " + String::valueOf(minimumDistance) + ", maxDist: " + String::valueOf(maximumDistance);
-		printTraceError(L, err);
+		StringBuffer errorMsg;
+		errorMsg << "DirectorManager::getSpawnPoint failed to find spawn point - Zone: " << zoneName << " X: " << x << ", Y: " << y << " Min Distance: " << minimumDistance << " Max Distance: " << maximumDistance;
+
+		printTraceError(L, errorMsg.toString());
 		return 0;
 	}
 }
@@ -3567,6 +3586,18 @@ int DirectorManager::getSpawnArea(lua_State* L) {
 		return 0;
 	}
 
+	auto planetManager = zone->getPlanetManager();
+
+	if (planetManager == nullptr) {
+		return 0;
+	}
+
+	auto terrainManager = planetManager->getTerrainManager();
+
+	if (terrainManager == nullptr) {
+		return 0;
+	}
+
 	bool found = false;
 	Vector3 position;
 	int retries = 50;
@@ -3579,7 +3610,7 @@ int DirectorManager::getSpawnArea(lua_State* L) {
 		int y0 = position.getY() - areaSize;
 		int y1 = position.getY() + areaSize;
 
-		found = zone->getPlanetManager()->getTerrainManager()->getHighestHeightDifference(x0, y0, x1, y1) <= maximumHeightDifference;
+		found = terrainManager->getHighestHeightDifference(x0, y0, x1, y1) <= maximumHeightDifference;
 		retries--;
 	}
 
@@ -3591,7 +3622,7 @@ int DirectorManager::getSpawnArea(lua_State* L) {
 		int y0 = position.getY() - areaSize;
 		int y1 = position.getY() + areaSize;
 
-		found = zone->getPlanetManager()->getTerrainManager()->getHighestHeightDifference(x0, y0, x1, y1) <= maximumHeightDifference;
+		found = terrainManager->getHighestHeightDifference(x0, y0, x1, y1) <= maximumHeightDifference;
 	}
 
 	if (found) {
@@ -3716,8 +3747,11 @@ int DirectorManager::getCityRegionAt(lua_State* L) {
 
 	if (zone != nullptr) {
 		PlanetManager* planetManager = zone->getPlanetManager();
+		CityRegion* cityRegion = nullptr;
 
-		CityRegion* cityRegion = planetManager->getCityRegionAt(x, y);
+		if (planetManager != nullptr) {
+			cityRegion = planetManager->getCityRegionAt(x, y);
+		}
 
 		if (cityRegion != nullptr) {
 			lua_pushlightuserdata(L, cityRegion);

@@ -27,6 +27,9 @@ require("sui.custom.SuiProcessorPuzzle")
 require("sui.custom.SuiRadiationSensor")
 require("sui.custom.SuiReceiverPuzzle")
 
+includeFile("tools/dl_services_terminal.lua")
+includeFile("tools/mission_level_choice.lua")
+includeFile("tools/mission_direction_choice.lua")
 includeFile("helperfuncs.lua")
 includeFile("playerTriggers.lua")
 
@@ -163,6 +166,7 @@ includeFile("dungeon/corellian_corvette/ticket_takers/lt_lance.lua")
 -- Village
 includeFile("village/village_community_crafting.lua")
 includeFile("village/village_gm_sui.lua")
+includeFile("village/village_sui.lua")
 includeFile("village/village_jedi_manager_common.lua")
 includeFile("village/village_jedi_manager_holocron.lua")
 includeFile("village/village_jedi_manager_township.lua")

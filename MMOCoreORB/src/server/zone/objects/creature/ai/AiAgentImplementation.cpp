@@ -177,6 +177,22 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 
 	level = getTemplateLevel();
 
+	int creatureDifficulty = getCreatureDifficulty();
+	int attackable = 1;
+	
+	attackable = npcTemplate->getPvpBitmask();
+	
+	uint64 customaimap = npcTemplate->getCustomAiMap();
+	
+	String strdifficulty = "";
+	
+	if (creatureDifficulty == 2 || creatureDifficulty == 5) {
+		strdifficulty = " - \\#FFA500 Elite";
+	}
+	if (creatureDifficulty == 3 || creatureDifficulty == 6) {
+		strdifficulty = " - \\#FF0000 Heroic";
+	}	
+
 	planetMapCategory = npcTemplate->getPlanetMapCategory();
 	mapCategoryName = npcTemplate->getPlanetMapCategoryName();
 
@@ -238,21 +254,41 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 		int templSpecies = getSpecies();
 
 		if (!npcTemplate->getRandomNameTag()) {
-			setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies), false);
+			//if (((creatureDifficulty >= 2 && creatureDifficulty <= 3) || (creatureDifficulty >= 5 && creatureDifficulty <= 6)) && attackable >= 1 && customaimap != 146400298) {
+			if (attackable >= 1 && customaimap != 146400298) {
+				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "] ", false);
+			//} else if ((creatureDifficulty == 1 || creatureDifficulty == 4) && attackable >= 1 && customaimap != 146400298) {
+			//	setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies) + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+			} else {
+				setCustomObjectName(nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies), false);
+			}
 		} else {
 			String newName = nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies);
-			newName += " (";
-
+			//if (creatureDifficulty >= 2 && creatureDifficulty <= 3 && attackable >= 1 && customaimap != 146400298) {			
+			if (attackable >= 1 && customaimap != 146400298) {			
+				newName += strdifficulty + "\\#FFFFFF (";
+			} else {
+				newName += "\\#FFFFFF (";
+			}
 			if (objectName == "")
 				newName += templateData->getCustomName();
 			else
 				newName += StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
 
 			newName += ")";
-			setCustomObjectName(newName, false);
+			if (attackable >= 1 && customaimap != 146400298) {
+				setCustomObjectName(newName + "\\#C0C0C0 [" + std::to_string(level) + "] ", false);
+			}
 		}
 	} else {
-		setCustomObjectName(templateData->getCustomName(), false);
+		//if (((creatureDifficulty >= 2 && creatureDifficulty <= 3) || (creatureDifficulty >= 5 && creatureDifficulty <= 6)) && attackable >= 1 && customaimap != 146400298) {			
+		if (attackable >= 1 && customaimap != 146400298) {			
+			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + strdifficulty + " \\#C0C0C0 [" + std::to_string(level) + "] ", false);
+		//} else if ((creatureDifficulty == 1 || creatureDifficulty == 4) && attackable >= 1 && customaimap != 146400298) {
+		//	setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + " \\#C0C0C0 [" + std::to_string(level) + "]", false);
+		} else {
+			setCustomObjectName(templateData->getCustomName() + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString(), false);
+		}
 	}
 
 	setHeight(templateData->getScale(), false);
@@ -433,6 +469,9 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 	else if (getArmor() == 3)
 		alm->insertAttribute("armorrating", "Heavy");
 
+	alm->insertAttribute("creatureDifficulty",std::to_string(getCreatureDifficulty()));
+	if (getCreatureDifficulty() > 3) alm->insertAttribute("cdpMultiplier",std::to_string(getCDPMultiplier()));
+	
 	if (isSpecialProtection(SharedWeaponObjectTemplate::KINETIC)) {
 		StringBuffer txt;
 		txt << Math::getPrecision(getKinetic(), 1) << "%";
@@ -615,17 +654,24 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 }
 
 void AiAgentImplementation::respawn(Zone* zone, int level) {
-	if (getZoneUnsafe() != nullptr)
+	// Fail to respawn if they are in the zone already
+	if (getZoneUnsafe() != nullptr) {
 		return;
+	}
 
 #ifdef DEBUG_AI_WEAPONS
-	info(true) << "respawn called for - " << getDisplayedName() << " ID: " << getObjectID();
+	auto inventory = getInventory();
+
+	info(true) << "respawn called for - " << getDisplayedName() << " ID: " << getObjectID() << " Inventory Size: " << inventory->getContainerObjectsSize();
 #endif
 
-	blackboard.removeAll();
+	// Remove the object flag for baby
+	if (creatureBitmask & ObjectFlag::BABY) {
+		removeObjectFlag(ObjectFlag::BABY);
+	}
 
-	// Reload all of the agents info
-	reloadTemplate();
+	// Clear the agents blackboard
+	blackboard.removeAll();
 
 	// Check to see if the agent is a creature and rolls to spawn as a baby (lairs and dynamic spawns only)
 	ManagedReference<SceneObject*> home = homeObject.get();
@@ -679,11 +725,20 @@ void AiAgentImplementation::respawn(Zone* zone, int level) {
 			Creature* creature = cast<Creature*>(asAiAgent());
 
 			if (creature != nullptr) {
+				// Destroy the weapons that were re-created when the template was reloaded at the top of this function
+				destroyAllWeapons();
+
+				// Now reload the template for baby stats
 				creature->loadTemplateDataForBaby(npcTemplate);
 
 				// info(true) << getDisplayedName() << " ID: " << getObjectID() << " Loc: " << getWorldPosition().toString() << " SPAWNED AS BABY";
 			}
 		}
+	}
+
+	// Reload all of the agents info babies are handled separately, also creates weapons for the agent
+	if (!(getCreatureBitmask() & ObjectFlag::BABY)) {
+		reloadTemplate();
 	}
 
 	clearRunningChain();
@@ -721,6 +776,8 @@ void AiAgentImplementation::respawn(Zone* zone, int level) {
 	currentFoundPath = nullptr;
 
 	respawnCounter++;
+
+	// info(true) << "END respawn called for - " << getDisplayedName() << " ID: " << getObjectID() << " Inventory Size: " << inventory->getContainerObjectsSize();
 
 	activateAiBehavior();
 }
@@ -1165,58 +1222,66 @@ void AiAgentImplementation::destroyAllWeapons() {
 	AiAgent* thisAgent = asAiAgent();
 
 	// Set current weapon null, all weapons will be destroyed below
-	currentWeapon = nullptr;
+	setCurrentWeapon(nullptr);
 
-	ManagedReference<WeaponObject*> defaultWeap = getDefaultWeapon();
+	auto defaultWeap = getDefaultWeapon();
 
 	if (defaultWeap != nullptr) {
 		Locker dlock(defaultWeap, thisAgent);
+
 		defaultWeap->destroyObjectFromWorld(true);
 		setDefaultWeapon(nullptr);
 
 #ifdef DEBUG_AI_WEAPONS
 		msg << "Default Weapon - Ref Count: " << defaultWeap->getReferenceCount() << endl;
 #endif
+
+		defaultWeap = nullptr;
 	}
 
-	ManagedReference<WeaponObject*> primaryWeap = getPrimaryWeapon();
+	auto primaryWeap = getPrimaryWeapon();
 
 	if (primaryWeap != nullptr) {
 		Locker plocker(primaryWeap, thisAgent);
 
 		primaryWeap->destroyObjectFromWorld(true);
-
-		primaryWeapon = nullptr;
+		setPrimaryWeapon(nullptr);
 
 #ifdef DEBUG_AI_WEAPONS
 		msg << "Primary Weapon - Ref Count: " << primaryWeap->getReferenceCount() << endl;
 #endif
+
+		primaryWeap = nullptr;
 	}
 
-	ManagedReference<WeaponObject*> secondaryWeap = getSecondaryWeapon();
+	auto secondaryWeap = getSecondaryWeapon();
 
 	if (secondaryWeap != nullptr) {
 		Locker slock(secondaryWeap, thisAgent);
-		secondaryWeap->destroyObjectFromWorld(true);
 
-		secondaryWeapon = nullptr;
+		secondaryWeap->destroyObjectFromWorld(true);
+		setSecondaryWeapon(nullptr);
 
 #ifdef DEBUG_AI_WEAPONS
 		msg << "Secondary Weapon - Ref Count: " << secondaryWeap->getReferenceCount() << endl;
 #endif
+
+		secondaryWeap = nullptr;
 	}
 
-	ManagedReference<WeaponObject*> thrownWeap = getThrownWeapon();
+	auto thrownWeap = getThrownWeapon();
 
 	if (thrownWeap != nullptr) {
 		Locker tlock(thrownWeap, thisAgent);
-		thrownWeap->destroyObjectFromWorld(true);
 
-		thrownWeapon = nullptr;
+		thrownWeap->destroyObjectFromWorld(true);
+		setThrownWeapon(nullptr);
 
 #ifdef DEBUG_AI_WEAPONS
 		msg << "Thrown Weapon - Ref Count: " << thrownWeap->getReferenceCount() << endl;
 #endif
+
+		thrownWeap = nullptr;
 	}
 
 #ifdef DEBUG_AI_WEAPONS
@@ -1937,16 +2002,21 @@ bool AiAgentImplementation::killPlayer(SceneObject* prospect) {
 }
 
 bool AiAgentImplementation::stalkProspect(SceneObject* prospect) {
-	if (prospect == nullptr || !prospect->isCreatureObject())
+	if (prospect == nullptr || !prospect->isCreatureObject()) {
 		return false;
+	}
 
-	CreatureObject* creature = prospect->asCreatureObject();
+	auto creature = prospect->asCreatureObject();
 
 	if (creature != nullptr && creature->isPlayerCreature() && creature->hasSkill("outdoors_ranger_novice")) {
 		StringIdChatParameter param;
 		param.setStringId("@skl_use:notify_stalked"); // "It seems that you are being stalked by %TO."
 		param.setTO(getObjectName());
 		creature->sendSystemMessage(param);
+	}
+
+	if (getPosture() != CreaturePosture::UPRIGHT) {
+		setPosture(CreaturePosture::UPRIGHT, true, true);
 	}
 
 	setStalkObject(prospect);
@@ -2599,14 +2669,15 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 
 	PathFinderManager* pathFinder = PathFinderManager::instance();
 
-	if (pathFinder == nullptr)
+	if (pathFinder == nullptr) {
 		return false;
+	}
 
 	/*
 	*	STEP 1: If we do not already have a path referenced, find a new path
 	*/
 
-	Reference<Vector<WorldCoordinates>* > path;
+	Reference<Vector<WorldCoordinates>* > path = nullptr;
 	ManagedReference<SceneObject*> currentParent = getParent().get();
 
 	PatrolPoint currentPoint(currentPosition);
@@ -2621,8 +2692,9 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 
 		path = currentFoundPath = static_cast<CurrentFoundPath*>(pathFinder->findPath(currentPoint.getCoordinates(), endMovementCoords, getZoneUnsafe()));
 	} else {
-		if (currentParent != nullptr && !currentParent->isCellObject())
+		if (currentParent != nullptr && !currentParent->isCellObject()) {
 			currentParent = nullptr;
+		}
 
 		if ((movementState == AiAgent::FOLLOWING || movementState == AiAgent::PATHING_HOME || movementState == AiAgent::NOTIFY_ALLY || movementState == AiAgent::MOVING_TO_HEAL || movementState == AiAgent::WATCHING || movementState == AiAgent::CRACKDOWN_SCANNING)
 			&& endMovementCell == nullptr && currentParent == nullptr && currentFoundPath->get(currentFoundPath->size() - 1).getWorldPosition().squaredDistanceTo(endMovementCoords.getWorldPosition()) > 4 * 4) {
@@ -2634,8 +2706,14 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 		}
 	}
 
-	if (path == nullptr || path->size() < 2) {
+	if (path == nullptr) {
 		currentFoundPath = nullptr;
+
+		return false;
+	} else if (path->size() < 2) {
+		currentFoundPath = nullptr;
+		path == nullptr;
+
 		return false;
 	}
 
@@ -2647,8 +2725,9 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 #endif
 
 	// Filter out duplicate path points
-	if (currentParent != nullptr && endMovementCell != nullptr)
+	if (currentParent != nullptr && endMovementCell != nullptr) {
 		pathFinder->filterPastPoints(path, asAiAgent());
+	}
 
 	// the farthest we will move is one point in the path, and the movement update time will change to reflect that
 	WorldCoordinates nextMovementPosition;
@@ -2663,6 +2742,7 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 		} else {
 			path = nullptr;
 			currentFoundPath = nullptr;
+
 			return false;
 		}
 	}
@@ -2671,8 +2751,9 @@ bool AiAgentImplementation::findNextPosition(float maxDistance, bool walk) {
 	uint64 currentParentID = currentParent != nullptr ? currentParent->getObjectID() : 0;
 	uint64 nextParentID = nextMovementCell != nullptr ? nextMovementCell->getObjectID() : 0;
 
-	if (currentParentID != nextParentID && nextParentID > 0)
+	if (currentParentID != nextParentID && nextParentID > 0) {
 		currentPosition = PathFinderManager::transformToModelSpace(currentPosition, nextMovementCell->getParent().get());
+	}
 
 	Vector3 movementDiff(currentWorldPos - nextMovementPosition.getWorldPosition());
 
@@ -3443,13 +3524,16 @@ int AiAgentImplementation::setDestination() {
 	return getPatrolPointSize();
 }
 
-void AiAgentImplementation::setWait(int wait) {
-	cooldownTimerMap->updateToCurrentAndAddMili("waitTimer", wait);
+void AiAgentImplementation::setWait(uint64 wait) {
+	cooldownTimerMap->updateToCurrentTime("waitTimer");
+	cooldownTimerMap->addMiliTime("waitTimer", wait);
 }
 
 void AiAgentImplementation::stopWaiting() {
-	if (peekBlackboard("isWaiting"))
+	if (peekBlackboard("isWaiting")) {
 		eraseBlackboard("isWaiting");
+	}
+
 	cooldownTimerMap->updateToCurrentTime("waitTimer");
 }
 
@@ -4281,8 +4365,9 @@ void AiAgentImplementation::setCombatState() {
 
 	ManagedReference<SceneObject*> home = homeObject.get();
 
-	if (home != nullptr)
+	if (home != nullptr) {
 		home->notifyObservers(ObserverEventType::AIMESSAGE, asAiAgent(), ObserverEventType::STARTCOMBAT);
+	}
 
 	notifyObservers(ObserverEventType::STARTCOMBAT, asAiAgent());
 
@@ -4550,13 +4635,15 @@ void AiAgentImplementation::handleException(const Exception& ex, const String& c
 }
 
 void AiAgentImplementation::addObjectFlag(unsigned int flag) {
-	if (!(creatureBitmask & flag))
+	if (!(creatureBitmask & flag)) {
 		creatureBitmask |= flag;
+	}
 }
 
 void AiAgentImplementation::removeObjectFlag(unsigned int flag) {
-	if (creatureBitmask & flag)
+	if (creatureBitmask & flag) {
 		creatureBitmask &= ~flag;
+	}
 }
 
 void AiAgentImplementation::loadCreatureBitmask() {

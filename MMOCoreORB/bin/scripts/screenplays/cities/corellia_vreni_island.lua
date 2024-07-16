@@ -108,6 +108,18 @@ CorelliaVreniIslandScreenPlay = CityScreenPlay:new {
 		{"mercenary",300,-16.3,-0.9,3.2,106,3005697, "angry"},
 		{"mercenary",300,-16.3,-0.9,-2.9,65,3005697, "angry"},
 		{"medic",60,1.4,0.7,2.0,167,7615445, "npc_use_terminal_high"}
+	},
+
+	citySpawns = {
+		--newb grind starter spawns
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0},
+		{"meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0},
+		{"meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0},
+		{"meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0},
 	}
 }
 
@@ -115,11 +127,12 @@ registerScreenPlay("CorelliaVreniIslandScreenPlay", true)
 
 function CorelliaVreniIslandScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnGcwMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -132,35 +145,3 @@ function CorelliaVreniIslandScreenPlay:spawnSceneObjects()
 
 end
 
-function CorelliaVreniIslandScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	--newb grind starter spawns
-	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
-	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
-	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
-	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
-	spawnMobile("corellia", "durni", 300, getRandomNumber(10) + -5379, 5.7, getRandomNumber(10) + -6418, getRandomNumber(360), 0)
-	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)
-	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)
-	spawnMobile("corellia", "meatlump_fool", 300, getRandomNumber(10) + -5529, 11.4, getRandomNumber(10) + -6353, getRandomNumber(360), 0)
-end

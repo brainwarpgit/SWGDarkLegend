@@ -44,6 +44,7 @@ function padawan_pannaqa_01_conv_handler:runScreenHandlers(pConvTemplate, pPlaye
 		PadawanTrials:failTrial(pPlayer)
 	elseif (screenID == "gardens_in_shape") then
 		PadawanTrials:passTrial(pPlayer)
+		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
 	elseif (screenID == "ill_be_here") then
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)
 		PadawanTrials:createTargetLocation(pPlayer)

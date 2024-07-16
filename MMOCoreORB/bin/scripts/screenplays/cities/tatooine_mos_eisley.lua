@@ -365,7 +365,64 @@ TatooineMosEisleyScreenPlay = CityScreenPlay:new {
 		{"trainer_pistol",0,3358.6,5,-4841.3,36,0, "npc_sitting_chair"},
 		{"trainer_rifleman",0,3426,5,-4917,0,0, ""},
 		{"trainer_scout",0,3519.76,5,-4786.9,77,0, ""},
-		{"trainer_smuggler",0,3401,5,-4879,340,0, "worried"}
+		{"trainer_smuggler",0,3401,5,-4879,340,0, "worried"},
+		
+		{"junk_dealer", 0, 3271.49, 5, -4797.09, 52, 0, ""},
+		{"junk_dealer", 0, -31.1, -0.5, 7.1, 31, 1082887, ""},
+	},
+
+	citySpawns = {
+		--Creatures	
+		{"minor_worrt",300,3863.8,5,-4809.5,170,0},
+		{"minor_worrt",300,3857.8,5,-4814.4,127,0},
+		{"minor_worrt",300,3856.5,5,-4826.1,45,0},
+		{"minor_worrt",300,3864.6,5,-4826.3,-1,0},
+		{"minor_worrt",300,3870.9,5,-4818.6,-74,0},
+		{"minor_worrt",300,3867.6,5,-4811.8,-128,0},
+
+		{"rill",300,3851.3,5,-4725,-175,0},
+		{"rill",300,3845.2,5,-4734.8,36,0},
+		{"tempest_rill",300,3855,5,-4733,53,0},
+
+		{"rockmite",300,3957.1,5,-4739.8,67,0},
+		{"rockmite",300,3964.5,5,-4744.8,11,0},
+		{"rockmite",300,3970.4,5,-4739.3,-72,0},
+		{"rockmite",300,3966.1,5,-4731.9,-135,0},
+
+		{"rockmite",300,3979.2,5,-4824.1,-174,0},
+		{"rockmite",300,3972.4,5,-4829,110,0},
+		{"rockmite",300,3973.6,5,-4836.5,35,0},
+		{"rockmite",300,3981.7,5,-4836.7,-23,0},
+
+		{"rockmite",300,3597.7,11.6,-5046,156,0},
+		{"rockmite",300,3593,11.6,-5050.2,93,0},
+		{"rockmite",300,3597.7,13.2,-5055.8,14,0},
+		{"rockmite",300,3602.2,11.3,-5049.7,-80,0},
+
+		{"rockmite",300,3859.5,5.5,-4919.3,25,0},
+		{"rockmite",300,3865.8,5,-4919.4,-2,0},
+		{"rockmite",300,3867.8,5,-4912,-110,0},
+		{"rockmite",300,3860.9,5,-4909,130,0},
+
+		{"rockmite",300,3765.2,5,-4651.9,-163,0},
+		{"rockmite",300,3758.3,5,-4654.4,120,0},
+		{"rockmite",300,3763.3,5,-4660.2,18,0},
+		{"rockmite",300,3767.8,5,-4657.5,-80,0},
+
+		{"rockmite",300,3767.7,5,-4913.8,-44,0},
+		{"rockmite",300,3768.4,5,-4907,-107,0},
+		{"rockmite",300,3760.2,5,-4905.1,148,0},
+		{"rockmite",300,3760.4,5,-4912.9,54,0},
+
+		{"worrt",300,3659.4,5,-4601.8,-179,0},
+		{"worrt",300,3662.9,5,-4612.5,-26,0},
+		{"worrt",300,3651.5,5,-4612,31,0},
+		{"worrt",300,3652.1,5,-4602.8,123,0},
+
+		{"worrt",300,3584.9,5,-4536.4,-19,0},
+		{"worrt",300,3585.7,5,-4530.5,-81,0},
+		{"worrt",300,3573.9,5,-4529.6,108,0},
+		{"worrt",300,3580.5,5,-4544.8,34,0},
 	}
 }
 
@@ -373,11 +430,12 @@ registerScreenPlay("TatooineMosEisleyScreenPlay", true)
 
 function TatooineMosEisleyScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -404,88 +462,3 @@ function TatooineMosEisleyScreenPlay:spawnSceneObjects()
 	spawnSceneObject(self.planet, "object/static/structure/general/droid_21bmedical_powerdown.iff", -24.2, 1.0, -9.2, 1188001, math.rad(70) )
 end
 
-function TatooineMosEisleyScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, 3271.49, 5, -4797.09, 52, 0)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
-	end
-	pNpc = spawnMobile(self.planet, "junk_dealer", 0, -31.1, -0.5, 7.1, 31, 1082887)
-	if pNpc ~= nil then
-		AiAgent(pNpc):setConvoTemplate("junkDealerArmsConvoTemplate")
-	end
-
-	--Creatures
-	--[[
-	spawnMobile(self.planet, "minor_worrt",300,3863.8,5,-4809.5,170,0)
-	spawnMobile(self.planet, "minor_worrt",300,3857.8,5,-4814.4,127,0)
-	spawnMobile(self.planet, "minor_worrt",300,3856.5,5,-4826.1,45,0)
-	spawnMobile(self.planet, "minor_worrt",300,3864.6,5,-4826.3,-1,0)
-	spawnMobile(self.planet, "minor_worrt",300,3870.9,5,-4818.6,-74,0)
-	spawnMobile(self.planet, "minor_worrt",300,3867.6,5,-4811.8,-128,0)
-
-	spawnMobile(self.planet, "rill",300,3851.3,5,-4725,-175,0)
-	spawnMobile(self.planet, "rill",300,3845.2,5,-4734.8,36,0)
-	spawnMobile(self.planet, "tempest_rill",300,3855,5,-4733,53,0)
-
-	spawnMobile(self.planet, "rockmite",300,3957.1,5,-4739.8,67,0)
-	spawnMobile(self.planet, "rockmite",300,3964.5,5,-4744.8,11,0)
-	spawnMobile(self.planet, "rockmite",300,3970.4,5,-4739.3,-72,0)
-	spawnMobile(self.planet, "rockmite",300,3966.1,5,-4731.9,-135,0)
-
-	spawnMobile(self.planet, "rockmite",300,3979.2,5,-4824.1,-174,0)
-	spawnMobile(self.planet, "rockmite",300,3972.4,5,-4829,110,0)
-	spawnMobile(self.planet, "rockmite",300,3973.6,5,-4836.5,35,0)
-	spawnMobile(self.planet, "rockmite",300,3981.7,5,-4836.7,-23,0)
-
-	spawnMobile(self.planet, "rockmite",300,3597.7,11.6,-5046,156,0)
-	spawnMobile(self.planet, "rockmite",300,3593,11.6,-5050.2,93,0)
-	spawnMobile(self.planet, "rockmite",300,3597.7,13.2,-5055.8,14,0)
-	spawnMobile(self.planet, "rockmite",300,3602.2,11.3,-5049.7,-80,0)
-
-	spawnMobile(self.planet, "rockmite",300,3859.5,5.5,-4919.3,25,0)
-	spawnMobile(self.planet, "rockmite",300,3865.8,5,-4919.4,-2,0)
-	spawnMobile(self.planet, "rockmite",300,3867.8,5,-4912,-110,0)
-	spawnMobile(self.planet, "rockmite",300,3860.9,5,-4909,130,0)
-
-	spawnMobile(self.planet, "rockmite",300,3765.2,5,-4651.9,-163,0)
-	spawnMobile(self.planet, "rockmite",300,3758.3,5,-4654.4,120,0)
-	spawnMobile(self.planet, "rockmite",300,3763.3,5,-4660.2,18,0)
-	spawnMobile(self.planet, "rockmite",300,3767.8,5,-4657.5,-80,0)
-
-	spawnMobile(self.planet, "rockmite",300,3767.7,5,-4913.8,-44,0)
-	spawnMobile(self.planet, "rockmite",300,3768.4,5,-4907,-107,0)
-	spawnMobile(self.planet, "rockmite",300,3760.2,5,-4905.1,148,0)
-	spawnMobile(self.planet, "rockmite",300,3760.4,5,-4912.9,54,0)
-
-	spawnMobile(self.planet, "worrt",300,3659.4,5,-4601.8,-179,0)
-	spawnMobile(self.planet, "worrt",300,3662.9,5,-4612.5,-26,0)
-	spawnMobile(self.planet, "worrt",300,3651.5,5,-4612,31,0)
-	spawnMobile(self.planet, "worrt",300,3652.1,5,-4602.8,123,0)
-
-	spawnMobile(self.planet, "worrt",300,3584.9,5,-4536.4,-19,0)
-	spawnMobile(self.planet, "worrt",300,3585.7,5,-4530.5,-81,0)
-	spawnMobile(self.planet, "worrt",300,3573.9,5,-4529.6,108,0)
-	spawnMobile(self.planet, "worrt",300,3580.5,5,-4544.8,34,0)
-	]]
-end

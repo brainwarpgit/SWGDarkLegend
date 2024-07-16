@@ -7,6 +7,7 @@
 
 
 #include "SharedStructureObjectTemplate.h"
+#include "server/globalVariables.h"
 
 
 void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
@@ -14,18 +15,22 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	lotSize = templateData->getByteField("lotSize");
 
-	baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate");
+	baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate") * globalVariables::structureBaseMaintenanceRateMultiplier;
 
-	basePowerRate = templateData->getIntField("basePowerRate");
+	basePowerRate = templateData->getIntField("basePowerRate") * globalVariables::structureBasePowerRateMultiplier;
+	
+	if (globalVariables::structureAllowAllZonesEnabled == true) {
+		allowedZones = {"corellia", "talus", "dathomir", "endor", "lok", "naboo", "rori", "tatooine", "yavin4", "dantooine"};
+	} else {
+		LuaObject allowzones = templateData->getObjectField("allowedZones");
+		allowedZones.removeAll(); //Make sure it's empty...
 
-	LuaObject allowzones = templateData->getObjectField("allowedZones");
-	allowedZones.removeAll(); //Make sure it's empty...
+		for (int i = 1; i <= allowzones.getTableSize(); ++i) {
+			allowedZones.put(allowzones.getStringAt(i));
+		}
 
-	for (int i = 1; i <= allowzones.getTableSize(); ++i) {
-		allowedZones.put(allowzones.getStringAt(i));
+		allowzones.pop();
 	}
-
-	allowzones.pop();
 
 	cityRankRequired = templateData->getByteField("cityRankRequired");
 
@@ -35,7 +40,8 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	uniqueStructure = templateData->getBooleanField("uniqueStructure");
 
-	cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase");
+	cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase") * globalVariables::cityMaintenanceBaseMultiplier;
 
-	cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate");
+	cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate") * globalVariables::cityMaintenanceRateMultiplier;
+
 }

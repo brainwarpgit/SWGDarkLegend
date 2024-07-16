@@ -28,42 +28,39 @@ BlueleafTempleScreenPlay = ScreenPlay:new {
 		}					
 	},
 	
-	lootContainerRespawn = 1800 -- 30 minutes
+	lootContainerRespawn = 1800, -- 30 minutes
+	
+	ScreenPSpawns = {
+		-- Outside Temple	
+		{"yavin4", "kliknik_dark_hunter_poiYavin4BlueleafTemple",600,-895.6,84.8,-2059,-139,0},
+		{"yavin4", "kliknik_dark_hunter_poiYavin4BlueleafTemple",600,-896.2,84.8,-2064.1,42,0},
+		{"yavin4", "kliknik_dark_hunter_poiYavin4BlueleafTemple",600,-892.3,84.8,-2062.4,-109,0},
+		{"yavin4", "kliknik_dark_hunter_poiYavin4BlueleafTemple",600,-884.4,84.8,-2026.1,-96,0},
+		{"yavin4", "kliknik_dark_hunter_poiYavin4BlueleafTemple",600,-888.5,84.8,-2023.3,155,0},
+		{"yavin4", "kliknik_dark_hunter_poiYavin4BlueleafTemple",600,-888.6,84.8,-2028.8,35,0},
+		-- Inside Temple
+		{"yavin4", "kliknik_dark_defender_poiYavin4BlueleafTemple",600,-9,-37.3,-9,48,468319},
+		{"yavin4", "kliknik_dark_defender_poiYavin4BlueleafTemple",600,-10.5,-37.3,4.2,111,468319},
+		{"yavin4", "kliknik_dark_defender_poiYavin4BlueleafTemple",600,6.6,-37.3,12.8,-149,468319},
+		{"yavin4", "kliknik_dark_defender_poiYavin4BlueleafTemple",600,10.2,-37.3,4.8,-110,468319},
+		{"yavin4", "kliknik_dark_defender_poiYavin4BlueleafTemple",600,10.9,-37.3,-3.9,-69,468319},
+		{"yavin4", "kliknik_dark_defender_poiYavin4BlueleafTemple",600,-12.1,-37.3,18.2,74,468319},
+		{"yavin4", "kliknik_dark_queen_poiYavin4BlueleafTemple",600,-0.6,-37.3,-28.3,-19,468319},
+		{"yavin4", "kliknik_dark_worker_poiYavin4BlueleafTemple",600,-24,-1.3,10.3,93,468319},
+		{"yavin4", "kliknik_dark_worker_poiYavin4BlueleafTemple",600,-16.4,-1.3,-21,49,468319},
+		{"yavin4", "kliknik_dark_worker_poiYavin4BlueleafTemple",600,12.1,-1.3,-23.4,21,468319},
+		{"yavin4", "kliknik_dark_worker_poiYavin4BlueleafTemple",600,23.4,-1.3,11,-77,468319},
+		{"yavin4", "kliknik_dark_warrior_poiYavin4BlueleafTemple",600,12.4,-1.3,32.4,-93,468318},
+		{"yavin4", "kliknik_dark_warrior_poiYavin4BlueleafTemple",600,-12.8,-1.3,32,93,468318},
+	}
 }
 
 registerScreenPlay("BlueleafTempleScreenPlay", true)
 
 function BlueleafTempleScreenPlay:start()
 	if (isZoneEnabled("yavin4")) then
-		self:spawnMobiles()
+		self:spawnScreenPMobiles()
 		self:initializeLootContainers()
 	end
 end
 
-function BlueleafTempleScreenPlay:spawnMobiles()
-	-- Outside Temple	
-	spawnMobile("yavin4", "kliknik_dark_hunter",600,-895.6,84.8,-2059,-139,0)
-	spawnMobile("yavin4", "kliknik_dark_hunter",600,-896.2,84.8,-2064.1,42,0)
-	spawnMobile("yavin4", "kliknik_dark_hunter",600,-892.3,84.8,-2062.4,-109,0)
-	spawnMobile("yavin4", "kliknik_dark_hunter",600,-884.4,84.8,-2026.1,-96,0)
-	spawnMobile("yavin4", "kliknik_dark_hunter",600,-888.5,84.8,-2023.3,155,0)
-	spawnMobile("yavin4", "kliknik_dark_hunter",600,-888.6,84.8,-2028.8,35,0)
-	
-	-- Inside Temple
-	spawnMobile("yavin4", "kliknik_dark_defender",600,-9,-37.3,-9,48,468319)
-	spawnMobile("yavin4", "kliknik_dark_defender",600,-10.5,-37.3,4.2,111,468319)
-	spawnMobile("yavin4", "kliknik_dark_defender",600,6.6,-37.3,12.8,-149,468319)
-	spawnMobile("yavin4", "kliknik_dark_defender",600,10.2,-37.3,4.8,-110,468319)
-	spawnMobile("yavin4", "kliknik_dark_defender",600,10.9,-37.3,-3.9,-69,468319)
-	spawnMobile("yavin4", "kliknik_dark_defender",600,-12.1,-37.3,18.2,74,468319)
-	
-	spawnMobile("yavin4", "kliknik_dark_queen",600,-0.6,-37.3,-28.3,-19,468319)
-	
-	spawnMobile("yavin4", "kliknik_dark_worker",600,-24,-1.3,10.3,93,468319)
-	spawnMobile("yavin4", "kliknik_dark_worker",600,-16.4,-1.3,-21,49,468319)
-	spawnMobile("yavin4", "kliknik_dark_worker",600,12.1,-1.3,-23.4,21,468319)
-	spawnMobile("yavin4", "kliknik_dark_worker",600,23.4,-1.3,11,-77,468319)
-	
-	spawnMobile("yavin4", "kliknik_dark_warrior",600,12.4,-1.3,32.4,-93,468318)
-	spawnMobile("yavin4", "kliknik_dark_warrior",600,-12.8,-1.3,32,93,468318)
-end

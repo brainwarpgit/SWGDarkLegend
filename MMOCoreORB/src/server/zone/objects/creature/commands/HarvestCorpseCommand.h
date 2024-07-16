@@ -9,6 +9,7 @@
 #include "server/zone/objects/creature/ai/Creature.h"
 #include "server/zone/managers/creature/CreatureManager.h"
 #include "server/zone/Zone.h"
+#include "server/globalVariables.h"
 
 class HarvestCorpseCommand : public QueueCommand {
 public:
@@ -101,9 +102,45 @@ public:
 
 			ManagedReference<CreatureManager*> manager = cr->getZone()->getCreatureManager();
 			manager->harvest(cr, player, type);
+			
+			if (globalVariables::harvestAreaEnabled == true) {
+			
+				Zone* zone = creature->getZone();
+
+				SortedVector<TreeEntry*> closeObjects;
+				CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) creature->getCloseObjects();
+				if (closeObjectsVector == nullptr) {
+					zone->getInRangeObjects(creature->getWorldPositionX(), creature->getWorldPositionZ(), creature->getWorldPositionY(), globalVariables::harvestDistance, &closeObjects, true);
+				} else {
+					closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
+				}
+
+				for (int i = 0; i < closeObjects.size(); ++i) {
+					SceneObject* obj = static_cast<SceneObject*>(closeObjects.get(i));
+
+					if (obj == nullptr)
+						continue;
+
+					if (obj->getObjectID() == creature->getObjectID())
+						continue;
+
+					CreatureObject* c = obj->asCreatureObject();
+
+					if (c == nullptr || c->isPlayerCreature() || !c->isDead() || !c->isCreature())
+						continue;
+
+					if (!creature->isInRange(c, globalVariables::harvestDistance))//distance
+						continue;
+
+					Creature* cr2 = cast<Creature*>( c);
+					Locker clocker(cr2, player);
+
+					ManagedReference<CreatureManager*> manager2 = cr2->getZone()->getCreatureManager();
+					manager2->harvest(cr2, player, type);
+
+				}
+			}
 		}
-
-
 		return SUCCESS;
 	}
 

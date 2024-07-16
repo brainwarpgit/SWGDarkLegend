@@ -9,6 +9,7 @@
 #include "templates/tangible/ArmorObjectTemplate.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
 #include "templates/tangible/SharedWeaponObjectTemplate.h"
+#include "server/globalVariables.h"
 
 void ArmorObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -133,9 +134,7 @@ void ArmorObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cre
 	if ((isSpecial(SharedWeaponObjectTemplate::ELECTRICITY) || isVulnerable(SharedWeaponObjectTemplate::ELECTRICITY)) && getElectricity() >= 0.5) {
 		StringBuffer txt;
 		txt << Math::getPrecision(getElectricity(),1) << "%";
-		alm->insertAttribute(
-				"cat_armor_special_protection.armor_eff_elemental_electrical",
-				txt.toString());
+		alm->insertAttribute("cat_armor_special_protection.armor_eff_elemental_electrical", txt.toString());
 	}
 
 	if ((isSpecial(SharedWeaponObjectTemplate::STUN) || isVulnerable(SharedWeaponObjectTemplate::STUN)) &&  getStun() >= 0.5) {
@@ -196,8 +195,7 @@ void ArmorObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cre
 	if (!isSpecial(SharedWeaponObjectTemplate::STUN) && (!isVulnerable(SharedWeaponObjectTemplate::STUN) && getStun() >= 0.5)) {
 		StringBuffer txt;
 		txt << Math::getPrecision(getStun(),1) << "%";
-		alm->insertAttribute("cat_armor_effectiveness.armor_eff_stun",
-				txt.toString());
+		alm->insertAttribute("cat_armor_effectiveness.armor_eff_stun", txt.toString());
 	}
 
 	if (!isSpecial(SharedWeaponObjectTemplate::BLAST) && !isVulnerable(SharedWeaponObjectTemplate::BLAST) && getBlast() >= 0.5) {
@@ -273,6 +271,19 @@ void ArmorObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cre
 
 	if (sliced)
 		alm->insertAttribute("arm_attr", "@obj_attr_n:hacked");
+
+	if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", level);
+	if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+	String lootQualityString = "Base";
+	if (lootQuality == 4 ) {
+		lootQualityString = "Legendary";
+	} else if (lootQuality == 3) {
+		lootQualityString = "Exceptional";
+	} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
+		lootQualityString = globalVariables::lootYellowModifierName;
+	}
+	if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
+
 }
 
 bool ArmorObjectImplementation::isVulnerable(int type) const {
@@ -281,28 +292,51 @@ bool ArmorObjectImplementation::isVulnerable(int type) const {
 
 float ArmorObjectImplementation::getTypeValue(int type, float value) const {
 	int newValue = 0;
-
 	if (vulnerabilites & type)
 		newValue = value;
-
 	else if (isSpecial(type)) {
 		newValue = specialProtection + value;
-
-		if (newValue > 80)
-			newValue = 80;
+		if (newValue > globalVariables::playerMaxArmorUnSliced) {
+			newValue = globalVariables::playerMaxArmorUnSliced;
+		}
 	} else {
 		newValue = baseProtection + value;
 		newValue *= effectivenessSlice;
-
-		if(sliced && effectivenessSlice > 1) {
-			if(newValue > 90)
-				newValue = 90;
+		if (sliced && effectivenessSlice > 1) {
+			if(newValue > globalVariables::playerMaxArmorSliced)
+				newValue = globalVariables::playerMaxArmorSliced;
 		} else {
-			if(newValue > 80)
-				newValue = 80;
+			if (type & SharedWeaponObjectTemplate::KINETIC) {
+				if (newValue > globalVariables::craftingKineticMaxResists) newValue = globalVariables::craftingKineticMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::ENERGY) {
+				if (newValue > globalVariables::craftingEnergyMaxResists) newValue = globalVariables::craftingEnergyMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::BLAST) {
+				if (newValue > globalVariables::craftingBlastMaxResists) newValue = globalVariables::craftingBlastMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::HEAT) {
+				if (newValue > globalVariables::craftingHeatMaxResists) newValue = globalVariables::craftingHeatMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::COLD) {
+				if (newValue > globalVariables::craftingColdMaxResists) newValue = globalVariables::craftingColdMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::ELECTRICITY) {
+				if (newValue > globalVariables::craftingElectricityMaxResists) newValue = globalVariables::craftingElectricityMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::ACID) {
+				if (newValue > globalVariables::craftingAcidMaxResists) newValue = globalVariables::craftingAcidMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::STUN) {
+				if (newValue > globalVariables::craftingStunMaxResists) newValue = globalVariables::craftingStunMaxResists;
+			}
+			if (type & SharedWeaponObjectTemplate::LIGHTSABER) {
+				if (newValue > globalVariables::craftingLightsaberMaxResists) newValue = globalVariables::craftingLightsaberMaxResists;
+			}
+			if(newValue > globalVariables::playerMaxArmorUnSliced)
+				newValue = globalVariables::playerMaxArmorUnSliced;
 		}
 	}
-
 	return newValue;
 }
 
@@ -399,6 +433,17 @@ void ArmorObjectImplementation::updateCraftingValues(CraftingValues* values, boo
 		specialProtection = values->getCurrentValue("armor_effectiveness");
 	else
 		specialProtection = values->getCurrentValue("armor_special_effectiveness");
+		
+	if (values->hasExperimentalAttribute("level")) {
+		level = values->getCurrentValue("level");
+	}
+	if (values->hasExperimentalAttribute("modifier")) {
+		modifier = values->getCurrentValue("modifier");
+	}
+	if (values->hasExperimentalAttribute("lootQuality")) {
+		lootQuality = values->getCurrentValue("lootQuality");
+	}
+
 }
 
 void ArmorObjectImplementation::calculateSpecialProtection(CraftingValues* craftingValues) {

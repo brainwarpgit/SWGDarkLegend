@@ -123,6 +123,36 @@ NabooMoeniaScreenPlay = CityScreenPlay:new {
 		{"trainer_doctor",0,-25,0.26,-4,180,1717506, ""},
 		{"trainer_medic",0,-17.2255,0.26,-1.2311,150,1717506, ""},
 		{"trainer_medic",0,16.6671,0.26,5.91467,177,1717502, ""}
+	},
+
+	citySpawns = {
+		--Outside
+		{"mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+		{"mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+		{"mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0},
+
+		--newb grind starter spawns
+		{"diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0},
+		{"diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0},
+		{"diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0},
+		{"mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0},
 	}
 }
 
@@ -130,11 +160,12 @@ registerScreenPlay("NabooMoeniaScreenPlay", true)
 
 function NabooMoeniaScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
+		self:spawnCityMobiles()
 	end
 end
 
@@ -144,53 +175,3 @@ function NabooMoeniaScreenPlay:spawnSceneObjects()
 	spawnSceneObject(self.planet, "object/tangible/crafting/station/public_space_station.iff", 4789.74, 4.17, -4709.03, 0, math.rad(125) )
 end
 
-function NabooMoeniaScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-
-	--Outside
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_punk", 300, getRandomNumber(10) + 4856.8, 4.2, getRandomNumber(10) + -4701.5, getRandomNumber(360), 0)
-
-	--newb grind starter spawns
-	--[[spawnMobile(self.planet, "diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "diseased_nuna", 300, getRandomNumber(10) + 4599.2, 5.0, getRandomNumber(10) + -4806.4, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "gungan_hermit", 300, getRandomNumber(10) + 4782, 4.2, getRandomNumber(10) + -4526, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "hermit_spider", 300, getRandomNumber(10) + 4635, 5.4, getRandomNumber(10) + -4542, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mott", 300, getRandomNumber(10) + 4577, 6.5, getRandomNumber(10) + -4622, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)
-	spawnMobile(self.planet, "mummer_thug", 300, getRandomNumber(10) + 4681, 4.0, getRandomNumber(10) + -4730, getRandomNumber(360), 0)]]
-end

@@ -12,6 +12,7 @@
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
 #include "server/zone/objects/structure/StructureObject.h"
 #include "server/zone/objects/area/CampSiteActiveArea.h"
+#include "server/globalVariables.h"
 
 SkillModManager::SkillModManager()
 		: Logger("SkillModManager") {
@@ -49,9 +50,15 @@ void SkillModManager::init() {
 			LuaObject entry = skillLimits.getObjectAt(i);
 
 			uint32 type = entry.getIntAt(1);
-			int min = entry.getIntAt(2);
-			int max = entry.getIntAt(3);
-
+			int min = 0;
+			int max = 0;
+			if (type == 4097) {
+				min = entry.getIntAt(2);
+				max = globalVariables::lootAttachmentMax;
+			} else {
+				min = entry.getIntAt(2);
+				max = entry.getIntAt(3);
+			}
 			skillModMin.put(type, min);
 			skillModMax.put(type, max);
 

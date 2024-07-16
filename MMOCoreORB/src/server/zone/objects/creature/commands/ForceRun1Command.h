@@ -6,6 +6,7 @@
 #define FORCERUN1COMMAND_H_
 
 #include "JediQueueCommand.h"
+#include "server/globalVariables.h"
 
 class ForceRun1Command : public JediQueueCommand {
 public:
@@ -29,8 +30,13 @@ public:
 		int res = creature->hasBuff(buffCRC) ? NOSTACKJEDIBUFF : doJediSelfBuffCommand(creature);
 
 		if (res == NOSTACKJEDIBUFF) {
-			creature->sendSystemMessage("@jedi_spam:already_force_running"); // You are already force running.
-			return GENERALERROR;
+			if (globalVariables::playerJediForceRunToggleEnabled == false) {
+				creature->sendSystemMessage("@jedi_spam:already_force_running"); // You are already force running.
+				return GENERALERROR;
+			} else {
+				creature->sendSystemMessage("You feel the Force leave your body, and you return to normal movement speed."); // Toggle Force Run off.
+				creature->removeBuff(BuffCRC::JEDI_FORCE_RUN_1);
+			}
 		}
 		// Return if something is in error.
 		if (res != SUCCESS) {

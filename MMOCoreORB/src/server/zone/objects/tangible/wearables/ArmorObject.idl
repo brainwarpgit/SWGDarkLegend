@@ -18,6 +18,10 @@ class ArmorObject extends WearableObject {
 	protected int actionEncumbrance;
 	protected int mindEncumbrance;
 
+	protected int level;
+	protected float modifier;
+	protected int lootQuality;
+	
 	protected int rating;
 
 	protected float kinetic;

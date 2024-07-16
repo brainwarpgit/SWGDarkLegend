@@ -94,6 +94,15 @@ function RecruiterConvoHandler:runScreenHandlers(pConvTemplate, pPlayer, pNpc, s
 			screenObject:setDialogTextTO("faction_recruiter", getRankName(rank))
 			screenObject:setDialogTextDI(requiredPoints)
 		else
+			local faction = recruiterScreenplay:getRecruiterFaction(pNpc)
+			local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+			if (faction == "rebel" and rank == 21) then
+				CreatureObject(pPlayer):sendSystemMessage("You have been awarded the Rebel Command BARC Speeder.  Thank you for your service to the Rebellion")
+				--local pItem = giveItem(pInventory, "object/tangible/deed/vehicle_deed/barc_speeder_rebel_deed.iff", -1)
+			elseif (faction == "imperial" and rank == 21) then
+				CreatureObject(pPlayer):sendSystemMessage("You have been awarded the Imperial Command BARC Speeder.  LONG LIVE THE EMPIRE!!!")
+				--local pItem = giveItem(pInventory, "object/tangible/deed/vehicle_deed/barc_speeder_imperial_deed.iff", -1)
+			end
 			PlayerObject(pGhost):decreaseFactionStanding(recruiterScreenplay:getRecruiterFaction(pNpc), requiredPoints)
 			CreatureObject(pPlayer):setFactionRank(rank)
 		end

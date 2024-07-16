@@ -81,7 +81,7 @@ object_tangible_wearables_armor_marine_armor_marine_helmet = object_tangible_wea
 				"object/mobile/vendor/zabrak_male.iff" },
 
 	-- Damage types in WeaponObject
-	vulnerability = ACID + HEAT + STUN + LIGHTSABER,
+	vulnerability = LIGHTSABER,
 
 	-- These are default Blue Frog stats
 	healthEncumbrance = 15,
@@ -96,7 +96,7 @@ object_tangible_wearables_armor_marine_armor_marine_helmet = object_tangible_wea
 	kinetic = 30,
 	energy = 30,
 	electricity = 30,
-	stun = 0,
+	stun = 15,
 	blast = 30,
 	heat = 0,
 	cold = 30,

@@ -12,6 +12,7 @@
 #include "GenericResponse.h"
 #include "server/zone/packets/harvester/HarvesterObjectMessage7.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 class EmptyHopperCallback : public MessageCallback {
 	uint64 harvesterId;
@@ -100,8 +101,8 @@ public:
 				return;
 			}
 
-			if (byte1 == 0 && quantity > ResourceContainer::MAXSIZE) {
-				quantity = ResourceContainer::MAXSIZE;
+			if (byte1 == 0 && quantity > globalVariables::resourcesContainerSize) {
+				quantity = globalVariables::resourcesContainerSize;
 			}
 
 			if (byte1 == 1) {
@@ -112,8 +113,8 @@ public:
 				if(newQuantity < 0)
 					newQuantity = 0;
 
-				if(newQuantity > ResourceContainer::MAXSIZE)
-					newQuantity = ResourceContainer::MAXSIZE;
+				if(newQuantity > globalVariables::resourcesContainerSize)
+					newQuantity = globalVariables::resourcesContainerSize;
 
 				inso->updateResourceContainerQuantity(container, newQuantity, true);
 			} else if (byte1 == 0) {

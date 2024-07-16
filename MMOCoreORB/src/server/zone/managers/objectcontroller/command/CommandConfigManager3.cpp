@@ -333,6 +333,7 @@
 #include "server/zone/objects/creature/commands/StrafeShot1Command.h"
 #include "server/zone/objects/creature/commands/StrafeShot2Command.h"
 #include "server/zone/objects/creature/commands/StructurestatusCommand.h"
+#include "server/zone/objects/creature/commands/FsVillageCommand.h"
 #include "server/zone/objects/creature/commands/StunAttackCommand.h"
 
 using namespace server::zone::managers::objectcontroller::command;
@@ -633,5 +634,6 @@ void CommandConfigManager::registerCommands3() {
 	commandFactory.registerCommand<StrafeShot1Command>(String("strafeShot1").toLowerCase());
 	commandFactory.registerCommand<StrafeShot2Command>(String("strafeShot2").toLowerCase());
 	commandFactory.registerCommand<StructurestatusCommand>(String("structurestatus").toLowerCase());
+	commandFactory.registerCommand<FsVillageCommand>(String("fsvillage").toLowerCase());
 	commandFactory.registerCommand<StunAttackCommand>(String("stunAttack").toLowerCase());
 }

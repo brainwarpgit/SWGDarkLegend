@@ -13,7 +13,7 @@ powerSwitchCount = 7
 resetTimer = 1209600
 
 -- amount of time in seconds to wait when a slice fails
-sliceCooldown = 120
+sliceCooldown = 60
 
 dnaNucleotides = { "A", "G", "C", "T" }
 dnaPairs = { "AT", "TA", "GC", "CG" }
@@ -70,7 +70,7 @@ spawnBaseAlarms = false
 bonusXP = 15
 
 -- Crackdown settings
-crackdownScansEnabled = true
+crackdownScansEnabled = false
 
 -- thresholds for scaling crackdown npc's difficulty, first threshold should always be 0.
 difficutlyScalingThresholds = {0, 64}
@@ -97,7 +97,7 @@ spawnDefenses = 1
 -- Amount of time to delay vulnerability in seconds afer placing base
 initialVulnerabilityDelay = 0
 
-racialPenaltyEnabled = 1
+racialPenaltyEnabled = 0
 
 -- assign points to each type of base
 -- s01=Forward Outpost, s02 = Field Hospital , s03 = Tactical Center, s04 = Detach HQ

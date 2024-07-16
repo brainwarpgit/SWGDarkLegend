@@ -3,7 +3,7 @@
 		See file COPYING for copying conditions.*/
 
 #include "server/zone/objects/tangible/component/Component.h"
-
+#include "server/globalVariables.h"
 
 void ComponentImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -98,6 +98,19 @@ void ComponentImplementation::fillAttributeList(AttributeListMessage* alm, Creat
 			displayvalue.deleteAll();
 		}
 	}
+	if (useCountOnly == 0) {
+		if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", level);
+		if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+		String lootQualityString = "Base";
+		if (lootQuality == 4 ) {
+			lootQualityString = "Legendary";
+		} else if (lootQuality == 3) {
+			lootQualityString = "Exceptional";
+		} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
+			lootQualityString = globalVariables::lootYellowModifierName;
+		}
+		if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
+	}
 }
 
 float ComponentImplementation::getAttributeValue(const String& attributeName){
@@ -145,29 +158,45 @@ void ComponentImplementation::updateCraftingValues(CraftingValues* values, bool 
 	}
 
 	// info(true) << "ComponentImplementation::updateCraftingValues called with total attributes #" << values->getTotalExperimentalAttributes();
+	if (values->hasExperimentalAttribute("useCountOnly")) {
+		useCountOnly = values->getCurrentValue("useCountOnly");
+	} else {
+		useCountOnly = 0;
+	}
+	if (useCountOnly == 0) {	
+		for (int i = 0; i < values->getTotalExperimentalAttributes(); ++i) {
+			attribute = values->getAttribute(i);
 
-	for (int i = 0; i < values->getTotalExperimentalAttributes(); ++i) {
-		attribute = values->getAttribute(i);
+			// info(true) << "updateCraftingValues -- #" << i << " Attribute: " << attribute;
 
-		// info(true) << "updateCraftingValues -- #" << i << " Attribute: " << attribute;
+			if (attribute == "useCount") {
+				continue;
+			}
+			
+			value = values->getCurrentValue(attribute);
+			precision = values->getPrecision(attribute);
+			group = values->getAttributeGroup(attribute);
+			hidden = values->isHidden(attribute);
 
-		if (attribute == "useCount")
-			continue;
+			if (!hasKey(attribute))
+				keyList.add(attribute);
 
-		value = values->getCurrentValue(attribute);
-		precision = values->getPrecision(attribute);
-		group = values->getAttributeGroup(attribute);
-		hidden = values->isHidden(attribute);
+			attributeMap.put(attribute, value);
+			precisionMap.put(attribute, precision);
+			titleMap.put(attribute, group);
 
-		if (!hasKey(attribute))
-			keyList.add(attribute);
-
-		attributeMap.put(attribute, value);
-		precisionMap.put(attribute, precision);
-		titleMap.put(attribute, group);
-
-		if (firstUpdate)
-			hiddenMap.put(attribute, hidden);
+			if (firstUpdate)
+				hiddenMap.put(attribute, hidden);
+		}
+		if (values->hasExperimentalAttribute("level")) {
+			level = values->getCurrentValue("level");
+		}
+		if (values->hasExperimentalAttribute("modifier")) {
+			modifier = values->getCurrentValue("modifier");
+		}
+		if (values->hasExperimentalAttribute("lootQuality")) {
+			lootQuality = values->getCurrentValue("lootQuality");
+		}
 	}
 }
 

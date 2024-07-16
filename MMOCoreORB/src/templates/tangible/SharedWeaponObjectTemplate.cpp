@@ -212,6 +212,10 @@ void SharedWeaponObjectTemplate::readObject(LuaObject* templateData) {
 	toughMods.pop();
 
 	armorPiercing = templateData->getIntField("armorPiercing");
+	
+	level = templateData->getIntField("level");
+	modifier = templateData->getFloatField("modifier");
+	lootQuality = templateData->getIntField("lootQuality");
 
 	healthAttackCost = templateData->getIntField("healthAttackCost");
 	actionAttackCost = templateData->getIntField("actionAttackCost");

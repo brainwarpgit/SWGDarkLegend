@@ -21,6 +21,7 @@
 #include "server/zone/objects/mission/events/FailMissionAfterCertainTimeTask.h"
 #include "events/CompleteMissionObjectiveTask.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
 
 void MissionObjectiveImplementation::destroyObjectFromDatabase() {
 	for (int i = 0; i < observers.size(); ++i) {
@@ -53,10 +54,10 @@ void MissionObjectiveImplementation::activate() {
 
 		activated = true;
 		int64 timeElapsed = missionStartTime.miliDifference();
-		int64 missionDuration = MISSIONDURATION;
+		int64 missionDuration = globalVariables::missionExpirationTime * 60 * 60 * 1000;
 
 		if (mission->getTypeCRC() == MissionTypes::BOUNTY) {
-			missionDuration = ConfigManager::instance()->getInt("Core3.MissionManager.BountyExpirationTime", MISSIONDURATION);
+			missionDuration = globalVariables::missionBountyExpirationTime * 60 * 60 * 1000;
 		}
 
 		int64 timeRemaining = missionDuration - timeElapsed;

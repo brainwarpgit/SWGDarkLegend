@@ -288,7 +288,7 @@ function CorvetteTicketGiverLogic:giveReward(pPlayer)
 		return
 	end
 
-	local pItem = giveItem(pInventory, "object/tangible/loot/loot_schematic/corellian_corvette_landspeeder_av21_schematic.iff", -1)
+	local pItem = giveItem(pInventory, "object/tangible/component/vehicle/veh_power_plant_av21.iff", -1)
 
 	if pItem ~= nil then
 		SceneObject(pItem):sendTo(pPlayer)

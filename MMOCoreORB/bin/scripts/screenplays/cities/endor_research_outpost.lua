@@ -61,26 +61,19 @@ EndorResearchOutpostScreenPlay = CityScreenPlay:new {
 		{1, 3221.86, 24, -3473.87, 251.839, 0, ""},
 		{1, 3228.48, 24, -3510.48, 15.5858, 0, ""},
 	},
+	
+	mobiles = {
+		{"kilnstrider",60,-3.44448,0.624999,-6.82681,331.362,9925367,"npc_imperial"},
+	}
 }
 
 registerScreenPlay("EndorResearchOutpostScreenPlay", true)
 
 function EndorResearchOutpostScreenPlay:start()
 	if (isZoneEnabled("endor")) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnPatrolMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
-function EndorResearchOutpostScreenPlay:spawnMobiles()
-	--tavern building
-	pNpc = spawnMobile("endor", "kilnstrider",60,-3.44448,0.624999,-6.82681,331.362,9925367)
-	if pNpc ~= nil then
-		self:setMoodString(pNpc, "npc_imperial")
-
-		if CreatureObject(pNpc):getPvpStatusBitmask() == 0 and CreatureObject(pNpc):getOptionsBitmask() > 0 then
-			CreatureObject(pNpc):clearOptionBit(AIENABLED)
-		end
-	end
-end

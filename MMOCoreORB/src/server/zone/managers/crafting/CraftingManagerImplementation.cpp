@@ -7,6 +7,7 @@
 #include "server/zone/managers/crafting/labratories/ResourceLabratory.h"
 #include "server/zone/managers/crafting/labratories/GeneticLabratory.h"
 #include "server/zone/managers/crafting/labratories/DroidLabratory.h"
+#include "server/globalVariables.h"
 
 void CraftingManagerImplementation::initialize() {
 	schematicMap = SchematicMap::instance();
@@ -60,75 +61,132 @@ int CraftingManagerImplementation::getCreationCount(ManufactureSchematic* manufa
 	return lab->getCreationCount(manufactureSchematic);
 }
 
-int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObject* player,
-		DraftSchematic* draftSchematic, float effectiveness) {
-
-	float cityBonus = player->getSkillMod("private_spec_experimentation");
-
-	int experimentationSkill = player->getSkillMod(draftSchematic->getExperimentationSkill());
-	int forceSkill = player->getSkillMod("force_experimentation");
-	experimentationSkill += forceSkill;
-
-	float experimentingPoints = ((float)experimentationSkill) / 10.0f;
-
-	int failMitigate = (player->getSkillMod(draftSchematic->getAssemblySkill()) - 100 + cityBonus) / 7;
-	failMitigate += player->getSkillMod("force_failure_reduction");
-
-	if(failMitigate < 0)
-		failMitigate = 0;
-	if(failMitigate > 5)
-		failMitigate = 5;
-
-	// 0.85-1.15
-	float toolModifier = 1.0f + (effectiveness / 100.0f);
-
-	//Bespin Port
-	float expbonus = 0;
-	if (player->hasBuff(BuffCRC::FOOD_EXPERIMENT_BONUS)) {
-		Buff* buff = player->getBuff(BuffCRC::FOOD_EXPERIMENT_BONUS);
-
-		if (buff != nullptr) {
-			expbonus = buff->getSkillModifierValue("experiment_bonus");
-			toolModifier *= 1.0f + (expbonus / 100.0f);
+int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObject* player, DraftSchematic* draftSchematic, float effectiveness) {
+	if (globalVariables::craftingNewExperimentEnabled == true) {
+		float cityBonus = std::min(player->getSkillMod("private_spec_experimentation"),20);
+		float experimentationSkill = std::min(player->getSkillMod(draftSchematic->getExperimentationSkill()),125);
+		float forceBonus = std::min(player->getSkillMod("force_experimentation"),45);
+		float luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+		float craftBonus = 0;
+		if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
+			Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
+			if (buff != nullptr) {
+				craftBonus = buff->getSkillModifierValue("experiment_bonus");
+			}
 		}
+		float luckSkill = System::random(125) + luckRoll + effectiveness + cityBonus + forceBonus + craftBonus;
+		experimentationSkill += luckRoll + effectiveness + cityBonus + forceBonus + craftBonus;
+		float failMitigate = std::min(player->getSkillMod("force_failure_reduction"),10);
+		float failRoll = System::random(experimentationSkill + luckRoll + effectiveness + cityBonus + forceBonus + craftBonus + 100);	
+		float toolModifier = 1.0f + (effectiveness / 10);	
+		float failSkill = toolModifier * ((failRoll / 10) + failMitigate);
+
+	//	player->sendSystemMessage("cityBonus " + std::to_string(cityBonus));
+	//	player->sendSystemMessage("forceBonus " + std::to_string(forceBonus));
+	//	player->sendSystemMessage("luckRoll " + std::to_string(luckRoll));
+	//	player->sendSystemMessage("craftBonus " + std::to_string(craftBonus));
+	//	player->sendSystemMessage("effectiveness " + std::to_string(effectiveness));
+	//	player->sendSystemMessage("luckSkill " + std::to_string(luckSkill));
+	//	player->sendSystemMessage("experimentationSkill " + std::to_string(experimentationSkill));
+	//	player->sendSystemMessage("failMitigate " + std::to_string(failMitigate));
+	//	player->sendSystemMessage("failRoll " + std::to_string(failRoll));	
+	//	player->sendSystemMessage("toolModifier " + std::to_string(toolModifier));	
+	//	player->sendSystemMessage("failSkill " + std::to_string(failSkill));
+		
+		if(failSkill < 10) {
+			return CRITICALFAILURE;
+		}
+
+		if (experimentationSkill >= 140 || luckSkill >= 140)
+			return AMAZINGSUCCESS;
+
+		if (experimentationSkill >= 120 || luckSkill >= 120)
+			return GREATSUCCESS;
+
+		if (experimentationSkill >= 100 || luckSkill >= 100)
+			return GOODSUCCESS;
+
+		if (experimentationSkill >= 80 || luckSkill >= 80)
+			return MODERATESUCCESS;
+
+		if (experimentationSkill >= 60 || luckSkill >= 60)
+			return SUCCESS;
+
+		if (experimentationSkill >= 40 || luckSkill >= 40)
+			return MARGINALSUCCESS;
+
+		if (experimentationSkill >= 20 || luckSkill >= 20)
+			return OK;
+
+		return BARELYSUCCESSFUL;
+	} else {
+		float cityBonus = player->getSkillMod("private_spec_experimentation");
+
+		int experimentationSkill = player->getSkillMod(draftSchematic->getExperimentationSkill());
+		int forceSkill = player->getSkillMod("force_experimentation");
+		experimentationSkill += forceSkill;
+
+		float experimentingPoints = ((float)experimentationSkill) / 10.0f;
+
+		int failMitigate = (player->getSkillMod(draftSchematic->getAssemblySkill()) - 100 + cityBonus) / 7;
+		failMitigate += player->getSkillMod("force_failure_reduction");
+
+		if(failMitigate < 0)
+			failMitigate = 0;
+		if(failMitigate > 5)
+			failMitigate = 5;
+
+		// 0.85-1.15
+		float toolModifier = 1.0f + (effectiveness / 100.0f);
+
+		//Bespin Port
+		float expbonus = 0;
+		if (player->hasBuff(BuffCRC::FOOD_EXPERIMENT_BONUS)) {
+			Buff* buff = player->getBuff(BuffCRC::FOOD_EXPERIMENT_BONUS);
+
+			if (buff != nullptr) {
+				expbonus = buff->getSkillModifierValue("experiment_bonus");
+				toolModifier *= 1.0f + (expbonus / 100.0f);
+			}
+		}
+
+		/// Range 0-100
+		int luckRoll = System::random(100) + cityBonus;
+
+		if(luckRoll > ((95 - expbonus) - forceSkill))
+			return AMAZINGSUCCESS;
+
+		if(luckRoll < (5 - expbonus - failMitigate))
+			luckRoll -= System::random(100);
+
+		//if(luckRoll < 5)
+		//	return CRITICALFAILURE;
+
+		luckRoll += System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
+
+		///
+		int experimentRoll = (toolModifier * (luckRoll + (experimentingPoints * 4)));
+
+		if (experimentRoll > 70)
+			return GREATSUCCESS;
+
+		if (experimentRoll > 60)
+			return GOODSUCCESS;
+
+		if (experimentRoll > 50)
+			return MODERATESUCCESS;
+
+		if (experimentRoll > 40)
+			return SUCCESS;
+
+		if (experimentRoll > 30)
+			return MARGINALSUCCESS;
+
+		if (experimentRoll > 20)
+			return OK;
+
+		return BARELYSUCCESSFUL;
 	}
-
-	/// Range 0-100
-	int luckRoll = System::random(100) + cityBonus;
-
-	if(luckRoll > ((95 - expbonus) - forceSkill))
-		return AMAZINGSUCCESS;
-
-	if(luckRoll < (5 - expbonus - failMitigate))
-		luckRoll -= System::random(100);
-
-	//if(luckRoll < 5)
-	//	return CRITICALFAILURE;
-
-	luckRoll += System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
-
-	///
-	int experimentRoll = (toolModifier * (luckRoll + (experimentingPoints * 4)));
-
-	if (experimentRoll > 70)
-		return GREATSUCCESS;
-
-	if (experimentRoll > 60)
-		return GOODSUCCESS;
-
-	if (experimentRoll > 50)
-		return MODERATESUCCESS;
-
-	if (experimentRoll > 40)
-		return SUCCESS;
-
-	if (experimentRoll > 30)
-		return MARGINALSUCCESS;
-
-	if (experimentRoll > 20)
-		return OK;
-
-	return BARELYSUCCESSFUL;
 }
 
 String CraftingManagerImplementation::generateSerial() {

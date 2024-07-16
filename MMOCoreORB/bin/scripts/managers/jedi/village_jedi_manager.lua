@@ -6,7 +6,7 @@ jediManagerName = "VillageJediManager"
 
 NOTINABUILDING = 0
 
-NUMBEROFTREESTOMASTER = 6
+NUMBEROFTREESTOMASTER = 16
 
 VillageJediManager = JediManager:new {
 	screenplayName = jediManagerName,
@@ -100,19 +100,19 @@ end
 
 --Check for force skill prerequisites
 function VillageJediManager:canLearnSkill(pPlayer, skillName)
-	if string.find(skillName, "force_sensitive") ~= nil then
-		local index = string.find(skillName, "0")
-		if index ~= nil then
-			local skillNameFinal = string.sub(skillName, 1, string.len(skillName) - 3)
-			if CreatureObject(pPlayer):getScreenPlayState("VillageUnlockScreenPlay:" .. skillNameFinal) < 2 then
-				return false
-			end
-		end
-	end
+--	if string.find(skillName, "force_sensitive") ~= nil then
+--		local index = string.find(skillName, "0")
+--		if index ~= nil then
+--			local skillNameFinal = string.sub(skillName, 1, string.len(skillName) - 3)
+--			if CreatureObject(pPlayer):getScreenPlayState("VillageUnlockScreenPlay:" .. skillNameFinal) < 2 then
+--				return false
+--			end
+--		end
+--	end
 
-	if skillName == "force_title_jedi_rank_01" and CreatureObject(pPlayer):getForceSensitiveSkillCount(false) < 24 then
-		return false
-	end
+--	if skillName == "force_title_jedi_rank_01" and CreatureObject(pPlayer):getForceSensitiveSkillCount(false) < 24 then
+--		return false
+--	end
 
 	if skillName == "force_title_jedi_rank_03" and not CreatureObject(pPlayer):villageKnightPrereqsMet("") then
 		return false
@@ -129,10 +129,10 @@ function VillageJediManager:canSurrenderSkill(pPlayer, skillName)
 		return false
 	end
 
-	if string.find(skillName, "force_sensitive_") and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02") and CreatureObject(pPlayer):getForceSensitiveSkillCount(false) <= 24 then
-		CreatureObject(pPlayer):sendSystemMessage("@jedi_spam:revoke_force_sensitive")
-		return false
-	end
+--	if string.find(skillName, "force_sensitive_") and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02") and CreatureObject(pPlayer):getForceSensitiveSkillCount(false) <= 24 then
+--		CreatureObject(pPlayer):sendSystemMessage("@jedi_spam:revoke_force_sensitive")
+--		return false
+--	end
 
 	if string.find(skillName, "force_discipline_") and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_03") and not CreatureObject(pPlayer):villageKnightPrereqsMet(skillName) then
 		return false

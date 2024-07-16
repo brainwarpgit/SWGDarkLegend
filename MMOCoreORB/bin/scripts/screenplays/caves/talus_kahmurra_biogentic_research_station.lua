@@ -27,32 +27,33 @@ TalusKahmurraBiogenticResearchStationScreenPlay = ScreenPlay:new {
                 }
         },
 
-        lootContainerRespawn = 1800
+	lootContainerRespawn = 1800, -- 30 minutes
+	
+	ScreenPSpawns = {
+		{"talus", "rabid_mutant_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -5.1, -13.8, -14.9, 80, 4795365},
+		{"talus", "frenzied_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 0.6, -13.8, -9.6, -7, 4795365},
+		{"talus", "frenzied_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 0.5, -13.8, -0.5, 300, 4795365},
+		{"talus", "frenzied_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -6.1, -13.8, -8.6, -118, 4795365},
+		{"talus", "rabid_mutant_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 5.8, -6.8, -1.8, 160, 4795363},
+		{"talus", "frenzied_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 7.8, -6.8, -14.1, -79, 4795362},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 1.3, -6.8, -13.1, 280, 4795362},
+		{"talus", "frenzied_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -6.0, -6.8, -14.1, 32, 4795362},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -2.7, -6.8, -6.2, 124, 4795361},
+		{"talus", "frenzied_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -6.8, -6.8, -7.5, -120, 4795361},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -4.5, -6.8, -0.3, 0, 4795361},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 2.4, 0.3, -3.8, -93, 4795359},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, 0.2, 0.3, 7.6, -1, 4795357},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -4796.3, 16.6, -4753.1, 122, 0},
+		{"talus", "genetically_enchanced_kahmurra_caveTalusKaymurraBiogenticResearchStation", 300, -4780.3, 17.2, -4737.9, 41, 0},
+	}
 }
 
 registerScreenPlay("TalusKahmurraBiogenticResearchStationScreenPlay", true)
 
 function TalusKahmurraBiogenticResearchStationScreenPlay:start()
 	if (isZoneEnabled("talus")) then
-                self:spawnMobiles()
-                self:initializeLootContainers()
+ 		self:initializeLootContainers()
+		self:spawnScreenPMobiles()
         end
 end
 
-function TalusKahmurraBiogenticResearchStationScreenPlay:spawnMobiles()
-	spawnMobile("talus", "rabid_mutant_kahmurra", 300, -5.1, -13.8, -14.9, 80, 4795365)
-	spawnMobile("talus", "frenzied_kahmurra", 300, 0.6, -13.8, -9.6, -7, 4795365)
-	spawnMobile("talus", "frenzied_kahmurra", 300, 0.5, -13.8, -0.5, 300, 4795365)
-	spawnMobile("talus", "frenzied_kahmurra", 300, -6.1, -13.8, -8.6, -118, 4795365)
-	spawnMobile("talus", "rabid_mutant_kahmurra", 300, 5.8, -6.8, -1.8, 160, 4795363)
-	spawnMobile("talus", "frenzied_kahmurra", 300, 7.8, -6.8, -14.1, -79, 4795362)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, 1.3, -6.8, -13.1, 280, 4795362)
-	spawnMobile("talus", "frenzied_kahmurra", 300, -6.0, -6.8, -14.1, 32, 4795362)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, -2.7, -6.8, -6.2, 124, 4795361)
-	spawnMobile("talus", "frenzied_kahmurra", 300, -6.8, -6.8, -7.5, -120, 4795361)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, -4.5, -6.8, -0.3, 0, 4795361)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, 2.4, 0.3, -3.8, -93, 4795359)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, 0.2, 0.3, 7.6, -1, 4795357)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, -4796.3, 16.6, -4753.1, 122, 0)
-	spawnMobile("talus", "genetically_enchanced_kahmurra", 300, -4780.3, 17.2, -4737.9, 41, 0)
-end
