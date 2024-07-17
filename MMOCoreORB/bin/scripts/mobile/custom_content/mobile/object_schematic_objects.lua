@@ -3604,11 +3604,11 @@ object_mobile_shared_lifeday_monkey_lizard = SharedDraftSchematicObjectTemplate:
 
 ObjectTemplates:addClientTemplate(object_mobile_shared_lifeday_monkey_lizard, "object/mobile/shared_lifeday_monkey_lizard.iff")
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-object_mobile_shared_lifeday_monkey_lizard_2 = SharedDraftSchematicObjectTemplate:new {
+object_mobile_shared_lifeday_monkey_lizard_02 = SharedDraftSchematicObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_lifeday_monkey_lizard_2.iff"
 }
 
-ObjectTemplates:addClientTemplate(object_mobile_shared_lifeday_monkey_lizard_2, "object/mobile/shared_lifeday_monkey_lizard_2.iff")
+ObjectTemplates:addClientTemplate(object_mobile_shared_lifeday_monkey_lizard_02, "object/mobile/shared_lifeday_monkey_lizard_2.iff")
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 object_mobile_shared_lifeday_saun_dann = SharedDraftSchematicObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_lifeday_saun_dann.iff"
@@ -5560,17 +5560,17 @@ object_mobile_shared_union_sentry_droid_crafted = SharedDraftSchematicObjectTemp
 
 ObjectTemplates:addClientTemplate(object_mobile_shared_union_sentry_droid_crafted, "object/mobile/shared_union_sentry_droid_crafted.iff")
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-object_mobile_shared_uwari_beetle_aggro_1 = SharedDraftSchematicObjectTemplate:new {
+object_mobile_shared_uwari_beetle_aggro_01 = SharedDraftSchematicObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_uwari_beetle_aggro_1.iff"
 }
 
-ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_1, "object/mobile/shared_uwari_beetle_aggro_1.iff")
+ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_01, "object/mobile/shared_uwari_beetle_aggro_1.iff")
 ----------------------------------------------------------------------------------------------------------------------------------------------------
-object_mobile_shared_uwari_beetle_aggro_2 = SharedDraftSchematicObjectTemplate:new {
+object_mobile_shared_uwari_beetle_aggro_02 = SharedDraftSchematicObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_uwari_beetle_aggro_2.iff"
 }
 
-ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_2, "object/mobile/shared_uwari_beetle_aggro_2.iff")
+ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_02, "object/mobile/shared_uwari_beetle_aggro_2.iff")
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 object_mobile_shared_veers = SharedDraftSchematicObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_veers.iff"

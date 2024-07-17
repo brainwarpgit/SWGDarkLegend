@@ -21,8 +21,8 @@ includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/urnsoris_soldi
 includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/urnsoris_worker.lua")
 includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/urnsoris_young.lua")
 includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_beetle_aggro.lua")
-includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_beetle_aggro_1.lua")
-includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_beetle_aggro_2.lua")
+includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_beetle_aggro_01.lua")
+includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_beetle_aggro_02.lua")
 includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_beetle_domestic.lua")
 includeFile("custom_content/kashyyyk/dead_forest/myyydril_caverns/uwari_deathswarm.lua")
 

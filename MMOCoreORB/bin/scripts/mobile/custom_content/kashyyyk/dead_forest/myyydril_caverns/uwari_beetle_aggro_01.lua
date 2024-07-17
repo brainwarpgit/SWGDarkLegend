@@ -1,5 +1,5 @@
-uwari_beetle_aggro_2 = Creature:new {
-	customName = "uwari_beetle_aggro_2",
+uwari_beetle_aggro_01 = Creature:new {
+	customName = "uwari_beetle_aggro_01",
 	socialGroup = "townsperson",
 	faction = "",
 	mobType = MOB_NPC,
@@ -29,7 +29,7 @@ uwari_beetle_aggro_2 = Creature:new {
 	customAiMap = "",
 
 	templates = {
-		"object/mobile/uwari_beetle_aggro_2.iff"
+		"object/mobile/uwari_beetle_aggro_1.iff"
 	},
 
 	lootGroups = {
@@ -47,4 +47,4 @@ uwari_beetle_aggro_2 = Creature:new {
 	conversationTemplate = ""
 }
 
-CreatureTemplates:addCreatureTemplate(uwari_beetle_aggro_2, "uwari_beetle_aggro_2")
+CreatureTemplates:addCreatureTemplate(uwari_beetle_aggro_01, "uwari_beetle_aggro_01")

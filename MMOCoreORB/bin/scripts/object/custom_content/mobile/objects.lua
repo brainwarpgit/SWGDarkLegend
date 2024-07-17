@@ -9278,11 +9278,11 @@ ObjectTemplates:addClientTemplate(object_mobile_shared_lifeday_monkey_lizard, "o
 ------------------------------------------------------------------------------------------------------------------------------------
 
 
-object_mobile_shared_lifeday_monkey_lizard_2 = SharedCreatureObjectTemplate:new {
+object_mobile_shared_lifeday_monkey_lizard_02 = SharedCreatureObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_lifeday_monkey_lizard_2.iff"
 }
 
-ObjectTemplates:addClientTemplate(object_mobile_shared_lifeday_monkey_lizard_2, "object/mobile/shared_lifeday_monkey_lizard_2.iff")
+ObjectTemplates:addClientTemplate(object_mobile_shared_lifeday_monkey_lizard_02, "object/mobile/shared_lifeday_monkey_lizard_2.iff")
 ------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -11886,19 +11886,19 @@ ObjectTemplates:addClientTemplate(object_mobile_shared_union_sentry_droid_crafte
 ------------------------------------------------------------------------------------------------------------------------------------
 
 
-object_mobile_shared_uwari_beetle_aggro_1 = SharedCreatureObjectTemplate:new {
+object_mobile_shared_uwari_beetle_aggro_01 = SharedCreatureObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_uwari_beetle_aggro_1.iff"
 }
 
-ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_1, "object/mobile/shared_uwari_beetle_aggro_1.iff")
+ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_01, "object/mobile/shared_uwari_beetle_aggro_1.iff")
 ------------------------------------------------------------------------------------------------------------------------------------
 
 
-object_mobile_shared_uwari_beetle_aggro_2 = SharedCreatureObjectTemplate:new {
+object_mobile_shared_uwari_beetle_aggro_02 = SharedCreatureObjectTemplate:new {
 	clientTemplateFileName = "object/mobile/shared_uwari_beetle_aggro_2.iff"
 }
 
-ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_2, "object/mobile/shared_uwari_beetle_aggro_2.iff")
+ObjectTemplates:addClientTemplate(object_mobile_shared_uwari_beetle_aggro_02, "object/mobile/shared_uwari_beetle_aggro_2.iff")
 ------------------------------------------------------------------------------------------------------------------------------------
 
 

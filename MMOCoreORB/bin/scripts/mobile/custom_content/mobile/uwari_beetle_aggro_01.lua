@@ -1,5 +1,5 @@
-uwari_beetle_aggro_1 = Creature:new {
-	customName = "uwari_beetle_aggro_1",
+uwari_beetle_aggro_01 = Creature:new {
+	customName = "uwari_beetle_aggro_01",
 	socialGroup = "townsperson",
 	faction = "",
 	mobType = MOB_NPC,
@@ -47,4 +47,4 @@ uwari_beetle_aggro_1 = Creature:new {
 	conversationTemplate = ""
 }
 
-CreatureTemplates:addCreatureTemplate(uwari_beetle_aggro_1, "uwari_beetle_aggro_1")
+CreatureTemplates:addCreatureTemplate(uwari_beetle_aggro_01, "uwari_beetle_aggro_01")

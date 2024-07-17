@@ -1,5 +1,5 @@
-lifeday_monkey_lizard_2 = Creature:new {
-	customName = "lifeday_monkey_lizard_2",
+lifeday_monkey_lizard_02 = Creature:new {
+	customName = "lifeday_monkey_lizard_02",
 	socialGroup = "townsperson",
 	faction = "",
 	mobType = MOB_NPC,
@@ -47,4 +47,4 @@ lifeday_monkey_lizard_2 = Creature:new {
 	conversationTemplate = ""
 }
 
-CreatureTemplates:addCreatureTemplate(lifeday_monkey_lizard_2, "lifeday_monkey_lizard_2")
+CreatureTemplates:addCreatureTemplate(lifeday_monkey_lizard_02, "lifeday_monkey_lizard_02")
