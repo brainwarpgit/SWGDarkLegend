@@ -721,8 +721,16 @@ void PlayerCreationManager::addProfessionStartingItems(CreatureObject* creature,
 	//Reference<Skill*> startingSkill = SkillManager::instance()->getSkill("crafting_artisan_novice");
 
 	//Starting skill.
-	SkillManager::instance()->awardSkill(startingSkill->getSkillName(),
-			creature, false, true, true);
+	if (globalVariables::playerCreationGrantAllNoviceSkillsEnabled == false) {
+		SkillManager::instance()->awardSkill(startingSkill->getSkillName(), creature, false, true, true);
+	} else {
+		SkillManager::instance()->awardSkill("crafting_artisan_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("social_entertainer_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("combat_brawler_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("combat_marksman_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("outdoors_scout_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("science_medic_novice", creature, false, true, true);
+	}			
 
 	if (globalVariables::playerCreationAllLanguagesEnabled == true) {
 		SkillManager::instance()->awardSkill("social_language_basic_speak", creature, true, true, true);

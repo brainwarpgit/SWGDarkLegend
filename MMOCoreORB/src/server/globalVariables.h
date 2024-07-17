@@ -287,6 +287,7 @@ namespace globalVariables {
 	extern int playerCreationNewCreationTime;
 	extern bool playerCreationAllLanguagesEnabled;
 	extern bool playerCreationJoinGalaxyChatEnabled;
+	extern bool playerCreationGrantAllNoviceSkillsEnabled;
 
 //Player Payments
 	extern bool playerPaymentCashAndBankEnabled;

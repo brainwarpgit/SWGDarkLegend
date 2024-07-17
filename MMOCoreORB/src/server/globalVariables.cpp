@@ -285,6 +285,7 @@ namespace globalVariables {
 	int playerCreationNewCreationTime = 60;
 	bool playerCreationAllLanguagesEnabled = false;
 	bool playerCreationJoinGalaxyChatEnabled = false;
+	bool playerCreationGrantAllNoviceSkillsEnabled = false;
 
 //Player Payments
 	bool playerPaymentCashAndBankEnabled = false;
@@ -673,6 +674,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
 			if (lua->getGlobalBoolean("playerCreationJoinGalaxyChatEnabled") == true || lua->getGlobalBoolean("playerCreationJoinGalaxyChatEnabled") == false) playerCreationJoinGalaxyChatEnabled = lua->getGlobalBoolean("playerCreationJoinGalaxyChatEnabled");
+			if (lua->getGlobalBoolean("playerCreationGrantAllNoviceSkillsEnabled") == true || lua->getGlobalBoolean("playerCreationGrantAllNoviceSkillsEnabled") == false) playerCreationGrantAllNoviceSkillsEnabled = lua->getGlobalBoolean("playerCreationGrantAllNoviceSkillsEnabled");
 
 			//Player Payments
 			if (lua->getGlobalBoolean("playerPaymentCashAndBankEnabled") == true || lua->getGlobalBoolean("playerPaymentCashAndBankEnabled") == false) playerPaymentCashAndBankEnabled = lua->getGlobalBoolean("playerPaymentCashAndBankEnabled");

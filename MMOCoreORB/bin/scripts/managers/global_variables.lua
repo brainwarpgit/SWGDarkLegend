@@ -282,6 +282,7 @@ playerSpeedMultiplier = 2 --default 1
 playerCreationNewCreationTime = 5 --default 60 in minutes
 playerCreationAllLanguagesEnabled = true --default false
 playerCreationJoinGalaxyChatEnabled = true --default false
+playerCreationGrantAllNoviceSkillsEnabled = true --default false
 
 --Player Payments
 playerPaymentCashAndBankEnabled = true --default false Auction/CityManager/Structure/RepairVehicle
