@@ -132,3 +132,15 @@ object_tangible_deed_player_house_deed_shared_yt1300_house_deed = SharedTangible
 	clientTemplateFileName = "object/tangible/deed/player_house_deed/shared_yt1300_house_deed.iff"
 }
 ObjectTemplates:addClientTemplate(object_tangible_deed_player_house_deed_shared_yt1300_house_deed, "object/tangible/deed/player_house_deed/shared_yt1300_house_deed.iff")
+--Barn Player House Deed
+object_tangible_deed_player_house_deed_shared_barn_no_planet_restriction_deed = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/deed/player_house_deed/shared_barn_no_planet_restriction_deed.iff"
+}
+ObjectTemplates:addClientTemplate(object_tangible_deed_player_house_deed_shared_barn_no_planet_restriction_deed, "object/tangible/deed/player_house_deed/shared_barn_no_planet_restriction_deed.iff")
+
+--Diner Player House Deed
+object_tangible_deed_player_house_deed_shared_diner_no_planet_restriction_deed = SharedTangibleObjectTemplate:new {
+	clientTemplateFileName = "object/tangible/deed/player_house_deed/shared_diner_no_planet_restriction_deed.iff"
+}
+ObjectTemplates:addClientTemplate(object_tangible_deed_player_house_deed_shared_diner_no_planet_restriction_deed, "object/tangible/deed/player_house_deed/shared_diner_no_planet_restriction_deed.iff")
+

@@ -2,7 +2,7 @@
 includeFile("custom_content/building/player/city/serverobjects.lua")
 
 -- Server Objects
-includeFile("custom_content/building/player/player_house_atat.lua")
+--[[includeFile("custom_content/building/player/player_house_atat.lua")
 includeFile("custom_content/building/player/player_house_generic_large_window_s01.lua")
 includeFile("custom_content/building/player/player_house_generic_large_window_s02.lua")
 includeFile("custom_content/building/player/player_house_generic_medium_windowed.lua")
@@ -29,7 +29,7 @@ includeFile("custom_content/building/player/player_house_tree_house_01.lua")
 includeFile("custom_content/building/player/player_house_wod_ns_hut.lua")
 includeFile("custom_content/building/player/player_house_wod_sm_hut.lua")
 includeFile("custom_content/building/player/player_house_yt1300.lua")
-includeFile("custom_content/building/player/player_mustafar_house_lg.lua")
+includeFile("custom_content/building/player/player_mustafar_house_lg.lua")--]]
 
 includeFile("custom_content/building/player/atat_house.lua")
 includeFile("custom_content/building/player/bespin_house.lua")
@@ -47,7 +47,7 @@ includeFile("custom_content/building/player/jedi_house.lua")
 includeFile("custom_content/building/player/musty_house.lua")
 includeFile("custom_content/building/player/ns_hut_house.lua")
 includeFile("custom_content/building/player/nab_small_win_01.lua")
-includeFile("custom_content/building/player/player_pgc_merchant_tent_s01.lua")
+--includeFile("custom_content/building/player/player_pgc_merchant_tent_s01.lua")
 includeFile("custom_content/building/player/rebel_house.lua")
 includeFile("custom_content/building/player/relaxation_house.lua")
 includeFile("custom_content/building/player/sandcrawler_house.lua")
