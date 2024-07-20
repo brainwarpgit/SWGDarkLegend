@@ -21,6 +21,7 @@
 #include "server/zone/managers/creature/SpawnLairMobileTask.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/managers/combat/CombatManager.h"
+#include "server/globalVariables.h"
 
 // #define DEBUG_WILD_LAIRS
 // #define DEBUG_LAIR_HEALING
@@ -672,7 +673,14 @@ void LairObserverImplementation::spawnLairMobile(LairObject* lair, int spawnNumb
 	}
 
 	if (creature == nullptr) {
-		creature = creatureManager->spawnCreatureWithAi(lairTemplateCRC, x, z, y);
+		String templateName = creatureTemplate->getTemplateName();
+		int creatureRoll = System::random(1000);
+		int creatureDifficulty = 1;
+		if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
+		if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+		if (creatureDifficulty == 2) templateName += "_2";
+		if (creatureDifficulty == 3) templateName += "_3";
+		creature = creatureManager->spawnCreatureWithAi(templateName.hashCode(), x, z, y);
 	}
 
 	if (creature == nullptr || !creature->isAiAgent()) {
