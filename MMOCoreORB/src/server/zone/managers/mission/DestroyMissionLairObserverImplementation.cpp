@@ -18,7 +18,7 @@ void DestroyMissionLairObserverImplementation::checkForHeal(TangibleObject* lair
 		return;
 	}
 
-	LairObserverImplementation::checkForHeal(lair, attacker, forceNewUpdate);
+	LairObserverImplementation::checkForHeal(lair, forceNewUpdate);
 }
 
 bool DestroyMissionLairObserverImplementation::checkForNewSpawns(TangibleObject* lair, TangibleObject* attacker, bool forceSpawn) {
@@ -64,6 +64,18 @@ bool DestroyMissionLairObserverImplementation::checkForNewSpawns(TangibleObject*
 	// Lair limit is double due to "milking"
 	if (lairObject->isRepopulated()) {
 		spawnLimit *= 2;
+	}
+
+	// Schedule the aggro task
+	if (attacker != nullptr && attacker->isCreatureObject() && lastAggroTime.isPast()) {
+		lastAggroTime.updateToCurrentTime();
+		lastAggroTime.addMiliTime(LairObserver::AGGRO_CHECK_INTERVAL * 1000);
+
+		auto aggroTask = new LairAggroTask(lairObject, attacker, _this.getReferenceUnsafeStaticCast(), false);
+
+		if (aggroTask != nullptr) {
+			aggroTask->schedule(LairObserver::AGGRO_TASK_DELAY * 1000);
+		}
 	}
 
 #ifdef DEBUG_MISSION_LAIRS
@@ -206,12 +218,21 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 	float y = lair->getPositionY() + (size - System::random(size * 20) / 10.0f);
 	float z = zone->getHeight(x, y);
 
+	bool spawnScout = false;
+
+	if (getMobType() == LairTemplate::CREATURE && scoutCreatureId == 0 && (System::random(100) <= LairObserver::SCOUT_SPAWN_CHANCE)) {
+		spawnScout = true;
+	}
+
 	ManagedReference<CreatureObject*> creature = nullptr;
 
 	if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, LairObserver::BABY_SPAWN_CHANCE)) {
 		creature = creatureManager->spawnCreatureAsBaby(lairTemplateCRC, x, z, y);
 
 		babiesSpawned++;
+
+		// Don't spawn baby as a scout
+		spawnScout = false;
 	}
 
 	if (creature == nullptr) {
@@ -242,6 +263,15 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 	agent->setRespawnTimer(0);
 	agent->setHomeObject(lair);
 	agent->setLairTemplateCRC(lairTemplateCRC);
+
+	if (spawnScout) {
+		agent->addObjectFlag(ObjectFlag::SCOUT);
+		agent->setAITemplate();
+
+		agent->setCustomObjectName(agent->getDisplayedName() + " (scout)", true);
+
+		scoutCreatureId = agent->getObjectID();
+	}
 
 	spawnedCreatures.add(agent);
 
