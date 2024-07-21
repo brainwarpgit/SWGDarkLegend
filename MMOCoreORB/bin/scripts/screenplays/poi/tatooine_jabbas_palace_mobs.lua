@@ -49,6 +49,9 @@ function TatooineJabbasPalaceMobsScreenPlay:start()
 	if (isZoneEnabled("tatooine")) then
 		spawnSceneObject("tatooine","object/tangible/instrument/organ_max_rebo.iff", -11, 2, 36, 1177487, 0.0707,0,0.0707,0)
 		--spawnSceneObject("tatooine", "object/tangible/instrument/instrument_organ_max_rebo.iff", -11.1, 2, 36.2, 1177487, 0.9974847113288691, 0, -0.07088194879630508, 0)
+		spawnSceneObject("tatooine","object/tangible/travel/ticket_collector/ticket_collector.iff", -6178.7, 90,-6388 , 0, math.rad(80))
+		spawnSceneObject("tatooine","object/tangible/terminal/terminal_travel.iff", -6179.1, 90, -6384.7, 0, math.rad(80))
+		spawnSceneObject("tatooine", "object/creature/npc/theme_park/lambda_shuttle.iff", -6186.0, 90, -6370, 0, math.rad(265))
 		self:spawnMobiles()
 		self:spawnStatics()
 	end

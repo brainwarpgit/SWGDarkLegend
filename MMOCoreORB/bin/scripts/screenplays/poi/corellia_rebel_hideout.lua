@@ -262,6 +262,11 @@ registerScreenPlay("RebelHideoutScreenPlay", true)
 
 function RebelHideoutScreenPlay:start()
 	if (isZoneEnabled("corellia")) then
+		spawnSceneObject("corellia", "object/tangible/travel/ticket_collector/ticket_collector.iff", -6529.2, 398, 6041.9 , 0, math.rad(165))
+		spawnSceneObject("corellia", "object/tangible/terminal/terminal_travel.iff", -6521.0, 398, 6044.3, 0, math.rad(165))
+		spawnSceneObject("corellia", "object/creature/npc/theme_park/lambda_shuttle.iff", -6528.87, 398, 6048.43, 0, math.rad(73))
+		--spawnSceneObject("corellia", "object/static/structure/general/landing_pad_shuttle.iff", 5425, 78.5, -4166, 0 , math.rad(185))
+		
 		self:spawnScreenPMobiles()
 		self:spawnSceneObjects()
 	end

@@ -42,7 +42,9 @@
 
 
 object_creature_npc_theme_park_lambda_shuttle = object_creature_npc_theme_park_shared_lambda_shuttle:new {
-
+	optionsBitmask = 256,
+	groundZoneComponent = "ShuttleZoneComponent",
+	species = 216
 }
 
 ObjectTemplates:addTemplate(object_creature_npc_theme_park_lambda_shuttle, "object/creature/npc/theme_park/lambda_shuttle.iff")

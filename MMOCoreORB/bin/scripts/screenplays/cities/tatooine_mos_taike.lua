@@ -122,6 +122,7 @@ end
 
 function TatooineMosTaikeScreenPlay:spawnSceneObjects()
 
+	spawnSceneObject(self.planet, "object/building/tatooine/shuttleport_tatooine.iff", 3775.6, 7.5, 2285.8, 0 ,math.rad(90))
 	--Tavern
 	spawnSceneObject(self.planet, "object/static/structure/general/droid_r2_powerdown.iff", 5.5, 1.0, 10.3, 1154121, math.rad(180) )
 	spawnSceneObject(self.planet, "object/static/structure/general/all_foodcart_s01.iff", -7.1, -4.0, -6.1, 1154126, math.rad(180) )

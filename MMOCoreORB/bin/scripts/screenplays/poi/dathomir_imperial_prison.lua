@@ -348,6 +348,11 @@ registerScreenPlay("ImperialPrisonScreenPlay", true)
 
 function ImperialPrisonScreenPlay:start()
 	if (isZoneEnabled("dathomir")) then
+		spawnSceneObject("dathomir", "object/tangible/travel/ticket_collector/ticket_collector.iff", -6241.8, 120, 949.7 , 0, math.rad(260))
+		spawnSceneObject("dathomir", "object/tangible/terminal/terminal_travel.iff", -6239.7, 120, 939.8, 0, math.rad(260))
+		spawnSceneObject("dathomir", "object/creature/npc/theme_park/lambda_shuttle.iff", -6213.3, 120, 949, 0, math.rad(260))
+		--spawnSceneObject("dathomir", "object/static/structure/general/landing_pad_shuttle.iff", -6217, 120, 976, 0 , math.rad(260))
+
  		self:spawnScreenPMobiles()
                 self:initializeLootContainers()
         end

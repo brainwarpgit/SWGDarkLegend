@@ -71,6 +71,7 @@ corellia = {
 		{name = "Doaba Guerfel Starport", x = 3349.8933, z = 308, y = 5598.1362, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
 		{name = "Bela Vistal Shuttleport A", x = 6644.269, z = 330, y = -5922.5225, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 		{name = "Bela Vistal Shuttleport B", x = 6930.8042, z = 330, y = -5534.8936, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Rebel Hideout", x = -6522.4, z = 398, y = 6035.2, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 	},
 
 	jtlTravelPoints = {
@@ -158,8 +159,8 @@ dathomir = {
 	planetTravelPoints = {
 		{name = "Trade Outpost", x = 618.89258, z = 6.039608, y = 3092.0142, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3, cityControlLandingPoint = 0},
 		{name = "Science Outpost", x = -49.021923, z = 18, y = -1584.7278, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3, cityControlLandingPoint = 0},
---		{name = "Imperial Prison", x = -6429.3, z = 120, y = 966.1, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3, cityControlLandingPoint = 0},
-		{name = "Village Shuttle", x = 5395.5, z = 78.5, y = -4162.6, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3, cityControlLandingPoint = 0},
+		{name = "Imperial Prison", x = -6243, z = 120, y = 970, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3, cityControlLandingPoint = 0},
+		{name = "Village Shuttle", x = 5410.4, z = 78.5, y = -4163.9, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3, cityControlLandingPoint = 0},
 	},
 
 	jtlTravelPoints = {
@@ -271,6 +272,7 @@ lok = {
 
 	planetTravelPoints = {
 		{name = "Nym's Stronghold", x = 478.92676, z = 9, y = 5511.9565, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Imperial Outpost", x = -1944.6, z = 12.0, y = -3213.5, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 1},
 	},
 
 	jtlTravelPoints = {
@@ -324,7 +326,8 @@ naboo = {
 		{name = "Dee'ja Peak Shuttleport", x = 5331.9375, z = 327.02765, y = -1576.6733, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 		{name = "Kaadara Starport", x = 5280.2002, z = -192, y = 6688.0498, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
 		{name = "Kaadara Shuttleport", x = 5123.3857, z = -192, y = 6616.0264, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
-		{name = "Emperor's Retreat", x = 2442.8, z = 292.0, y = -3916.8, interplanetaryTravelAllowed = 0, incomingTravelAllowed = 0, landingRange = 3}
+		{name = "Emperor's Retreat", x = 2442.8, z = 292.0, y = -3916.8, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		--{name = "Emperor's Retreat", x = 2434.8, z = 292.0, y = -3937.6, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 1},
 	},
 
 	jtlTravelPoints = {
@@ -565,9 +568,9 @@ tatooine = {
 		{name = "Mos Entha Starport", x = 1266.0996, z = 7, y = 3065.1392, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 6},
 		{name = "Mos Entha Shuttle B", x = 1395.447, z = 7, y = 3467.0117, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 		{name = "Mos Entha Shuttle A", x = 1730.8828, z = 7, y = 3184.6135, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
-		{name = "Jabba's Palace", x = -6192.8, z = 90.0, y = -6449.3, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Jabba's Palace", x = -6178.0, z = 90.0, y = -6364.5, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
 		{name = "Wayfar Shuttleport", x = -5088.2, z = 75, y = -6613.1, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
---		{name = "Mos Taike Shuttleport", x = 3773.7, z = 8.1, y = 2286.0, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 3},
+		{name = "Mos Taike Shuttleport", x = 3774.6, z = 8.4, y = 2306.5, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 1},
 	},
 
 	jtlTravelPoints = {
@@ -681,6 +684,9 @@ dungeon1 = {
 dungeon2 = {
 	weatherEnabled = 0,
 	gcwEnabled = 0,
+	planetTravelPoints = {
+		{name = "Dungeon2", x = -164, z = 1, y = 67, interplanetaryTravelAllowed = 1, incomingTravelAllowed = 1, landingRange = 1},
+	},
 }
 
 creature_test = {

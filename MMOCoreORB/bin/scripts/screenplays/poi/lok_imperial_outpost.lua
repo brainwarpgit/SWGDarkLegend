@@ -274,6 +274,10 @@ registerScreenPlay("LokImperialOutpostScreenPlay", true)
 
 function LokImperialOutpostScreenPlay:start()
 	if (isZoneEnabled("lok")) then
+		spawnSceneObject("lok", "object/tangible/travel/ticket_collector/ticket_collector.iff", -1950.6, 12, -3205.8 , 0, math.rad(180))
+		spawnSceneObject("lok", "object/tangible/terminal/terminal_travel.iff", -1939.6, 12, -3205.8, 0, math.rad(180))
+		spawnSceneObject("lok", "object/creature/npc/theme_park/player_shuttle.iff", -1946.5, 12, -3200, 0, math.rad(90))
+		spawnSceneObject("lok", "object/static/structure/general/landing_pad_shuttle.iff", -1945, 12, -3200, 0 , math.rad(90))
 		self:spawnScreenPMobiles()
 		self:initializeLootContainers()
 	end

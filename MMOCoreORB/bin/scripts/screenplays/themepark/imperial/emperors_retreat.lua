@@ -17,7 +17,9 @@ end
 
 function EmperorsRetreatScreenPlay:spawnSceneObjects()
 	local elevatorUp = spawnSceneObject("naboo", "object/tangible/terminal/terminal_elevator_up.iff", 13, 1, -36, 1418877, 1, 0, 0, 0)
-	spawnSceneObject("naboo", "object/tangible/terminal/terminal_elevator_down.iff", 13, 20.5, -36, 1418877, 1, 0, 0, 0)
+	spawnSceneObject("naboo","object/tangible/travel/ticket_collector/ticket_collector.iff", 2435, 292,-3909 , 0, math.rad(170))
+	spawnSceneObject("naboo","object/tangible/terminal/terminal_travel.iff", 2431.8, 292, -3909.5, 0, math.rad(170))
+	spawnSceneObject("naboo", "object/creature/npc/theme_park/lambda_shuttle.iff", 2426, 250, -3892, 0, math.rad(350))
 
 	if (elevatorUp ~= nil) then
 		SceneObject(elevatorUp):setObjectMenuComponent("EmperorElevatorMenuComponent")

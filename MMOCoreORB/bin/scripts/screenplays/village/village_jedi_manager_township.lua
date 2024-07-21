@@ -210,6 +210,11 @@ function VillageJediManagerTownship:start()
 	if (isZoneEnabled("dathomir")) then
 		Logger:log("Starting the Village Township Screenplay.", LT_INFO)
 
+		spawnSceneObject("dathomir", "object/tangible/travel/ticket_collector/ticket_collector.iff", 5419.6, 78.5, -4161.6 , 0, math.rad(275))
+		spawnSceneObject("dathomir", "object/tangible/terminal/terminal_travel.iff", 5418.9, 78.5, -4170.9, 0, math.rad(275))
+		spawnSceneObject("dathomir", "object/creature/npc/theme_park/player_shuttle.iff", 5425, 78.5, -4164.5, 0, math.rad(185))
+		spawnSceneObject("dathomir", "object/static/structure/general/landing_pad_shuttle.iff", 5425, 78.5, -4166, 0 , math.rad(185))
+
 		local currentPhase = VillageJediManagerTownship.getCurrentPhase()
 		VillageJediManagerTownship.setCurrentPhaseInit()
 		VillageJediManagerTownship:spawnMobiles(currentPhase, true)
