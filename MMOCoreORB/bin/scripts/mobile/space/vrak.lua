@@ -1,19 +1,17 @@
-adwan_turoldine = Creature:new {
-	objectName = "@npc_spawner_n:adwan_turoldine",
+vrak = Creature:new {
+	objectName = "@npc_spawner_n:vrak",
 	socialGroup = "townsperson",
 	faction = "townsperson",
 	mobType = MOB_NPC,
-	level = 100,
-	planetMapCategory = "trainer",
-	planetMapSubCategory = "trainer_pilot_privateer",
-	chanceHit = 1,
-	damageMin = 645,
-	damageMax = 1000,
-	baseXp = 9429,
-	baseHAM = 24000,
-	baseHAMmax = 30000,
+	level = 4,
+	chanceHit = 0.24,
+	damageMin = 40,
+	damageMax = 45,
+	baseXp = 62,
+	baseHAM = 113,
+	baseHAMmax = 138,
 	armor = 0,
-	resists = {0,0,0,0,0,0,0,0,-1},
+	resists = {15,15,15,15,15,15,15,-1,-1},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -24,11 +22,11 @@ adwan_turoldine = Creature:new {
 	tamingChance = 0,
 	ferocity = 0,
 	pvpBitmask = NONE,
-	creatureBitmask = PACK,
-	optionsBitmask = AIENABLED,
+	creatureBitmask = HERD,
+	optionsBitmask = AIENABLED + JTLINTERESTING,
 	diet = HERBIVORE,
 
-	templates = {"object/mobile/space_privateer_tier4_corellia_adwan.iff"},
+	templates = {"object/mobile/dressed_nym_destroyer_rod_m.iff"},		
 	lootGroups = {},
 
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
@@ -36,11 +34,11 @@ adwan_turoldine = Creature:new {
 	primaryWeapon = "unarmed",
 	secondaryWeapon = "none",
 	conversationTemplate = "",
-
+	
 	-- primaryAttacks and secondaryAttacks should be separate skill groups specific to the weapon type listed in primaryWeapon and secondaryWeapon
 	-- Use merge() to merge groups in creatureskills.lua together. If a weapon is set to "none", set the attacks variable to empty brackets
 	primaryAttacks = {},
 	secondaryAttacks = { }
 }
 
-CreatureTemplates:addCreatureTemplate(adwan_turoldine, "adwan_turoldine")
+CreatureTemplates:addCreatureTemplate(vrak, "vrak")

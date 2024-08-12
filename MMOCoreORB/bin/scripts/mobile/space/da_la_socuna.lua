@@ -1,11 +1,11 @@
-shamdon_kree = Creature:new {
-	objectName = "@npc_spawner_n:shamdon_kree",
-	socialGroup = "townsperson",
-	faction = "townsperson",
+da_la_socuna = Creature:new {
+	objectName = "@npc_spawner_n:da_la_socuna",
+	socialGroup = "rebel",
+	faction = "rebel",
 	mobType = MOB_NPC,
-	level = 10,
 	planetMapCategory = "trainer",
-	planetMapSubCategory = "trainer_pilot_privateer",
+	planetMapSubCategory = "trainer_pilot_rebel",
+	level = 10,
 	chanceHit = 0.28,
 	damageMin = 90,
 	damageMax = 110,
@@ -25,10 +25,10 @@ shamdon_kree = Creature:new {
 	ferocity = 0,
 	pvpBitmask = NONE,
 	creatureBitmask = PACK,
-	optionsBitmask = AIENABLED,
+	optionsBitmask = AIENABLED + JTLINTERESTING,
 	diet = HERBIVORE,
 
-	templates = {"object/mobile/space_privateer_tier2_shamdon.iff"},
+	templates = {"object/mobile/space_rebel_tier1_tatooine_socuna.iff"},
 	lootGroups = {},
 
 	-- Primary and secondary weapon should be different types (rifle/carbine, carbine/pistol, rifle/unarmed, etc)
@@ -43,4 +43,4 @@ shamdon_kree = Creature:new {
 	secondaryAttacks = { }
 }
 
-CreatureTemplates:addCreatureTemplate(shamdon_kree, "shamdon_kree")
+CreatureTemplates:addCreatureTemplate(da_la_socuna, "da_la_socuna")

@@ -346,59 +346,16 @@ CorelliaTyrenaScreenPlay = CityScreenPlay:new {
 		{"trainer_scout", 0,-5061.86,21,-2322.52,36,0, ""},
 		{"trainer_weaponsmith", 0,-5106,21,-2324,180,0, ""},
 
-		{"larek_tatham",60,-5050.23,21,-2291.69,113.059,0, "neutral"},
-		{"junk_dealer", 0, -5203.6, 21, -2285.9, -11, 0, ""},
-		{"sullustan_male",60,-5564.23,21,-2777.78,0,0, "nervous"},
+		--JTL Rebel Trainer
+		{"kreezo", 60, -4.4, 0.6, -3.6, -130, 3375654, "neutral"},
 		
-		{"scientist", 60,-5431.41,21,-2685.81,106.943,0,""},
-		{"commoner",60,-5192.9,21,-2545.55,46.5164,0, "calm", "Excited Journalist"},
-		{"commoner",60,15.2091,0.639422,56.8933,284.328,1935687, "calm", "Amarent Loren"},
-		{"jom_irimore",60,-5520,21.3,-2630.99,0,0, "calm", "Jom Irimore"},
-		{"r2",60,-5295.88,21,-2528.24,196.589,0, "calm", "R2-B0"},
-		{"r2",60,-5297.6,21,-2396.69,271.4,0, "calm", "R2-X2"},
-		{"r2",60,-4954.63,21,-2376.82,26.4361,0, "calm", "R2-E3"},
-		{"r3",60,-5312.13,25.7208,-2570.41,64.2735,0, "calm", "R3-X5"},
-		{"r5",60,-5400.32,21,-2614.17,236.816,0, "calm", "R5-S7"},
-		{"r2",60,-13.4312,1.6,-15.4443,7.68027,1935827, "calm", "R2-P9"},
-		{"r3",60,-16.1386,2.25,18.5614,173.343,1935472, "calm", "R3-X8"},
-		{"r5",60,-4954.81,21,-2379.55,166.051,0, "calm", "R5-C7"},
+		--Space Greeters
+		{"larek_tatham", 60, -5050.23, 21, -2291.69, 113.059, 0, "neutral"},
+		{"cll_8_space", 60, -5050, 21, -2288, 145, 0, ""},
+		{"ulaire_roye", 60, -5048.68, 21, -2291.24, 113.059,0, "neutral"},
 
-		{"junk_dealer", 0, -5639.2, 21, -2799.2, -40, 0,""},
-	
-	},
-
-	citySpawns = {
-		--Ragtag's
-		{"ragtag_kook", 300,-5215.15,29.033,-2198.86,133.12,0},
-		{"ragtag_kook", 300,-5220.6,30.4428,-2186.49,348.738,0},
-		{"ragtag_kook", 300,-5211.84,28.4788,-2194.09,10.766,0},
-		{"ragtag_kook", 300,-5219.46,30.4446,-2185.86,7.83436,0},
-		{"ragtag_kook", 300,-4872.65,11.1341,-2390.99,302.831,0},
-		{"ragtag_kook", 300,-4868.58,11.257,-2387.94,83.5642,0},
-		{"ragtag_kook", 300,-5735.79,28.6208,-2610.4,123.649,0},
-		{"ragtag_kook", 300,-5737.79,28.5516,-2607.4,132.784,0},
-		{"ragtag_kook", 300,-5734.79,28.7267,-2609.4,139.039,0},
-		{"ragtag_kook", 300,-5752.38,16.7564,-2798.05,339.808,0},
-		{"ragtag_kook", 300,-5738.79,28.2523,-2614.4,291.78,0},
-		{"ragtag_kook", 300,-5759.38,16.8412,-2798.05,36.2043,0},
-		{"ragtag_kook", 300,-5755.38,16.8078,-2791.05,5.21744,0},
-		{"ragtag_kook", 300,-5757.38,16.8277,-2792.05,209.008,0},
-		{"ragtag_kook", 300,-5750.38,16.684,-2794.05,244.293,0},
-		{"ragtag_loon", 300,-4855.73,11.1455,-2525.71,169.83,0},
-		{"ragtag_loon", 300,-4855.73,11.1789,-2528.71,285.482,0},
-		{"ragtag_loon", 300,-4855.73,11.1489,-2521.71,326.785,0},
-		{"ragtag_loon", 300,-4865.73,10.5102,-2521.71,326.643,0},
-		{"ragtag_mercenary", 300,-5691.26,15.4606,-2887.12,356.964,0},
-		{"ragtag_mercenary", 300,-5672.95,15.312,-2893.61,357.718,0},
-		{"ragtag_mercenary", 300,-5694.23,15.4638,-2884.47,185.304,0},
-		{"ragtag_thug", 300,-5683.98,16.7263,-2843.44,81.9355,0},
-		{"ragtag_thug", 300,-5685.49,17.6827,-2825.55,256.078,0},
-		{"ragtag_thug", 300,-5683.2,16.9368,-2840.36,90.595,0},
-
-		--More misc
-		{"swooper_leader", 300,-5416.8,4.57113,-2286.37,76.0594,0},
-		{"swooper_leader", 300,-5415.8,5.33258,-2277.08,224.956,0},
-		{"swooper_leader", 300,-5420.58,3.58008,-2285.59,200.562,0},
+		{"junk_dealer", 0, -5203.6, 21, -2285.9, -11, 0, ""},
+		{"sullustan_male", 60, -5564.23, 21, -2777.78, 0, 0, "nervous"}
 	}
 }
 
@@ -406,11 +363,10 @@ registerScreenPlay("CorelliaTyrenaScreenPlay", true)
 
 function CorelliaTyrenaScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnStaticMobiles()
+		self:spawnMobiles()
 		self:spawnSceneObjects()
 		self:spawnGcwMobiles()
 		self:spawnPatrolMobiles()
-		self:spawnCityMobiles()
 	end
 end
 
@@ -420,3 +376,75 @@ function CorelliaTyrenaScreenPlay:spawnSceneObjects()
 
 end
 
+function CorelliaTyrenaScreenPlay:spawnMobiles()
+	local mobiles = self.mobiles
+
+	for i = 1, #mobiles, 1 do
+		local mob = mobiles[i]
+
+		-- {template, respawn, x, z, y, direction, cell, mood}
+		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
+
+		if (pMobile ~= nil) then
+			if mob[8] ~= "" then
+				CreatureObject(pMobile):setMoodString(mob[8])
+			end
+
+			AiAgent(pMobile):addObjectFlag(AI_STATIC)
+
+			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
+				CreatureObject(pMobile):clearOptionBit(AIENABLED)
+			end
+		end
+	end
+
+	--{"commoner",60,-5192.9,21,-2545.55,46.5164,0, "calm", "Excited Journalist"},
+	--{"commoner",60,15.2091,0.639422,56.8933,284.328,1935687, "calm", "Amarent Loren"},
+	--{"jom_irimore",60,-5520,21.3,-2630.99,0,0, "calm", "Jom Irimore"},
+	--{"r2",60,-5295.88,21,-2528.24,196.589,0, "calm", "R2-B0"},
+	--{"r2",60,-5297.6,21,-2396.69,271.4,0, "calm", "R2-X2"},
+	--{"r2",60,-4954.63,21,-2376.82,26.4361,0, "calm", "R2-E3"},
+	--{"r3",60,-5312.13,25.7208,-2570.41,64.2735,0, "calm", "R3-X5"},
+	--{"r5",60,-5400.32,21,-2614.17,236.816,0, "calm", "R5-S7"},
+	--{"r2",60,-13.4312,1.6,-15.4443,7.68027,1935827, "calm", "R2-P9"},
+	--{"r3",60,-16.1386,2.25,18.5614,173.343,1935472, "calm", "R3-X8"},
+	--{"r5",60,-4954.81,21,-2379.55,166.051,0, "calm", "R5-C7"},
+
+	local pNpc = spawnMobile(self.planet, "junk_dealer", 0, -5639.2, 21, -2799.2, -40, 0)
+	if pNpc ~= nil then
+		AiAgent(pNpc):setConvoTemplate("junkDealerFineryConvoTemplate")
+	end
+
+	--Ragtag's
+	spawnMobile(self.planet, "ragtag_kook", 300,-5215.15,29.033,-2198.86,133.12,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5220.6,30.4428,-2186.49,348.738,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5211.84,28.4788,-2194.09,10.766,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5219.46,30.4446,-2185.86,7.83436,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-4872.65,11.1341,-2390.99,302.831,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-4868.58,11.257,-2387.94,83.5642,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5735.79,28.6208,-2610.4,123.649,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5737.79,28.5516,-2607.4,132.784,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5734.79,28.7267,-2609.4,139.039,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5752.38,16.7564,-2798.05,339.808,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5738.79,28.2523,-2614.4,291.78,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5759.38,16.8412,-2798.05,36.2043,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5755.38,16.8078,-2791.05,5.21744,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5757.38,16.8277,-2792.05,209.008,0)
+	spawnMobile(self.planet, "ragtag_kook", 300,-5750.38,16.684,-2794.05,244.293,0)
+	spawnMobile(self.planet, "ragtag_loon", 300,-4855.73,11.1455,-2525.71,169.83,0)
+	spawnMobile(self.planet, "ragtag_loon", 300,-4855.73,11.1789,-2528.71,285.482,0)
+	spawnMobile(self.planet, "ragtag_loon", 300,-4855.73,11.1489,-2521.71,326.785,0)
+	spawnMobile(self.planet, "ragtag_loon", 300,-4865.73,10.5102,-2521.71,326.643,0)
+	spawnMobile(self.planet, "ragtag_mercenary", 300,-5691.26,15.4606,-2887.12,356.964,0)
+	spawnMobile(self.planet, "ragtag_mercenary", 300,-5672.95,15.312,-2893.61,357.718,0)
+	spawnMobile(self.planet, "ragtag_mercenary", 300,-5694.23,15.4638,-2884.47,185.304,0)
+	spawnMobile(self.planet, "ragtag_thug", 300,-5683.98,16.7263,-2843.44,81.9355,0)
+	spawnMobile(self.planet, "ragtag_thug", 300,-5685.49,17.6827,-2825.55,256.078,0)
+	spawnMobile(self.planet, "ragtag_thug", 300,-5683.2,16.9368,-2840.36,90.595,0)
+
+	--More misc
+	spawnMobile(self.planet, "scientist", 60,-5431.41,21,-2685.81,106.943,0)
+	spawnMobile(self.planet, "swooper_leader", 300,-5416.8,4.57113,-2286.37,76.0594,0)
+	spawnMobile(self.planet, "swooper_leader", 300,-5415.8,5.33258,-2277.08,224.956,0)
+	spawnMobile(self.planet, "swooper_leader", 300,-5420.58,3.58008,-2285.59,200.562,0)
+end

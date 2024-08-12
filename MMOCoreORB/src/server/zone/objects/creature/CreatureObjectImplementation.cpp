@@ -4112,6 +4112,8 @@ void CreatureObjectImplementation::removeOutOfRangeObjects() {
 	message <<
 	"Player: " << getDisplayedName() << " ID: " << getObjectID() << " Reached Max COV Count: " << covSize << endl <<
 	"Zone: " << (zone != nullptr ? zone->getZoneName() : "null") << endl <<
+	"Saved Zone: " << ghost->getSavedTerrainName() << endl <<
+	"Saved Parent: " << ghost->getSavedParentID() << endl <<
 	"World Position: " << getWorldPosition().toString();
 	message.flush();
 
