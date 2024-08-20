@@ -46,7 +46,7 @@ import server.zone.managers.auction.AuctionSearchTask;
 import server.zone.objects.tangible.Instrument;
 include server.zone.objects.creature.CommandQueue;
 include server.zone.objects.ship.ShipObject;
-include server.globalVariables;
+include system.lang.String;
 
 @mock
 @json
@@ -1667,7 +1667,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getAccelerationMultiplierMod() {
-		return accelerationMultiplierMod * globalVariables.playerSpeedMultiplier;
+		return accelerationMultiplierMod;
 	}
 
 	@read
@@ -1677,7 +1677,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getSpeedMultiplierMod() {
-		return speedMultiplierMod * globalVariables.playerSpeedMultiplier;
+		return speedMultiplierMod;
 	}
 
 	@mock
@@ -1744,7 +1744,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getTurnScale() {
-		return turnScale + (turnScale / globalVariables.playerSpeedMultiplier);
+		return turnScale;
 	}
 
 	@read
@@ -2358,4 +2358,9 @@ class CreatureObject extends TangibleObject {
 	@dirty
 	@local
 	public native boolean checkInConversationRange(SceneObject object);
+
+	@preLocked
+	public native void setQueueCommandDeltaTime(@dereferenced final String commandName, @dereferenced final String commandGroup);
+
+	public native unsigned long getQueueCommandDeltaTime(@dereferenced final String commandName);
 }

@@ -12,13 +12,36 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
-#include "server/globalVariables.h"
+
+void AttachmentImplementation::initializeMembers() {
+	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
+		setOptionsBitmask(32, true);
+		attachmentType = CLOTHINGTYPE;
+
+	} else if (gameObjectType == SceneObjectType::ARMORATTACHMENT) {
+		setOptionsBitmask(32, true);
+		attachmentType = ARMORTYPE;
+	}
+}
 
 void AttachmentImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
 
 	setLoggingName("AttachmentObject");
 
+	// This is here to convert the existing HashTable to a VectorMap
+	if (skillModifiers.size() < 1) {
+		HashTableIterator<String, int> iterator = skillModMap.iterator();
+
+		String key = "";
+		int value = 0;
+
+		for (int i = 0; i < skillModMap.size(); ++i) {
+			iterator.getNextKeyAndValue(key, value);
+
+			skillModifiers.put(key, value);
+		}
+	}
 }
 
 void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool firstUpdate) {
@@ -34,7 +57,7 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 		return;
 	}
 
-	float level = values->hasExperimentalAttribute("level") ? values->getCurrentValue("level") : 1;
+	float level = values->hasExperimentalAttribute("creatureLevel") ? values->getCurrentValue("creatureLevel") : 1;
 	float bonus = values->hasExperimentalAttribute("modifier") ? values->getCurrentValue("modifier") : 1;
 	float rank = LootValues::getLevelRankValue(level, 0.2f, 0.9f);
 
@@ -54,37 +77,16 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 		modCount = System::random(1) + 2;
 	}
 
-	if (modCount > globalVariables::lootAttachmentModCount) modCount = globalVariables::lootAttachmentModCount;
-	if (modCount < 0) modCount = 0;
+	for (int i = 0; i < modCount; ++i) {
+		float step = 1.f - ((i / (float)modCount) * 0.5f);
+		int min = Math::clamp(-1, (int)round(0.075f * level) - 1, 25) * step;
+		int max = Math::clamp(-1, (int)round(0.125f * level) + 1, 25);
+		int mod = System::random(max - min) + min;
 
-	for(int i = 0; i < modCount; ++i) {
-		int mod = 0;
-		if (level >= globalVariables::lootAttachmentMaxLevel) {
-			mod = globalVariables::lootAttachmentMax;
-		} else {
-			float scalingFactor = float(level / globalVariables::lootAttachmentMaxLevel);
-			int adjustedStats = (int)(scalingFactor * globalVariables::lootAttachmentMax);
-			int minStat = adjustedStats - round(adjustedStats * 0.075f);
-			int maxStat = adjustedStats + round(adjustedStats * 0.125f);
-			mod = System::random(maxStat - minStat) + minStat;
-			if (mod > globalVariables::lootAttachmentMax) mod = globalVariables::lootAttachmentMax;
-		}
 		String modName = lootManager->getRandomLootableMod(gameObjectType);
-		skillModMap.put(modName, mod <= 0 ? 1 : mod);
+
+		skillModifiers.put(modName, mod == 0 ? 1 : mod);
 	}
-}
-
-void AttachmentImplementation::initializeMembers() {
-	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
-		setOptionsBitmask(32, true);
-		attachmentType = CLOTHINGTYPE;
-
-	} else if (gameObjectType == SceneObjectType::ARMORATTACHMENT) {
-		setOptionsBitmask(32, true);
-		attachmentType = ARMORTYPE;
-
-	}
-
 }
 
 void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, CreatureObject* object) {
@@ -92,33 +94,14 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 	StringBuffer name;
 
-	HashTableIterator<String, int> iterator = skillModMap.iterator();
-
-	String key = "";
-	int value = 0;
-
-	for(int i = 0; i < skillModMap.size(); ++i) {
-
-		iterator.getNextKeyAndValue(key, value);
+	for (int i = 0; i < skillModifiers.size(); i++) {
+		auto key = skillModifiers.elementAt(i).getKey();
+		auto value = skillModifiers.elementAt(i).getValue();
 
 		name << "cat_skill_mod_bonus.@stat_n:" << key;
 
 		msg->insertAttribute(name.toString(), value);
 
-		if (globalVariables::lootAttachmentNameEnabled == true) {
-			StringId SEAName;
-			SEAName.setStringId("stat_n", key);
-			setCustomObjectName("", false);
-			setObjectName(SEAName, false);
-			setCustomObjectName(getDisplayedName() + " +" + String::valueOf(value), true);
-			StringId originalName;
-			if (isArmorAttachment())
-			    originalName.setStringId("item_n", "socket_gem_armor");
-			else
-			    originalName.setStringId("item_n", "socket_gem_clothing");
-			setObjectName(originalName, true);
-        	}
-        	name.deleteAll();
+		name.deleteAll();
 	}
-
 }
