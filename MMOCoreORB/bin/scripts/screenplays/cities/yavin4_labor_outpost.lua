@@ -16,7 +16,9 @@ Yavin4LaborOutpostScreenPlay = CityScreenPlay:new {
 
 	mobiles = {
 		{"eker", 60, -3.9, 0.6, 1.2, -144, 3035372, ""},
-		{"aqzow", 60, 1.9, 0.6, 1.7, 40, 3035376, ""}
+		{"aqzow", 60, 1.9, 0.6, 1.7, 40, 3035376, ""},
+		
+		{"junk_dealer", 0, -6982, 73, -5751, 20, 0, ""},
 	}
 }
 
@@ -24,30 +26,8 @@ registerScreenPlay("Yavin4LaborOutpostScreenPlay", true)
 
 function Yavin4LaborOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 		self:spawnStationaryMobiles()
 	end
 end
 
-function Yavin4LaborOutpostScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-end

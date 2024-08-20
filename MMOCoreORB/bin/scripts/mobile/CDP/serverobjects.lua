@@ -390,6 +390,8 @@ includeFile("CDP/poi/corellia/stronghold/stormtrooper_squad_leader_poiCorelliaSt
 -- Abandoned Rebel Base Ranges from 20 - 25
 includeFile("CDP/poi/dantooine/abandoned_rebel_base/rebel_commando_poiDantooineAbandonedRebelBase.lua")
 includeFile("CDP/poi/dantooine/abandoned_rebel_base/rebel_recruiter_poiDantooineAbandonedRebelBase.lua")
+includeFile("CDP/poi/dantooine/abandoned_rebel_base/ezkiel_poiDantooineAbandonedRebelBase.lua")
+includeFile("CDP/poi/dantooine/abandoned_rebel_base/vrovel_poiDantooineAbandonedRebelBase.lua")
 -- Dantari Village Ranges from 25 - 42
 includeFile("CDP/poi/dantooine/dantari_village/dantari_battlelord_poiDantooineDantariVillage.lua")
 includeFile("CDP/poi/dantooine/dantari_village/dantari_chief_poiDantooineDantariVillage.lua")
@@ -1049,6 +1051,9 @@ includeFile("CDP/poi/yavin4/imperial_base/stormtrooper_bombardier_poiYavin4Imper
 includeFile("CDP/poi/yavin4/imperial_base/stormtrooper_medic_poiYavin4ImperialBase.lua")
 includeFile("CDP/poi/yavin4/imperial_base/stormtrooper_poiYavin4ImperialBase.lua")
 includeFile("CDP/poi/yavin4/imperial_base/stormtrooper_sniper_poiYavin4ImperialBase.lua")
+includeFile("CDP/poi/yavin4/imperial_base/alozen_poiYavin4ImperialBase.lua")
+includeFile("CDP/poi/yavin4/imperial_base/barlow_poiYavin4ImperialBase.lua")
+includeFile("CDP/poi/yavin4/imperial_base/haymir_rendundi_poiYavin4ImperialBase.lua")
 -- Woolamander Temple Ranges from 29 - 51
 includeFile("CDP/poi/yavin4/woolamander_temple/woolamander_gatherer_poiYavin4WoolamanderTemple.lua")
 includeFile("CDP/poi/yavin4/woolamander_temple/woolamander_harrower_poiYavin4WoolamanderTemple.lua")

@@ -113,8 +113,8 @@ LokNymStrongholdScreenPlay = CityScreenPlay:new {
 
 		--JTL quest
 		{"nym_fuel_tech", 60, 374.599, 11.9876, 4986.77, 31.5798, 0, "neutral"},
-		{"nym_fuel_tech_2", 60, 481.309, 23.0, 4961.29, 173, 0, "neutral"},
-		{"nym_fuel_tech_3", 60, -23.933, 4.223, -37.526, 0, 6595514, "neutral"},
+		{"nym_fuel_tech_02", 60, 481.309, 23.0, 4961.29, 173, 0, "neutral"},
+		{"nym_fuel_tech_03", 60, -23.933, 4.223, -37.526, 0, 6595514, "neutral"},
 		{"ramna", 60, 19.5548, -0.894995, -20.1381, 20.176, 8145379, "neutral"},
 		{"warvog_arkon", 60, -12.1246, 1.6, -16.3553, 291.827, 8145361, "neutral"},
 		{"viopa", 60, -2.2483, 4.0782, -10.4691, 138.087, 6595511, "neutral"},

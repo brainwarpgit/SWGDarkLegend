@@ -37,7 +37,9 @@ TalusImperialOutpostScreenPlay = CityScreenPlay:new {
 		{"stormtrooper_bombardier", 300, -2201.2, 20.0, 2295.2, 0, 0, ""},
 
 		{"hakassha_sireen", 300, 0.1, 0.1, -6.0, 0, 4965433, "neutral"},
-		{"prisk_kith_vys", 300, -3.8, 0.1, -5.0, 39, 4965436, "neutral"}
+		{"prisk_kith_vys", 300, -3.8, 0.1, -5.0, 39, 4965436, "neutral"},
+		
+		{"junk_dealer", 0, -2220, 20.0, 2333, 0, 0, ""}
 	}
 }
 
@@ -45,29 +47,7 @@ registerScreenPlay("TalusImperialOutpostScreenPlay", true)
 
 function TalusImperialOutpostScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
-		self:spawnMobiles()
+		self:spawnStaticMobiles()
 	end
 end
 
-function TalusImperialOutpostScreenPlay:spawnMobiles()
-	local mobiles = self.mobiles
-
-	for i = 1, #mobiles, 1 do
-		local mob = mobiles[i]
-
-		-- {template, respawn, x, z, y, direction, cell, mood}
-		local pMobile = spawnMobile(self.planet, mob[1], mob[2], mob[3], mob[4], mob[5], mob[6], mob[7])
-
-		if (pMobile ~= nil) then
-			if mob[8] ~= "" then
-				CreatureObject(pMobile):setMoodString(mob[8])
-			end
-
-			AiAgent(pMobile):addObjectFlag(AI_STATIC)
-
-			if CreatureObject(pMobile):getPvpStatusBitmask() == 0 then
-				CreatureObject(pMobile):clearOptionBit(AIENABLED)
-			end
-		end
-	end
-end
