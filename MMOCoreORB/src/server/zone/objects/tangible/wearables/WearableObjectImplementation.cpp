@@ -14,6 +14,8 @@
 #include "server/zone/managers/skill/SkillModManager.h"
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+#include "server/globalVariables.h"
+#include "server/userVariables.h"
 
 void WearableObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -55,58 +57,93 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 	if (socketsGenerated) {
 		return;
 	}
-
-	int skill = 0;
-	int luck = 0;
-
-	if (craftingValues != nullptr) {
-		ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
-
-		if (manuSchematic != nullptr) {
-			ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
-			ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
-
-			if (player != nullptr && draftSchematic != nullptr) {
-				String assemblySkill = draftSchematic->getAssemblySkill();
-
-				skill = player->getSkillMod(assemblySkill);
-
-				if (MIN_SOCKET_MOD > skill)
-					return;
-
-				luck = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
+	if (globalVariables::craftingNewGenerateSocketsEnabled == false) {
+		int skill = 0;
+		int luck = 0;
+		if (craftingValues != nullptr) {
+			ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
+			if (manuSchematic != nullptr) {
+				ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
+				ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
+				if (player != nullptr && draftSchematic != nullptr) {
+					String assemblySkill = draftSchematic->getAssemblySkill();
+					skill = player->getSkillMod(assemblySkill);
+					if (globalVariables::craftingMinSocketMod > skill)
+						return;
+					luck = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
+				}
 			}
 		}
-	}
-
-	skill -= MIN_SOCKET_MOD;
-	int bonusMod = 65 - skill;
-
-	if (bonusMod <= 0) {
-		bonusMod = 0;
+		skill -= globalVariables::craftingMinSocketMod;
+		int bonusMod = 65 - skill;
+		if (bonusMod <= 0) {
+			bonusMod = 0;
+		} else {
+			bonusMod = System::random(bonusMod);
+		}
+		int skillAdjust = skill + System::random(luck) + bonusMod;
+		int maxMod = 65 + System::random(skill);
+		float randomSkill = System::random(skillAdjust) * 10;
+		float roll = randomSkill / (400.f + maxMod);
+		float generatedCount = roll * globalVariables::craftingMaxSockets;
+		if (generatedCount > globalVariables::craftingMaxSockets) {
+			generatedCount = globalVariables::craftingMaxSockets;
+		} else if (generatedCount > 3 && generatedCount <= 3.75f) {
+			generatedCount = floor(generatedCount);
+		}
+		usedSocketCount = 0;
+		socketCount = (int)generatedCount;
+		socketsGenerated = true;
+		return;
 	} else {
-		bonusMod = System::random(bonusMod);
+		int stationNearby = 0;
+		float toolEffectiveness = 0;
+		int assemblySkill = 0;
+		int luckSkill = 0;
+		if (craftingValues != nullptr) {
+			ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
+			if (manuSchematic != nullptr) {
+				ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
+				ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
+				if (player != nullptr && draftSchematic != nullptr) {
+					int cityBonus = player->getSkillMod("private_spec_assembly");
+					assemblySkill = std::min(player->getSkillMod("clothing_assembly"),125);
+					int forceBonus = std::min(player->getSkillMod("force_assembly"),45);
+					int craftBonus = 0;
+					int luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+					toolEffectiveness = userVariables::getUserVariable("toolEffectiveness",player->getFirstName());
+					if (userVariables::getUserVariable("stationNearby",player->getFirstName()) == 1.f) stationNearby = 15;
+					if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
+						Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
+
+						if (buff != nullptr) {
+							craftBonus = buff->getSkillModifierValue("craft_bonus");
+						}
+					}
+					luckSkill = System::random(125) + ((luckRoll + toolEffectiveness + stationNearby + cityBonus + forceBonus + craftBonus) / 2);
+					assemblySkill += (luckRoll + toolEffectiveness + stationNearby + cityBonus + forceBonus + craftBonus) / 2;
+				}
+			}
+		}
+		if (luckSkill == 0 && assemblySkill == 0) { // Makes this Loot and not crafted.
+			luckSkill = System::random(globalVariables::craftingMaxSocketMod) + globalVariables::craftingMinSocketMod;
+			assemblySkill = 20;
+		}
+		float assemblyDivisor = (globalVariables::craftingMaxSocketMod - globalVariables::craftingMinSocketMod) / globalVariables::craftingMaxSockets;
+		if (assemblySkill < globalVariables::craftingMinSocketMod || luckSkill < globalVariables::craftingMinSocketMod) {
+			return;
+		} else {	
+			for ( int i = globalVariables::craftingMaxSockets; i >= 1; --i) {
+				if (assemblySkill >= globalVariables::craftingMinSocketMod + (assemblyDivisor * i) || luckSkill >= globalVariables::craftingMinSocketMod + (assemblyDivisor * i)) {
+					socketCount = i;
+					break;
+				}
+			}
+		}
+		usedSocketCount = 0;
+		socketsGenerated = true;
+		return;
 	}
-
-	int skillAdjust = skill + System::random(luck) + bonusMod;
-	int maxMod = 65 + System::random(skill);
-
-	float randomSkill = System::random(skillAdjust) * 10;
-	float roll = randomSkill / (400.f + maxMod);
-
-	float generatedCount = roll * MAXSOCKETS;
-
-	if (generatedCount > MAXSOCKETS)
-		generatedCount = MAXSOCKETS;
-	else if (generatedCount > 3 && generatedCount <= 3.75f)
-		generatedCount = floor(generatedCount);
-
-	usedSocketCount = 0;
-	socketCount = (int)generatedCount;
-
-	socketsGenerated = true;
-
-	return;
 }
 
 void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attachment* attachment) {
@@ -114,7 +151,7 @@ void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attac
 		return;
 	}
 
-	if (getRemainingSockets() < 1 && wearableSkillMods.size() > 5) {
+	if (getRemainingSockets() < 1 && wearableSkillMods.size() > (globalVariables::craftingMaxSockets + 1)) {
 		return;
 	}
 
@@ -222,27 +259,54 @@ bool WearableObjectImplementation::isEquipped() {
 	return false;
 }
 
-String WearableObjectImplementation::repairAttempt(int repairChance) {
-	String message = "@error_message:";
-
-	if(repairChance < 25) {
-		message += "sys_repair_failed";
-		setMaxCondition(1, true);
-		setConditionDamage(0, true);
-	} else if(repairChance < 50) {
-		message += "sys_repair_imperfect";
-		setMaxCondition(getMaxCondition() * .65f, true);
-		setConditionDamage(0, true);
-	} else if(repairChance < 75) {
-		setMaxCondition(getMaxCondition() * .80f, true);
-		setConditionDamage(0, true);
-		message += "sys_repair_slight";
+String WearableObjectImplementation::repairAttempt(int repairChance, int luckSkill, float repairMaxMod) {
+	String message = "";		
+	if (globalVariables::craftingNewRepairEnabled == false ) {
+		if(repairChance < 25) {
+			message += "sys_repair_failed";
+			setMaxCondition(1, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 50) {
+			message += "sys_repair_imperfect";
+			setMaxCondition(getMaxCondition() * .65f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 75) {
+			setMaxCondition(getMaxCondition() * .80f, true);
+			setConditionDamage(0, true);
+			message += "sys_repair_slight";
+		} else {
+			setMaxCondition(getMaxCondition() * .95f, true);
+			setConditionDamage(0, true);
+			message += "sys_repair_perfect";
+		}
 	} else {
-		setMaxCondition(getMaxCondition() * .95f, true);
-		setConditionDamage(0, true);
-		message += "sys_repair_perfect";
+		float repairMaxMod = globalVariables::craftingRepairMaxMod;
+		if ((getMaxCondition() - getConditionDamage()) <= 0 && repairMaxMod < 1) {
+			message += "This item was broken. Reducing Max Condition by " + std::to_string(repairMaxMod * 100) + "%! ";
+			setMaxCondition(getMaxCondition() * repairMaxMod, true);
+		}
+		if(repairChance < 50 || luckSkill < 50) {
+			message += "You barely repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .6f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 100 || luckSkill < 100) {
+			message += "You somewhat repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .7f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 150 || luckSkill < 150) {
+			message += "You almost repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .8f, true);
+			setConditionDamage(0, true);
+		} else if(repairChance < 200 || luckSkill < 200) {
+			message += "You completely repaired this item to full condition.";
+			setMaxCondition(getMaxCondition() * .9f, true);
+			setConditionDamage(0, true);
+		} else {
+			message += "You completely repaired this item to full condition.";
+			setMaxCondition(getMaxCondition(), true);
+			setConditionDamage(0, true);
+		}
 	}
-
 	return message;
 }
 

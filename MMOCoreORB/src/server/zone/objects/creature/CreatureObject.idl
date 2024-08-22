@@ -47,6 +47,7 @@ import server.zone.objects.tangible.Instrument;
 include server.zone.objects.creature.CommandQueue;
 include server.zone.objects.ship.ShipObject;
 include system.lang.String;
+include server.globalVariables;
 
 @mock
 @json
@@ -1667,7 +1668,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getAccelerationMultiplierMod() {
-		return accelerationMultiplierMod;
+		return accelerationMultiplierMod * globalVariables.playerSpeedMultiplier;
 	}
 
 	@read
@@ -1677,7 +1678,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getSpeedMultiplierMod() {
-		return speedMultiplierMod;
+		return speedMultiplierMod * globalVariables.playerSpeedMultiplier;
 	}
 
 	@mock
@@ -1744,7 +1745,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getTurnScale() {
-		return turnScale;
+		return turnScale + (turnScale / globalVariables.playerSpeedMultiplier);
 	}
 
 	@read
