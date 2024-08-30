@@ -151,9 +151,9 @@ function ForceShrineMenuComponent:forceSelection(pPlayer, pSui, eventIndex, args
 		return
 	end
 		
-	--VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_GLOWING)
-	--FsIntro:startPlayerOnIntro(pPlayer)
-	local intVar1 = getVariable("intVariable1")
-	CreatureObject(pPlayer):sendSystemMessage(tostring(intVar1))
+	VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_GLOWING)
+	FsIntro:startPlayerOnIntro(pPlayer)
+	--local intVar1 = getVariable("intVariable1")
+	--CreatureObject(pPlayer):sendSystemMessage(tostring(intVar1))
 	CreatureObject(pPlayer):sendSystemMessage(sayings[getRandomNumber(#sayings)])	
 end
