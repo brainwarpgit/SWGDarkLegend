@@ -90,33 +90,33 @@ void LightsaberCrystalComponentImplementation::generateCrystalStats(float modifi
 
 		damage = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinHealthSac() * modifier;
-		maxStat = crystalData->getMaxHealthSac() * modifier;
+		minStat = crystalData->getMinHealthSac();// * modifier;
+		maxStat = crystalData->getMaxHealthSac();// * modifier;
 
 		sacHealth = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinActionSac() * modifier;
-		maxStat = crystalData->getMaxActionSac() * modifier;
+		minStat = crystalData->getMinActionSac();// * modifier;
+		maxStat = crystalData->getMaxActionSac();// * modifier;
 
 		sacAction = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinMindSac() * modifier;
-		maxStat = crystalData->getMaxMindSac() * modifier;
+		minStat = crystalData->getMinMindSac();// * modifier;
+		maxStat = crystalData->getMaxMindSac();// * modifier;
 
 		sacMind = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinWoundChance() * modifier;
-		maxStat = crystalData->getMaxWoundChance() * modifier;
+		minStat = crystalData->getMinWoundChance();// * modifier;
+		maxStat = crystalData->getMaxWoundChance();// * modifier;
 
 		woundChance = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		float minFloatStat = crystalData->getMinForceCost() * modifier;
-		float maxFloatStat = crystalData->getMaxForceCost() * modifier;
+		float minFloatStat = crystalData->getMinForceCost();// * modifier;
+		float maxFloatStat = crystalData->getMaxForceCost();// * modifier;
 
 		floatForceCost = getRandomizedStat(minFloatStat, maxFloatStat, itemLevel);
 
-		minFloatStat = crystalData->getMinAttackSpeed() * modifier;
-		maxFloatStat = crystalData->getMaxAttackSpeed() * modifier;
+		minFloatStat = crystalData->getMinAttackSpeed();// * modifier;
+		maxFloatStat = crystalData->getMaxAttackSpeed();// * modifier;
 
 		attackSpeed = Math::getPrecision(getRandomizedStat(minFloatStat, maxFloatStat, itemLevel), 2);
 	}
@@ -328,7 +328,7 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 				} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
 					lootQualityString = globalVariables::lootYellowModifierName;
 				}
-				alm->insertAttribute("Loot Quality", lootQualityString);
+				alm->insertAttribute("LootQuality", lootQualityString);
 			} else {
 				StringBuffer str;
 				str << "@jedi_spam:crystal_quality_" << getQuality();
@@ -343,7 +343,7 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 				} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
 					lootQualityString = globalVariables::lootYellowModifierName;
 				}
-				if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("Loot Quality", lootQualityString);
+				if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
 			}
 		}
 	}

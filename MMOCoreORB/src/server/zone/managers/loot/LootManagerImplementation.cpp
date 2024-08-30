@@ -302,7 +302,27 @@ void LootManagerImplementation::setCustomObjectNameNew(TangibleObject* object, c
 
 	String suffixName = "";
 
-	if (object->isWeaponObject() || object->isArmorObject() || object->isComponent()) {
+	AttributesMap staticValues;
+	staticValues = templateObject->getAttributesMapCopy();
+	
+	int useCountOnly = 0;
+	int modCount = -1;
+	if (object->isComponent()) {
+		modCount = staticValues.getSize();
+		if ((staticValues.getSize() <= 1 && staticValues.getAttribute(0) == "useCount") || (staticValues.getSize() <= 1 && staticValues.getAttribute(0) == "color")) {
+			useCountOnly = 1;
+		}
+	}
+		
+	int crystalColor = 0;
+	if (object->isLightsaberCrystalObject()) {
+		LightsaberCrystalComponent* crystal = cast<LightsaberCrystalComponent*> (object);
+		crystalColor = crystal->getColor();
+	}
+	
+//	Logger::console.info("modCount: " + std::to_string(modCount) + " useCount: " + std::to_string(useCountOnly) + " color: " + std::to_string(crystalColor) + " objectName: " + object->getDisplayedName(),true);
+	
+	if (object->isWeaponObject() || object->isArmorObject() || (object->isComponent() && useCountOnly == 0) || (object->isComponent() && crystalColor == 31)) {
 		if (modifier >= legendaryModifier) {
 			suffixName = " (Legendary)";
 		} else if (modifier >= exceptionalModifier) {
@@ -606,24 +626,6 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 	VectorMap<String,int> skillMods = *templateObject->getSkillMods();
 
 	float modifier = Math::max(getRandomModifier(templateObject, level, excMod, creatureDifficulty, luckSkill), baseModifier);
-	/*int chance = LootValues::getLevelRankValue(level, 0.2f, 0.9f) * modifier * levelChance;
-	int roll = System::random(skillModChance);
-	int randomMods = 0;
-	int pivot = 0;
-	if (roll <= chance) {
-		pivot = chance - roll;
-
-		if (pivot < 40) {
-			randomMods = 1;
-		} else if (pivot < 70) {
-			randomMods = System::random(1) + 1;
-		} else if (pivot < 100) {
-			randomMods = System::random(2) + 1;
-		} else {
-			randomMods = System::random(1) + 2;
-		}
-	}
-Logger::console.info("modifier: " + std::to_string(modifier) + " chance: " + std::to_string(chance) + " roll: " + std::to_string(roll) + " skillModChance: " + std::to_string(skillModChance) + " pivot: " + std::to_string(pivot) + " randomMods: " + std::to_string(randomMods),true);*/
 	int roll = System::random(skillModChance + luckSkill);
 	int randomMods = 0;
 	if (modifier >= globalVariables::lootLegendaryDamageModifier) {

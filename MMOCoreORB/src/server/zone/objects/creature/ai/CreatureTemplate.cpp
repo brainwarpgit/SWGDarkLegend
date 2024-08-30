@@ -254,20 +254,21 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	damageMin *= baseCreatureDamageMin;
 	baseHAM *= baseCreatureHAM;
 	baseHAMmax *= baseCreatureHAMmax;
-	if (creatureDifficulty == 2) armor += 1;
-	if (creatureDifficulty == 3) armor += 2;
-	if (creatureDifficulty == 4) armor += 1;
-	if (creatureDifficulty == 5) armor += 2;
-	if (creatureDifficulty == 6) armor += 3;
+	
+	if (creatureDifficulty == 2 && System::random(1000) > 975) armor += 1;
+	if (creatureDifficulty == 3 && System::random(1000) > 975) armor += 2;
+	if (creatureDifficulty == 4 && System::random(1000) > 975) armor += 1;
+	if (creatureDifficulty == 5 && System::random(1000) > 975) armor += 2;
+	if (creatureDifficulty == 6 && System::random(1000) > 975) armor += 3;
 	if (armor > 3) armor = 3;
 
 	float levelPercentModified = (float)level / (float)globalVariables::creatureMaxLevel * 100.0f;
 	float levelPercentDifference = (levelPercentModified - levelPercentBase) * 1.25f;
 	if (creatureDifficulty <= 3) levelPercentDifference = 0.0f;
 
-//	if (creatureDifficulty >= 4) {
-//		std::cout << "levelPercentBase: " << levelPercentBase << " levelPercentModified: " << levelPercentModified << " Level: " << level << " levelPercentDifference: " << levelPercentDifference << " Name: " << templateName << std::endl;
-//	}
+/*	if (creatureDifficulty >= 4) {
+		std::cout << "baseCreatureDamageMax" << baseCreatureDamageMax << "levelPercentBase: " << levelPercentBase << " levelPercentModified: " << levelPercentModified << " Level: " << level << " levelPercentDifference: " << levelPercentDifference << " Name: " << templateName << std::endl;
+	}*/
 	if (damageMin >= damageMax) damageMin = damageMax * 0.9;
 	if (baseHAMmax >= baseHAM) baseHAM = baseHAMmax * 0.9;
 	
