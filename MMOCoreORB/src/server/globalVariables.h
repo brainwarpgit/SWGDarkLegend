@@ -1,6 +1,7 @@
 #ifndef GLOBALVARIABLES_H_
 #define GLOBALVARIABLES_H_
 
+#include <unordered_map>
 #include <string>
 
 namespace globalVariables {
@@ -105,6 +106,9 @@ namespace globalVariables {
 	extern float poiYavin4BlueleafTempleMultiplier;
 	extern float poiYavin4ImperialBaseMultiplier;
 	extern float poiYavin4WoolamanderTempleMultiplier;
+
+//Command
+	extern bool commandCheckForceStatusCommandEnabled;
 
 //Crafting
 	extern int craftingFactoryCrateMaxSize;
@@ -390,7 +394,7 @@ namespace globalVariables {
 //Wearables
 	extern bool wearablesFactionEnabled;
 	extern bool wearablesAllPlayerRacesEnabled;
-
+	
 //Initializer
 	bool loadConfigData();
 }

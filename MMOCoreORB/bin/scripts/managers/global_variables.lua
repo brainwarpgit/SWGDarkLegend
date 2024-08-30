@@ -106,6 +106,9 @@ poiYavin4BlueleafTempleMultiplier = 5 --default 1 Ranges from 30 - 42
 poiYavin4ImperialBaseMultiplier = 5 --default 1 Ranges from 4 - 25 / AT-ST 125
 poiYavin4WoolamanderTempleMultiplier = 5 --default 1 Ranges from 29 - 51
 
+--Commands
+commandCheckForceStatusCommandEnabled = true --default true
+
 --Crafting
 craftingFactoryCrateMaxSize = 1000 --default 100
 craftingFactoryRunTimeMultiplier = 0 --default 8

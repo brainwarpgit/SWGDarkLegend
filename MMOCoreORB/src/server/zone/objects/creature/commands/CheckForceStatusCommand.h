@@ -6,6 +6,7 @@
 #define CHECKFORCESTATUSCOMMAND_H_
 
 #include "server/zone/managers/jedi/JediManager.h"
+#include "server/globalVariables.h"
 
 class CheckForceStatusCommand : public QueueCommand {
 public:
@@ -23,7 +24,9 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		JediManager::instance()->checkForceStatusCommand(creature);
+		if (globalVariables::commandCheckForceStatusCommandEnabled == true) {
+			JediManager::instance()->checkForceStatusCommand(creature);
+		}
 
 		return SUCCESS;
 	}

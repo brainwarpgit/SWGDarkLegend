@@ -106,6 +106,9 @@ namespace globalVariables {
 	float poiYavin4ImperialBaseMultiplier = 1;
 	float poiYavin4WoolamanderTempleMultiplier = 1;
 
+//Command
+	bool commandCheckForceStatusCommandEnabled = true;
+	
 //Crafting
 	int craftingFactoryCrateMaxSize = 100;
 	int craftingFactoryRunTimeMultiplier = 8;
@@ -497,6 +500,9 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("poiYavin4BlueleafTempleMultiplier") > 0) poiYavin4BlueleafTempleMultiplier = lua->getGlobalFloat("poiYavin4BlueleafTempleMultiplier");
 			if (lua->getGlobalFloat("poiYavin4ImperialBaseMultiplier") > 0) poiYavin4ImperialBaseMultiplier = lua->getGlobalFloat("poiYavin4ImperialBaseMultiplier");
 			if (lua->getGlobalFloat("poiYavin4WoolamanderTempleMultiplier") > 0) poiYavin4WoolamanderTempleMultiplier = lua->getGlobalFloat("poiYavin4WoolamanderTempleMultiplier");
+			
+			//Command commandCheckForceStatusCommandEnabled
+			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
 			
 			//Crafting 
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
