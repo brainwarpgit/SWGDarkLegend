@@ -41,6 +41,36 @@ function Glowing:getCompletedBadgeTypeCount(pPlayer)
 	return typesCompleted
 end
 
+function Glowing:getCompletedBadgeAmountCount(pPlayer)
+	local pGhost = CreatureObject(pPlayer):getPlayerObject()
+
+	if (pGhost == nil) then
+		return 0
+	end
+
+	local typesCompleted = 0
+	local badgeCount = 0
+	
+	for i = 1, #self.requiredBadges, 1 do
+		local type = self.requiredBadges[i].type
+		local requiredAmount = self.requiredBadges[i].amount
+
+		local badgeListByType = getBadgeListByType(type)
+
+		for j = 1, #badgeListByType, 1 do
+			if PlayerObject(pGhost):hasBadge(badgeListByType[j]) then
+				badgeCount = badgeCount + 1
+			end
+		end
+
+		if badgeCount >= requiredAmount then
+			typesCompleted = typesCompleted + 1
+		end
+	end
+
+	return badgeCount
+end
+
 function Glowing:hasRequiredBadgeCount(pPlayer)
 	return self:getCompletedBadgeTypeCount(pPlayer) == #self.requiredBadges
 end

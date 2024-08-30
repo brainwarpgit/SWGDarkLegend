@@ -11,6 +11,9 @@ function ForceShrineMenuComponent:fillObjectMenuResponse(pSceneObject, pMenuResp
 		menuResponse:addRadialMenuItem(121, 3, "@force_rank:recover_jedi_items") -- Recover Jedi Items
 	end
 
+	if (not CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then
+		menuResponse:addRadialMenuItem(122, 3, "Become One with the Force!")
+	end
 end
 
 function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selectedID)
@@ -26,6 +29,12 @@ function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selec
 		end
 	elseif (selectedID == 121 and CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02")) then
 		self:recoverRobe(pPlayer)
+	elseif (selectedID == 122) then
+		if (CreatureObject(pPlayer):getPosture() ~= CROUCHED) then
+			CreatureObject(pPlayer):sendSystemMessage("To properly meditate here, you must do so respectfully.")
+		else
+			self:makeForceSensitive(pPlayer)
+		end
 	end
 
 	return 0
@@ -106,4 +115,45 @@ function ForceShrineMenuComponent:recoverRobe(pPlayer)
 
 	giveItem(pInventory, robeTemplate, -1)
 	CreatureObject(pPlayer):sendSystemMessage("@force_rank:items_recovered")
+end
+
+function ForceShrineMenuComponent:makeForceSensitive(pPlayer)
+
+	local sui = SuiMessageBox.new("ForceShrineMenuComponent", "forceSelection") 
+	
+	sui.setTitle("Force Sensitive")
+
+	local promptText = "Would you like to become Force Sensitive?\n\nIf you choose to accept, you will be visited by a mysterious character to begin your journey!\n\n\\#pcontrast1 It is recommended but not required to have at least 1 master profession before becoming Force Sensitive.\\#"
+
+	sui.setPrompt(promptText)
+	sui.setOkButtonText("Yes")
+	sui.setCancelButtonText("No")
+	
+	sui.sendTo(pPlayer)
+	
+end
+
+function ForceShrineMenuComponent:forceSelection(pPlayer, pSui, eventIndex, args)
+	sayings = {
+        	"The Force is a guide, not a master. Let it flow through you, but do not seek to control it.",
+       		"Patience is the path to true understanding. The Force reveals itself to those who wait.",
+       		"Trust in the Force, but trust in yourself first. The two are one.",
+       		"Your connection to the Force is unique. Nurture it, and it will grow as you do.",
+       		"In stillness, you will find the Force. In motion, you will understand it.",
+        	"Balance within yourself, and the Force will be balance with you.",
+       		"The Force in all things, but it is strongest in those who seek it with a pure heart."
+    	}
+
+	local cancelPressed = (eventIndex == 1)
+
+	if (cancelPressed) then
+		CreatureObject(pPlayer):sendSystemMessage("Come back when you are ready to learn the ways of the Force.")
+		return
+	end
+		
+	--VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_GLOWING)
+	--FsIntro:startPlayerOnIntro(pPlayer)
+	local intVar1 = getVariable("intVariable1")
+	CreatureObject(pPlayer):sendSystemMessage(tostring(intVar1))
+	CreatureObject(pPlayer):sendSystemMessage(sayings[getRandomNumber(#sayings)])	
 end

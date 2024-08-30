@@ -16,10 +16,21 @@ intro = ConvoScreen:new {
 		{"@conversation/fs_experience_converter:s_2734c210", "learn_reflex"}, -- I wish to learn more about using the Force to enhance my reflexes.
 		-- Was used to convert old jedi system to new
 		--{"@conversation/fs_experience_converter:s_69a7c6ca", "learn_force"}, -- I wish to learn new uses of the Force.
-		{"@conversation/fs_experience_converter:s_e4c01185", "what_aspects"} -- What aspects of the Force am I ready to learn?
+		{"@conversation/fs_experience_converter:s_e4c01185", "what_aspects"}, -- What aspects of the Force am I ready to learn?
+		{"How to I reduce my conversion rate?", "conversion_rate"},
 	}
 }
 paemosConvoTemplate:addScreen(intro);
+
+conversion_rate = ConvoScreen:new {
+	id = "conversion_rate",
+	leftDialog = "",
+	customDialogText = "Simple, just keep earning badges!   The more badges you earn the better the conversion rate!",
+	stopConversation = "true",
+	options = {}
+}
+paemosConvoTemplate:addScreen(conversion_rate);
+
 
 learn_crafting = ConvoScreen:new {
 	id = "learn_crafting",

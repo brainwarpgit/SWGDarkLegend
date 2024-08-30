@@ -14,7 +14,8 @@ FsIntro = ScreenPlay:new {
 	stepDelay = {
 		[1] = { 60, 300 }, -- Old man visit, 1-5 minutes
 		[3] = { 60, 300 } -- Sith shadow attack, 1-5 minutes
-	}
+	},
+	
 }
 
 function FsIntro:getCurrentStep(pPlayer)

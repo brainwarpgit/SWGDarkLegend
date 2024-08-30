@@ -11,58 +11,58 @@ require("screenplays.screenplay")
 ExperienceConverter = ScreenPlay:new {
 	xpConversion = {
 		combat = {
-			{ "bountyhunter", 2 },
-			{ "combat_general", 1 },
-			{ "combat_meleespecialize_onehand", 10 },
-			{ "combat_meleespecialize_polearm", 10 },
-			{ "combat_meleespecialize_twohand", 10 },
-			{ "combat_meleespecialize_unarmed", 10 },
-			{ "combat_rangedspecialize_carbine", 10 },
-			{ "combat_rangedspecialize_heavy", 10 },
-			{ "combat_rangedspecialize_pistol", 10 },
-			{ "combat_rangedspecialize_rifle", 10 },
-			{ "squadleader", 10 }
+			{ "bountyhunter", 10 },
+			{ "combat_general", 10 },
+			{ "combat_meleespecialize_onehand", 50 },
+			{ "combat_meleespecialize_polearm", 50 },
+			{ "combat_meleespecialize_twohand", 50 },
+			{ "combat_meleespecialize_unarmed", 50 },
+			{ "combat_rangedspecialize_carbine", 50 },
+			{ "combat_rangedspecialize_heavy", 50 },
+			{ "combat_rangedspecialize_pistol", 50 },
+			{ "combat_rangedspecialize_rifle", 50 },
+			{ "squadleader", 50 }
 		},
 		senses = {
-			{ "bio_engineer_dna_harvesting", 2 },
-			{ "camp", 2 },
-			{ "creaturehandler", 5 },
-			{ "dance", 5 },
-			{ "entertainer_healing", 5 },
-			{ "imagedesigner", 5 },
-			{ "medical", 5 },
---			{ "merchant", 4 },
-			{ "music", 5 },
---			{ "political", 3 },
-			{ "resource_harvesting_inorganic", 5 },
-			{ "scout", 4 },
-			{ "slicing", 2 },
-			{ "trapping", 10 },
+			{ "bio_engineer_dna_harvesting", 20 },
+			{ "camp", 20},
+			{ "creaturehandler", 20 },
+			{ "dance", 20 },
+			{ "entertainer_healing", 20 },
+			{ "imagedesigner", 20 },
+			{ "medical", 20 },
+--			{ "merchant", 20 },
+			{ "music", 20 },
+--			{ "political", 20 },
+			{ "resource_harvesting_inorganic", 50 },
+			{ "scout", 20 },
+			{ "slicing", 20 },
+			{ "trapping", 20 },
 		},
 		reflex = {
-			{ "bountyhunter", 2 },
-			{ "combat_general", 1 },
-			{ "combat_meleespecialize_onehand", 10 },
-			{ "combat_meleespecialize_polearm", 10 },
-			{ "combat_meleespecialize_twohand", 10 },
-			{ "combat_meleespecialize_unarmed", 10 },
-			{ "combat_rangedspecialize_carbine", 10 },
-			{ "combat_rangedspecialize_heavy", 10 },
-			{ "combat_rangedspecialize_pistol", 10 },
-			{ "combat_rangedspecialize_rifle", 10 },
-			{ "squadleader", 10 }
+			{ "bountyhunter", 10 },
+			{ "combat_general", 10 },
+			{ "combat_meleespecialize_onehand", 50 },
+			{ "combat_meleespecialize_polearm", 50 },
+			{ "combat_meleespecialize_twohand", 50 },
+			{ "combat_meleespecialize_unarmed", 50 },
+			{ "combat_rangedspecialize_carbine", 50 },
+			{ "combat_rangedspecialize_heavy", 50},
+			{ "combat_rangedspecialize_pistol", 50 },
+			{ "combat_rangedspecialize_rifle", 50 },
+			{ "squadleader", 50 }
 		},
 		crafting = {
-			{ "crafting_bio_engineer_creature", 2 },
-			{ "crafting_clothing_armor", 2 },
-			{ "crafting_clothing_general", 2 },
-			{ "crafting_droid_general", 2 },
-			{ "crafting_food_general", 2 },
-			{ "crafting_general", 4 },
-			{ "crafting_medicine_general", 2 },
-			{ "crafting_spice", 2 },
-			{ "crafting_structure_general", 4 },
-			{ "crafting_weapons_general", 2 }
+			{ "crafting_bio_engineer_creature", 20},
+			{ "crafting_clothing_armor", 20 },
+			{ "crafting_clothing_general", 20 },
+			{ "crafting_droid_general", 20 },
+			{ "crafting_food_general", 20 },
+			{ "crafting_general", 40 },
+			{ "crafting_medicine_general", 20 },
+			{ "crafting_spice", 20 },
+			{ "crafting_structure_general", 40 },
+			{ "crafting_weapons_general", 20 }
 		}
 	}
 }
@@ -142,6 +142,31 @@ function ExperienceConverter:sendConversionSUI(pPlayer, pNpc, experienceType)
 	writeStringSharedMemory(SceneObject(pPlayer):getObjectID() .. ":paemosConversionType", experienceType)
 end
 
+function ExperienceConverter:getRatio(pPlayer, ratio)
+	local completedBadges = Glowing:getCompletedBadgeAmountCount(pPlayer)
+	local ratioDivision = ratio / 8
+	local ratioMod = 0
+	if (completedBadges >= 80) then 
+		ratioMod = math.floor(ratioDivision * 7)
+	elseif (completedBadges >= 70) then
+		ratioMod = math.floor(ratioDivision * 6)
+	elseif (completedBadges >= 60) then
+		ratioMod = math.floor(ratioDivision * 5)
+	elseif (completedBadges >= 50) then
+		ratioMod = math.floor(ratioDivision * 4)
+	elseif (completedBadges >= 40) then
+		ratioMod = math.floor(ratioDivision * 3)
+	elseif (completedBadges >= 30) then
+		ratioMod = math.floor(ratioDivision * 2)
+	elseif (completedBadges >= 20) then
+		ratioMod = math.floor(ratioDivision * 1)
+	else
+		ratioMod = 0
+	end
+	
+	return ratioMod
+end
+ 
 function ExperienceConverter:convertXpTypeCallback(pPlayer, pSui, eventIndex, args)
 	if (pPlayer == nil) then
 		return
@@ -183,7 +208,11 @@ function ExperienceConverter:convertXpTypeCallback(pPlayer, pSui, eventIndex, ar
 	local chosenXp = suiPageData:getStoredData(tostring(args))
 	local xpAmount = PlayerObject(pGhost):getExperience(chosenXp)
 	local conversionList = self.xpConversion[xpType]
-
+	
+	--CreatureObject(pPlayer):sendSystemMessage(tostring(chosenXp))
+	--CreatureObject(pPlayer):sendSystemMessage(tostring(xpAmount))
+	--CreatureObject(pPlayer):sendSystemMessage(tostring(conversionList))
+	
 	local ratio = 0
 
 	for i = 1, #conversionList, 1 do
@@ -191,7 +220,14 @@ function ExperienceConverter:convertXpTypeCallback(pPlayer, pSui, eventIndex, ar
 			ratio = conversionList[i][2]
 		end
 	end
-
+	
+	local ratioMod = self:getRatio(pPlayer, ratio)
+	
+	ratio = ratio - ratioMod
+	
+	--CreatureObject(pPlayer):sendSystemMessage(tostring(ratioMod))
+	--CreatureObject(pPlayer):sendSystemMessage(tostring(ratio))
+	
 	if (xpAmount < ratio) then
 		CreatureObject(pPlayer):sendSystemMessage("@quest/force_sensitive/utils:convert_not_enough_xp")
 		deleteStringSharedMemory(playerID .. ":paemosConversionType")
@@ -226,7 +262,7 @@ function ExperienceConverter:convertXpTypeCallback(pPlayer, pSui, eventIndex, ar
 	sui.sendTo(pPlayer)
 end
 
-function ExperienceConverter:convertXpTransferCallback(pPlayer, pSui, eventIndex, transferInputFromValue, transferInputToValue)
+function ExperienceConverter:convertXpTransferCallback(pPlayer, pSui, eventIndex, transferInputFromValue, transferInputToValue )
 	local playerID = SceneObject(pPlayer):getObjectID()
 	local conversionType = readStringSharedMemory(playerID .. ":paemosConversionType")
 	local chosenXp = readStringSharedMemory(playerID .. ":paemosChosenXp")
@@ -252,13 +288,17 @@ function ExperienceConverter:convertXpTransferCallback(pPlayer, pSui, eventIndex
 	end
 
 	local conversionList = self.xpConversion[conversionType]
-	local ratio = 0
+		local ratio = 0
 
 	for i = 1, #conversionList, 1 do
 		if (conversionList[i][1] == chosenXp) then
 			ratio = conversionList[i][2]
 		end
 	end
+	
+	local ratioMod = self:getRatio(pPlayer, ratio)
+	
+	ratio = ratio - ratioMod
 
 	if (ratio == 0) then
 		CreatureObject(pPlayer):sendSystemMessage("@quest/force_sensitive/utils:convert_illegal_type")
