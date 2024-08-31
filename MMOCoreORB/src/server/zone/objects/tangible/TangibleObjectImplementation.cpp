@@ -453,13 +453,9 @@ void TangibleObjectImplementation::synchronizedUIStopListen(CreatureObject* play
 }
 
 void TangibleObjectImplementation::removeOutOfRangeObjects() {
-	TangibleObject* rangeCheckObject = asTangibleObject();
+	auto rangeCheckObject = asTangibleObject();
 
-	if (rangeCheckObject == nullptr) {
-		return;
-	}
-
-	auto rootParent = rangeCheckObject->getRootParent();
+	auto rootParent = getRootParent();
 	auto parent = getParent().get();
 
 	if (parent != nullptr && (parent->isVehicleObject() || parent->isMount())) {
@@ -473,7 +469,7 @@ void TangibleObjectImplementation::removeOutOfRangeObjects() {
 	}
 
 #ifdef DEBUG_COV
-	info(true) << "TangibleObjectImplementation::removeOutOfRangeObjects() called - For Object: " << rangeCheckObject->getDisplayedName();
+	info(true) << "TangibleObjectImplementation::removeOutOfRangeObjects() called -- by: " << getDisplayedName() << " ID: " << getObjectID() << " Using Parent or Root Object: " << rangeCheckObject->getDisplayedName() << " Parent/Rooot ID: " << rangeCheckObject->getObjectID();
 #endif // DEBUG_COV
 
 	SortedVector<TreeEntry*> closeObjects;
@@ -496,7 +492,7 @@ void TangibleObjectImplementation::removeOutOfRangeObjects() {
 	float ourRange = rangeCheckObject->getOutOfRangeDistance();
 	bool objectIsShip = rangeCheckObject->isShipObject();
 
-	uint64 thisObectId = getObjectID();
+	uint64 thisObjectID = getObjectID();
 	uint64 rangeCheckObjectId = rangeCheckObject->getObjectID();
 
 	for (int i = closeObjects.size() - 1; i >= 0; i--) {
@@ -506,10 +502,10 @@ void TangibleObjectImplementation::removeOutOfRangeObjects() {
 			continue;
 		}
 
-		uint64 covObjectId = covObject->getObjectID();
+		uint64 covObjectID = covObject->getObjectID();
 
 		// Don't remove ourselves or our parent / root parent that is being used to remove objects out of range
-		if (covObjectId == thisObectId || covObjectId == rangeCheckObjectId) {
+		if (covObjectID == thisObjectID || covObjectID == rangeCheckObjectId) {
 			continue;
 		}
 
@@ -518,6 +514,9 @@ void TangibleObjectImplementation::removeOutOfRangeObjects() {
 
 		// They should be managed by the parent
 		if (covObjectRoot != nullptr) {
+			continue;
+		// covObject is a player, their root is null but this object has a parent
+		} else if (covObject->isPlayerCreature() && parent != nullptr) {
 			continue;
 		}
 
@@ -544,22 +543,43 @@ void TangibleObjectImplementation::removeOutOfRangeObjects() {
 		}
 
 		/*
-		if (getObjectID() == PLAYERIDHERE && (covObject->isVehicleObject() || covObject->isPlayerCreature())) {
+		if (isPlayerCreature() && ((covObject->getObjectID() == COVOBJECTIDHERE) || covObject->isPlayerCreature() || covObject->isVehicleObject())) {
 			StringBuffer msg;
 
-			msg << getDisplayedName() << " removeOutOfRangeObjects task removed object from COV: " << covObject->getDisplayedName() << endl;
-			msg << "Our World Pos: " << worldPos.toString() << " Distance Sq: " << deltaDistance << " RangeSq Checked Against: " << outOfRangeSqr;
-			info(true) << msg.toString();
-		}*/
+			msg << endl << endl
+			<< getDisplayedName() << " -- TangibleObjectImplementation::removeOutOfRangeObjects() removing Object from COV -- " << covObject->getDisplayedName() << endl
+			<< "COV Size: " << getCloseObjects()->size() << endl
+			<< "Parent ID: " << getParentID() << endl
+			<< "Root Parent ID: " << (rootParent != nullptr ? rootParent->getObjectID() : 0) << endl
+			<< "Player is using Range Check Object: " << rangeCheckObject->getDisplayedName() <<  " ID: " <<  rangeCheckObject->getObjectID() << endl
+			<< "Object is Ship: " << (objectIsShip ? "true" : "false") << endl
+			<< "Player World Position: " << worldPos.toString() << endl
+			<< "COV Object World Position: " << objectWorldPos.toString() << endl
+			<< "Delta Distance: " << deltaDistance << endl
+			<< "Out of Range Squared: " << outOfRangeSqr << endl << endl;
 
-		// Remove covObject from in range objects using either the objects root parent or the object itself
-		if (rangeCheckObject->getCloseObjects() != nullptr) {
+			info(true) << msg.toString();
+		}
+		*/
+
+		// Remove covObject from this objects COV
+		if (rangeCheckObject->isVehicleObject() || rangeCheckObject->isMount()) {
 			rangeCheckObject->removeInRangeObject(covObject);
+		} else {
+			rangeCheckObject = asTangibleObject();
+
+			if (getCloseObjects() != nullptr) {
+				removeInRangeObject(covObject);
+			} else {
+				notifyDissapear(covObject);
+			}
 		}
 
 		// Remove the object from covObjects' COV
 		if (covObject->getCloseObjects() != nullptr) {
 			covObject->removeInRangeObject(rangeCheckObject);
+		} else {
+			covObject->notifyDissapear(covObject);
 		}
 	}
 }

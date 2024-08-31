@@ -2198,7 +2198,7 @@ void CreatureObjectImplementation::notifyLoadFromDatabase() {
 		getZoneServer()->getPlayerManager()->fixHAM(asCreatureObject());
 		getZoneServer()->getPlayerManager()->fixBuffSkillMods(asCreatureObject());
         }
-  
+
 	for (int i = 0; i < creatureBuffs.getBuffListSize(); ++i) {
 		ManagedReference<Buff*> buff = creatureBuffs.getBuffByIndex(i);
 
@@ -4088,14 +4088,15 @@ void CreatureObjectImplementation::removeOutOfRangeObjects() {
 		return;
 	}
 
-	auto closeObjectsVector = getCloseObjects();
-
-	if (closeObjectsVector == nullptr)
-		return;
-
 	auto ghost = getPlayerObject();
 
 	if (ghost == nullptr) {
+		return;
+	}
+
+	auto closeObjectsVector = getCloseObjects();
+
+	if (closeObjectsVector == nullptr) {
 		return;
 	}
 
@@ -4112,6 +4113,7 @@ void CreatureObjectImplementation::removeOutOfRangeObjects() {
 	message <<
 	"Player: " << getDisplayedName() << " ID: " << getObjectID() << " Reached Max COV Count: " << covSize << endl <<
 	"Zone: " << (zone != nullptr ? zone->getZoneName() : "null") << endl <<
+	"Current Parent: " << getParentID() << endl <<
 	"Saved Zone: " << ghost->getSavedTerrainName() << endl <<
 	"Saved Parent: " << ghost->getSavedParentID() << endl <<
 	"World Position: " << getWorldPosition().toString();
