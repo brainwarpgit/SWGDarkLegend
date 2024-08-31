@@ -352,7 +352,7 @@ int SlicingSessionImplementation::getSlicingSkill(CreatureObject* slicer) {
 		else if (slicer->hasSkill(skill0))
 			return 0;
 	} else {
-		int slicemod = std::min(slicer->getSkillMod("slicing"),125);
+		int slicemod = slicer->getSkillMod("slicing");
 
 		if (slicemod >= 100)
 			return 5;
@@ -666,10 +666,10 @@ void SlicingSessionImplementation::handleWeaponSlice() {
 				return;
 
 		}
-		float luckSkill = std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30);
-		float luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+		float luckSkill = player->getSkillMod("luck") + player->getSkillMod("force_luck");
+		float luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 		float luckSuccess = 0.85;
-		if (luckRoll >= (std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30)) * luckSuccess) {
+		if (luckRoll >= (player->getSkillMod("luck") + player->getSkillMod("force_luck")) * luckSuccess) {
 			min += 10;
 			max += 5;
 			player->sendSystemMessage("The force was with you on this slice....");

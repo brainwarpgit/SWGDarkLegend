@@ -107,10 +107,10 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 				ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
 				if (player != nullptr && draftSchematic != nullptr) {
 					int cityBonus = player->getSkillMod("private_spec_assembly");
-					assemblySkill = std::min(player->getSkillMod("clothing_assembly"),125);
-					int forceBonus = std::min(player->getSkillMod("force_assembly"),45);
+					assemblySkill = player->getSkillMod("clothing_assembly");
+					int forceBonus = player->getSkillMod("force_assembly");
 					int craftBonus = 0;
-					int luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+					int luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 					toolEffectiveness = userVariables::getUserVariable("toolEffectiveness",player->getFirstName());
 					if (userVariables::getUserVariable("stationNearby",player->getFirstName()) == 1.f) stationNearby = 15;
 					if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {

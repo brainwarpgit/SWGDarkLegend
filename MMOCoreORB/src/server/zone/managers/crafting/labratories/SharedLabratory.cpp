@@ -184,10 +184,10 @@ float SharedLabratory::getWeightedValue(ManufactureSchematic* manufactureSchemat
 }
 int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchematic* draftSchematic, float effectiveness){
 	if (globalVariables::craftingNewAssemblyEnabled == true) {
-		float cityBonus = std::min(player->getSkillMod("private_spec_assembly"),20);
-		float assemblySkill = std::min(player->getSkillMod(draftSchematic->getAssemblySkill()),125);
-		float forceBonus = std::min(player->getSkillMod("force_assembly"),45);
-		float luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+		float cityBonus = player->getSkillMod("private_spec_assembly");
+		float assemblySkill = player->getSkillMod(draftSchematic->getAssemblySkill());
+		float forceBonus = player->getSkillMod("force_assembly");
+		float luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 		float craftBonus = 0;
 		if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
 			Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
@@ -197,7 +197,7 @@ int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchema
 		}
 		float luckSkill = System::random(125) + luckRoll + effectiveness + cityBonus + forceBonus + craftBonus;
 		assemblySkill += luckRoll + effectiveness + cityBonus + forceBonus + craftBonus;
-		float failMitigate = std::min(player->getSkillMod("force_failure_reduction"),10);
+		float failMitigate = player->getSkillMod("force_failure_reduction");
 		float failRoll = System::random(assemblySkill + luckRoll + effectiveness + cityBonus + forceBonus + craftBonus + 100);	
 		float toolModifier = 1.0f + (effectiveness / 10);	
 		float failSkill = toolModifier * ((failRoll / 10) + failMitigate);

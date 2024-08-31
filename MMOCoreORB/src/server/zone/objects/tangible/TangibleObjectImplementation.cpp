@@ -1366,16 +1366,16 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 		int toolQuality = 0;
 		int luckSkill = 0;
 		if (player->hasSkill("crafting_tailor_novice") && repairTemplate->getRepairType() == 16777216) {
-			repairmod = std::min(player->getSkillMod("clothing_repair"),125);
+			repairmod = player->getSkillMod("clothing_repair");
 		}
 		if (player->hasSkill("crafting_armorsmith_novice") && repairTemplate->getRepairType() == 256) {
-			repairmod = std::min(player->getSkillMod("armor_repair"),125);
+			repairmod =player->getSkillMod("armor_repair");
 		}
 		if (player->hasSkill("crafting_weaponsmith_novice") && repairTemplate->getRepairType() == 131072) {
-			repairmod = std::min(player->getSkillMod("weapon_repair"),125);
+			repairmod = player->getSkillMod("weapon_repair");
 		}
-		int luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));	
-		forceBonus += std::min(player->getSkillMod("force_repair_bonus"),45);
+		int luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));	
+		forceBonus += player->getSkillMod("force_repair_bonus");
 		toolQuality = repairTool->getQuality();
 		ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
 

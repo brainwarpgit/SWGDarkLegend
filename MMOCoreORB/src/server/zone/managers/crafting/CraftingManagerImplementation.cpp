@@ -63,10 +63,10 @@ int CraftingManagerImplementation::getCreationCount(ManufactureSchematic* manufa
 
 int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObject* player, DraftSchematic* draftSchematic, float effectiveness) {
 	if (globalVariables::craftingNewExperimentEnabled == true) {
-		float cityBonus = std::min(player->getSkillMod("private_spec_experimentation"),20);
-		float experimentationSkill = std::min(player->getSkillMod(draftSchematic->getExperimentationSkill()),125);
-		float forceBonus = std::min(player->getSkillMod("force_experimentation"),45);
-		float luckRoll = System::random(std::min(player->getSkillMod("luck"),25) + std::min(player->getSkillMod("force_luck"),30));
+		float cityBonus = player->getSkillMod("private_spec_experimentation");
+		float experimentationSkill = player->getSkillMod(draftSchematic->getExperimentationSkill());
+		float forceBonus = player->getSkillMod("force_experimentation");
+		float luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 		float craftBonus = 0;
 		if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
 			Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
@@ -76,7 +76,7 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 		}
 		float luckSkill = System::random(125) + luckRoll + effectiveness + cityBonus + forceBonus + craftBonus;
 		experimentationSkill += luckRoll + effectiveness + cityBonus + forceBonus + craftBonus;
-		float failMitigate = std::min(player->getSkillMod("force_failure_reduction"),10);
+		float failMitigate = player->getSkillMod("force_failure_reduction");
 		float failRoll = System::random(experimentationSkill + luckRoll + effectiveness + cityBonus + forceBonus + craftBonus + 100);	
 		float toolModifier = 1.0f + (effectiveness / 10);	
 		float failSkill = toolModifier * ((failRoll / 10) + failMitigate);
