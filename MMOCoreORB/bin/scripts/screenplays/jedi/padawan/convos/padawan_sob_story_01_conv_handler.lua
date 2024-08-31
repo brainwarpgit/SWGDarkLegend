@@ -1,3 +1,5 @@
+dofile("scripts/managers/global_variables.lua")
+
 padawan_sob_story_01_conv_handler = conv_handler:new {}
 
 function padawan_sob_story_01_conv_handler:getInitialScreen(pPlayer, pNpc, pConvTemplate)
@@ -40,7 +42,9 @@ function padawan_sob_story_01_conv_handler:runScreenHandlers(pConvTemplate, pPla
 		PadawanTrials:failTrial(pPlayer)
 	elseif (screenID == "please_excuse_me") then
 		PadawanTrials:passTrial(pPlayer)
-		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
+		if missionJediPadawanTrialsGrantXPEnabled and missionJediPadawanTrailsXP ~= nil and missionJediPadawanTrailsXP > 0 then
+			CreatureObject(pPlayer):awardExperience("jedi_general", missionJediPadawanTrailsXP, true)
+		end
 	elseif (screenID == "going_camping" or screenID == "somewhere_in_wild") then
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)
 		writeData(SceneObject(pNpc):getObjectID() .. ":destroyNpcOnExit", 1)

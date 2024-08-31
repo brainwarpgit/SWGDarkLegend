@@ -241,6 +241,8 @@ missionEscortMissionDistance = 64 --default 64
 missionEscortMissionDistanceEnabled = false --default true
 missionThemeParkFactionMultiplier = 10 --default 1
 missionThemeParkCreditMultiplier = 10 --default 1
+missionJediPadawanTrialsGrantXPEnabled = true --default false
+missionJediPadawanTrailsXP = 1250 --default 0   1250 to get enough for one novice box after trials.
 
 --Pet
 petCallTime = 0 --default 15 in seconds
@@ -353,6 +355,7 @@ resourcesContainerSize = 10000000 --default 100000
 --Skills
 skillsInstantMasterPoliticianEnabled = true --default false
 skillsInstantMasterMerchantEnabled = true --default false
+skillsStartTrainerTrainsAllSkillsEnabled = true --default false
 
 --Slicing
 slicingNewSliceEnabled = true --default false

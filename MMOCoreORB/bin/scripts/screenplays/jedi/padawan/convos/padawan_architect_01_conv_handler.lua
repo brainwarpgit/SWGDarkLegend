@@ -1,3 +1,5 @@
+dofile("scripts/managers/global_variables.lua")
+
 padawan_architect_01_conv_handler = conv_handler:new {}
 
 function padawan_architect_01_conv_handler:getInitialScreen(pPlayer, pNpc, pConvTemplate)
@@ -46,7 +48,9 @@ function padawan_architect_01_conv_handler:runScreenHandlers(pConvTemplate, pPla
 		PadawanTrials:failTrial(pPlayer)
 	elseif (screenID == "back_chose_success") then
 		PadawanTrials:passTrial(pPlayer)
-		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
+		if missionJediPadawanTrialsGrantXPEnabled and missionJediPadawanTrailsXP ~= nil and missionJediPadawanTrailsXP > 0 then
+			CreatureObject(pPlayer):awardExperience("jedi_general", missionJediPadawanTrailsXP, true)
+		end
 	elseif (screenID == "yes_accept") then
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)
 		writeData(SceneObject(pNpc):getObjectID() .. ":destroyNpcOnExit", 1)

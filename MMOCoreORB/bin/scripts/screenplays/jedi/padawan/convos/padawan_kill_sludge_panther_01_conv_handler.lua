@@ -1,3 +1,5 @@
+dofile("scripts/managers/global_variables.lua")
+
 padawan_kill_sludge_panther_01_conv_handler = conv_handler:new {}
 
 function padawan_kill_sludge_panther_01_conv_handler:getInitialScreen(pPlayer, pNpc, pConvTemplate)
@@ -35,7 +37,9 @@ function padawan_kill_sludge_panther_01_conv_handler:runScreenHandlers(pConvTemp
 
 	if (screenID == "intro_reached_goal") then
 		PadawanTrials:passTrial(pPlayer)
-		CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
+		if missionJediPadawanTrialsGrantXPEnabled and missionJediPadawanTrailsXP ~= nil and missionJediPadawanTrailsXP > 0 then
+			CreatureObject(pPlayer):awardExperience("jedi_general", missionJediPadawanTrailsXP, true)
+		end
 	elseif (screenID == "find_and_kill") then
 		PadawanTrials:setupHuntTrial(pPlayer)
 		writeData(playerID .. ":JediTrials:acceptedTask", 1)

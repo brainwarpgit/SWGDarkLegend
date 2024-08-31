@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not skillsAlreadyAdded then
+	skillsAlreadyAdded = false
+end
+
 trainerSkills = {
 	-- Starter Professions
 	trainer_artisan = {
@@ -19,150 +25,6 @@ trainerSkills = {
 		"crafting_artisan_survey_02",
 		"crafting_artisan_survey_03",
 		"crafting_artisan_survey_04",
-		"crafting_architect_novice",
-		"crafting_architect_master",
-		"crafting_architect_production_01",
-		"crafting_architect_production_02",
-		"crafting_architect_production_03",
-		"crafting_architect_production_04",
-		"crafting_architect_techniques_01",
-		"crafting_architect_techniques_02",
-		"crafting_architect_techniques_03",
-		"crafting_architect_techniques_04",
-		"crafting_architect_harvesting_01",
-		"crafting_architect_harvesting_02",
-		"crafting_architect_harvesting_03",
-		"crafting_architect_harvesting_04",
-		"crafting_architect_blueprints_01",
-		"crafting_architect_blueprints_02",
-		"crafting_architect_blueprints_03",
-		"crafting_architect_blueprints_04",
-		"crafting_armorsmith_novice",
-		"crafting_armorsmith_master",
-		"crafting_armorsmith_personal_01",
-		"crafting_armorsmith_personal_02",
-		"crafting_armorsmith_personal_03",
-		"crafting_armorsmith_personal_04",
-		"crafting_armorsmith_heavy_01",
-		"crafting_armorsmith_heavy_02",
-		"crafting_armorsmith_heavy_03",
-		"crafting_armorsmith_heavy_04",
-		"crafting_armorsmith_deflectors_01",
-		"crafting_armorsmith_deflectors_02",
-		"crafting_armorsmith_deflectors_03",
-		"crafting_armorsmith_deflectors_04",
-		"crafting_armorsmith_complexity_01",
-		"crafting_armorsmith_complexity_02",
-		"crafting_armorsmith_complexity_03",
-		"crafting_armorsmith_complexity_04",
-		"crafting_weaponsmith_novice",
-		"crafting_weaponsmith_master",
-		"crafting_weaponsmith_melee_01",
-		"crafting_weaponsmith_melee_02",
-		"crafting_weaponsmith_melee_03",
-		"crafting_weaponsmith_melee_04",
-		"crafting_weaponsmith_firearms_01",
-		"crafting_weaponsmith_firearms_02",
-		"crafting_weaponsmith_firearms_03",
-		"crafting_weaponsmith_firearms_04",
-		"crafting_weaponsmith_munitions_01",
-		"crafting_weaponsmith_munitions_02",
-		"crafting_weaponsmith_munitions_03",
-		"crafting_weaponsmith_munitions_04",
-		"crafting_weaponsmith_techniques_01",
-		"crafting_weaponsmith_techniques_02",
-		"crafting_weaponsmith_techniques_03",
-		"crafting_weaponsmith_techniques_04",
-		"crafting_shipwright_novice",
-		"crafting_shipwright_master",
-		"crafting_shipwright_engineering_01",
-		"crafting_shipwright_engineering_02",
-		"crafting_shipwright_engineering_03",
-		"crafting_shipwright_engineering_04",
-		"crafting_shipwright_propulsion_01",
-		"crafting_shipwright_propulsion_02",
-		"crafting_shipwright_propulsion_03",
-		"crafting_shipwright_propulsion_04",
-		"crafting_shipwright_systems_01",
-		"crafting_shipwright_systems_02",
-		"crafting_shipwright_systems_03",
-		"crafting_shipwright_systems_04",
-		"crafting_shipwright_defense_01",
-		"crafting_shipwright_defense_02",
-		"crafting_shipwright_defense_03",
-		"crafting_shipwright_defense_04",
-		"crafting_droidengineer_novice",
-		"crafting_droidengineer_master",
-		"crafting_droidengineer_production_01",
-		"crafting_droidengineer_production_02",
-		"crafting_droidengineer_production_03",
-		"crafting_droidengineer_production_04",
-		"crafting_droidengineer_techniques_01",
-		"crafting_droidengineer_techniques_02",
-		"crafting_droidengineer_techniques_03",
-		"crafting_droidengineer_techniques_04",
-		"crafting_droidengineer_refinement_01",
-		"crafting_droidengineer_refinement_02",
-		"crafting_droidengineer_refinement_03",
-		"crafting_droidengineer_refinement_04",
-		"crafting_droidengineer_blueprints_01",
-		"crafting_droidengineer_blueprints_02",
-		"crafting_droidengineer_blueprints_03",
-		"crafting_droidengineer_blueprints_04",
-		"crafting_chef_novice",
-		"crafting_chef_master",
-		"crafting_chef_dish_01",
-		"crafting_chef_dish_02",
-		"crafting_chef_dish_03",
-		"crafting_chef_dish_04",
-		"crafting_chef_dessert_01",
-		"crafting_chef_dessert_02",
-		"crafting_chef_dessert_03",
-		"crafting_chef_dessert_04",
-		"crafting_chef_drink_01",
-		"crafting_chef_drink_02",
-		"crafting_chef_drink_03",
-		"crafting_chef_drink_04",
-		"crafting_chef_techniques_01",
-		"crafting_chef_techniques_02",
-		"crafting_chef_techniques_03",
-		"crafting_chef_techniques_04",
-		"crafting_tailor_novice",
-		"crafting_tailor_master",
-		"crafting_tailor_casual_01",
-		"crafting_tailor_casual_02",
-		"crafting_tailor_casual_03",
-		"crafting_tailor_casual_04",
-		"crafting_tailor_field_01",
-		"crafting_tailor_field_02",
-		"crafting_tailor_field_03",
-		"crafting_tailor_field_04",
-		"crafting_tailor_formal_01",
-		"crafting_tailor_formal_02",
-		"crafting_tailor_formal_03",
-		"crafting_tailor_formal_04",
-		"crafting_tailor_production_01",
-		"crafting_tailor_production_02",
-		"crafting_tailor_production_03",
-		"crafting_tailor_production_04",
-		"crafting_merchant_novice",
-		"crafting_merchant_master",
-		"crafting_merchant_advertising_01",
-		"crafting_merchant_advertising_02",
-		"crafting_merchant_advertising_03",
-		"crafting_merchant_advertising_04",
-		"crafting_merchant_sales_01",
-		"crafting_merchant_sales_02",
-		"crafting_merchant_sales_03",
-		"crafting_merchant_sales_04",
-		"crafting_merchant_hiring_01",
-		"crafting_merchant_hiring_02",
-		"crafting_merchant_hiring_03",
-		"crafting_merchant_hiring_04",
-		"crafting_merchant_management_01",
-		"crafting_merchant_management_02",
-		"crafting_merchant_management_03",
-		"crafting_merchant_management_04"
 	},
 
 	trainer_brawler = {
@@ -184,114 +46,6 @@ trainerSkills = {
 		"combat_brawler_polearm_02",
 		"combat_brawler_polearm_03",
 		"combat_brawler_polearm_04",
-		"combat_1hsword_novice",
-		"combat_1hsword_master",
-		"combat_1hsword_accuracy_01",
-		"combat_1hsword_accuracy_02",
-		"combat_1hsword_accuracy_03",
-		"combat_1hsword_accuracy_04",
-		"combat_1hsword_speed_01",
-		"combat_1hsword_speed_02",
-		"combat_1hsword_speed_03",
-		"combat_1hsword_speed_04",
-		"combat_1hsword_ability_01",
-		"combat_1hsword_ability_02",
-		"combat_1hsword_ability_03",
-		"combat_1hsword_ability_04",
-		"combat_1hsword_support_01",
-		"combat_1hsword_support_02",
-		"combat_1hsword_support_03",
-		"combat_1hsword_support_04",
-		"combat_2hsword_novice",
-		"combat_2hsword_master",
-		"combat_2hsword_accuracy_01",
-		"combat_2hsword_accuracy_02",
-		"combat_2hsword_accuracy_03",
-		"combat_2hsword_accuracy_04",
-		"combat_2hsword_speed_01",
-		"combat_2hsword_speed_02",
-		"combat_2hsword_speed_03",
-		"combat_2hsword_speed_04",
-		"combat_2hsword_ability_01",
-		"combat_2hsword_ability_02",
-		"combat_2hsword_ability_03",
-		"combat_2hsword_ability_04",
-		"combat_2hsword_support_01",
-		"combat_2hsword_support_02",
-		"combat_2hsword_support_03",
-		"combat_2hsword_support_04",
-		"combat_polearm_novice",
-		"combat_polearm_master",
-		"combat_polearm_accuracy_01",
-		"combat_polearm_accuracy_02",
-		"combat_polearm_accuracy_03",
-		"combat_polearm_accuracy_04",
-		"combat_polearm_speed_01",
-		"combat_polearm_speed_02",
-		"combat_polearm_speed_03",
-		"combat_polearm_speed_04",
-		"combat_polearm_ability_01",
-		"combat_polearm_ability_02",
-		"combat_polearm_ability_03",
-		"combat_polearm_ability_04",
-		"combat_polearm_support_01",
-		"combat_polearm_support_02",
-		"combat_polearm_support_03",
-		"combat_polearm_support_04",
-		"combat_unarmed_novice",
-		"combat_unarmed_master",
-		"combat_unarmed_accuracy_01",
-		"combat_unarmed_accuracy_02",
-		"combat_unarmed_accuracy_03",
-		"combat_unarmed_accuracy_04",
-		"combat_unarmed_speed_01",
-		"combat_unarmed_speed_02",
-		"combat_unarmed_speed_03",
-		"combat_unarmed_speed_04",
-		"combat_unarmed_ability_01",
-		"combat_unarmed_ability_02",
-		"combat_unarmed_ability_03",
-		"combat_unarmed_ability_04",
-		"combat_unarmed_support_01",
-		"combat_unarmed_support_02",
-		"combat_unarmed_support_03",
-		"combat_unarmed_support_04",
-		"combat_commando_novice",
-		"combat_commando_master",
-		"combat_commando_heavyweapon_accuracy_01",
-		"combat_commando_heavyweapon_accuracy_02",
-		"combat_commando_heavyweapon_accuracy_03",
-		"combat_commando_heavyweapon_accuracy_04",
-		"combat_commando_heavyweapon_speed_01",
-		"combat_commando_heavyweapon_speed_02",
-		"combat_commando_heavyweapon_speed_03",
-		"combat_commando_heavyweapon_speed_04",
-		"combat_commando_thrownweapon_01",
-		"combat_commando_thrownweapon_02",
-		"combat_commando_thrownweapon_03",
-		"combat_commando_thrownweapon_04",
-		"combat_commando_support_01",
-		"combat_commando_support_02",
-		"combat_commando_support_03",
-		"combat_commando_support_04",
-		"combat_smuggler_novice",
-		"combat_smuggler_master",
-		"combat_smuggler_underworld_01",
-		"combat_smuggler_underworld_02",
-		"combat_smuggler_underworld_03",
-		"combat_smuggler_underworld_04",
-		"combat_smuggler_slicing_01",
-		"combat_smuggler_slicing_02",
-		"combat_smuggler_slicing_03",
-		"combat_smuggler_slicing_04",
-		"combat_smuggler_combat_01",
-		"combat_smuggler_combat_02",
-		"combat_smuggler_combat_03",
-		"combat_smuggler_combat_04",
-		"combat_smuggler_spice_01",
-		"combat_smuggler_spice_02",
-		"combat_smuggler_spice_03",
-		"combat_smuggler_spice_04"
 	},
 
 	trainer_entertainer = {
@@ -313,78 +67,6 @@ trainerSkills = {
 		"social_entertainer_healing_02",
 		"social_entertainer_healing_03",
 		"social_entertainer_healing_04",
-		"social_imagedesigner_novice",
-		"social_imagedesigner_master",
-		"social_imagedesigner_hairstyle_01",
-		"social_imagedesigner_hairstyle_02",
-		"social_imagedesigner_hairstyle_03",
-		"social_imagedesigner_hairstyle_04",
-		"social_imagedesigner_exotic_01",
-		"social_imagedesigner_exotic_02",
-		"social_imagedesigner_exotic_03",
-		"social_imagedesigner_exotic_04",
-		"social_imagedesigner_bodyform_01",
-		"social_imagedesigner_bodyform_02",
-		"social_imagedesigner_bodyform_03",
-		"social_imagedesigner_bodyform_04",
-		"social_imagedesigner_markings_01",
-		"social_imagedesigner_markings_02",
-		"social_imagedesigner_markings_03",
-		"social_imagedesigner_markings_04",
-		"social_musician_novice",
-		"social_musician_master",
-		"social_musician_ability_01",
-		"social_musician_ability_02",
-		"social_musician_ability_03",
-		"social_musician_ability_04",
-		"social_musician_wound_01",
-		"social_musician_wound_02",
-		"social_musician_wound_03",
-		"social_musician_wound_04",
-		"social_musician_knowledge_01",
-		"social_musician_knowledge_02",
-		"social_musician_knowledge_03",
-		"social_musician_knowledge_04",
-		"social_musician_shock_01",
-		"social_musician_shock_02",
-		"social_musician_shock_03",
-		"social_musician_shock_04",
-		"social_dancer_novice",
-		"social_dancer_master",
-		"social_dancer_ability_01",
-		"social_dancer_ability_02",
-		"social_dancer_ability_03",
-		"social_dancer_ability_04",
-		"social_dancer_wound_01",
-		"social_dancer_wound_02",
-		"social_dancer_wound_03",
-		"social_dancer_wound_04",
-		"social_dancer_knowledge_01",
-		"social_dancer_knowledge_02",
-		"social_dancer_knowledge_03",
-		"social_dancer_knowledge_04",
-		"social_dancer_shock_01",
-		"social_dancer_shock_02",
-		"social_dancer_shock_03",
-		"social_dancer_shock_04",
-		"social_politician_novice",
-		"social_politician_master",
-		"social_politician_fiscal_01",
-		"social_politician_fiscal_02",
-		"social_politician_fiscal_03",
-		"social_politician_fiscal_04",
-		"social_politician_martial_01",
-		"social_politician_martial_02",
-		"social_politician_martial_03",
-		"social_politician_martial_04",
-		"social_politician_civic_01",
-		"social_politician_civic_02",
-		"social_politician_civic_03",
-		"social_politician_civic_04",
-		"social_politician_urban_01",
-		"social_politician_urban_02",
-		"social_politician_urban_03",
-		"social_politician_urban_04"
 	},
 
 	trainer_marksman = {
@@ -406,150 +88,6 @@ trainerSkills = {
 		"combat_marksman_support_02",
 		"combat_marksman_support_03",
 		"combat_marksman_support_04",
-		"combat_rifleman_novice",
-		"combat_rifleman_master",
-		"combat_rifleman_accuracy_01",
-		"combat_rifleman_accuracy_02",
-		"combat_rifleman_accuracy_03",
-		"combat_rifleman_accuracy_04",
-		"combat_rifleman_speed_01",
-		"combat_rifleman_speed_02",
-		"combat_rifleman_speed_03",
-		"combat_rifleman_speed_04",
-		"combat_rifleman_ability_01",
-		"combat_rifleman_ability_02",
-		"combat_rifleman_ability_03",
-		"combat_rifleman_ability_04",
-		"combat_rifleman_support_01",
-		"combat_rifleman_support_02",
-		"combat_rifleman_support_03",
-		"combat_rifleman_support_04",
-		"combat_pistol_novice",
-		"combat_pistol_master",
-		"combat_pistol_accuracy_01",
-		"combat_pistol_accuracy_02",
-		"combat_pistol_accuracy_03",
-		"combat_pistol_accuracy_04",
-		"combat_pistol_speed_01",
-		"combat_pistol_speed_02",
-		"combat_pistol_speed_03",
-		"combat_pistol_speed_04",
-		"combat_pistol_ability_01",
-		"combat_pistol_ability_02",
-		"combat_pistol_ability_03",
-		"combat_pistol_ability_04",
-		"combat_pistol_support_01",
-		"combat_pistol_support_02",
-		"combat_pistol_support_03",
-		"combat_pistol_support_04",		
-		"combat_carbine_novice",
-		"combat_carbine_master",
-		"combat_carbine_accuracy_01",
-		"combat_carbine_accuracy_02",
-		"combat_carbine_accuracy_03",
-		"combat_carbine_accuracy_04",
-		"combat_carbine_speed_01",
-		"combat_carbine_speed_02",
-		"combat_carbine_speed_03",
-		"combat_carbine_speed_04",
-		"combat_carbine_ability_01",
-		"combat_carbine_ability_02",
-		"combat_carbine_ability_03",
-		"combat_carbine_ability_04",
-		"combat_carbine_support_01",
-		"combat_carbine_support_02",
-		"combat_carbine_support_03",
-		"combat_carbine_support_04",
-		"combat_smuggler_novice",
-		"combat_smuggler_master",
-		"combat_smuggler_underworld_01",
-		"combat_smuggler_underworld_02",
-		"combat_smuggler_underworld_03",
-		"combat_smuggler_underworld_04",
-		"combat_smuggler_slicing_01",
-		"combat_smuggler_slicing_02",
-		"combat_smuggler_slicing_03",
-		"combat_smuggler_slicing_04",
-		"combat_smuggler_combat_01",
-		"combat_smuggler_combat_02",
-		"combat_smuggler_combat_03",
-		"combat_smuggler_combat_04",
-		"combat_smuggler_spice_01",
-		"combat_smuggler_spice_02",
-		"combat_smuggler_spice_03",
-		"combat_smuggler_spice_04",
-		"outdoors_squadleader_novice",
-		"outdoors_squadleader_master",
-		"outdoors_squadleader_movement_01",
-		"outdoors_squadleader_movement_02",
-		"outdoors_squadleader_movement_03",
-		"outdoors_squadleader_movement_04",
-		"outdoors_squadleader_offense_01",
-		"outdoors_squadleader_offense_02",
-		"outdoors_squadleader_offense_03",
-		"outdoors_squadleader_offense_04",
-		"outdoors_squadleader_defense_01",
-		"outdoors_squadleader_defense_02",
-		"outdoors_squadleader_defense_03",
-		"outdoors_squadleader_defense_04",
-		"outdoors_squadleader_support_01",
-		"outdoors_squadleader_support_02",
-		"outdoors_squadleader_support_03",
-		"outdoors_squadleader_support_04",
-		"combat_commando_novice",
-		"combat_commando_master",
-		"combat_commando_heavyweapon_accuracy_01",
-		"combat_commando_heavyweapon_accuracy_02",
-		"combat_commando_heavyweapon_accuracy_03",
-		"combat_commando_heavyweapon_accuracy_04",
-		"combat_commando_heavyweapon_speed_01",
-		"combat_commando_heavyweapon_speed_02",
-		"combat_commando_heavyweapon_speed_03",
-		"combat_commando_heavyweapon_speed_04",
-		"combat_commando_thrownweapon_01",
-		"combat_commando_thrownweapon_02",
-		"combat_commando_thrownweapon_03",
-		"combat_commando_thrownweapon_04",
-		"combat_commando_support_01",
-		"combat_commando_support_02",
-		"combat_commando_support_03",
-		"combat_commando_support_04",
-		"combat_bountyhunter_novice",
-		"combat_bountyhunter_master",
-		"combat_bountyhunter_investigation_01",
-		"combat_bountyhunter_investigation_02",
-		"combat_bountyhunter_investigation_03",
-		"combat_bountyhunter_investigation_04",
-		"combat_bountyhunter_droidcontrol_01",
-		"combat_bountyhunter_droidcontrol_02",
-		"combat_bountyhunter_droidcontrol_03",
-		"combat_bountyhunter_droidcontrol_04",
-		"combat_bountyhunter_droidresponse_01",
-		"combat_bountyhunter_droidresponse_02",
-		"combat_bountyhunter_droidresponse_03",
-		"combat_bountyhunter_droidresponse_04",
-		"combat_bountyhunter_support_01",
-		"combat_bountyhunter_support_02",
-		"combat_bountyhunter_support_03",
-		"combat_bountyhunter_support_04",
-		"science_combatmedic_novice",
-		"science_combatmedic_master",
-		"science_combatmedic_healing_range_01",
-		"science_combatmedic_healing_range_02",
-		"science_combatmedic_healing_range_03",
-		"science_combatmedic_healing_range_04",
-		"science_combatmedic_healing_range_speed_01",
-		"science_combatmedic_healing_range_speed_02",
-		"science_combatmedic_healing_range_speed_03",
-		"science_combatmedic_healing_range_speed_04",
-		"science_combatmedic_medicine_01",
-		"science_combatmedic_medicine_02",
-		"science_combatmedic_medicine_03",
-		"science_combatmedic_medicine_04",
-		"science_combatmedic_support_01",
-		"science_combatmedic_support_02",
-		"science_combatmedic_support_03",
-		"science_combatmedic_support_04"
 	},
 
 	trainer_medic = {
@@ -571,60 +109,6 @@ trainerSkills = {
 		"science_medic_crafting_02",
 		"science_medic_crafting_03",
 		"science_medic_crafting_04",
-		"science_combatmedic_novice",
-		"science_combatmedic_master",
-		"science_combatmedic_healing_range_01",
-		"science_combatmedic_healing_range_02",
-		"science_combatmedic_healing_range_03",
-		"science_combatmedic_healing_range_04",
-		"science_combatmedic_healing_range_speed_01",
-		"science_combatmedic_healing_range_speed_02",
-		"science_combatmedic_healing_range_speed_03",
-		"science_combatmedic_healing_range_speed_04",
-		"science_combatmedic_medicine_01",
-		"science_combatmedic_medicine_02",
-		"science_combatmedic_medicine_03",
-		"science_combatmedic_medicine_04",
-		"science_combatmedic_support_01",
-		"science_combatmedic_support_02",
-		"science_combatmedic_support_03",
-		"science_combatmedic_support_04",
-		"science_doctor_novice",
-		"science_doctor_master",
-		"science_doctor_wound_speed_01",
-		"science_doctor_wound_speed_02",
-		"science_doctor_wound_speed_03",
-		"science_doctor_wound_speed_04",
-		"science_doctor_wound_01",
-		"science_doctor_wound_02",
-		"science_doctor_wound_03",
-		"science_doctor_wound_04",
-		"science_doctor_ability_01",
-		"science_doctor_ability_02",
-		"science_doctor_ability_03",
-		"science_doctor_ability_04",
-		"science_doctor_support_01",
-		"science_doctor_support_02",
-		"science_doctor_support_03",
-		"science_doctor_support_04",
-		"outdoors_bio_engineer_novice",
-		"outdoors_bio_engineer_master",
-		"outdoors_bio_engineer_creature_01",
-		"outdoors_bio_engineer_creature_02",
-		"outdoors_bio_engineer_creature_03",
-		"outdoors_bio_engineer_creature_04",
-		"outdoors_bio_engineer_tissue_01",
-		"outdoors_bio_engineer_tissue_02",
-		"outdoors_bio_engineer_tissue_03",
-		"outdoors_bio_engineer_tissue_04",
-		"outdoors_bio_engineer_dna_harvesting_01",
-		"outdoors_bio_engineer_dna_harvesting_02",
-		"outdoors_bio_engineer_dna_harvesting_03",
-		"outdoors_bio_engineer_dna_harvesting_04",
-		"outdoors_bio_engineer_production_01",
-		"outdoors_bio_engineer_production_02",
-		"outdoors_bio_engineer_production_03",
-		"outdoors_bio_engineer_production_04"
 	},
 
 	trainer_scout = {
@@ -646,96 +130,6 @@ trainerSkills = {
 		"outdoors_scout_camp_02",
 		"outdoors_scout_camp_03",
 		"outdoors_scout_camp_04",
-		"outdoors_bio_engineer_novice",
-		"outdoors_bio_engineer_master",
-		"outdoors_bio_engineer_creature_01",
-		"outdoors_bio_engineer_creature_02",
-		"outdoors_bio_engineer_creature_03",
-		"outdoors_bio_engineer_creature_04",
-		"outdoors_bio_engineer_tissue_01",
-		"outdoors_bio_engineer_tissue_02",
-		"outdoors_bio_engineer_tissue_03",
-		"outdoors_bio_engineer_tissue_04",
-		"outdoors_bio_engineer_dna_harvesting_01",
-		"outdoors_bio_engineer_dna_harvesting_02",
-		"outdoors_bio_engineer_dna_harvesting_03",
-		"outdoors_bio_engineer_dna_harvesting_04",
-		"outdoors_bio_engineer_production_01",
-		"outdoors_bio_engineer_production_02",
-		"outdoors_bio_engineer_production_03",
-		"outdoors_bio_engineer_production_04",
-		"outdoors_creaturehandler_novice",
-		"outdoors_creaturehandler_master",
-		"outdoors_creaturehandler_taming_01",
-		"outdoors_creaturehandler_taming_02",
-		"outdoors_creaturehandler_taming_03",
-		"outdoors_creaturehandler_taming_04",
-		"outdoors_creaturehandler_training_01",
-		"outdoors_creaturehandler_training_02",
-		"outdoors_creaturehandler_training_03",
-		"outdoors_creaturehandler_training_04",
-		"outdoors_creaturehandler_healing_01",
-		"outdoors_creaturehandler_healing_02",
-		"outdoors_creaturehandler_healing_03",
-		"outdoors_creaturehandler_healing_04",
-		"outdoors_creaturehandler_support_01",
-		"outdoors_creaturehandler_support_02",
-		"outdoors_creaturehandler_support_03",
-		"outdoors_creaturehandler_support_04",
-		"combat_bountyhunter_novice",
-		"combat_bountyhunter_master",
-		"combat_bountyhunter_investigation_01",
-		"combat_bountyhunter_investigation_02",
-		"combat_bountyhunter_investigation_03",
-		"combat_bountyhunter_investigation_04",
-		"combat_bountyhunter_droidcontrol_01",
-		"combat_bountyhunter_droidcontrol_02",
-		"combat_bountyhunter_droidcontrol_03",
-		"combat_bountyhunter_droidcontrol_04",
-		"combat_bountyhunter_droidresponse_01",
-		"combat_bountyhunter_droidresponse_02",
-		"combat_bountyhunter_droidresponse_03",
-		"combat_bountyhunter_droidresponse_04",
-		"combat_bountyhunter_support_01",
-		"combat_bountyhunter_support_02",
-		"combat_bountyhunter_support_03",
-		"combat_bountyhunter_support_04",
-		"outdoors_squadleader_novice",
-		"outdoors_squadleader_master",
-		"outdoors_squadleader_movement_01",
-		"outdoors_squadleader_movement_02",
-		"outdoors_squadleader_movement_03",
-		"outdoors_squadleader_movement_04",
-		"outdoors_squadleader_offense_01",
-		"outdoors_squadleader_offense_02",
-		"outdoors_squadleader_offense_03",
-		"outdoors_squadleader_offense_04",
-		"outdoors_squadleader_defense_01",
-		"outdoors_squadleader_defense_02",
-		"outdoors_squadleader_defense_03",
-		"outdoors_squadleader_defense_04",
-		"outdoors_squadleader_support_01",
-		"outdoors_squadleader_support_02",
-		"outdoors_squadleader_support_03",
-		"outdoors_squadleader_support_04",
-		"outdoors_ranger_novice",
-		"outdoors_ranger_master",
-		"outdoors_ranger_movement_01",
-		"outdoors_ranger_movement_02",
-		"outdoors_ranger_movement_03",
-		"outdoors_ranger_movement_04",
-		"outdoors_ranger_tracking_01",
-		"outdoors_ranger_tracking_02",
-		"outdoors_ranger_tracking_03",
-		"outdoors_ranger_tracking_04",
-		"outdoors_ranger_harvest_01",
-		"outdoors_ranger_harvest_02",
-		"outdoors_ranger_harvest_03",
-		"outdoors_ranger_harvest_04",
-		"outdoors_ranger_support_01",
-		"outdoors_ranger_support_02",
-		"outdoors_ranger_support_03",
-		"outdoors_ranger_support_04"
 	},
 
 	-- Elite Professions
@@ -1498,3 +892,619 @@ trainerSkills = {
 		"force_discipline_defender_preternatural_defense_04"
 	},
 }
+
+if skillsStartTrainerTrainsAllSkillsEnabled and not skillsAlreadyAdded then
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_production_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_production_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_production_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_production_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_techniques_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_techniques_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_techniques_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_techniques_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_harvesting_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_harvesting_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_harvesting_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_harvesting_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_blueprints_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_blueprints_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_blueprints_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_architect_blueprints_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_personal_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_personal_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_personal_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_personal_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_heavy_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_heavy_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_heavy_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_heavy_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_deflectors_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_deflectors_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_deflectors_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_deflectors_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_complexity_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_complexity_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_complexity_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_armorsmith_complexity_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_melee_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_melee_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_melee_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_melee_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_firearms_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_firearms_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_firearms_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_firearms_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_munitions_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_munitions_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_munitions_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_munitions_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_techniques_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_techniques_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_techniques_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_weaponsmith_techniques_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_engineering_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_engineering_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_engineering_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_engineering_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_propulsion_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_propulsion_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_propulsion_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_propulsion_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_systems_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_systems_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_systems_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_systems_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_defense_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_defense_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_defense_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_shipwright_defense_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_production_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_production_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_production_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_production_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_techniques_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_techniques_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_techniques_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_techniques_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_refinement_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_refinement_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_refinement_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_refinement_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_blueprints_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_blueprints_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_blueprints_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_droidengineer_blueprints_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dish_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dish_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dish_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dish_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dessert_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dessert_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dessert_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_dessert_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_drink_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_drink_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_drink_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_drink_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_techniques_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_techniques_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_techniques_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_chef_techniques_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_casual_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_casual_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_casual_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_casual_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_field_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_field_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_field_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_field_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_formal_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_formal_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_formal_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_formal_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_production_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_production_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_production_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_tailor_production_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_novice")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_master")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_advertising_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_advertising_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_advertising_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_advertising_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_sales_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_sales_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_sales_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_sales_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_hiring_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_hiring_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_hiring_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_hiring_04")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_management_01")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_management_02")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_management_03")
+	table.insert(trainerSkills.trainer_artisan, "crafting_merchant_management_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_novice")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_master")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_accuracy_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_accuracy_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_accuracy_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_accuracy_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_speed_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_speed_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_speed_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_speed_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_ability_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_ability_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_ability_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_ability_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_support_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_support_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_support_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_1hsword_support_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_novice")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_master")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_accuracy_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_accuracy_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_accuracy_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_accuracy_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_speed_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_speed_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_speed_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_speed_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_ability_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_ability_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_ability_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_ability_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_support_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_support_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_support_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_2hsword_support_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_novice")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_master")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_accuracy_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_accuracy_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_accuracy_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_accuracy_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_speed_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_speed_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_speed_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_speed_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_ability_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_ability_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_ability_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_ability_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_support_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_support_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_support_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_polearm_support_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_novice")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_master")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_accuracy_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_accuracy_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_accuracy_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_accuracy_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_speed_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_speed_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_speed_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_speed_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_ability_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_ability_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_ability_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_ability_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_support_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_support_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_support_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_unarmed_support_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_novice")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_master")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_accuracy_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_accuracy_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_accuracy_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_accuracy_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_speed_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_speed_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_speed_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_heavyweapon_speed_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_thrownweapon_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_thrownweapon_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_thrownweapon_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_thrownweapon_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_support_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_support_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_support_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_commando_support_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_novice")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_master")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_underworld_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_underworld_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_underworld_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_underworld_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_slicing_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_slicing_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_slicing_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_slicing_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_combat_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_combat_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_combat_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_combat_04")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_spice_01")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_spice_02")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_spice_03")
+	table.insert(trainerSkills.trainer_brawler, "combat_smuggler_spice_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_novice")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_master")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_hairstyle_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_hairstyle_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_hairstyle_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_hairstyle_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_exotic_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_exotic_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_exotic_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_exotic_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_bodyform_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_bodyform_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_bodyform_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_bodyform_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_markings_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_markings_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_markings_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_imagedesigner_markings_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_novice")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_master")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_ability_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_ability_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_ability_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_ability_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_wound_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_wound_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_wound_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_wound_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_knowledge_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_knowledge_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_knowledge_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_knowledge_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_shock_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_shock_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_shock_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_musician_shock_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_novice")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_master")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_ability_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_ability_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_ability_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_ability_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_wound_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_wound_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_wound_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_wound_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_knowledge_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_knowledge_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_knowledge_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_knowledge_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_shock_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_shock_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_shock_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_dancer_shock_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_novice")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_master")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_fiscal_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_fiscal_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_fiscal_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_fiscal_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_martial_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_martial_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_martial_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_martial_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_civic_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_civic_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_civic_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_civic_04")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_urban_01")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_urban_02")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_urban_03")
+	table.insert(trainerSkills.trainer_entertainer, "social_politician_urban_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_novice")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_master")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_accuracy_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_accuracy_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_accuracy_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_accuracy_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_speed_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_speed_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_speed_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_speed_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_ability_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_ability_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_ability_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_ability_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_support_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_support_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_support_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_rifleman_support_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_novice")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_master")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_accuracy_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_accuracy_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_accuracy_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_accuracy_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_speed_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_speed_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_speed_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_speed_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_ability_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_ability_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_ability_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_ability_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_support_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_support_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_support_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_pistol_support_04")		
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_novice")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_master")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_accuracy_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_accuracy_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_accuracy_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_accuracy_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_speed_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_speed_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_speed_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_speed_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_ability_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_ability_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_ability_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_ability_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_support_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_support_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_support_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_carbine_support_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_novice")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_master")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_underworld_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_underworld_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_underworld_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_underworld_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_slicing_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_slicing_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_slicing_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_slicing_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_combat_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_combat_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_combat_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_combat_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_spice_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_spice_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_spice_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_smuggler_spice_04")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_novice")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_master")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_movement_01")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_movement_02")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_movement_03")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_movement_04")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_offense_01")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_offense_02")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_offense_03")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_offense_04")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_defense_01")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_defense_02")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_defense_03")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_defense_04")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_support_01")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_support_02")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_support_03")
+	table.insert(trainerSkills.trainer_marksman, "outdoors_squadleader_support_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_novice")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_master")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_accuracy_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_accuracy_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_accuracy_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_accuracy_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_speed_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_speed_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_speed_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_heavyweapon_speed_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_thrownweapon_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_thrownweapon_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_thrownweapon_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_thrownweapon_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_support_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_support_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_support_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_commando_support_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_novice")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_master")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_investigation_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_investigation_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_investigation_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_investigation_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidcontrol_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidcontrol_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidcontrol_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidcontrol_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidresponse_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidresponse_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidresponse_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_droidresponse_04")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_support_01")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_support_02")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_support_03")
+	table.insert(trainerSkills.trainer_marksman, "combat_bountyhunter_support_04")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_novice")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_master")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_01")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_02")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_03")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_04")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_speed_01")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_speed_02")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_speed_03")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_healing_range_speed_04")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_medicine_01")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_medicine_02")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_medicine_03")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_medicine_04")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_support_01")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_support_02")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_support_03")
+	table.insert(trainerSkills.trainer_marksman, "science_combatmedic_support_04")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_novice")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_master")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_01")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_02")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_03")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_04")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_speed_01")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_speed_02")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_speed_03")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_healing_range_speed_04")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_medicine_01")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_medicine_02")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_medicine_03")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_medicine_04")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_support_01")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_support_02")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_support_03")
+	table.insert(trainerSkills.trainer_medic, "science_combatmedic_support_04")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_novice")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_master")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_speed_01")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_speed_02")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_speed_03")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_speed_04")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_01")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_02")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_03")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_wound_04")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_ability_01")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_ability_02")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_ability_03")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_ability_04")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_support_01")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_support_02")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_support_03")
+	table.insert(trainerSkills.trainer_medic, "science_doctor_support_04")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_novice")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_master")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_creature_01")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_creature_02")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_creature_03")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_creature_04")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_tissue_01")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_tissue_02")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_tissue_03")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_tissue_04")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_dna_harvesting_01")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_dna_harvesting_02")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_dna_harvesting_03")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_dna_harvesting_04")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_production_01")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_production_02")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_production_03")
+	table.insert(trainerSkills.trainer_medic, "outdoors_bio_engineer_production_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_novice")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_master")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_creature_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_creature_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_creature_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_creature_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_tissue_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_tissue_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_tissue_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_tissue_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_dna_harvesting_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_dna_harvesting_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_dna_harvesting_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_dna_harvesting_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_production_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_production_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_production_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_bio_engineer_production_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_novice")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_master")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_taming_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_taming_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_taming_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_taming_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_training_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_training_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_training_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_training_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_healing_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_healing_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_healing_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_healing_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_support_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_support_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_support_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_creaturehandler_support_04")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_novice")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_master")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_investigation_01")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_investigation_02")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_investigation_03")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_investigation_04")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidcontrol_01")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidcontrol_02")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidcontrol_03")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidcontrol_04")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidresponse_01")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidresponse_02")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidresponse_03")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_droidresponse_04")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_support_01")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_support_02")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_support_03")
+	table.insert(trainerSkills.trainer_scout, "combat_bountyhunter_support_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_novice")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_master")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_movement_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_movement_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_movement_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_movement_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_offense_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_offense_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_offense_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_offense_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_defense_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_defense_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_defense_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_defense_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_support_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_support_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_support_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_squadleader_support_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_novice")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_master")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_movement_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_movement_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_movement_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_movement_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_tracking_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_tracking_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_tracking_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_tracking_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_harvest_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_harvest_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_harvest_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_harvest_04")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_support_01")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_support_02")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_support_03")
+	table.insert(trainerSkills.trainer_scout, "outdoors_ranger_support_04")
+	skillsAlreadyAdded = true
+end

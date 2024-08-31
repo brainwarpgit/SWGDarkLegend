@@ -1,4 +1,5 @@
 local ObjectManager = require("managers.object.object_manager")
+dofile("scripts/managers/global_variables.lua")
 
 PadawanTrials = ScreenPlay:new {}
 
@@ -371,7 +372,9 @@ function PadawanTrials:notifyTunedLightsaberCrystal(pPlayer, pItem)
 
 	CreatureObject(pPlayer):setScreenPlayState(1, trialState .. "_crystal")
 	self:passTrial(pPlayer)
-	CreatureObject(pPlayer):awardExperience("jedi_general", 1000, true)
+	if missionJediPadawanTrialsGrantXPEnabled and missionJediPadawanTrailsXP ~= nil and missionJediPadawanTrailsXP > 0 then
+		CreatureObject(pPlayer):awardExperience("jedi_general", missionJediPadawanTrailsXP, true)
+	end
 	return 1
 end
 
