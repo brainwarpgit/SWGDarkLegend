@@ -7,6 +7,9 @@
 --
 --
 --
+--Admin
+adminTag = "SWGDL-Admin"
+
 --Auction
 auctionMaxBazaarPrice = 10000000 --default 20000
 auctionMaxSales = 1000 --default 25
@@ -234,6 +237,10 @@ missionNameAndLevelEnabled = true --default false destroy terminals?
 missionDirectionSelectionEnabled = true --default false all mission terminals?
 missionLevelSelectionEnabled = true --default false destroy / faction terminals
 missionRewardMultiplier = 2 --default 1
+missionEscortMissionDistance = 64 --default 64
+missionEscortMissionDistanceEnabled = false --default true
+missionThemeParkFactionMultiplier = 10 --default 1
+missionThemeParkCreditMultiplier = 10 --default 1
 
 --Pet
 petCallTime = 0 --default 15 in seconds
@@ -389,3 +396,4 @@ vendorSkimSalesForMaintenancePercent = 5 --default 5 in percent
 wearablesAllPlayerRaces = { "object/creature/player/bothan_male.iff","object/creature/player/bothan_female.iff","object/creature/player/human_male.iff","object/creature/player/human_female.iff","object/creature/player/ithorian_male.iff","object/creature/player/ithorian_female.iff","object/creature/player/moncal_male.iff","object/creature/player/moncal_female.iff","object/creature/player/rodian_male.iff","object/creature/player/rodian_female.iff","object/creature/player/sullustan_male.iff","object/creature/player/sullustan_female.iff","object/creature/player/trandoshan_male.iff","object/creature/player/trandoshan_female.iff","object/creature/player/twilek_male.iff","object/creature/player/twilek_female.iff","object/creature/player/wookiee_male.iff","object/creature/player/wookiee_female.iff","object/creature/player/zabrak_male.iff","object/creature/player/zabrak_female.iff","object/mobile/vendor/aqualish_female.iff","object/mobile/vendor/aqualish_male.iff","object/mobile/vendor/bith_female.iff","object/mobile/vendor/bith_male.iff","object/mobile/vendor/bothan_female.iff","object/mobile/vendor/bothan_male.iff","object/mobile/vendor/devaronian_male.iff","object/mobile/vendor/gran_male.iff","object/mobile/vendor/human_female.iff","object/mobile/vendor/human_male.iff","object/mobile/vendor/ishi_tib_male.iff","object/mobile/vendor/ithorian_female.iff","object/mobile/vendor/ithorian_male.iff","object/mobile/vendor/moncal_female.iff","object/mobile/vendor/moncal_male.iff","object/mobile/vendor/nikto_male.iff","object/mobile/vendor/quarren_male.iff","object/mobile/vendor/rodian_female.iff","object/mobile/vendor/rodian_male.iff","object/mobile/vendor/sullustan_female.iff","object/mobile/vendor/sullustan_male.iff","object/mobile/vendor/trandoshan_female.iff","object/mobile/vendor/trandoshan_male.iff","object/mobile/vendor/twilek_female.iff","object/mobile/vendor/twilek_male.iff","object/mobile/vendor/weequay_male.iff","object/mobile/vendor/wookiee_female.iff","object/mobile/vendor/wookiee_male.iff","object/mobile/vendor/zabrak_female.iff","object/mobile/vendor/zabrak_male.iff" }
 wearablesFactionEnabled = false --default true
 wearablesAllPlayerRacesEnabled = true --default false
+

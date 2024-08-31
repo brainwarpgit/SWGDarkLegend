@@ -1,5 +1,6 @@
 require("screenplays.screenplay")
 local ObjectManager = require("managers.object.object_manager")
+dofile("scripts/managers/global_variables.lua")
 
 SIT = 1
 STAND = 0
@@ -1887,13 +1888,24 @@ function ThemeParkLogic:handleMissionReward(pConversingPlayer)
 	end
 
 	local rewards = mission.rewards
+	local factionMultiplier = 1
+	local creditMultiplier = 1
+	if missionThemeParkFactionMultiplier ~= nil and missionThemeParkFactionMultiplier > 0 then
+		factionMultiplier = missionThemeParkFactionMultiplier
+	end
+	if missionThemeParkCreditMultiplier ~= nil and missionThemeParkCreditMultiplier > 0 then
+		creditMultiplier = missionThemeParkCreditMultiplier
+	end
+	
+	
+	local missionThemeParkCreditMultiplier = 0
 
 	for i = 1, # rewards, 1 do
 		local reward = rewards[i]
 		if reward.rewardType == "credits" then
-			self:giveCredits(pConversingPlayer, reward.amount)
+			self:giveCredits(pConversingPlayer, reward.amount * creditMultiplier)
 		elseif reward.rewardType == "faction" then
-			self:giveFaction(pConversingPlayer, reward.faction, reward.amount)
+			self:giveFaction(pConversingPlayer, reward.faction, reward.amount * factionMultiplier)
 		elseif reward.rewardType == "loot" then
 			self:giveLoot(pConversingPlayer, reward.lootGroup)
 		elseif reward.rewardType == "loot_set" then
@@ -2178,9 +2190,15 @@ function ThemeParkLogic:escortedNpcCloseEnough(pConversingPlayer)
 	local objectID = readData(CreatureObject(pConversingPlayer):getObjectID() .. ":missionSpawn:no1")
 	local pNpc = getSceneObject(objectID)
 
-	--return pNpc ~= nil and SceneObject(pConversingPlayer):getDistanceTo(pNpc) < 64
-	if pNpc == nil then return end
-	return true
+	if missionEscortMissionDistanceEnabled == nil or missionEscortMissionDistanceEnabled == true then
+		if missionEscortMissionDistance == nil then
+			return pNpc ~= nil and SceneObject(pConversingPlayer):getDistanceTo(pNpc) < 64
+		else
+			return pNpc ~= nil and SceneObject(pConversingPlayer):getDistanceTo(pNpc) < missionEscortMissionDistance
+		end
+	else
+		return pNpc ~= nil
+	end
 end
 
 function ThemeParkLogic:resetThemePark(pConversingPlayer)

@@ -1,8 +1,19 @@
+--local lfs = require("lfs")
+--print("Current Directory: ", lfs.currentdir())
+dofile("scripts/managers/global_variables.lua")
+local admin_tag
+
+if adminTag ~= nil or adminTag ~= "" then
+	admin_tag = adminTag
+else
+	admin_tag = "SWGEmu-Admin"
+end
+
 admin = {
 	level = 15,
 	name = "admin",
 	flag = 0,
-	tag = "SWGDL-Admin",
+	tag = admin_tag,
 	skills = {
 		"admin_base",
 		"admin_debug_01",
