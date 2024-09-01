@@ -197,6 +197,9 @@ namespace globalVariables {
 	int harvestMilkTime = 10;
 	float harvestDNASampleDistance = 16;
 
+//Jedi
+	bool jediForceCostToTuneEnabled = true;
+
 //Loot
 	int lootDistance = 16;
 	bool lootAreaEnabled = false;
@@ -592,6 +595,9 @@ namespace globalVariables {
 			if (lua->getGlobalInt("harvestMilkTime") >= 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
 			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
 
+			//Jedi jediForceCostToTuneEnabled
+			if (lua->getGlobalBoolean("jediForceCostToTuneEnabled") == true || lua->getGlobalBoolean("jediForceCostToTuneEnabled") == false) jediForceCostToTuneEnabled = lua->getGlobalBoolean("jediForceCostToTuneEnabled");
+						
 			//Loot
 			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
 			if (lua->getGlobalBoolean("lootAreaEnabled") == true || lua->getGlobalBoolean("lootAreaEnabled") == false) lootAreaEnabled = lua->getGlobalBoolean("lootAreaEnabled");

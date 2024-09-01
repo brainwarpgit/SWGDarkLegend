@@ -200,6 +200,9 @@ harvestMultiplier = 2 --default 1
 harvestMilkTime = 5 --default 10 in seconds
 harvestDNASampleDistance = 64 --default 16  
 
+--Jedi
+jediForceCostToTuneEnabled = false --default true
+
 --Loot
 lootDistance = 64 --default 16 (Distance does not affect menu options.   They are still greyed out past the default..  must use /loot all)
 lootAreaEnabled = true --default false

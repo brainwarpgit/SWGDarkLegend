@@ -144,8 +144,8 @@ void LightsaberCrystalComponentImplementation::validateCrystalStats() {
 		setMaxCondition(getRandomizedStat(minStat, maxStat, itemLevel));
 
 	if (color == 31) {
-		minStat = crystalData->getMinDamage();
-		maxStat = crystalData->getMaxDamage();
+		minStat = crystalData->getMinDamage() * modifier;
+		maxStat = crystalData->getMaxDamage() * modifier;
 
 		if (damage > maxStat || damage < minStat)
 			damage = getRandomizedStat(minStat, maxStat, itemLevel);
@@ -391,6 +391,29 @@ int LightsaberCrystalComponentImplementation::handleObjectMenuSelect(CreatureObj
 			ownerID = 0;
 
 			//String tuneName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
+			String tuneName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
+			if (getCustomObjectName().toString().contains("(Exceptional) (tuned)"))
+				if (getCustomObjectName().toString().contains("Crystal"))
+					tuneName = "\\#00FF00Crystal (Exceptional)\\#.";
+				else
+					tuneName = "\\#00FF00Krayt Dragon Pearl (Exceptional)\\#.";
+			else if (getCustomObjectName().toString().contains("(Legendary) (tuned)"))
+				if (getCustomObjectName().toString().contains("Crystal"))
+					tuneName = "\\#00FF00Crystal (Legendary)\\#.";
+				else
+					tuneName = "\\#00FF00Krayt Dragon Pearl (Legendary)\\#.";
+			else if (getCustomObjectName().toString().contains("(" + globalVariables::lootYellowModifierName + ") (tuned)"))
+				if (getCustomObjectName().toString().contains("Crystal"))
+					tuneName = "\\#00FF00Crystal (" + globalVariables::lootYellowModifierName + ")\\#.";
+				else
+					tuneName = "\\#00FF00Krayt Dragon Pearl (" + globalVariables::lootYellowModifierName + ")\\#.";
+			else
+				if (getCustomObjectName().toString().contains("Crystal"))
+					tuneName = "\\#FFFFFFCrystal\\#.";
+				else
+					tuneName = "\\#FFFFFFKrayt Dragon Pearl\\#.";
+				
+			setCustomObjectName(tuneName, true);
 			//if (getCustomObjectName().toString().contains("(Exceptional)"))
 			//	tuneName = tuneName + " (Exceptional)\\#.";
 			//else if (getCustomObjectName().toString().contains("(Legendary)"))
@@ -445,8 +468,9 @@ void LightsaberCrystalComponentImplementation::tuneCrystal(CreatureObject* playe
 			player->sendSystemMessage("@jedi_spam:no_force_power");
 			return;
 		}
-
-		ghost->setForcePower(ghost->getForcePower() - tuningCost);
+		if (globalVariables::jediForceCostToTuneEnabled == true) {
+			ghost->setForcePower(ghost->getForcePower() - tuningCost);
+		}
 	}
 
 	if (ownerID == 0) {
@@ -461,6 +485,8 @@ void LightsaberCrystalComponentImplementation::tuneCrystal(CreatureObject* playe
 			tuneName = "\\#00FF00" + tuneName + " (Exceptional) (tuned)\\#.";
 		else if (getCustomObjectName().toString().contains("(Legendary)"))
 			tuneName = "\\#00FF00" + tuneName + " (Legendary) (tuned)\\#.";
+		else if (getCustomObjectName().toString().contains("(" + globalVariables::lootYellowModifierName + ")"))
+			tuneName = "\\#00FF00" + tuneName + " (" + globalVariables::lootYellowModifierName + ") (tuned)\\#.";
 		else
 			tuneName = "\\#00FF00" + tuneName + " (tuned)\\#.";
 
