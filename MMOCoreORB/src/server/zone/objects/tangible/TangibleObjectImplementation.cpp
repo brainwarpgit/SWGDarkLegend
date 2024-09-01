@@ -579,7 +579,7 @@ void TangibleObjectImplementation::removeOutOfRangeObjects() {
 		if (covObject->getCloseObjects() != nullptr) {
 			covObject->removeInRangeObject(rangeCheckObject);
 		} else {
-			covObject->notifyDissapear(covObject);
+			covObject->notifyDissapear(rangeCheckObject);
 		}
 	}
 }
