@@ -471,8 +471,8 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 			}
 		}
 	}
-	if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", level);
-	if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+	if (globalVariables::lootLevelToItemDescriptionEnabled == true and level != -999999) alm->insertAttribute("challenge_level", level);
+	if (globalVariables::lootModifierToItemDescriptionEnabled == true and modifier != -999999) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
 	String lootQualityString = "Base";
 	if (lootQuality == 4 ) {
 		lootQualityString = "Legendary";
@@ -481,7 +481,7 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 	} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
 		lootQualityString = globalVariables::lootYellowModifierName;
 	}
-	if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
+	if (globalVariables::lootQualityToItemDescriptionEnabled == true and lootQualityString != "Base") alm->insertAttribute("LootQuality", lootQualityString);
 }
 
 int WeaponObjectImplementation::getPointBlankAccuracy(bool withPup) const {

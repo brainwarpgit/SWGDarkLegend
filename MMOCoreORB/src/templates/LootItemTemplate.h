@@ -100,9 +100,9 @@ public:
 				const String& attribute = attributes->get(i);
 				const String& group = groups->get(i);
 
-				if (attribute == "sockets") {
-					continue;
-				}
+				//if (attribute == "sockets") {
+				//	continue;
+				//}
 
 				float min = minValues->get(i);
 				float max = maxValues->get(i);
