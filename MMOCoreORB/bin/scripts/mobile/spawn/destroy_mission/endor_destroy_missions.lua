@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not endorLairsAlreadyAdded then
+	endorLairsAlreadyAdded = false
+end
+
 endor_destroy_missions = {
 	minLevelCeiling = 40,
 
@@ -250,5 +256,15 @@ endor_destroy_missions = {
 		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(endor_destroy_missions.lairSpawns, {
+		lairTemplateName = "endor_blurrg_raptor_lair_neutral_small",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	endorLairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("endor_destroy_missions", endor_destroy_missions);

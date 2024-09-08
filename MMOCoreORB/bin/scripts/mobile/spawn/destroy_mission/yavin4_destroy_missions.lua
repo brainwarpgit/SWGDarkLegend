@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not yavin4LairsAlreadyAdded then
+	yavin4LairsAlreadyAdded = false
+end
+
 yavin4_destroy_missions = {
 	minLevelCeiling = 25,
 
@@ -106,5 +112,21 @@ yavin4_destroy_missions = {
 		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(yavin4_destroy_missions.lairSpawns, {
+		lairTemplateName = "yavin4_stintaril_prowler_lair_neutral_medium",
+		minDifficulty = 221,
+		maxDifficulty = 225,
+		size = 25,
+	})
+	table.insert(yavin4_destroy_missions.lairSpawns, {
+		lairTemplateName = "yavin4_acklay_lair_neutral_medium",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	yavin4LairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("yavin4_destroy_missions", yavin4_destroy_missions);

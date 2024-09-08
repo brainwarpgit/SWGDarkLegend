@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not dantooineLairsAlreadyAdded then
+	dantooineLairsAlreadyAdded = false
+end
+
 dantooine_destroy_missions = {
 	minLevelCeiling = 45,
 
@@ -184,5 +190,15 @@ dantooine_destroy_missions = {
 		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(dantooine_destroy_missions.lairSpawns, {
+		lairTemplateName = "dantooine_graul_marauder_lair_neutral_large",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 35,
+	})
+	dantooineLairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("dantooine_destroy_missions", dantooine_destroy_missions);

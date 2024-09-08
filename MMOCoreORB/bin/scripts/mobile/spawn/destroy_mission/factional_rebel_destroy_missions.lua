@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not factionalRebelLairsAlreadyAdded then
+	factionalRebelLairsAlreadyAdded = false
+end
+
 factional_rebel_destroy_missions = {
 	minLevelCeiling = 20,
 
@@ -188,13 +194,29 @@ factional_rebel_destroy_missions = {
 			maxDifficulty = 29,
 			size = 25,
 		},
-		{
-			lairTemplateName = "global_imperial_stormtrooper_camp2_imperial_large_theater",
-			minDifficulty = 25,
-			maxDifficulty = 32,
-			size = 25,
-		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(factional_rebel_destroy_missions.lairSpawns, {
+		lairTemplateName = "global_imperial_stormtrooper_commando_camp2_imperial_large_theater",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(factional_rebel_destroy_missions.lairSpawns, {
+		lairTemplateName = "global_imperial_general_camp2_imperial_large_theater",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(factional_rebel_destroy_missions.lairSpawns, {
+		lairTemplateName = "global_imperial_elite_novatrooper_commander_camp2_imperial_large_theater",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	factionalRebelLairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("factional_rebel_destroy_missions", factional_rebel_destroy_missions);

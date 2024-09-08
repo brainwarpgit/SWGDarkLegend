@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not factionalImperialLairsAlreadyAdded then
+	factionalImperialLairsAlreadyAdded = false
+end
+
 factional_imperial_destroy_missions = {
 	minLevelCeiling = 20,
 
@@ -152,7 +158,49 @@ factional_imperial_destroy_missions = {
 			maxDifficulty = 27,
 			size = 25,
 		},
+		{
+			lairTemplateName = "global_rebel_commando_camp2_rebel_large_theater",
+			minDifficulty = 396,
+			maxDifficulty = 400,
+			size = 25,
+		},
+		{
+			lairTemplateName = "global_rebel_general_camp2_rebel_large_theater",
+			minDifficulty = 396,
+			maxDifficulty = 400,
+			size = 25,
+		},
+		{
+			lairTemplateName = "global_rebel_rear_admiral_camp2_rebel_large_theater",
+			minDifficulty = 396,
+			maxDifficulty = 400,
+			size = 25,
+		},
 	}
 }
+
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(factional_imperial_destroy_missions.lairSpawns, {
+		lairTemplateName = "global_rebel_commando_camp2_rebel_large_theater",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(factional_imperial_destroy_missions.lairSpawns, {
+		lairTemplateName = "global_rebel_general_camp2_rebel_large_theater",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(factional_imperial_destroy_missions.lairSpawns, {
+		lairTemplateName = "global_rebel_rear_admiral_camp2_rebel_large_theater",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	factionalImperialLairsAlreadyAdded = true
+end
+
 
 addDestroyMissionGroup("factional_imperial_destroy_missions", factional_imperial_destroy_missions);

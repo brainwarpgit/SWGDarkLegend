@@ -201,6 +201,7 @@ namespace globalVariables {
 
 //Jedi
 	extern bool jediForceCostToTuneEnabled;
+	extern int jediKnightRequirementNumberOfMasters;
 
 //Loot
 	extern int lootDistance;

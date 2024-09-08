@@ -279,6 +279,7 @@ NabooTheedScreenPlay = CityScreenPlay:new {
 		{"flewt", 300, getRandomNumber(10) + -5176.4, 6, getRandomNumber(10) + 4612.2, getRandomNumber(360), 0},
 		{"flewt", 300, getRandomNumber(10) + -5161.3, 6, getRandomNumber(10) + 4601.7, getRandomNumber(360), 0},
 		{"flewt", 300, getRandomNumber(10) + -5193.3, 6, getRandomNumber(10) + 4610.0, getRandomNumber(360), 0},
+		--{"darth_vader_test", 1, 52, 12, 25, 0, 0},
 	}
 }
 

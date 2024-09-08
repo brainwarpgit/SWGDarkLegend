@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not lokLairsAlreadyAdded then
+	lokLairsAlreadyAdded = false
+end
+
 lok_destroy_missions = {
 	minLevelCeiling = 35,
 
@@ -154,5 +160,15 @@ lok_destroy_missions = {
 		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(lok_destroy_missions.lairSpawns, {
+		lairTemplateName = "lok_enraged_kimogilla_lair_neutral_medium",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	lokLairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("lok_destroy_missions", lok_destroy_missions);

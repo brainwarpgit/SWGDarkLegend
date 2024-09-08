@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not tatooineLairsAlreadyAdded then
+	tatooineLairsAlreadyAdded = false
+end
+
 tatooine_destroy_missions = {
 	minLevelCeiling = 25,
 
@@ -286,5 +292,21 @@ tatooine_destroy_missions = {
 		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(tatooine_destroy_missions.lairSpawns, {
+		lairTemplateName = "tatooine_tusken_raider_large",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(tatooine_destroy_missions.lairSpawns, {
+		lairTemplateName = "tatooine_giant_canyon_krayt_dragon_lair_neutral_medium",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	tatooineLairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("tatooine_destroy_missions", tatooine_destroy_missions);

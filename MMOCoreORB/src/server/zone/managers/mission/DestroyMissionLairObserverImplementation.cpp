@@ -46,15 +46,19 @@ bool DestroyMissionLairObserverImplementation::checkForNewSpawns(TangibleObject*
 
 	int spawnLimitAdjustment = 0;
 
-	if (difficulty == 0) {
-		spawnLimitAdjustment = -3;
-	} else if (difficulty == 4) {
-		spawnLimitAdjustment = 3;
+	if (lairTemplate->getSpawnLimit() > 5) {
+		if (difficulty == 0) {
+			spawnLimitAdjustment = -3;
+		} else if (difficulty == 4) {
+			spawnLimitAdjustment = 3;
+		}
 	}
 
 	int spawnLimit = lairTemplate->getSpawnLimit() + spawnLimitAdjustment;
 	spawnLimitAdjustment = spawnLimit;
-
+	
+	//Logger::console.info("NORMAL MISSION - spawnLimitAdjustment: " + std::to_string(spawnLimitAdjustment) + " lairTemplate: " + lairTemplate->getName(),true);
+	
 	bool isCreatureLair = false;
 
 	if (getMobType() == LairTemplate::CREATURE) {
@@ -87,6 +91,9 @@ bool DestroyMissionLairObserverImplementation::checkForNewSpawns(TangibleObject*
 	} else if (getMobType() == LairTemplate::NPC) {
 		return false;
 	} else {
+		if (lairTemplate->getSpawnLimit() < 6) {
+			return false;
+		}
 		// Spawn limit has been reached for lair
 		if (spawnedCreatures.size() >= spawnLimit) {
 			return false;
@@ -129,19 +136,19 @@ bool DestroyMissionLairObserverImplementation::checkForNewSpawns(TangibleObject*
 	int amountToSpawn = 0;
 
 	if (isCreatureLair) {
-		amountToSpawn = spawnLimitAdjustment / 3;
-
-		if (amountToSpawn <= 1) {
-			amountToSpawn = 2;
+		if (lairTemplate->getSpawnLimit() > 5) {
+			amountToSpawn = spawnLimitAdjustment / 3;
+		} else {
+			amountToSpawn = lairTemplate->getSpawnLimit();
 		}
 	} else {
-		amountToSpawn = System::random(2) + (spawnLimitAdjustment / 3);
-
-		if (amountToSpawn < 1) {
-			amountToSpawn = 1;
+		if (lairTemplate->getSpawnLimit() > 5) {
+			amountToSpawn = spawnLimitAdjustment / 3;
+		} else {
+			amountToSpawn = lairTemplate->getSpawnLimit();
 		}
 	}
-
+	
 	for (int i = 0; i < amountToSpawn; i++) {
 		int num = System::random(mobiles->size() - 1);
 		const String& mob = mobiles->get(num);
@@ -220,29 +227,34 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 
 	bool spawnScout = false;
 
-	if (getMobType() == LairTemplate::CREATURE && scoutCreatureId == 0 && (System::random(100) <= LairObserver::SCOUT_SPAWN_CHANCE)) {
-		spawnScout = true;
+	if (lairTemplate->getSpawnLimit() > 5) {
+		if (getMobType() == LairTemplate::CREATURE && scoutCreatureId == 0 && (System::random(100) <= LairObserver::SCOUT_SPAWN_CHANCE)) {
+			spawnScout = true;
+		}
 	}
-
+	
 	ManagedReference<CreatureObject*> creature = nullptr;
 
-	if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, LairObserver::BABY_SPAWN_CHANCE)) {
-		creature = creatureManager->spawnCreatureAsBaby(lairTemplateCRC, x, z, y);
+	if (lairTemplate->getSpawnLimit() > 5) {
+		if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, LairObserver::BABY_SPAWN_CHANCE)) {
+			creature = creatureManager->spawnCreatureAsBaby(lairTemplateCRC, x, z, y);
 
-		babiesSpawned++;
+			babiesSpawned++;
 
-		// Don't spawn baby as a scout
-		spawnScout = false;
+			// Don't spawn baby as a scout
+			spawnScout = false;
+		}
 	}
-
+	
 	if (creature == nullptr) {
 		String templateName = creatureTemplate->getTemplateName();
 		int creatureRoll = System::random(1000);
 		int creatureDifficulty = 1;
 		if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
 		if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
-		if (creatureDifficulty == 2) templateName += "_2";
-		if (creatureDifficulty == 3) templateName += "_3";
+		if (creatureDifficulty == 2 && !templateName.contains("_lair")) templateName += "_2";
+		if (creatureDifficulty == 3 && !templateName.contains("_lair")) templateName += "_3";
+		if (templateName.contains("_lair")) templateName += "_3";
 		creature = creatureManager->spawnCreatureWithAi(templateName.hashCode(), x, z, y);
 	}
 
@@ -264,7 +276,7 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 	agent->setHomeObject(lair);
 	agent->setLairTemplateCRC(lairTemplateCRC);
 
-	if (spawnScout) {
+	if (spawnScout && lairTemplate->getSpawnLimit() > 5) {
 		agent->addObjectFlag(ObjectFlag::SCOUT);
 		agent->setAITemplate();
 
@@ -305,7 +317,10 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 	}
 
 	// Any spawn wave with the exception of the initial wave causes lair damage
-	int newDamage = (lair->getMaxCondition() / ((lairTemplate->getSpawnLimit() / 3) * 5));
+	int newDamage = 0;
+	if (lairTemplate->getSpawnLimit() > 5) {
+		newDamage = (lair->getMaxCondition() / ((lairTemplate->getSpawnLimit() / 3) * 5));
+	}
 
 #ifdef DEBUG_MISSION_LAIRS
 	info(true) << "Wild Lair - Name: " << lair->getDisplayedName() << " ID: " << lair->getObjectID() << " Damaging Self from creature spawn: " << newDamage;

@@ -199,6 +199,7 @@ namespace globalVariables {
 
 //Jedi
 	bool jediForceCostToTuneEnabled = true;
+	int jediKnightRequirementNumberOfMasters = 2;
 
 //Loot
 	int lootDistance = 16;
@@ -241,7 +242,7 @@ namespace globalVariables {
 	bool missionDirectionSelectionEnabled = false;
 	bool missionLevelSelectionEnabled = false;
 	int missionRewardMultiplier = 1;
-
+	
 //Pet
 	int petCallTime = 15;
 	int petGrowthCycleTime = 720;
@@ -597,6 +598,7 @@ namespace globalVariables {
 
 			//Jedi jediForceCostToTuneEnabled
 			if (lua->getGlobalBoolean("jediForceCostToTuneEnabled") == true || lua->getGlobalBoolean("jediForceCostToTuneEnabled") == false) jediForceCostToTuneEnabled = lua->getGlobalBoolean("jediForceCostToTuneEnabled");
+			if (lua->getGlobalInt("jediKnightRequirementNumberOfMasters") >= 0) jediKnightRequirementNumberOfMasters = lua->getGlobalInt("jediKnightRequirementNumberOfMasters");
 						
 			//Loot
 			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
@@ -635,7 +637,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("missionDirectionSelectionEnabled") == true || lua->getGlobalBoolean("missionDirectionSelectionEnabled") == false) missionDirectionSelectionEnabled = lua->getGlobalBoolean("missionDirectionSelectionEnabled");
 			if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
 			if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
-
+			
 			//Pet
 			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");
 			if (lua->getGlobalInt("petGrowthCycleTime") > 0) petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");

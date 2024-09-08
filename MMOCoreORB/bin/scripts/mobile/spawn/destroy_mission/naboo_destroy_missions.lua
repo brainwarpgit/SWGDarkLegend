@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not nabooLairsAlreadyAdded then
+	nabooLairsAlreadyAdded = false
+end
+
 naboo_destroy_missions = {
 	minLevelCeiling = 25,
 
@@ -220,5 +226,15 @@ naboo_destroy_missions = {
 		},
 	}
 }
+
+if missionEnableJediKnightDestroyMissions then
+	table.insert(naboo_destroy_missions.lairSpawns, {
+		lairTemplateName = "naboo_peko_peko_albatross",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	nabooLairsAlreadyAdded = true
+end
 
 addDestroyMissionGroup("naboo_destroy_missions", naboo_destroy_missions);

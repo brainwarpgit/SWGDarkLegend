@@ -1,3 +1,9 @@
+dofile("scripts/managers/global_variables.lua")
+
+if not dathomirLairsAlreadyAdded then
+	dathomirLairsAlreadyAdded = false
+end
+
 dathomir_destroy_missions = {
 	minLevelCeiling = 45,
 
@@ -157,8 +163,29 @@ dathomir_destroy_missions = {
 			minDifficulty = 87,
 			maxDifficulty = 91,
 			size = 35,
-		}
+		},
 	}
 }
 
+if missionEnableJediKnightDestroyMissions then
+	table.insert(dathomir_destroy_missions.lairSpawns, {
+		lairTemplateName = "dathomir_rancor_ancient_bull_lair_neutral_large",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(dathomir_destroy_missions.lairSpawns, {
+		lairTemplateName = "dathomir_kiin_dray_lair_neutral_large",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	table.insert(dathomir_destroy_missions.lairSpawns, {
+		lairTemplateName = "dathomir_nightsister_elder_large",
+		minDifficulty = 396,
+		maxDifficulty = 400,
+		size = 25,
+	})
+	dathomirLairsAlreadyAdded = true
+end
 addDestroyMissionGroup("dathomir_destroy_missions", dathomir_destroy_missions);

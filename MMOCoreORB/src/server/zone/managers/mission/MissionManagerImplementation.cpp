@@ -5,6 +5,7 @@
  *      Author: victor
  */
 
+#include <system/lang/String.h>
 #include "server/zone/managers/mission/MissionManager.h"
 #include "server/zone/objects/tangible/terminal/mission/MissionTerminal.h"
 #include "server/zone/objects/creature/CreatureObject.h"
@@ -781,15 +782,22 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	if (globalVariables::missionLevelSelectionEnabled == true) {	
 		diffDisplay = difficultyLevel + 7;
 		String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");
-	  	int levelChoice = Integer::valueOf(level);
-		if (levelChoice > 0) 
+		int levelChoice = Integer::valueOf(level);
+		if (levelChoice > 0) {
 			diffDisplay += levelChoice;
-		else if (player->isGrouped())
-			diffDisplay += player->getGroup()->getGroupLevel();
-		else
+		} else if (player->isGrouped()) {
+			bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
+			Reference<GroupObject*> group = player->getGroup();
+
+			if (group != nullptr) {
+				Locker locker(group);
+				diffDisplay += group->getGroupLevel(includeFactionPets);
+			}
+		} else {
 			diffDisplay += playerLevel;
+		}
 	} else {
-		int diffDisplay = difficultyLevel < 5 ? 4 : difficultyLevel;
+		diffDisplay = difficultyLevel < 5 ? 4 : difficultyLevel;
 
 		if (player->isGrouped()) {
 			bool includeFactionPets = faction != Factions::FACTIONNEUTRAL || ConfigManager::instance()->includeFactionPetsForMissionDifficulty();
@@ -926,6 +934,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	else
 		messageDifficulty = "_hard";
 	
+	String mobileName = "mysterious";
 	if (globalVariables::missionNameAndLevelEnabled == true) {
 		String groupSuffix;
 	 	if (lairTemplateObject->getMobType() == LairTemplate::NPC) {
@@ -936,10 +945,12 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	 		groupSuffix = " lair.";
 	 	}
 	 	const VectorMap<String, int>* mobiles = lairTemplateObject->getMobiles();
-	 	String mobileName = "mysterious";
 	 	if (mobiles->size() > 0) {
 	 		mobileName = mobiles->elementAt(0).getKey();
 	 	}
+		if (mobileName.contains("_lair")) {
+			mobileName = mobileName.replaceFirst("_lair","");
+		}
 		mission->setMissionTitle("CL" + String::valueOf(diffDisplay), " Destroy the " + mobileName.replaceAll("_", " ") + groupSuffix);
 	} else {
 		if (lairTemplateObject->getMobType() == LairTemplate::NPC) {
@@ -956,12 +967,12 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	case Factions::FACTIONIMPERIAL:
 		mission->setRewardFactionPointsImperial(factionPointsReward * 2);
 		mission->setRewardFactionPointsRebel(-factionPointsReward);
-		generateRandomFactionalDestroyMissionDescription(player, mission, "imperial");
+		generateRandomFactionalDestroyMissionDescription(player, mission, "imperial", mobileName, diffDisplay);
 		break;
 	case Factions::FACTIONREBEL:
 		mission->setRewardFactionPointsImperial(-factionPointsReward);
 		mission->setRewardFactionPointsRebel(factionPointsReward * 2);
-		generateRandomFactionalDestroyMissionDescription(player, mission, "rebel");
+		generateRandomFactionalDestroyMissionDescription(player, mission, "rebel", mobileName, diffDisplay);
 		break;
 	default:
 		mission->setRewardFactionPointsImperial(0);
@@ -1711,7 +1722,7 @@ void MissionManagerImplementation::randomizeGenericReconMission(CreatureObject* 
 	mission->setTypeCRC(MissionTypes::RECON);
 }
 
-void MissionManagerImplementation::generateRandomFactionalDestroyMissionDescription(CreatureObject* player, MissionObject* mission, const String& faction) {
+void MissionManagerImplementation::generateRandomFactionalDestroyMissionDescription(CreatureObject* player, MissionObject* mission, const String& faction, const String& mobileName, int diffDisplay) {
 	String difficultyString = faction;
 	int randomMax;
 
@@ -1741,8 +1752,13 @@ void MissionManagerImplementation::generateRandomFactionalDestroyMissionDescript
 	}
 
 	int randomNumber = System::random(randomMax) + 1;
-
-	mission->setMissionTitle("mission/mission_destroy_" + difficultyString, "m" + String::valueOf(randomNumber) + "t");
+	
+	if (globalVariables::missionNameAndLevelEnabled == true) {
+		mission->setMissionTitle("CL" + String::valueOf(diffDisplay), " Destroy the " + mobileName.replaceAll("_", " ") + " camp");
+	} else {
+		mission->setMissionTitle("mission/mission_destroy_" + difficultyString, "m" + String::valueOf(randomNumber) + "t");
+	}
+	
 	mission->setMissionDescription("mission/mission_destroy_" +  difficultyString, "m" + String::valueOf(randomNumber) + "d");
 }
 

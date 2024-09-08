@@ -202,6 +202,7 @@ harvestDNASampleDistance = 64 --default 16
 
 --Jedi
 jediForceCostToTuneEnabled = false --default true
+jediKnightRequirementNumberOfMasters = 3 --default 2 and change  points removed due to skills having no costs
 
 --Loot
 lootDistance = 64 --default 16 (Distance does not affect menu options.   They are still greyed out past the default..  must use /loot all)
@@ -246,6 +247,7 @@ missionThemeParkFactionMultiplier = 10 --default 1
 missionThemeParkCreditMultiplier = 10 --default 1
 missionJediPadawanTrialsGrantXPEnabled = true --default false
 missionJediPadawanTrailsXP = 1250 --default 0   1250 to get enough for one novice box after trials.
+missionEnableJediKnightDestroyMissions = true --default false
 
 --Pet
 petCallTime = 0 --default 15 in seconds
