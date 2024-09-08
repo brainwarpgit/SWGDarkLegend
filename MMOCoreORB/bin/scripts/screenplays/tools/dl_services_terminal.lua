@@ -148,6 +148,29 @@ function swgdl_buff_terminal:openWindow(pCreatureObject, pUsingObject)
 	
 	sui.add(resetMessage, "")
 	
+	local newbItemsMessage = "Get Starting Items"
+
+	if (tonumber(readScreenPlayData(pCreatureObject,"swgdl_buff_terminal", "newbItemsOneTimeFree")) == nil) then
+		newbItemsMessage = newbItemsMessage .. " (0cr) - First Time Free +25k each use after"
+	else
+		local newbItemsFee = tonumber(readScreenPlayData(pCreatureObject,"swgdl_buff_terminal", "newbItemsOneTimeFree"))
+		if (newbItemsFee >= 100000) then
+			newbItemsFee = 100000
+			newbItemsMessage = newbItemsMessage .. " (" .. tostring(newbItemsFee) .. "cr) - Max Fee"
+		else
+			newbItemsMessage = newbItemsMessage .. " (" .. tostring(newbItemsFee) .. "cr) - +25k each use after"
+		end
+		
+	end
+	
+	sui.add(newbItemsMessage, "")
+	
+	--local newbItemsReset = "(Admin) Reset Starting Items"
+	
+	--if PlayerObject(CreatureObject(pCreatureObject):getPlayerObject()):isPrivileged() then
+	--	sui.add(newbItemsReset, "")
+	--end
+	
 	sui.sendTo(pCreatureObject)
 end
 
@@ -177,6 +200,10 @@ function swgdl_buff_terminal:defaultCallback(pPlayer, pSui, eventIndex, args)
 		self:woundWounds(pPlayer)
 	elseif (selectedOption == 3) then
 		self:removePlayerBuffs(pPlayer)
+	elseif (selectedOption == 4) then
+		self:giveNewbItems(pPlayer)
+	--elseif (selectedOption == 5) then
+	--	self:newbItemReset(pPlayer)
 	end
 end
 
@@ -377,3 +404,112 @@ end
 function swgdl_buff_terminal_menu_component:noCallback(pPlayer, pSui, eventIndex)
 	-- do nothing
 end
+
+function swgdl_buff_terminal:giveNewbItems(pPlayer)
+	local newbItemsFee = 0
+	if (tonumber(readScreenPlayData(pPlayer,"swgdl_buff_terminal", "newbItemsOneTimeFree")) ~= nil) then
+		newbItemsFee = tonumber(readScreenPlayData(pPlayer,"swgdl_buff_terminal", "newbItemsOneTimeFree"))
+	end
+	if (newbItemsFee > 100000) then
+		newbItemsFee = 100000
+	end
+	local price = newbItemsFee
+	
+	if (price > 0) then
+		local playerCash = CreatureObject(pPlayer):getCashCredits()
+		local playerBank = CreatureObject(pPlayer):getBankCredits()
+
+		if (playerCash + playerBank < price) then
+			CreatureObject(pPlayer):sendSystemMessage("Insufficient Funds: You require " .. tostring(newbItemsFee) .. " credits in cash to use the wounding service.")
+			return
+		end
+		
+		if (playerCash > price) then
+			CreatureObject(pPlayer):subtractCashCredits(price)
+		else
+			local diff = price - playerCash
+			CreatureObject(pPlayer):subtractCashCredits(playerCash)
+			CreatureObject(pPlayer):setBankCredits(playerBank-diff)
+		end		
+	end
+
+	local pInventory = CreatureObject(pPlayer):getSlottedObject("inventory")
+	
+	if pInventory == nil then
+		return
+	end
+
+	if (SceneObject(pInventory):isContainerFullRecursive()) then
+		if (pDroid ~= nil) then
+			spatialChat(pDroid, "@new_player:inventory_full")
+		end
+		return
+	end
+	
+	local pCraftingTool = giveItem(pInventory, "object/tangible/crafting/station/generic_tool.iff", -1)
+	if (pCraftingTool ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("@new_player:given_crafting_tool")
+	end
+
+	local pSurveryDevice = giveItem(pInventory, "object/tangible/survey_tool/survey_tool_mineral.iff", -1)
+	if (pSurveryDevice ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("@new_player:given_survey_device")
+	end
+
+	local pInstrument = giveItem(pInventory, "object/tangible/instrument/slitherhorn.iff", -1)
+	if (pInstrument ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("@new_player:given_slitherhorn")
+	end
+
+	local pWeaponKnife = giveItem(pInventory, "object/weapon/melee/knife/knife_survival.iff", -1)
+	if (pWeaponKnife ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("Survival Knife has been place in your inventory")
+	end	
+
+	local pWeaponStaff = giveItem(pInventory, "object/weapon/melee/polearm/lance_staff_wood_s1.iff", -1)
+	if (pWeaponStaff ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("Wooden Staff has been place in your inventory")
+	end	
+
+	local pWeaponAxe = giveItem(pInventory, "object/weapon/melee/axe/axe_heavy_duty.iff", -1)
+	if (pWeaponAxe ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("Heavy Duty Axe has been place in your inventory")
+	end	
+	
+	local pWeaponPistol = giveItem(pInventory, "object/weapon/ranged/pistol/pistol_cdef.iff", -1)
+	if (pWeaponPistol ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("CDEF Pistol has been place in your inventory")
+	end
+	
+	local pWeaponCarbine = giveItem(pInventory, "object/weapon/ranged/carbine/carbine_cdef.iff", -1)
+	if (pWeaponCarbine ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("CDEF Carbine has been place in your inventory")
+	end
+	
+	local pWeaponRifle = giveItem(pInventory, "object/weapon/ranged/rifle/rifle_cdef.iff", -1)
+	if (pWeaponRifle ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("CDEF Rifle been place in your inventory")
+	end	
+
+	local SwoopReward = giveItem(pInventory, "object/tangible/deed/vehicle_deed/speederbike_swoop_deed.iff", -1)
+	if (SwoopReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a Swoop Speeder!")
+	end
+	
+	local BagReward = giveItem(pInventory, "object/tangible/wearables/backpack/backpack_s01.iff", -1)
+	if (BagReward ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("You have been given a Travel Bag!")
+	end
+
+	writeScreenPlayData(pPlayer, "swgdl_buff_terminal", "newbItemsOneTimeFree", newbItemsFee + 25000)
+end
+
+function swgdl_buff_terminal:newbItemReset(pPlayer)
+	deleteScreenPlayData(pPlayer, "swgdl_buff_terminal", "newbItemsOneTimeFree")
+	if (tonumber(readScreenPlayData(pPlayer,"swgdl_buff_terminal", "newbItemsOneTimeFree")) ~= nil) then
+		CreatureObject(pPlayer):sendSystemMessage("newbItemsOneTimeFree not nil")
+	else
+		CreatureObject(pPlayer):sendSystemMessage("Data Reset")
+	end
+end
+
