@@ -106,6 +106,27 @@ namespace globalVariables {
 	float poiYavin4ImperialBaseMultiplier = 1;
 	float poiYavin4WoolamanderTempleMultiplier = 1;
 
+//Combat
+	float combatDamageMeleeWeaponMultiplier = 1;
+	float combatDamageUnarmedWeaponMultiplier = 1;
+	float combatDamageOneHandWeaponMultiplier = 1;
+	float combatDamageTwoHandWeaponMultiplier = 1;
+	float combatDamagePolearmWeaponMultiplier = 1;
+	float combatDamageRangedWeaponMultiplier = 1;
+	float combatDamagePistolWeaponMultiplier = 1;
+	float combatDamageCarbineWeaponMultiplier = 1;
+	float combatDamageRifleWeaponMultiplier = 1;
+	float combatDamageThrownWeaponMultiplier = 1;
+	float combatDamageHeavyWeaponMultiplier = 1;
+	float combatDamageSpecialHeavyWeaponMultiplier = 1;
+	float combatDamageMineWeaponMultiplier = 1;
+	float combatDamageJediWeaponMultiplier = 1;
+	float combatDamageJediOneHandWeaponMultiplier = 1;
+	float combatDamageJediTwoHandWeaponMultiplier = 1;
+	float combatDamageJediPolearmWeaponMultiplier = 1;
+	float combatDamageJediForcePowerMultiplier = 1;
+	float combatDamageAllMultiplier = 1;
+	
 //Command
 	bool commandCheckForceStatusCommandEnabled = true;
 	
@@ -505,7 +526,28 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("poiYavin4ImperialBaseMultiplier") > 0) poiYavin4ImperialBaseMultiplier = lua->getGlobalFloat("poiYavin4ImperialBaseMultiplier");
 			if (lua->getGlobalFloat("poiYavin4WoolamanderTempleMultiplier") > 0) poiYavin4WoolamanderTempleMultiplier = lua->getGlobalFloat("poiYavin4WoolamanderTempleMultiplier");
 			
-			//Command commandCheckForceStatusCommandEnabled
+			//Combat
+			if (lua->getGlobalFloat("combatDamageMeleeWeaponMultiplier") > 0) combatDamageMeleeWeaponMultiplier = lua->getGlobalFloat("combatDamageMeleeWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageUnarmedWeaponMultiplier") > 0) combatDamageUnarmedWeaponMultiplier = lua->getGlobalFloat("combatDamageUnarmedWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageOneHandWeaponMultiplier") > 0) combatDamageOneHandWeaponMultiplier = lua->getGlobalFloat("combatDamageOneHandWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageTwoHandWeaponMultiplier") > 0) combatDamageTwoHandWeaponMultiplier = lua->getGlobalFloat("combatDamageTwoHandWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamagePolearmWeaponMultiplier") > 0) combatDamagePolearmWeaponMultiplier = lua->getGlobalFloat("combatDamagePolearmWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageRangedWeaponMultiplier") > 0) combatDamageRangedWeaponMultiplier = lua->getGlobalFloat("combatDamageRangedWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamagePistolWeaponMultiplier") > 0) combatDamagePistolWeaponMultiplier = lua->getGlobalFloat("combatDamagePistolWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageCarbineWeaponMultiplier") > 0) combatDamageCarbineWeaponMultiplier = lua->getGlobalFloat("combatDamageCarbineWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageRifleWeaponMultiplier") > 0) combatDamageRifleWeaponMultiplier = lua->getGlobalFloat("combatDamageRifleWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageThrownWeaponMultiplier") > 0) combatDamageThrownWeaponMultiplier = lua->getGlobalFloat("combatDamageThrownWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageHeavyWeaponMultiplier") > 0) combatDamageHeavyWeaponMultiplier = lua->getGlobalFloat("combatDamageHeavyWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageSpecialHeavyWeaponMultiplier") > 0) combatDamageSpecialHeavyWeaponMultiplier = lua->getGlobalFloat("combatDamageSpecialHeavyWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageMineWeaponMultiplier") > 0) combatDamageMineWeaponMultiplier = lua->getGlobalFloat("combatDamageMineWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageJediWeaponMultiplier") > 0) combatDamageJediWeaponMultiplier = lua->getGlobalFloat("combatDamageJediWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageJediOneHandWeaponMultiplier") > 0) combatDamageJediOneHandWeaponMultiplier = lua->getGlobalFloat("combatDamageJediOneHandWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageJediTwoHandWeaponMultiplier") > 0) combatDamageJediTwoHandWeaponMultiplier = lua->getGlobalFloat("combatDamageJediTwoHandWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageJediPolearmWeaponMultiplier") > 0) combatDamageJediPolearmWeaponMultiplier = lua->getGlobalFloat("combatDamageJediPolearmWeaponMultiplier");
+			if (lua->getGlobalFloat("combatDamageJediForcePowerMultiplier") > 0) combatDamageJediForcePowerMultiplier = lua->getGlobalFloat("combatDamageJediForcePowerMultiplier");
+			if (lua->getGlobalFloat("combatDamageAllMultiplier") > 0) combatDamageAllMultiplier = lua->getGlobalFloat("combatDamageAllMultiplier");
+
+			//Command
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
 			
 			//Crafting 

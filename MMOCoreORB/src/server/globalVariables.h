@@ -107,6 +107,27 @@ namespace globalVariables {
 	extern float poiYavin4ImperialBaseMultiplier;
 	extern float poiYavin4WoolamanderTempleMultiplier;
 
+//Combat
+	extern float combatDamageMeleeWeaponMultiplier;
+	extern float combatDamageUnarmedWeaponMultiplier;
+	extern float combatDamageOneHandWeaponMultiplier;
+	extern float combatDamageTwoHandWeaponMultiplier;
+	extern float combatDamagePolearmWeaponMultiplier;
+	extern float combatDamageRangedWeaponMultiplier;
+	extern float combatDamagePistolWeaponMultiplier;
+	extern float combatDamageCarbineWeaponMultiplier;
+	extern float combatDamageRifleWeaponMultiplier;
+	extern float combatDamageThrownWeaponMultiplier;
+	extern float combatDamageHeavyWeaponMultiplier;
+	extern float combatDamageSpecialHeavyWeaponMultiplier;
+	extern float combatDamageMineWeaponMultiplier;
+	extern float combatDamageJediWeaponMultiplier;
+	extern float combatDamageJediOneHandWeaponMultiplier;
+	extern float combatDamageJediTwoHandWeaponMultiplier;
+	extern float combatDamageJediPolearmWeaponMultiplier;
+	extern float combatDamageJediForcePowerMultiplier;
+	extern float combatDamageAllMultiplier;
+	
 //Command
 	extern bool commandCheckForceStatusCommandEnabled;
 

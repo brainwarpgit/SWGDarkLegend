@@ -31,6 +31,7 @@
 #include "server/zone/managers/frs/FrsManager.h"
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/objects/installation/TurretObject.h"
+#include "server/globalVariables.h"
 
 #define COMBAT_SPAM_RANGE 85 // Range at which players will see Combat Log Info
 
@@ -1130,15 +1131,70 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 
 	damage += defender->getSkillMod("private_damage_susceptibility");
 
-	if (attacker->isPlayerCreature()) {
+/*	if (attacker->isPlayerCreature()) {
 		if (data.isForceAttack() && !defender->isPlayerCreature())
 			damage *= 2 + System::random(1);
 		else if (!data.isForceAttack())
 			damage *= 1.5;
 	}
-
-	if (!data.isForceAttack() && weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
-		damage *= 1.25;
+*/	
+	//PvE Weapon Type Multipliers
+	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && !data.isForceAttack()) {
+		if (weapon->isMeleeWeapon() && !weapon->isJediWeapon())
+			damage *= globalVariables::combatDamageMeleeWeaponMultiplier;
+		if (weapon->isUnarmedWeapon() && !weapon->isJediWeapon())
+			damage *= globalVariables::combatDamageUnarmedWeaponMultiplier;
+		if (weapon->isOneHandMeleeWeapon() && !weapon->isJediWeapon())
+			damage *= globalVariables::combatDamageOneHandWeaponMultiplier;
+		if (weapon->isTwoHandMeleeWeapon() && !weapon->isJediWeapon())
+			damage *= globalVariables::combatDamageTwoHandWeaponMultiplier;
+		if (weapon->isPolearmWeaponObject() && !weapon->isJediWeapon())
+			damage *= globalVariables::combatDamagePolearmWeaponMultiplier;
+		if (weapon->isRangedWeapon() && !weapon->isJediWeapon())
+			damage *= globalVariables::combatDamageRangedWeaponMultiplier;
+		if (weapon->isPistolWeapon())
+			damage *= globalVariables::combatDamagePistolWeaponMultiplier;
+		if (weapon->isCarbineWeapon())
+			damage *= globalVariables::combatDamageCarbineWeaponMultiplier;
+		if (weapon->isRifleWeapon())
+			damage *= globalVariables::combatDamageRifleWeaponMultiplier;
+		if (weapon->isThrownWeapon())
+			damage *= globalVariables::combatDamageThrownWeaponMultiplier;
+		if (weapon->isHeavyWeapon())
+			damage *= globalVariables::combatDamageHeavyWeaponMultiplier;
+		if (weapon->isSpecialHeavyWeapon())
+			damage *= globalVariables::combatDamageSpecialHeavyWeaponMultiplier;
+		if (weapon->isMineWeapon())
+			damage *= globalVariables::combatDamageMineWeaponMultiplier;
+		if (weapon->isJediWeapon())
+			damage *= globalVariables::combatDamageJediWeaponMultiplier;
+		if (weapon->isJediOneHandedWeapon())
+			damage *= globalVariables::combatDamageJediOneHandWeaponMultiplier;
+		if (weapon->isJediTwoHandedWeapon())
+			damage *= globalVariables::combatDamageJediTwoHandWeaponMultiplier;
+		if (weapon->isJediPolearmWeapon())
+			damage *= globalVariables::combatDamageJediPolearmWeaponMultiplier;
+		
+	}
+	
+	//PvE Force Type Multipliers
+	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && data.isForceAttack()) {
+		damage *= globalVariables::combatDamageJediForcePowerMultiplier;
+	}
+	
+	//PvE Posture Multipliers
+	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && weapon->isRangedWeapon()) {
+		if (attacker->isProne())
+			damage *= 1.5;
+		if (attacker->isKneeling())
+			damage *= 1.25;
+	}
+	
+	//PvE Damage Multiplier
+	damage *= globalVariables::combatDamageAllMultiplier;
+	
+	//if (!data.isForceAttack() && weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
+	//	damage *= 1.25;
 
 	if (defender->isKnockedDown()) {
 		damage *= 1.5f;
@@ -2885,7 +2941,7 @@ bool CombatManager::applySpecialAttackCost(CreatureObject* attacker, WeaponObjec
 	if (attacker->isAiAgent() || data.isForceAttack())
 		return true;
 
-	float force = weapon->getForceCost() * data.getForceCostMultiplier();
+	float force = weapon->getForceCost() * data.getForceCostMultiplier() * 0.25f;
 
 	if (force > 0) { // Need Force check first otherwise it can be spammed.
 		ManagedReference<PlayerObject*> playerObject = attacker->getPlayerObject();
