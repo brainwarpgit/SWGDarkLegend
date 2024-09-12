@@ -98,6 +98,8 @@ void SceneObjectImplementation::initializeTransientMembers() {
 	if (originalObjectID == 0) {
 		originalObjectID = getObjectID();
 	}
+
+	updateWorldPosition(true);
 }
 
 void SceneObjectImplementation::initializePrivateData() {
@@ -1093,8 +1095,8 @@ void SceneObjectImplementation::destroyObjectFromWorld(bool sendSelfDestroy) {
 	}
 }
 
-bool SceneObjectImplementation::removeObject(SceneObject* object, SceneObject* destination, bool notifyClient) {
-	return containerComponent->removeObject(asSceneObject(), object, destination, notifyClient);
+bool SceneObjectImplementation::removeObject(SceneObject* object, SceneObject* destination, bool notifyClient, bool nullifyParent) {
+	return containerComponent->removeObject(asSceneObject(), object, destination, notifyClient, nullifyParent);
 }
 
 void SceneObjectImplementation::removeObjectFromZone(Zone* zone, SceneObject* par) {
@@ -1402,69 +1404,6 @@ Vector3 SceneObjectImplementation::getWorldCoordinate(float distance, float angl
 		newZ = getZoneUnsafe()->getHeight(newX, newY);
 
 	return Vector3(newX, newY, newZ);
-}
-
-Vector3 SceneObjectImplementation::getWorldPosition() {
-	auto root = getRootParentUnsafe();
-
-	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
-		return getPosition();
-	} else if (root->isPobShip()) {
-		return root->getPosition();
-	}
-
-	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
-	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
-
-	float posX = root->getPositionX() + (sin(angle) * length);
-	float posY = root->getPositionY() + (cos(angle) * length);
-	float posZ = root->getPositionZ() + getPositionZ();
-
-	Vector3 position(posX, posY, posZ);
-
-	return position;
-}
-
-float SceneObjectImplementation::getWorldPositionX() {
-	auto root = getRootParentUnsafe();
-
-	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
-		return getPositionX();
-	} else if (root->isPobShip()) {
-		return root->getPositionX();
-	}
-
-	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
-	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
-
-	return root->getPositionX() + (sin(angle) * length);
-}
-
-float SceneObjectImplementation::getWorldPositionY() {
-	auto root = getRootParentUnsafe();
-
-	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
-		return getPositionY();
-	} else if (root->isPobShip()) {
-		return root->getPositionY();
-	}
-
-	float length = Math::sqrt(getPositionX() * getPositionX() + getPositionY() * getPositionY());
-	float angle = root->getDirection()->getRadians() + atan2(getPositionX(), getPositionY());
-
-	return root->getPositionY() + (cos(angle) * length);
-}
-
-float SceneObjectImplementation::getWorldPositionZ() {
-	auto root = getRootParentUnsafe();
-
-	if (root == nullptr || (!root->isBuildingObject() && !root->isPobShip())) {
-		return getPositionZ();
-	} else if (root->isPobShip()) {
-		return root->getPositionZ();
-	}
-
-	return root->getPositionZ() + getPositionZ();
 }
 
 uint32 SceneObjectImplementation::getPlanetCRC() const {
@@ -2023,6 +1962,14 @@ bool SceneObjectImplementation::isAiAgent() {
 }
 
 bool SceneObject::isAiAgent() {
+	return false;
+}
+
+bool SceneObjectImplementation::isCreature() {
+	return false;
+}
+
+bool SceneObject::isCreature() {
 	return false;
 }
 
