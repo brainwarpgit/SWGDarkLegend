@@ -7,6 +7,8 @@
 
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/player/events/MeditateTask.h"
+#include "server/zone/objects/player/events/ForceMeditateTask.h"
+#include "server/globalVariables.h"
 
 class MeditateCommand : public QueueCommand {
 public:
@@ -46,12 +48,18 @@ public:
 
 		// Meditate Task
 		Reference<MeditateTask*> meditateTask = new MeditateTask(player);
+		Reference<ForceMeditateTask*> fmeditateTask = new ForceMeditateTask(player);
+		
 		meditateTask->setMoodString(player->getMoodString());
 		player->sendSystemMessage("@teraskasi:med_begin");
 
+		player->addPendingTask("meditate", meditateTask, globalVariables::playerMeditateTickTime * 1000);
+		if (player->hasSkill("force_discipline_enhancements_synergy_04") && globalVariables::commandMeditateMergeEnabled == true) {
+			player->addPendingTask("forcemeditate", fmeditateTask, globalVariables::playerMeditateTickTime * 1000);
+			player->playEffect("clienteffect/pl_force_meditate_self.cef", "");
+		}
+		
 		player->setMeditateState();
-
-		player->addPendingTask("meditate", meditateTask, 3500);
 
 		PlayerManager* playermgr = server->getZoneServer()->getPlayerManager();
 		player->registerObserver(ObserverEventType::POSTURECHANGED, playermgr);

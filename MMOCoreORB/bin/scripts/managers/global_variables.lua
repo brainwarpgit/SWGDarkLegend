@@ -132,6 +132,7 @@ combatDamageAllMultiplier = 1 --default 1 stacks with all other multipliers
 
 --Commands
 commandCheckForceStatusCommandEnabled = true --default true
+commandMeditateMergeEnabled = true --default false   merges /meditate and /forcemeditate together so it works if you have the skill from either.
 
 --Crafting
 craftingFactoryCrateMaxSize = 1000 --default 100
@@ -315,6 +316,8 @@ playerEntertainerBuffSelfEnabled = true --default false
 playerEntertainerInstantBuffEnabled = true --default false
 playerEntertainerBuffAnywhereEnabled = true --default false
 playerSpeedMultiplier = 2 --default 1
+playerMeditateTickTime = 2 --default 5 in seconds.
+playerJediForceMeditateMultiplier = 10 --default 3
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
@@ -334,7 +337,7 @@ playerAwardXPWeaponSplitEnabled = true --default false
 playerDNASamplingXPMultiplier = 1 --default 1
 playerBountyHunterXPMultiplier = 1 --default 1
 playerWildernessSurvivalXPMultiplier = 1 --default 1
-playerCombatXPMultiplier = 1 --default 1
+playerCombatXPMultiplier = 0.1 --default 0.1
 playerOnehandedWeaponsXPMultiplier = 1 --default 1
 playerPolearmWeaponsXPMultiplier = 1 --default 1
 playerTwohandedWeaponsXPMultiplier = 1 --default 1
@@ -356,9 +359,8 @@ playerWeaponCraftingXPMultiplier = 1 --default 1
 playerCreatureHandlingXPMultiplier = 1 --default 1
 playerDancingXPMultiplier = 1 --default 1
 playerEntertainerHealingXPMultiplier = 1 --default 1
-playerForceRankXPMultiplier = 1 --default 1
 playerImageDesignerXPMultiplier = 1 --default 1
-playerJediXPMultiplier = 1 --default 1
+playerJediXPMultiplier = 0.2 --default 0.2
 playerMedicalXPMultiplier = 1 --default 1
 playerMerchantXPMultiplier = 1 --default 1
 playerMusicianXPMultiplier = 1 --default 1
@@ -371,6 +373,13 @@ playerStarshipCombatXPMultiplier = 1 --default 1
 playerSquadLeadershipXPMultiplier = 1 --default 1
 playerTrappingXPMultiplier = 1 --default 1
 playerJediNegativeXPCap = 0 --default -10000000
+playerJediAwardedCombatXPEnabled = true --default false
+playerJediPvEForceRankXPEnabled = true --default false
+playerJediForceRankXPMultiplier = 0.01 -- default 0.05 no SWGEMU default
+playerMeditateGrantsHealingXPEnabled = true --default false
+playerXPBasedOnLevelEnabled = false --default true
+--playerCHXPModEnabled = true --default false
+--playerCHCombatXPEnabled = true --default false
 
 --Resources
 resourcesAddNameEnabled = true --default false

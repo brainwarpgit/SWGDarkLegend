@@ -891,7 +891,7 @@ void FrsManagerImplementation::adjustFrsExperience(CreatureObject* player, int a
 			param.setDI(amount);
 			player->sendSystemMessage(param);
 		}
-	} else {
+	/*} else {
 		FrsData* playerData = ghost->getFrsData();
 		int rank = playerData->getRank();
 		int councilType = playerData->getCouncilType();
@@ -931,7 +931,7 @@ void FrsManagerImplementation::adjustFrsExperience(CreatureObject* player, int a
 
 			chatManager->sendMail("Enclave Records", "@force_rank:demote_xp_debt_sub", "@force_rank:demote_xp_debt_body", player->getFirstName());
 			demotePlayer(player);
-		}
+		}*/
 	}
 }
 

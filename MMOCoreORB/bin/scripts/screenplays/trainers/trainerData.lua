@@ -891,6 +891,35 @@ trainerSkills = {
 		"force_discipline_defender_preternatural_defense_03",
 		"force_discipline_defender_preternatural_defense_04"
 	},
+	
+	trainer_frs_dark = {
+	--	"force_rank_dark_novice", 
+		"force_rank_dark_rank_01",
+		"force_rank_dark_rank_02",
+		"force_rank_dark_rank_03",
+		"force_rank_dark_rank_04",
+		"force_rank_dark_rank_05",
+		"force_rank_dark_rank_06",
+		"force_rank_dark_rank_07",
+		"force_rank_dark_rank_08",
+		"force_rank_dark_rank_09",
+		"force_rank_dark_rank_10",
+    		"force_rank_dark_master", 
+	},
+	trainer_frs_light = {
+	--	"force_rank_light_novice", 
+		"force_rank_light_rank_01",
+		"force_rank_light_rank_02",
+		"force_rank_light_rank_03",
+		"force_rank_light_rank_04",
+		"force_rank_light_rank_05",
+		"force_rank_light_rank_06",
+		"force_rank_light_rank_07",
+		"force_rank_light_rank_08",
+		"force_rank_light_rank_09",
+		"force_rank_light_rank_10",
+    		"force_rank_light_master", 
+	},
 }
 
 if skillsStartTrainerTrainsAllSkillsEnabled and not skillsAlreadyAdded then

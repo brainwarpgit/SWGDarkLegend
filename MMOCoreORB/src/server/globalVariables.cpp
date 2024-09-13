@@ -129,6 +129,7 @@ namespace globalVariables {
 	
 //Command
 	bool commandCheckForceStatusCommandEnabled = true;
+	bool commandMeditateMergeEnabled = false;
 	
 //Crafting
 	int craftingFactoryCrateMaxSize = 100;
@@ -308,6 +309,9 @@ namespace globalVariables {
 	bool playerEntertainerBuffSelfEnabled = false;
 	bool playerEntertainerInstantBuffEnabled = false;
 	bool playerEntertainerBuffAnywhereEnabled = false;
+	float playerSpeedMultiplier = 1;
+	float playerMeditateTickTime = 5;
+	float playerJediForceMeditateMultiplier = 3;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -327,7 +331,7 @@ namespace globalVariables {
 	float playerDNASamplingXPMultiplier = 1;
 	float playerBountyHunterXPMultiplier = 1;
 	float playerWildernessSurvivalXPMultiplier = 1;
-	float playerCombatXPMultiplier = 1;
+	float playerCombatXPMultiplier = 0.1;
 	float playerOnehandedWeaponsXPMultiplier = 1;
 	float playerPolearmWeaponsXPMultiplier = 1;
 	float playerTwohandedWeaponsXPMultiplier = 1;
@@ -349,9 +353,8 @@ namespace globalVariables {
 	float playerCreatureHandlingXPMultiplier = 1;
 	float playerDancingXPMultiplier = 1;
 	float playerEntertainerHealingXPMultiplier = 1;
-	float playerForceRankXPMultiplier = 1;
 	float playerImageDesignerXPMultiplier = 1;
-	float playerJediXPMultiplier = 1;
+	float playerJediXPMultiplier = 0.2;
 	float playerMedicalXPMultiplier = 1;
 	float playerMerchantXPMultiplier = 1;
 	float playerMusicianXPMultiplier = 1;
@@ -364,7 +367,13 @@ namespace globalVariables {
 	float playerSquadLeadershipXPMultiplier = 1;
 	float playerTrappingXPMultiplier = 1;
 	int playerJediNegativeXPCap = -10000000;
-	float playerSpeedMultiplier = 1;
+	bool playerJediAwardedCombatXPEnabled = false;
+	bool playerJediPvEForceRankXPEnabled = false;
+	float playerJediForceRankXPMultiplier = 0.05;
+	bool playerMeditateGrantsHealingXPEnabled = false;
+	bool playerXPBasedOnLevelEnabled = true;
+//	bool playerCHXPModEnabled = false;
+//	bool playerCHCombatXPEnabled = false;
 
 //Resources
 	bool resourcesAddNameEnabled = false;
@@ -549,6 +558,7 @@ namespace globalVariables {
 
 			//Command
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
+			if (lua->getGlobalBoolean("commandMeditateMergeEnabled") == true || lua->getGlobalBoolean("commandMeditateMergeEnabled") == false) commandMeditateMergeEnabled = lua->getGlobalBoolean("commandMeditateMergeEnabled");
 			
 			//Crafting 
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
@@ -686,7 +696,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("petGrowthStagesToGrown") > 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
 			if (lua->getGlobalBoolean("petStoreInCombatEnabled") == true || lua->getGlobalBoolean("petStoreInCombatEnabled") == false) petStoreInCombatEnabled = lua->getGlobalBoolean("petStoreInCombatEnabled");
 
-			//Player
+			//Player 
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
 			if (lua->getGlobalInt("playerSamplingTime") >= 0) playerSamplingTime = lua->getGlobalInt("playerSamplingTime");
 			if (lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == true || lua->getGlobalBoolean("playerSamplingMiniGameEnabled") == false) playerSamplingMiniGameEnabled = lua->getGlobalBoolean("playerSamplingMiniGameEnabled");
@@ -725,6 +735,8 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled") == true || lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled") == false) playerEntertainerInstantBuffEnabled = lua->getGlobalBoolean("playerEntertainerInstantBuffEnabled");
 			if (lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled") == true || lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled") == false) playerEntertainerBuffAnywhereEnabled = lua->getGlobalBoolean("playerEntertainerBuffAnywhereEnabled");
 			if (lua->getGlobalInt("playerSpeedMultiplier") >= 1) playerSpeedMultiplier = lua->getGlobalInt("playerSpeedMultiplier");
+			if (lua->getGlobalFloat("playerMeditateTickTime") >= 0) playerMeditateTickTime = lua->getGlobalFloat("playerMeditateTickTime");
+			if (lua->getGlobalFloat("playerJediForceMeditateMultiplier") >= 0) playerJediForceMeditateMultiplier = lua->getGlobalFloat("playerJediForceMeditateMultiplier");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
@@ -735,7 +747,7 @@ namespace globalVariables {
 			//Player Payments
 			if (lua->getGlobalBoolean("playerPaymentCashAndBankEnabled") == true || lua->getGlobalBoolean("playerPaymentCashAndBankEnabled") == false) playerPaymentCashAndBankEnabled = lua->getGlobalBoolean("playerPaymentCashAndBankEnabled");
 
-			//Player XP
+			//Player XP 
 			if (lua->getGlobalBoolean("playerForagingXPEnabled") == true || lua->getGlobalBoolean("playerForagingXPEnabled") == false) playerForagingXPEnabled = lua->getGlobalBoolean("playerForagingXPEnabled");
 			if (lua->getGlobalBoolean("playerMilkingXPEnabled") == true || lua->getGlobalBoolean("playerMilkingXPEnabled") == false) playerMilkingXPEnabled = lua->getGlobalBoolean("playerMilkingXPEnabled");
 			if (lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled") == true || lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled") == false) playerAwardSelfHealingXPEnabled = lua->getGlobalBoolean("playerAwardSelfHealingXPEnabled");
@@ -766,7 +778,6 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerCreatureHandlingXPMultiplier") > 0) playerCreatureHandlingXPMultiplier = lua->getGlobalFloat("playerCreatureHandlingXPMultiplier");
 			if (lua->getGlobalFloat("playerDancingXPMultiplier") > 0) playerDancingXPMultiplier = lua->getGlobalFloat("playerDancingXPMultiplier");
 			if (lua->getGlobalFloat("playerEntertainerHealingXPMultiplier") > 0) playerEntertainerHealingXPMultiplier = lua->getGlobalFloat("playerEntertainerHealingXPMultiplier");
-			if (lua->getGlobalFloat("playerForceRankXPMultiplier") > 0) playerForceRankXPMultiplier = lua->getGlobalFloat("playerForceRankXPMultiplier");
 			if (lua->getGlobalFloat("playerImageDesignerXPMultiplier") > 0) playerImageDesignerXPMultiplier = lua->getGlobalFloat("playerImageDesignerXPMultiplier");
 			if (lua->getGlobalFloat("playerJediXPMultiplier") > 0) playerJediXPMultiplier = lua->getGlobalFloat("playerJediXPMultiplier");
 			if (lua->getGlobalFloat("playerMedicalXPMultiplier") > 0) playerMedicalXPMultiplier = lua->getGlobalFloat("playerMedicalXPMultiplier");
@@ -781,6 +792,13 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerSquadLeadershipXPMultiplier") > 0) playerSquadLeadershipXPMultiplier = lua->getGlobalFloat("playerSquadLeadershipXPMultiplier");
 			if (lua->getGlobalFloat("playerTrappingXPMultiplier") > 0) playerTrappingXPMultiplier = lua->getGlobalFloat("playerTrappingXPMultiplier");
 			if (lua->getGlobalInt("playerJediNegativeXPCap") <= 0 && lua->getGlobalInt("playerJediNegativeXPCap") >= 0) playerJediNegativeXPCap = lua->getGlobalInt("playerJediNegativeXPCap");
+			if (lua->getGlobalBoolean("playerJediAwardedCombatXPEnabled") == true || lua->getGlobalBoolean("playerJediAwardedCombatXPEnabled") == false) playerJediAwardedCombatXPEnabled = lua->getGlobalBoolean("playerJediAwardedCombatXPEnabled");
+			if (lua->getGlobalBoolean("playerJediPvEForceRankXPEnabled") == true || lua->getGlobalBoolean("playerJediPvEForceRankXPEnabled") == false) playerJediPvEForceRankXPEnabled = lua->getGlobalBoolean("playerJediPvEForceRankXPEnabled");
+			if (lua->getGlobalFloat("playerJediForceRankXPMultiplier") > 0) playerJediForceRankXPMultiplier = lua->getGlobalFloat("playerJediForceRankXPMultiplier");
+			if (lua->getGlobalBoolean("playerMeditateGrantsHealingXPEnabled") == true || lua->getGlobalBoolean("playerMeditateGrantsHealingXPEnabled") == false) playerMeditateGrantsHealingXPEnabled = lua->getGlobalBoolean("playerMeditateGrantsHealingXPEnabled");
+			if (lua->getGlobalBoolean("playerXPBasedOnLevelEnabled") == true || lua->getGlobalBoolean("playerXPBasedOnLevelEnabled") == false) playerXPBasedOnLevelEnabled = lua->getGlobalBoolean("playerXPBasedOnLevelEnabled");
+//			if (lua->getGlobalBoolean("playerCHXPModEnabled") == true || lua->getGlobalBoolean("playerCHXPModEnabled") == false) playerCHXPModEnabled = lua->getGlobalBoolean("playerCHXPModEnabled");
+//			if (lua->getGlobalBoolean("playerCHCombatXPEnabled") == true || lua->getGlobalBoolean("playerCHCombatXPEnabled") == false) playerCHCombatXPEnabled = lua->getGlobalBoolean("playerCHCombatXPEnabled");
 			
 			//Resources 
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");

@@ -226,11 +226,11 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		}
 	}	
 	if (creatureDifficulty >= 4) {
-		baseCreatureXp *= cdpMultiplier;
-		baseCreatureMeatAmount *= cdpMultiplier;
-		baseCreatureHideAmount *= cdpMultiplier;
-		baseCreatureBoneAmount *= cdpMultiplier;
-		baseCreatureMilk *= cdpMultiplier;
+		//baseCreatureXp *= cdpMultiplier;
+		//baseCreatureMeatAmount *= cdpMultiplier;
+		//baseCreatureHideAmount *= cdpMultiplier;
+		//baseCreatureBoneAmount *= cdpMultiplier;
+		//baseCreatureMilk *= cdpMultiplier;
 		baseCreatureLevel *= cdpMultiplier;
 		baseCreatureChanceHit *= cdpMultiplier;
 		baseCreatureFerocity *= cdpMultiplier;

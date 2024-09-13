@@ -144,7 +144,7 @@ function JediTrials:unlockJediPadawan(pPlayer, dontSendSui)
 		local pItem = giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_padawan.iff", -1)
 	end
 
-	sendMail("system", "@jedi_spam:welcome_subject", "@jedi_spam:welcome_body", CreatureObject(pPlayer):getFirstName())
+	sendMail("SWG-DarkLegend", "@jedi_spam:welcome_subject", "@jedi_spam:welcome_body", CreatureObject(pPlayer):getFirstName())
 end
 
 function JediTrials:unlockJediKnight(pPlayer)
@@ -206,6 +206,8 @@ function JediTrials:unlockJediKnight(pPlayer)
 	else
 		giveItem(pInventory, knightRobe, -1)
 	end
+	
+	sendMail("SWG-DarkLegend", "Force Ranking System", "Now that you have attained Jedi Knight, you will begin to accumulate FRS XP for your chosen council.  This FRS XP will accumlate over time by running missions, killing creature, crafting, etc.. \n\nOnce you have enough FRS XP, you can travel to your chosen council enclave on Yavin4 to train.", CreatureObject(pPlayer):getFirstName())
 
 end
 

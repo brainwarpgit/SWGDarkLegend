@@ -100,20 +100,52 @@ function ForceShrineMenuComponent:recoverRobe(pPlayer)
 		return
 	end
 
-	local robeTemplate
-	if (CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_03")) then
-		local councilType = JediTrials:getJediCouncil(pPlayer)
+	--local robeTemplate
+	--if (CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_03")) then
+		--local councilType = JediTrials:getJediCouncil(pPlayer)
 
-		if (councilType == JediTrials.COUNCIL_LIGHT) then
-			robeTemplate = "object/tangible/wearables/robe/robe_jedi_light_s01.iff"
-		else
-			robeTemplate = "object/tangible/wearables/robe/robe_jedi_dark_s01.iff"
-		end
-	else
-		robeTemplate = "object/tangible/wearables/robe/robe_jedi_padawan.iff"
+		--if (councilType == JediTrials.COUNCIL_LIGHT) then
+		--	robeTemplate = "object/tangible/wearables/robe/robe_jedi_light_s01.iff"
+		--else
+		--	robeTemplate = "object/tangible/wearables/robe/robe_jedi_dark_s01.iff"
+		--end
+	--else
+	--	robeTemplate = "object/tangible/wearables/robe/robe_jedi_padawan.iff"
+	if CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_padawan.iff", -1)
 	end
-
-	giveItem(pInventory, robeTemplate, -1)
+	if CreatureObject(pPlayer):hasSkill("force_rank_dark_novice") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_dark_s01.iff", -1)
+	end
+	if CreatureObject(pPlayer):hasSkill("force_rank_light_novice") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_light_s01.iff", -1)
+	end
+	if CreatureObject(pPlayer):hasSkill("force_rank_dark_rank_01") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_dark_s02.iff", -1)
+	end
+	if CreatureObject(pPlayer):hasSkill("force_rank_light_rank_01") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_light_s02.iff", -1)
+	end
+		if CreatureObject(pPlayer):hasSkill("force_rank_dark_rank_05") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_dark_s03.iff", -1)
+	end
+	if CreatureObject(pPlayer):hasSkill("force_rank_light_rank_05") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_light_s03.iff", -1)
+	end
+		if CreatureObject(pPlayer):hasSkill("force_rank_dark_rank_08") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_dark_s04.iff", -1)
+	end
+	if CreatureObject(pPlayer):hasSkill("force_rank_light_rank_08") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_light_s04.iff", -1)
+	end
+		if CreatureObject(pPlayer):hasSkill("force_rank_dark_rank_10") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_dark_s05.iff", -1)
+	end
+	if CreatureObject(pPlayer):hasSkill("force_rank_light_rank_10") then
+		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_light_s05.iff", -1)
+	end
+	
+	--giveItem(pInventory, robeTemplate, -1)
 	CreatureObject(pPlayer):sendSystemMessage("@force_rank:items_recovered")
 end
 
@@ -135,14 +167,14 @@ end
 
 function ForceShrineMenuComponent:forceSelection(pPlayer, pSui, eventIndex, args)
 	sayings = {
-        	"The Force is a guide, not a master. Let it flow through you, but do not seek to control it.",
-       		"Patience is the path to true understanding. The Force reveals itself to those who wait.",
-       		"Trust in the Force, but trust in yourself first. The two are one.",
-       		"Your connection to the Force is unique. Nurture it, and it will grow as you do.",
-       		"In stillness, you will find the Force. In motion, you will understand it.",
-        	"Balance within yourself, and the Force will be balance with you.",
-       		"The Force in all things, but it is strongest in those who seek it with a pure heart."
-    	}
+		"The Force is a guide, not a master. Let it flow through you, but do not seek to control it.",
+		"Patience is the path to true understanding. The Force reveals itself to those who wait.",
+		"Trust in the Force, but trust in yourself first. The two are one.",
+		"Your connection to the Force is unique. Nurture it, and it will grow as you do.",
+		"In stillness, you will find the Force. In motion, you will understand it.",
+		"Balance within yourself, and the Force will be balance with you.",
+		"The Force in all things, but it is strongest in those who seek it with a pure heart."
+	}
 
 	local cancelPressed = (eventIndex == 1)
 

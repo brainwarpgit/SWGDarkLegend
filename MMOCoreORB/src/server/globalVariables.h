@@ -130,6 +130,7 @@ namespace globalVariables {
 	
 //Command
 	extern bool commandCheckForceStatusCommandEnabled;
+	extern bool commandMeditateMergeEnabled;
 
 //Crafting
 	extern int craftingFactoryCrateMaxSize;
@@ -311,6 +312,8 @@ namespace globalVariables {
 	extern bool playerEntertainerInstantBuffEnabled;
 	extern bool playerEntertainerBuffAnywhereEnabled;
 	extern float playerSpeedMultiplier;
+	extern float playerMeditateTickTime;
+	extern float playerJediForceMeditateMultiplier;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
@@ -352,7 +355,6 @@ namespace globalVariables {
 	extern float playerCreatureHandlingXPMultiplier;
 	extern float playerDancingXPMultiplier;
 	extern float playerEntertainerHealingXPMultiplier;
-	extern float playerForceRankXPMultiplier;
 	extern float playerImageDesignerXPMultiplier;
 	extern float playerJediXPMultiplier;
 	extern float playerMedicalXPMultiplier;
@@ -367,7 +369,14 @@ namespace globalVariables {
 	extern float playerSquadLeadershipXPMultiplier;
 	extern float playerTrappingXPMultiplier;
 	extern int playerJediNegativeXPCap;
-	
+	extern bool playerJediAwardedCombatXPEnabled;
+	extern bool playerJediPvEForceRankXPEnabled;
+	extern float playerJediForceRankXPMultiplier;
+	extern bool playerMeditateGrantsHealingXPEnabled;
+	extern bool playerXPBasedOnLevelEnabled;
+//	extern bool playerCHXPModEnabled;
+//	extern bool playerCHCombatXPEnabled;
+
 //Resources
 	extern bool resourcesAddNameEnabled;
 	extern int resourcesMinimumQuality;

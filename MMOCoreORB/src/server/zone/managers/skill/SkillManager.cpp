@@ -399,7 +399,18 @@ bool SkillManager::awardSkill(const String& skillName, CreatureObject* creature,
 	if (skill->getSkillName() == "crafting_merchant_novice" && globalVariables::skillsInstantMasterMerchantEnabled == true) { 
 		awardSkill("crafting_merchant_master", creature, true, true, true);
 	}
-    
+	if (skill->getSkillName() == "force_rank_dark_rank_05" || creature->hasSkill("force_rank_dark_rank_05")) {
+		awardSkill("force_title_jedi_rank_04", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_light_rank_05" || creature->hasSkill("force_rank_light_rank_05")) {
+		awardSkill("force_title_jedi_rank_04", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_dark_rank_10" || creature->hasSkill("force_rank_dark_rank_10")) {
+		awardSkill("force_title_jedi_master", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_light_rank_10" || creature->hasSkill("force_rank_light_rank_10")) {
+		awardSkill("force_title_jedi_master", creature, true, true, true);
+	}
 	return true;
 }
 

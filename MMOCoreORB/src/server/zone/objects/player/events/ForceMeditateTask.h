@@ -8,6 +8,7 @@
 
 #include "engine/engine.h"
 #include "server/zone/objects/creature/CreatureObject.h"
+#include "server/globalVariables.h"
 
 class ForceMeditateTask: public Task {
 	ManagedReference<CreatureObject*> player;
@@ -37,7 +38,7 @@ public:
 
 
 			if (fmeditateTask != nullptr)
-				fmeditateTask->reschedule(5000);
+				fmeditateTask->reschedule(globalVariables::playerMeditateTickTime * 1000);
 
 		} catch (Exception& e) {
 			player->error("unreported exception caught in ForceMeditateTask::activate");

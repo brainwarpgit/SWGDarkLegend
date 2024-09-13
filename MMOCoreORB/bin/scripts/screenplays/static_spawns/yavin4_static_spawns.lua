@@ -5,13 +5,6 @@ Yavin4StaticSpawnsScreenPlay = ScreenPlay:new {
 	planet = "yavin4",
 
 	ScreenPSpawns = {
-		-- Light Jedi Enclave (-5575, 4910)
-		{"yavin4", "light_jedi_sentinel", 10, -5579.0, 87.7, 4908.5, -179, 0},
-		{"yavin4", "light_jedi_sentinel", 10, -5572.6, 87.7, 4908.2, -179, 0},
-
-		-- Dark Jedi Enclave (5068, 310)
-		{"yavin4", "dark_jedi_sentinel", 10, 5074.2, 78.8, 313.9, 90, 0},
-		{"yavin4", "dark_jedi_sentinel", 10, 5074.3, 79.2, 306.4, 90, 0},
 
 		-- Yavin4 Ruins (-6299, -1502)
 		{"yavin4", "crazed_geonosian_guard_dungeonGeonosianBioLab",300,-6299.1,24.7,-1502,0,0},
@@ -36,5 +29,16 @@ registerScreenPlay("Yavin4StaticSpawnsScreenPlay", true)
 function Yavin4StaticSpawnsScreenPlay:start()
 	if (isZoneEnabled(self.planet)) then
 		self:spawnScreenPMobiles()
+		self:spawnMobiles()
 	end
+end
+
+function Yavin4StaticSpawnsScreenPlay:spawnMobiles()
+		-- Light Jedi Enclave (-5575, 4910)
+		spawnMobile(self.planet, "trainer_light_sentinel_3", 3600, -5579.0, 87.7, 4908.5, -179, 0)
+		spawnMobile(self.planet, "trainer_light_sentinel_3", 3600, -5572.6, 87.7, 4908.2, -179, 0)
+
+		-- Dark Jedi Enclave (5068, 310)
+		spawnMobile(self.planet, "trainer_dark_sentinel_3", 3600, 5074.2, 78.8, 313.9, 90, 0)
+		spawnMobile(self.planet, "trainer_dark_sentinel_3", 3600, 5074.3, 79.2, 306.4, 90, 0)
 end

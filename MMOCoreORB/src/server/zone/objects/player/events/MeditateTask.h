@@ -15,6 +15,8 @@
 #include "server/chat/StringIdChatParameter.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "templates/params/creature/CreatureAttribute.h"
+#include "server/zone/ZoneServer.h"
+#include "server/zone/managers/player/PlayerManager.h"
 #include "server/globalVariables.h"
 
 class MeditateTask: public Task {
@@ -44,6 +46,9 @@ public:
 			if (!player->isMeditating())
 				return;
 
+			int heal = 0;
+			ZoneServer* server = player->getZoneServer();
+			PlayerManager* playerManager = server->getPlayerManager();
 			if (player->isBleeding() || player->isPoisoned() || player->isDiseased()) {
 				if (player->isBleeding() && meditateMod >= 15)
 					player->healDot(CreatureState::BLEEDING, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
@@ -73,7 +78,7 @@ public:
 					}
 				}
 
-				int heal = (20 * globalVariables::playerMeditateHealingMultiplier) + System::random(10);
+				heal = (20 * globalVariables::playerMeditateHealingMultiplier) + System::random(10);
 				int fatigueheal = 0;
 
 				if (meditateMod >= 100) {
@@ -92,18 +97,21 @@ public:
 					healParams.setTO(CreatureAttribute::getName(pool));
 					healParams.setDI(heal);
 					player->sendSystemMessage(healParams);
+					if (globalVariables::playerMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "medical", heal * 0.5f, true);
 				}
 				if (globalVariables::playerMeditateFatigueHealingEnabled == true && player->getShockWounds() > 0) {
 						int fatigue = player->getShockWounds();
 						fatigueheal = Math::min(fatigue, fatigueheal / 2);
 						player->addShockWounds(-fatigueheal, true, false);
-						player->sendSystemMessage("Your Battle Fatigue recovers by " + std::to_string(fatigueheal) + " points.");
+						player->sendSystemMessage(" [meditate] Your Battle Fatigue recovers by " + std::to_string(fatigueheal) + " points.");
+						if (globalVariables::playerMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "entertainer_healing", fatigueheal, true);
 				}
 			}
+			
 			if (meditateTask != nullptr) {
-				meditateTask->reschedule(5000);
+				meditateTask->reschedule(globalVariables::playerMeditateTickTime * 1000);
 			} else {
-				meditateTask->schedule(5000);
+				meditateTask->schedule(globalVariables::playerMeditateTickTime * 1000);
 			}
 		} catch ( Exception& e) {
 			player->error("unreported exception caught in MeditateTask::activate");

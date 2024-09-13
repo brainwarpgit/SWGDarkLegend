@@ -659,27 +659,27 @@ void BountyMissionObjectiveImplementation::handlePlayerKilled(ManagedObject* arg
 	if (target == nullptr)
 		return;
 
-	int minXpLoss = -50000;
-	int maxXpLoss = -500000;
+//	int minXpLoss = -50000;
+//	int maxXpLoss = -500000;
 
 	VisibilityManager::instance()->clearVisibility(target);
-	int rewardCreds = mission->getRewardCredits() + mission->getBonusCredits();
-	int xpLoss = rewardCreds * -2;
+//	int rewardCreds = mission->getRewardCredits() + mission->getBonusCredits();
+//	int xpLoss = rewardCreds * -2;
 
-	if (xpLoss > minXpLoss)
-		xpLoss = minXpLoss;
-	else if (xpLoss < maxXpLoss)
-		xpLoss = maxXpLoss;
+//	if (xpLoss > minXpLoss)
+//		xpLoss = minXpLoss;
+//	else if (xpLoss < maxXpLoss)
+//		xpLoss = maxXpLoss;
 
-	auto playerManager = zoneServer->getPlayerManager();
+//	auto playerManager = zoneServer->getPlayerManager();
 
-	if (playerManager != nullptr)
-		playerManager->awardExperience(target, "jedi_general", xpLoss, true);
+//	if (playerManager != nullptr)
+//		playerManager->awardExperience(target, "jedi_general", xpLoss, true);
 
-	StringIdChatParameter message("base_player", "prose_revoke_xp");
-	message.setDI(xpLoss * -1);
-	message.setTO("exp_n", "jedi_general");
-	target->sendSystemMessage(message);
+//	StringIdChatParameter message("base_player", "prose_revoke_xp");
+//	message.setDI(xpLoss * -1);
+//	message.setTO("exp_n", "jedi_general");
+//	target->sendSystemMessage(message);
 
 	complete();
 }

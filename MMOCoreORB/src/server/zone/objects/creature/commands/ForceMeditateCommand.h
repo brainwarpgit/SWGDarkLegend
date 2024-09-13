@@ -5,7 +5,10 @@
 #ifndef FORCEMEDITATECOMMAND_H_
 #define FORCEMEDITATECOMMAND_H_
 
+#include "server/zone/objects/creature/CreatureObject.h"
+#include "server/zone/objects/player/events/MeditateTask.h"
 #include "server/zone/objects/player/events/ForceMeditateTask.h"
+#include "server/globalVariables.h"
 
 class ForceMeditateCommand : public QueueCommand {
 public:
@@ -49,9 +52,14 @@ public:
 		
 		creature->sendSystemMessage("@teraskasi:med_begin");
 		Reference<ForceMeditateTask*> fmeditateTask = new ForceMeditateTask(creature);
-		fmeditateTask->setMoodString(creature->getMoodString());
-		creature->addPendingTask("forcemeditate", fmeditateTask, 3500);
+		Reference<MeditateTask*> meditateTask = new MeditateTask(creature);
 
+		fmeditateTask->setMoodString(creature->getMoodString());
+		creature->addPendingTask("forcemeditate", fmeditateTask, globalVariables::playerMeditateTickTime * 1000);
+		if (creature->hasSkill("combat_unarmed_novice") && globalVariables::commandMeditateMergeEnabled == true) {
+			creature->addPendingTask("meditate", meditateTask, globalVariables::playerMeditateTickTime * 1000);
+		}
+		
 		creature->setMeditateState();
 
 		PlayerManager* playermgr = server->getZoneServer()->getPlayerManager();	
