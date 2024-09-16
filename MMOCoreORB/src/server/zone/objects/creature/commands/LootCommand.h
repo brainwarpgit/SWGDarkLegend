@@ -53,7 +53,8 @@ public:
 		if (!agent->isDead() || creature->isDead())
 			return GENERALERROR;
 
-		if (!creature->isInRange(creature, globalVariables::lootDistance)) {
+		//if (!creature->isInRange(creature, globalVariables::lootDistance)) {
+		if (!checkDistance(agent, creature, globalVariables::lootDistance)) {
 			creature->sendSystemMessage("@error_message:target_out_of_range"); //"Your target is out of range for this action."
 			return GENERALERROR;
 		}
@@ -92,7 +93,7 @@ public:
 					SortedVector<TreeEntry*> closeObjects;
 					CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) creature->getCloseObjects();
 					if (closeObjectsVector == nullptr) {
-						zone->getInRangeObjects(creature->getWorldPositionX(), creature->getWorldPositionZ(), creature->getWorldPositionY(), 64, &closeObjects, true);
+						zone->getInRangeObjects(creature->getWorldPositionX(), creature->getWorldPositionZ(), creature->getWorldPositionY(), globalVariables::lootDistance, &closeObjects, true);
 					} else {
 						closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
 					}
@@ -105,7 +106,8 @@ public:
 						CreatureObject* c = obj->asCreatureObject();
 						if (c == nullptr || c->isPlayerCreature() || !c->isDead())
 							continue;
-						if (!creature->isInRange(c, globalVariables::lootDistance))//distance
+						//if (!creature->isInRange(c, globalVariables::lootDistance))//distance
+						if (!checkDistance(agent, c, globalVariables::lootDistance))
 							continue;
 						playerManager->lootAll(creature, c);
 					}
