@@ -236,8 +236,17 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 	ManagedReference<CreatureObject*> creature = nullptr;
 
 	if (lairTemplate->getSpawnLimit() > 5) {
-		if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, LairObserver::BABY_SPAWN_CHANCE)) {
-			creature = creatureManager->spawnCreatureAsBaby(lairTemplateCRC, x, z, y);
+		if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, globalVariables::creatureBabySpawnChanceDestroyMissionLair)) {
+			String templateName = creatureTemplate->getTemplateName();
+			if (globalVariables::creatureAllCreatureCanSpawnBabyEnabled) {
+				int creatureRoll = System::random(1000);
+				int creatureDifficulty = 1;
+				if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
+				if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+				if (creatureDifficulty == 2) templateName += "_2";
+				if (creatureDifficulty == 3) templateName += "_3";
+			}
+			creature = creatureManager->spawnCreatureAsBaby(templateName.hashCode(), x, z, y);
 
 			babiesSpawned++;
 

@@ -122,7 +122,7 @@ void PetMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMe
 	} else if( controlDevice->getPetType() == PetManager::CREATUREPET ){
 		menuResponse->addRadialMenuItem(234, 3, "@pet/pet_menu:menu_feed" ); // PET_FEED
 
-		menuResponse->addRadialMenuItem(141, 3, "@pet/pet_menu:menu_command"); // PET_COMMAND
+		if (player->hasSkill("outdoors_creaturehandler_novice")) menuResponse->addRadialMenuItem(141, 3, "@pet/pet_menu:menu_command"); // PET_COMMAND
 
 		if( player->hasSkill( "outdoors_creaturehandler_novice" ) ){
 			menuResponse->addRadialMenuItemToRadialID(141, 142, 3, "@pet/pet_menu:menu_follow" ); // PET_FOLLOW
@@ -187,8 +187,16 @@ void PetMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMe
 
 		if( player->hasSkill( "outdoors_creaturehandler_support_04") && !controlDevice->isTrainedAsMount() && petManager->checkMountEligibility(controlDevice) == PetManager::CANBEMOUNTTRAINED){
 			menuResponse->addRadialMenuItemToRadialID(141, 207, 3, "@pet/pet_menu:menu_train_mount" ); // Train Pet As A Mount
+		} else {
+			if (globalVariables::creatureUntrainCreatureMountEnabled && player->hasSkill( "outdoors_creaturehandler_master") && controlDevice->isTrainedAsMount()) {
+				menuResponse->addRadialMenuItemToRadialID(141, 208, 3, "Untrain Pet As A Mount");
+			}
 		}
 
+		if( player->hasSkill("outdoors_creaturehandler_master") && globalVariables::creatureSetDefaultPetCommandsEnabled) {
+			menuResponse->addRadialMenuItemToRadialID(141, 209, 3, "Set Default Pet Commands" ); // Set Default Pet Commands
+		}
+		
 		if( pet->isIncapacitated() ){
 			menuResponse->addRadialMenuItem(166, 3, "@pet/pet_menu:awaken" );
 		}
@@ -202,9 +210,7 @@ void PetMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMe
 				menuResponse->addRadialMenuItem(206, 3, "@pet/pet_menu:menu_dismount"); // Climb Off Of Pet
 			}
 		}
-
 	}
-
 }
 
 int PetMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, CreatureObject* player, byte selectedID) const {
@@ -308,7 +314,19 @@ int PetMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, CreatureO
 		if (petControlDevice->getPetType() != PetManager::CREATUREPET) {
 			return 0;
 		}
-		petControlDevice->trainAsMount(player);
+		petControlDevice->trainAsMount(player, true);
+		break;
+	case 208: //Untrain Pet As A Mount
+		if (petControlDevice->getPetType() != PetManager::CREATUREPET) {
+			return 0;
+		}
+		petControlDevice->trainAsMount(player, false);
+		break;
+	case 209: //Set Default Pet Commands
+		if (petControlDevice->getPetType() != PetManager::CREATUREPET) {
+			return 0;
+		}
+		petControlDevice->setDefaultPetCommands();
 		break;
 	case 234: // Recharge/Feed
 		if (petControlDevice->getPetType() == PetManager::DROIDPET) {

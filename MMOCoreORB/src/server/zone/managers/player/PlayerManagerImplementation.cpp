@@ -2061,7 +2061,7 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 
 			// TODO: Find a more correct CH xp formula
 			float xpAmount = 0;
-			//if (globalVariables::playerCHXPModEnabled == false) {
+			if (globalVariables::playerCHXPModEnabled == false) {
 				float levelRatio = (float)destructedObject->getLevel() / (float)attacker->getLevel();
 
 				xpAmount = levelRatio * 500.f;
@@ -2072,9 +2072,9 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 					xpAmount = Math::min(xpAmount, (float)attacker->getLevel() * 50.f);
 					xpAmount /= totalPets;
 				}
-			//} else {
-			//	xpAmount = baseXp;
-			//}
+			} else {
+				xpAmount = baseXp;
+			}
 
 			if (winningFaction != Factions::FACTIONNEUTRAL && winningFaction == attacker->getFaction())
 				xpAmount *= gcwBonus;
@@ -2082,9 +2082,9 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 			trx.addState("combatTotalPets", totalPets);
 
 			awardExperience(owner, "creaturehandler", xpAmount);
-			//if (globalVariables::playerCHCombatXPEnabled == true) {
-			//	awardExperience(owner, "combat_general", xpAmount);
-			//}
+			if (globalVariables::playerCHCombatXPEnabled == true) {
+				awardExperience(owner, "combat_general", xpAmount);
+			}
 		} else if (attacker->isPlayerCreature()) {
 			if (!(attacker->getZone() == zone && destructedObject->isInRangeZoneless(attacker, 80))) {
 				continue;

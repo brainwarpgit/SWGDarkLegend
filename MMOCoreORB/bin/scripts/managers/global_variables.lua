@@ -186,7 +186,7 @@ creatureElectricityMaxResists = 80.0 --default 100.0
 creatureAcidMaxResists = 80.0--default 100.0
 creatureStunMaxResists = 80.0 --default 100.0
 creatureLightsaberMaxResists = 40.0 --default 100.0
-creatureWildSpawnDensity = 64.0 --default 32.0
+creatureWildSpawnDensity = 32.0 --default 32.0
 creatureSpawnElitePercentage = 30 --default 30 in percent
 creatureSpawnHeroicPercentage = 10 --default 10 in percent
 creatureModBaseScaleModifier = .05 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
@@ -203,6 +203,19 @@ creatureModBaseDamageMinModifier = .25 --default 0 Adds to creatureBaseMultiplie
 creatureModBaseHAMModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
 creatureModBaseHAMMaxModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
 creatureModBaseResistsModifier = .25 --default 0 Adds to creatureBaseMultiplier based on creatureDifficulty
+creatureAllCreatureCanSpawnBabyEnabled = true --default false
+creatureAllCreatureCanSpawnBabyChance = 0.05 --no SWGEMU default.   This is the lowest chance of all current mobiles
+creatureBabyRandomDifficultyEnabled = true --default false
+creatureBabySpawnChanceDestroyMissionLair = 750 --default 1000
+creatureBabySpawnChanceDynamicSpawn = 350 --default 500
+creatureBabySpawnChanceDynamicLair = 350 --default 500
+
+--Creature Handler
+creatureTamingMaxDistance = 64 --default 8
+creatureTamingCycleTime = 2 --default 10 in seconds.
+creatureTrainingAlwaysSuccessfulEnabled = true --default false
+creatureUntrainCreatureMountEnabled = true --default false
+creatureSetDefaultPetCommandsEnabled = true --default false MasterCH under train menu
 
 --Dungeons
 dungeonCorellianCorvetteMultiplier = 5 --default 1
@@ -217,7 +230,7 @@ factionCapMultiplier = 100 --default 1
 --Harvest
 harvestDistance = 64 --default 10 (Distance does not affect menu options.   They are still greyed out past the default..  must use /harvest)
 harvestAreaEnabled = true --default false
-harvestAreaCommandOnlyEnabled = true --default false
+harvestAreaCommandOnlyEnabled = false --default false
 harvestMultiplier = 2 --default 1
 harvestMilkTime = 5 --default 10 in seconds
 harvestDNASampleDistance = 64 --default 16  
@@ -276,6 +289,9 @@ petCallTime = 0 --default 15 in seconds
 petGrowthCycleTime = 1 --default 720 in minutes can not be less than 1
 petGrowthStagesToGrown = 10 --default 10 can not be less than 1
 petStoreInCombatEnabled = true --default false
+petOutOfCombatHAMRegenMultiplier = 10 --default 1
+petAllMountsUsedByAnyone = true --default false   when set to true all mounts are invulnerable and AI will not attack..Pets also can not attack.
+petCallInCombatEnabled = true --default 1
 
 --Player
 playerSamplingMultiplier = 10 --default 1
@@ -318,6 +334,7 @@ playerEntertainerBuffAnywhereEnabled = true --default false
 playerSpeedMultiplier = 2 --default 1
 playerMeditateTickTime = 2 --default 5 in seconds.
 playerJediForceMeditateMultiplier = 10 --default 3
+playerMaxLevelNonCHMount = 15 --default 10 overridden when creatureAllMountsAllowedForAllPlayersEnabled = true
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
@@ -378,8 +395,8 @@ playerJediPvEForceRankXPEnabled = true --default false
 playerJediForceRankXPMultiplier = 0.01 -- default 0.05 no SWGEMU default
 playerMeditateGrantsHealingXPEnabled = true --default false
 playerXPBasedOnLevelEnabled = false --default true
---playerCHXPModEnabled = true --default false
---playerCHCombatXPEnabled = true --default false
+playerCHXPModEnabled = true --default false
+playerCHCombatXPEnabled = true --default false
 
 --Resources
 resourcesAddNameEnabled = true --default false

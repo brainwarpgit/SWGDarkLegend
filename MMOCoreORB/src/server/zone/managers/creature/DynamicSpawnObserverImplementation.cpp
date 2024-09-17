@@ -135,8 +135,17 @@ void DynamicSpawnObserverImplementation::spawnInitialMobiles(SceneObject* buildi
 			ManagedReference<CreatureObject*> creo = nullptr;
 
 			// Ensure baby is not the first to spawn
-			if (j > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, BABY_SPAWN_CHANCE)) {
-				creo = creatureManager->spawnCreatureAsBaby(templateToSpawn.hashCode(), x, z, y);
+			if (j > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, globalVariables::creatureBabySpawnChanceDynamicSpawn)) {
+				String templateName = creatureTemplate->getTemplateName();
+				if (globalVariables::creatureBabyRandomDifficultyEnabled) {
+					int creatureRoll = System::random(1000);
+					int creatureDifficulty = 1;
+					if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
+					if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+					if (creatureDifficulty == 2) templateName += "_2";
+					if (creatureDifficulty == 3) templateName += "_3";
+				}
+				creo = creatureManager->spawnCreatureAsBaby(templateName.hashCode(), x, z, y);
 				babiesSpawned++;
 			}
 

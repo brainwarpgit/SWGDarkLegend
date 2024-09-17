@@ -45,7 +45,7 @@ void CreatureImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResp
 			menuResponse->addRadialMenuItemToRadialID(112, 236, 3, "@sui:harvest_bone");
 	}
 
-	if (canTameMe(player) && player->hasSkill("outdoors_creaturehandler_novice") && getChanceToTame(player) >= 15) {
+	if (canTameMe(player) && player->hasSkill("outdoors_creaturehandler_novice") && getChanceToTame(player) >= globalVariables::playerMaxLevelNonCHMount) {
 		menuResponse->addRadialMenuItem(159, 3, "@pet/pet_menu:menu_tame");
 	}
 }
@@ -270,7 +270,7 @@ void CreatureImplementation::notifyDespawn(Zone* zone) {
 
 bool CreatureImplementation::canHarvestMe(CreatureObject* player) {
 
-	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), 10.0f) || player->isInCombat() || !player->hasSkill("outdoors_scout_novice")
+	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), globalVariables::harvestDistance) || player->isInCombat() || !player->hasSkill("outdoors_scout_novice")
 			|| player->isDead() || player->isIncapacitated() || isPet())
 		return false;
 
@@ -358,17 +358,12 @@ bool CreatureImplementation::canTameMe(CreatureObject* player) {
 }
 
 float CreatureImplementation::getChanceToTame(CreatureObject* player) {
-	int skill = player->getSkillMod("tame_bonus");
-	int cl = npcTemplate->getLevel();
+	int tamingSkill = player->getSkillMod("tame_level");
+	int tamingBonus = player->getSkillMod("tame_bonus");
+	int creatureLevel = npcTemplate->getLevel();
 	int ferocity = getFerocity();
-	float tamingChance = getTame() * 100.0f;
-
-	if (isVicious())
-		skill += player->getSkillMod("tame_aggro");
-	else
-		skill += player->getSkillMod("tame_non_aggro");
-
-	float chanceToTame = tamingChance + skill - (cl + ferocity);
+	
+	float chanceToTame = (tamingSkill + tamingBonus) - (creatureLevel + ferocity);
 
 	return chanceToTame;
 }

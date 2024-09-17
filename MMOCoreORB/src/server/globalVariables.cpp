@@ -200,7 +200,20 @@ namespace globalVariables {
 	float creatureModBaseHAMModifier = 0;
 	float creatureModBaseHAMMaxModifier = 0;
 	float creatureModBaseResistsModifier = 0;
+	bool creatureAllCreatureCanSpawnBabyEnabled = false;
+	float creatureAllCreatureCanSpawnBabyChance = 0.05;
+	bool creatureBabyRandomDifficultyEnabled = false;
+	int creatureBabySpawnChanceDestroyMissionLair = 1000;
+	int creatureBabySpawnChanceDynamicSpawn = 500;
+	int creatureBabySpawnChanceDynamicLair = 500;
 
+//Creature Handler
+	int creatureTamingMaxDistance = 8;
+	float creatureTamingCycleTime = 10;
+	bool creatureTrainingAlwaysSuccessfulEnabled = false;
+	bool creatureUntrainCreatureMountEnabled = false;
+	bool creatureSetDefaultPetCommandsEnabled = false;
+	
 //Dungeon
 	float dungeonCorellianCorvetteMultiplier = 1;
 	float dungeonDeathWatchBunkerMultiplier = 1;
@@ -270,6 +283,9 @@ namespace globalVariables {
 	int petGrowthCycleTime = 720;
 	int petGrowthStagesToGrown = 10;
 	bool petStoreInCombatEnabled = false;
+	float petOutOfCombatHAMRegenMultiplier = 1;
+	bool petAllMountsUsedByAnyone = false;
+	bool petCallInCombatEnabled = false;
 
 //Player
 	int playerSamplingMultiplier = 1;
@@ -312,6 +328,7 @@ namespace globalVariables {
 	float playerSpeedMultiplier = 1;
 	float playerMeditateTickTime = 5;
 	float playerJediForceMeditateMultiplier = 3;
+	int playerMaxLevelNonCHMount = 10;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -372,8 +389,8 @@ namespace globalVariables {
 	float playerJediForceRankXPMultiplier = 0.05;
 	bool playerMeditateGrantsHealingXPEnabled = false;
 	bool playerXPBasedOnLevelEnabled = true;
-//	bool playerCHXPModEnabled = false;
-//	bool playerCHCombatXPEnabled = false;
+	bool playerCHXPModEnabled = false;
+	bool playerCHCombatXPEnabled = false;
 
 //Resources
 	bool resourcesAddNameEnabled = false;
@@ -629,7 +646,20 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("creatureModBaseHAMModifier") >= 0) creatureModBaseHAMModifier = lua->getGlobalFloat("creatureModBaseHAMModifier");
 			if (lua->getGlobalFloat("creatureModBaseHAMMaxModifier") >= 0) creatureModBaseHAMMaxModifier = lua->getGlobalFloat("creatureModBaseHAMMaxModifier");
 			if (lua->getGlobalFloat("creatureModBaseResistsModifier") >= 0) creatureModBaseResistsModifier = lua->getGlobalFloat("creatureModBaseResistsModifier");
+			if (lua->getGlobalBoolean("creatureAllCreatureCanSpawnBabyEnabled") == true || lua->getGlobalBoolean("creatureAllCreatureCanSpawnBabyEnabled") == false) creatureAllCreatureCanSpawnBabyEnabled = lua->getGlobalBoolean("creatureAllCreatureCanSpawnBabyEnabled");
+			if (lua->getGlobalFloat("creatureAllCreatureCanSpawnBabyChance") > 0) creatureAllCreatureCanSpawnBabyChance = lua->getGlobalFloat("creatureAllCreatureCanSpawnBabyChance");
+			if (lua->getGlobalBoolean("creatureBabyRandomDifficultyEnabled") == true || lua->getGlobalBoolean("creatureBabyRandomDifficultyEnabled") == false) creatureBabyRandomDifficultyEnabled = lua->getGlobalBoolean("creatureBabyRandomDifficultyEnabled");
+			if (lua->getGlobalInt("creatureBabySpawnChanceDestroyMissionLair") > 0) creatureBabySpawnChanceDestroyMissionLair = lua->getGlobalInt("creatureBabySpawnChanceDestroyMissionLair");
+			if (lua->getGlobalInt("creatureBabySpawnChanceDynamicSpawn") > 0) creatureBabySpawnChanceDynamicSpawn = lua->getGlobalInt("creatureBabySpawnChanceDynamicSpawn");
+			if (lua->getGlobalInt("creatureBabySpawnChanceDynamicLair") > 0) creatureBabySpawnChanceDynamicLair = lua->getGlobalInt("creatureBabySpawnChanceDynamicLair");
 
+			//Creature Handler 
+			if (lua->getGlobalInt("creatureTamingMaxDistance") > 0) creatureTamingMaxDistance = lua->getGlobalInt("creatureTamingMaxDistance");
+			if (lua->getGlobalFloat("creatureTamingCycleTime") > 0) creatureTamingCycleTime = lua->getGlobalFloat("creatureTamingCycleTime");
+			if (lua->getGlobalBoolean("creatureTrainingAlwaysSuccessfulEnabled") == true || lua->getGlobalBoolean("creatureTrainingAlwaysSuccessfulEnabled") == false) creatureTrainingAlwaysSuccessfulEnabled = lua->getGlobalBoolean("creatureTrainingAlwaysSuccessfulEnabled");
+			if (lua->getGlobalBoolean("creatureUntrainCreatureMountEnabled") == true || lua->getGlobalBoolean("creatureUntrainCreatureMountEnabled") == false) creatureUntrainCreatureMountEnabled = lua->getGlobalBoolean("creatureUntrainCreatureMountEnabled");
+			if (lua->getGlobalBoolean("creatureSetDefaultPetCommandsEnabled") == true || lua->getGlobalBoolean("creatureSetDefaultPetCommandsEnabled") == false) creatureSetDefaultPetCommandsEnabled = lua->getGlobalBoolean("creatureSetDefaultPetCommandsEnabled");
+			
 			//Dungeon
 			if (lua->getGlobalFloat("dungeonCorellianCorvetteMultiplier") > 0) dungeonCorellianCorvetteMultiplier = lua->getGlobalFloat("dungeonCorellianCorvetteMultiplier");
 			if (lua->getGlobalFloat("dungeonDeathWatchBunkerMultiplier") > 0) dungeonDeathWatchBunkerMultiplier = lua->getGlobalFloat("dungeonDeathWatchBunkerMultiplier");
@@ -690,12 +720,15 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
 			if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
 			
-			//Pet
+			//Pet 
 			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");
 			if (lua->getGlobalInt("petGrowthCycleTime") > 0) petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");
 			if (lua->getGlobalInt("petGrowthStagesToGrown") > 0) petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
 			if (lua->getGlobalBoolean("petStoreInCombatEnabled") == true || lua->getGlobalBoolean("petStoreInCombatEnabled") == false) petStoreInCombatEnabled = lua->getGlobalBoolean("petStoreInCombatEnabled");
-
+			if (lua->getGlobalFloat("petOutOfCombatHAMRegenMultiplier") > 0) petOutOfCombatHAMRegenMultiplier = lua->getGlobalFloat("petOutOfCombatHAMRegenMultiplier");
+			if (lua->getGlobalBoolean("petAllMountsUsedByAnyone") == true || lua->getGlobalBoolean("petAllMountsUsedByAnyone") == false) petAllMountsUsedByAnyone = lua->getGlobalBoolean("petAllMountsUsedByAnyone");
+			if (lua->getGlobalBoolean("petCallInCombatEnabled") == true || lua->getGlobalBoolean("petCallInCombatEnabled") == false) petCallInCombatEnabled = lua->getGlobalBoolean("petCallInCombatEnabled");
+			
 			//Player 
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
 			if (lua->getGlobalInt("playerSamplingTime") >= 0) playerSamplingTime = lua->getGlobalInt("playerSamplingTime");
@@ -737,6 +770,7 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerSpeedMultiplier") >= 1) playerSpeedMultiplier = lua->getGlobalInt("playerSpeedMultiplier");
 			if (lua->getGlobalFloat("playerMeditateTickTime") >= 0) playerMeditateTickTime = lua->getGlobalFloat("playerMeditateTickTime");
 			if (lua->getGlobalFloat("playerJediForceMeditateMultiplier") >= 0) playerJediForceMeditateMultiplier = lua->getGlobalFloat("playerJediForceMeditateMultiplier");
+			if (lua->getGlobalInt("playerMaxLevelNonCHMount") >= 1) playerMaxLevelNonCHMount = lua->getGlobalInt("playerMaxLevelNonCHMount");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
@@ -797,8 +831,8 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerJediForceRankXPMultiplier") > 0) playerJediForceRankXPMultiplier = lua->getGlobalFloat("playerJediForceRankXPMultiplier");
 			if (lua->getGlobalBoolean("playerMeditateGrantsHealingXPEnabled") == true || lua->getGlobalBoolean("playerMeditateGrantsHealingXPEnabled") == false) playerMeditateGrantsHealingXPEnabled = lua->getGlobalBoolean("playerMeditateGrantsHealingXPEnabled");
 			if (lua->getGlobalBoolean("playerXPBasedOnLevelEnabled") == true || lua->getGlobalBoolean("playerXPBasedOnLevelEnabled") == false) playerXPBasedOnLevelEnabled = lua->getGlobalBoolean("playerXPBasedOnLevelEnabled");
-//			if (lua->getGlobalBoolean("playerCHXPModEnabled") == true || lua->getGlobalBoolean("playerCHXPModEnabled") == false) playerCHXPModEnabled = lua->getGlobalBoolean("playerCHXPModEnabled");
-//			if (lua->getGlobalBoolean("playerCHCombatXPEnabled") == true || lua->getGlobalBoolean("playerCHCombatXPEnabled") == false) playerCHCombatXPEnabled = lua->getGlobalBoolean("playerCHCombatXPEnabled");
+			if (lua->getGlobalBoolean("playerCHXPModEnabled") == true || lua->getGlobalBoolean("playerCHXPModEnabled") == false) playerCHXPModEnabled = lua->getGlobalBoolean("playerCHXPModEnabled");
+			if (lua->getGlobalBoolean("playerCHCombatXPEnabled") == true || lua->getGlobalBoolean("playerCHCombatXPEnabled") == false) playerCHCombatXPEnabled = lua->getGlobalBoolean("playerCHCombatXPEnabled");
 			
 			//Resources 
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");

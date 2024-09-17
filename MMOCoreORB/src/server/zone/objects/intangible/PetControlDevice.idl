@@ -120,7 +120,7 @@ class PetControlDevice extends ControlDevice {
 	public native void arrestGrowth();
 
 	@preLocked
-	public native void trainAsMount(CreatureObject player);
+	public native void trainAsMount(CreatureObject player, boolean trainAnswer);
 
 	@read
 	public boolean isTrainedAsMount() {
@@ -173,6 +173,10 @@ class PetControlDevice extends ControlDevice {
 	@preLocked
 	public native void setDefaultCommands();
 
+	@local
+	@preLocked
+	public native void setDefaultPetCommands();
+	
 	/**
 	 * Sets default trained commands and command strings for the pet
 	 * @pre { }

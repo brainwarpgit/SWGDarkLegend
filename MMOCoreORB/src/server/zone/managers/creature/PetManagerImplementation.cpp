@@ -17,6 +17,7 @@
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/objects/creature/commands/QueueCommand.h"
+#include "server/globalVariables.h"
 
 void PetManagerImplementation::loadLuaConfig() {
 	info("Loading configuration file.", true);
@@ -364,8 +365,10 @@ bool PetManagerImplementation::handleCommandTraining(CreatureObject* speaker, Ai
 
 			int skill = speaker->getSkillMod("tame_level");
 			int level = petCreature->getAdultLevel();
-			int roll = System::random(skill + level);
-
+			int roll = 0;
+			if (!globalVariables::creatureTrainingAlwaysSuccessfulEnabled) {
+				roll = System::random(skill + level);
+			}
 			if (skill > roll)
 				success = true;
 

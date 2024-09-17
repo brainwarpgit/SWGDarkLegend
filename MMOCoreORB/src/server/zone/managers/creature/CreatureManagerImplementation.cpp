@@ -305,6 +305,7 @@ String CreatureManagerImplementation::getTemplateToSpawn(uint32 templateCRC) {
 }
 
 bool CreatureManagerImplementation::checkSpawnAsBaby(float tamingChance, int babiesSpawned, int chance) {
+	if (globalVariables::creatureAllCreatureCanSpawnBabyEnabled && tamingChance <= 0) tamingChance = globalVariables::creatureAllCreatureCanSpawnBabyChance;
 	if (tamingChance > 0) {
 		if (babiesSpawned == 0) {
 			if (System::random(chance) < (tamingChance * 100.0f)) {
@@ -321,8 +322,13 @@ bool CreatureManagerImplementation::checkSpawnAsBaby(float tamingChance, int bab
 CreatureObject* CreatureManagerImplementation::spawnCreatureAsBaby(uint32 templateCRC, float x, float z, float y, uint64 parentID) {
 	CreatureTemplate* creoTempl = creatureTemplateManager->getTemplate(templateCRC);
 
-	if (creoTempl == nullptr || creoTempl->getTame() <= 0)
-		return nullptr;
+	if (globalVariables::creatureAllCreatureCanSpawnBabyEnabled) {
+		if (creoTempl == nullptr || creoTempl->getMobType() == 3)
+			return nullptr;
+	} else {
+		if (creoTempl == nullptr || creoTempl->getTame() <= 0)
+			return nullptr;
+	}
 
 	CreatureObject* creO = nullptr;
 
@@ -1121,7 +1127,7 @@ void CreatureManagerImplementation::tame(Creature* creature, CreatureObject* pla
 		return;
 	}
 
-	if ((creature->isVicious() && player->getSkillMod("tame_aggro") < 1) || creature->getChanceToTame(player) <= 0) {
+	if (creature->getChanceToTame(player) < 0) {
 		player->sendSystemMessage("@pet/pet_menu:sys_lack_skill"); // You lack the skill to be able to tame that creature.
 		return;
 	}
@@ -1213,7 +1219,7 @@ void CreatureManagerImplementation::tame(Creature* creature, CreatureObject* pla
 
 	Reference<TameCreatureTask*> task = new TameCreatureTask(creature, player, mask, force, adult);
 
-	player->addPendingTask("tame_pet", task, 10000);
+	player->addPendingTask("tame_pet", task, globalVariables::creatureTamingCycleTime * 1000);
 }
 
 void CreatureManagerImplementation::milk(Creature* creature, CreatureObject* player) {

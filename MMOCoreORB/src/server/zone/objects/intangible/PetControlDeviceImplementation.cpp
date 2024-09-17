@@ -32,7 +32,7 @@
 #include "server/globalVariables.h"
 
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
-	if (player->isInCombat() || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
+	if ((player->isInCombat() && globalVariables::petCallInCombatEnabled == false) || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
 		player->sendSystemMessage("@pet/pet_menu:cant_call"); // You cannot call this pet right now.
 		return;
 	}
@@ -168,7 +168,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	int currentlySpawned = 0;
 	int spawnedLevel = 0;
 	int maxPets = 1;
-	int maxLevelofPets = 10;
+	int maxLevelofPets = globalVariables::playerMaxLevelNonCHMount;
 	int level = pet->getLevel();
 
 	if (pet->getCreatureTemplate() == nullptr) {
@@ -186,18 +186,24 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 		if (ch) {
 			maxPets = player->getSkillMod("keep_creature");
 			maxLevelofPets = player->getSkillMod("tame_level");
+			if (level > maxLevelofPets) {
+				player->sendSystemMessage("@pet/pet_menu:control_exceeded"); // Calling this pet would exceed your Control Level ability.
+			}
+		} else {
+			if (globalVariables::petAllMountsUsedByAnyone) {
+				if (!creaturePet->isMount()) {
+				 	if (level > maxLevelofPets) {
+						player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
+						return;
+					}
+				}
+			} else {
+				if (level > maxLevelofPets) {
+					player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
+					return;
+				}
+			}
 		}
-
-		if (creaturePet->getAdultLevel() > maxLevelofPets) {
-			player->sendSystemMessage("@pet/pet_menu:control_exceeded"); // Calling this pet would exceed your Control Level ability.
-			return;
-		}
-
-		if (creaturePet->isVicious() && (player->getSkillMod("tame_aggro") <= 0 || !ch)) {
-			player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
-			return;
-		}
-
 	} else if (petType == PetManager::FACTIONPET){
 		maxPets = 3;
 	}
@@ -387,7 +393,12 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 			creature->setHue(creature->getHueValue());
 
 		uint32 playerPvpStatusBitmask = player->getPvpStatusBitmask();
-
+		
+		AiAgent* pet = cast<AiAgent*>(creature.get());
+		if (pet == nullptr) {
+			return;
+		}
+		
 		if (playerPvpStatusBitmask & ObjectFlag::PLAYER) {
 			playerPvpStatusBitmask &= ~ObjectFlag::PLAYER;
 
@@ -396,8 +407,21 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 			creature->setPvpStatusBitmask(playerPvpStatusBitmask);
 		}
 
-		if (trainedAsMount && (creature->getOptionsBitmask() ^ 0x1000)) {
+		if (trainedAsMount || creature->isMount()) {
 			creature->setOptionBit(0x1000);
+			if (globalVariables::petAllMountsUsedByAnyone == true) {
+				pet->addObjectFlag(ObjectFlag::NOAIAGGRO);
+				//creature->setOptionBit(OptionBitmask::INVULNERABLE);
+			} else {
+				pet->removeObjectFlag(ObjectFlag::NOAIAGGRO);
+				//creature->clearOptionBit(OptionBitmask::INVULNERABLE);
+			}
+		} else if (!trainedAsMount || !creature->isMount()) {
+			creature->clearOptionBit(0x1000);
+			if (globalVariables::petAllMountsUsedByAnyone == true) {
+				pet->removeObjectFlag(ObjectFlag::NOAIAGGRO);
+				//creature->clearOptionBit(OptionBitmask::INVULNERABLE);
+			}
 		}
 	}
 
@@ -466,13 +490,19 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 	pet->setFollowObject(player);
 
 	if (petType == PetManager::CREATUREPET) {
-		pet->setCreatureBitmask(ObjectFlag::PET);
+		if (pet->getCreatureBitmask() ^ ObjectFlag::PET) {
+			pet->addObjectFlag(ObjectFlag::PET);
+		}
 	}
 	if (petType == PetManager::DROIDPET || petType == PetManager::HELPERDROIDPET) {
-		pet->setCreatureBitmask(ObjectFlag::DROID_PET);
+		if (pet->getCreatureBitmask() ^ ObjectFlag::DROID_PET) {
+			pet->addObjectFlag(ObjectFlag::DROID_PET);
+		}
 	}
 	if (petType == PetManager::FACTIONPET) {
-		pet->setCreatureBitmask(ObjectFlag::FACTION_PET);
+		if (pet->getCreatureBitmask() ^ ObjectFlag::FACTION_PET) {
+			pet->addObjectFlag(ObjectFlag::FACTION_PET);
+		}
 		/** dont know if npc faction pets trained via converse instead of radial
 		if (pet->isNonPlayerCreatureObject() && pet->getDiet() != ObjectFlag::NONE) // show converse to npcs that eat food i.e. not atst
 			pet->setOptionBit(OptionBitmask::CONVERSE,true);
@@ -825,25 +855,34 @@ bool PetControlDeviceImplementation::canBeTradedTo(CreatureObject* player, Creat
 
 		int numberStored = numberInTrade;
 		int maxStoredPets = playerManager->getBaseStoredCreaturePets();
-		int maxLevelofPets = 10;
+		int maxLevelofPets = globalVariables::playerMaxLevelNonCHMount;
 		int level = pet->getAdultLevel();
 		bool ch = receiver->hasSkill("outdoors_creaturehandler_novice");
 
 		if (ch) {
 			maxStoredPets += receiver->getSkillMod("stored_pets");
 			maxLevelofPets = receiver->getSkillMod("tame_level");
-		}
-
-		if (level > maxLevelofPets) {
-			player->sendSystemMessage("@pet/pet_menu:no_chance"); // That person has no chance of controlling this creature. Transfer failed.
-			receiver->sendSystemMessage("@pet/pet_menu:cannot_control"); // You have no chance of controlling that creature.
-			return false;
-		}
-
-		if (pet->isVicious() && (receiver->getSkillMod("tame_aggro") <= 0 || !ch)) {
-			player->sendSystemMessage("@pet/pet_menu:no_chance"); // That person has no chance of controlling this creature. Transfer failed.
-			receiver->sendSystemMessage("@pet/pet_menu:cannot_control"); // You have no chance of controlling that creature.
-			return false;
+			if (level > maxLevelofPets && ch) {
+				player->sendSystemMessage("@pet/pet_menu:no_chance"); // That person has no chance of controlling this creature. Transfer failed.
+				receiver->sendSystemMessage("@pet/pet_menu:cannot_control"); // You have no chance of controlling that creature.
+				return false;
+			}
+ 		} else {
+			if (globalVariables::petAllMountsUsedByAnyone) {
+				if (!pet->isMount()) {
+				 	if (pet->getAdultLevel() > maxLevelofPets) {
+						player->sendSystemMessage("@pet/pet_menu:no_chance"); // That person has no chance of controlling this creature. Transfer failed.
+						receiver->sendSystemMessage("@pet/pet_menu:cannot_control"); // You have no chance of controlling that creature.
+						return false;
+					}
+				}
+			} else { 
+				if (level > maxLevelofPets) {
+					player->sendSystemMessage("@pet/pet_menu:no_chance"); // That person has no chance of controlling this creature. Transfer failed.
+					receiver->sendSystemMessage("@pet/pet_menu:cannot_control"); // You have no chance of controlling that creature.
+					return false;
+				}
+			}
 		}
 
 		if (numberStored >= maxStoredPets) {
@@ -851,6 +890,32 @@ bool PetControlDeviceImplementation::canBeTradedTo(CreatureObject* player, Creat
 			receiver->sendSystemMessage("@pet/pet_menu:sys_too_many_stored"); // There are too many pets stored in this container. Release some of them to make room for more.
 			return false;
 		}
+
+/*bool ch = player->hasSkill("outdoors_creaturehandler_novice");
+
+		if (ch) {
+			maxPets = player->getSkillMod("keep_creature");
+			maxLevelofPets = player->getSkillMod("tame_level");
+			if (creaturePet->getAdultLevel() > maxLevelofPets) {
+				player->sendSystemMessage("@pet/pet_menu:control_exceeded"); // Calling this pet would exceed your Control Level ability.
+			}
+		} else {
+			if (globalVariables::petAllMountsUsedByAnyone) {
+				if (!creaturePet->isMount()) {
+				 	if (creaturePet->getAdultLevel() > maxLevelofPets) {
+						player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
+						return;
+					}
+				}
+			} else {
+				if (creaturePet->getAdultLevel() > maxLevelofPets) {
+					player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
+					return;
+				}
+			}
+		}*/
+
+
 
 		for (int i = 0; i < datapad->getContainerObjectsSize(); ++i) {
 			ManagedReference<SceneObject*> object = datapad->getContainerObject(i);
@@ -1158,6 +1223,28 @@ void PetControlDeviceImplementation::setDefaultCommands() {
 	trainedCommands.put(PetManager::GROUP, "group");
 }
 
+void PetControlDeviceImplementation::setDefaultPetCommands() {
+	trainedCommands.put(PetManager::FOLLOW, "follow");
+	trainedCommands.put(PetManager::ATTACK, "attack");
+	trainedCommands.put(PetManager::STORE, "store");
+	trainedCommands.put(PetManager::STAY, "stay");
+	trainedCommands.put(PetManager::GUARD, "guard");
+	trainedCommands.put(PetManager::PATROL, "patrol");
+	trainedCommands.put(PetManager::GETPATROLPOINT, "getpatrolpoint");
+	trainedCommands.put(PetManager::CLEARPATROLPOINTS, "clearpatrolpoints");
+	trainedCommands.put(PetManager::FORMATION1, "formation1");
+	trainedCommands.put(PetManager::FORMATION2, "formation2");
+	trainedCommands.put(PetManager::TRICK1, "trick1");
+	trainedCommands.put(PetManager::TRICK2, "trick2");	
+	trainedCommands.put(PetManager::GROUP, "group");
+	trainedCommands.put(PetManager::FOLLOWOTHER, "followother");
+	trainedCommands.put(PetManager::FRIEND, "friend");
+	trainedCommands.put(PetManager::RANGED_ATTACK, "rangedattack");
+	trainedCommands.put(PetManager::SPECIAL_ATTACK1, "specialattack1");
+	trainedCommands.put(PetManager::SPECIAL_ATTACK2, "specialattack2");
+	trainedCommands.put(PetManager::TRANSFER, "transfer");
+}
+
 void PetControlDeviceImplementation::setTrainingCommand(unsigned int commandID) {
 
 	// we set to 0 to flag completion so skip all this then.
@@ -1243,10 +1330,13 @@ void PetControlDeviceImplementation::setTrainingCommand(unsigned int commandID) 
 	trainingCommand = commandID;
 }
 
-void PetControlDeviceImplementation::trainAsMount(CreatureObject* player) {
-	if (isTrainedAsMount() || !player->hasSkill("outdoors_creaturehandler_support_04"))
+void PetControlDeviceImplementation::trainAsMount(CreatureObject* player, bool trainAnswer) {
+	if ((isTrainedAsMount() && trainAnswer) || !player->hasSkill("outdoors_creaturehandler_support_04"))
 		return;
 
+	if ((!isTrainedAsMount() && !trainAnswer) || !player->hasSkill("outdoors_creaturehandler_support_04"))
+		return;
+	
 	PetManager* petManager = player->getZoneServer()->getPetManager();
 	if (petManager == nullptr)
 		return;
@@ -1264,8 +1354,33 @@ void PetControlDeviceImplementation::trainAsMount(CreatureObject* player) {
 
 	assert(pet->isLockedByCurrentThread());
 
-	trainedAsMount = true;
-	pet->setOptionBit(0x1000);
+	if (trainAnswer) {
+		trainedAsMount = true;
+		
+		if (globalVariables::petAllMountsUsedByAnyone == true) {
+			Reference<StorePetTask*> task = new StorePetTask(player, pet);
+
+			if (task == nullptr)
+				return;
+
+			task->execute();
+
+			player->sendSystemMessage("Your have trained your mount.  Your pet has been stored!");
+		} else {
+			pet->setOptionBit(0x1000);
+		}
+	} else {
+		trainedAsMount = false;
+		//pet->clearOptionBit(0x1000);
+		
+		Reference<StorePetTask*> task = new StorePetTask(player, pet);
+
+		if (task == nullptr)
+			return;
+
+		task->execute();
+		player->sendSystemMessage("Your have untrained your mount.  Your pet has been stored!");
+	}
 }
 
 void PetControlDeviceImplementation::resetNamingCommands() {

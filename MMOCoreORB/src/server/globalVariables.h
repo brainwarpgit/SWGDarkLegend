@@ -202,6 +202,19 @@ namespace globalVariables {
 	extern float creatureModBaseHAMModifier;
 	extern float creatureModBaseHAMMaxModifier;
 	extern float creatureModBaseResistsModifier;
+	extern bool creatureAllCreatureCanSpawnBabyEnabled;
+	extern float creatureAllCreatureCanSpawnBabyChance;
+	extern bool creatureBabyRandomDifficultyEnabled;
+	extern int creatureBabySpawnChanceDestroyMissionLair;
+	extern int creatureBabySpawnChanceDynamicSpawn;
+	extern int creatureBabySpawnChanceDynamicLair;
+	
+//Creature Handler
+	extern int creatureTamingMaxDistance;
+	extern float creatureTamingCycleTime;
+	extern bool creatureTrainingAlwaysSuccessfulEnabled;
+	extern bool creatureUntrainCreatureMountEnabled;
+	extern bool creatureSetDefaultPetCommandsEnabled;
 
 //Dungeon
 	extern float dungeonCorellianCorvetteMultiplier;
@@ -272,6 +285,9 @@ namespace globalVariables {
 	extern int petGrowthCycleTime;
 	extern int petGrowthStagesToGrown;
 	extern bool petStoreInCombatEnabled;
+	extern float petOutOfCombatHAMRegenMultiplier;
+	extern bool petAllMountsUsedByAnyone;
+	extern bool petCallInCombatEnabled;
 
 //Player
 	extern int playerSamplingMultiplier;
@@ -314,6 +330,7 @@ namespace globalVariables {
 	extern float playerSpeedMultiplier;
 	extern float playerMeditateTickTime;
 	extern float playerJediForceMeditateMultiplier;
+	extern int playerMaxLevelNonCHMount;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
@@ -374,8 +391,8 @@ namespace globalVariables {
 	extern float playerJediForceRankXPMultiplier;
 	extern bool playerMeditateGrantsHealingXPEnabled;
 	extern bool playerXPBasedOnLevelEnabled;
-//	extern bool playerCHXPModEnabled;
-//	extern bool playerCHCombatXPEnabled;
+	extern bool playerCHXPModEnabled;
+	extern bool playerCHCombatXPEnabled;
 
 //Resources
 	extern bool resourcesAddNameEnabled;

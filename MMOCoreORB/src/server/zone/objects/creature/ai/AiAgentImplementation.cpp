@@ -87,6 +87,7 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
+#include "server/globalVariables.h"
 
 // #define DEBUG
 // #define DEBUG_AI_WEAPONS
@@ -4307,7 +4308,14 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* creature) {
 		return false;
 
 	// Handle Pets - Check against owner
-	if (isPet() && !isMindTricked()) {
+	if (isPet()) {
+		if (isMindTricked())
+			return false;
+			
+		if ((getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && /*(getOptionsBitmask() & OptionBitmask::INVULNERABLE) &&*/ globalVariables::petAllMountsUsedByAnyone == true) {
+			return false;
+		}
+
 		ManagedReference<PetControlDevice*> pcd = getControlDevice().get().castTo<PetControlDevice*>();
 		if (pcd != nullptr && pcd->getPetType() == PetManager::FACTIONPET && creature->isNeutral()) {
 			return false;
@@ -4397,6 +4405,10 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* creature) {
 		if (thisFaction == 0 && creatureFaction > 0)
 			return false;
 
+		if (isPet() && (getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && /*(getOptionsBitmask() & OptionBitmask::INVULNERABLE) &&*/ globalVariables::petAllMountsUsedByAnyone == true) {
+			return false;
+		}
+		
 		AiAgent* creatureAgent = creature->asAiAgent();
 
 		if (creatureAgent == nullptr)
