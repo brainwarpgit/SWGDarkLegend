@@ -288,7 +288,8 @@ namespace globalVariables {
 	extern float petOutOfCombatHAMRegenMultiplier;
 	extern bool petAllMountsUsedByAnyone;
 	extern bool petCallInCombatEnabled;
-
+	extern float petDamageMultiplier;
+	
 //Player
 	extern int playerSamplingMultiplier;
 	extern int playerSamplingTime;

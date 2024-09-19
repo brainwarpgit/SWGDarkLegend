@@ -286,6 +286,7 @@ namespace globalVariables {
 	float petOutOfCombatHAMRegenMultiplier = 1;
 	bool petAllMountsUsedByAnyone = false;
 	bool petCallInCombatEnabled = false;
+	float petDamageMultiplier = 1;
 
 //Player
 	int playerSamplingMultiplier = 1;
@@ -728,6 +729,7 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("petOutOfCombatHAMRegenMultiplier") > 0) petOutOfCombatHAMRegenMultiplier = lua->getGlobalFloat("petOutOfCombatHAMRegenMultiplier");
 			if (lua->getGlobalBoolean("petAllMountsUsedByAnyone") == true || lua->getGlobalBoolean("petAllMountsUsedByAnyone") == false) petAllMountsUsedByAnyone = lua->getGlobalBoolean("petAllMountsUsedByAnyone");
 			if (lua->getGlobalBoolean("petCallInCombatEnabled") == true || lua->getGlobalBoolean("petCallInCombatEnabled") == false) petCallInCombatEnabled = lua->getGlobalBoolean("petCallInCombatEnabled");
+			if (lua->getGlobalFloat("petDamageMultiplier") > 0) petDamageMultiplier = lua->getGlobalFloat("petDamageMultiplier");
 			
 			//Player 
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");

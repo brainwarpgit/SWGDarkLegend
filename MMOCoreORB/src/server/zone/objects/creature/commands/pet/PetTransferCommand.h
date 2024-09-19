@@ -5,6 +5,7 @@
 #include "server/zone/objects/creature/commands/QueueCommand.h"
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/objects/creature/ai/AiAgent.h"
+#include "server/zone/objects/intangible/tasks/StorePetTask.h"
 
 class PetTransferCommand : public QueueCommand {
 public:
@@ -113,8 +114,6 @@ public:
 		targetGhost->addToActivePets(pet);
 		targetDatapad->broadcastObject(controlDevice, true);
 
-		player->sendSystemMessage("@pet/pet_menu:pet_transfer_succeed"); // The pet has been successfully transferred
-
 		targetCrosslocker.release();
 
 		Locker plocker(player, pet);
@@ -128,6 +127,20 @@ public:
 		controlDevice->setLastCommandTarget(nullptr);
 		controlDevice->setLastCommand(PetManager::FOLLOW);
 
+		if (globalVariables::petAllMountsUsedByAnyone == true) {
+			Reference<StorePetTask*> task = new StorePetTask(targetPlayer, pet);
+
+			if (task == nullptr)
+				return GENERALERROR;
+
+			task->execute();
+
+			player->sendSystemMessage("The pet has been transfered and stored in their datapad!");
+			targetPlayer->sendSystemMessage("Your have been transfered a pet.  Your pet new has been stored!");
+		} else {
+			player->sendSystemMessage("@pet/pet_menu:pet_transfer_succeed"); // The pet has been successfully transferred
+		}
+		
 		return SUCCESS;
 	}
 };

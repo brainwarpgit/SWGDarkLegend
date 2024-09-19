@@ -407,20 +407,27 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 			creature->setPvpStatusBitmask(playerPvpStatusBitmask);
 		}
 
+		bool ch = player->hasSkill("outdoors_creaturehandler_novice");
+		
 		if (trainedAsMount || creature->isMount()) {
 			creature->setOptionBit(0x1000);
 			if (globalVariables::petAllMountsUsedByAnyone == true) {
-				pet->addObjectFlag(ObjectFlag::NOAIAGGRO);
-				//creature->setOptionBit(OptionBitmask::INVULNERABLE);
+				if (!ch && creature->getLevel() > globalVariables::playerMaxLevelNonCHMount) {
+					pet->addObjectFlag(ObjectFlag::NOAIAGGRO);
+					creature->setOptionBit(OptionBitmask::INVULNERABLE);
+				} else {
+					pet->removeObjectFlag(ObjectFlag::NOAIAGGRO);
+					creature->clearOptionBit(OptionBitmask::INVULNERABLE);
+				}
 			} else {
 				pet->removeObjectFlag(ObjectFlag::NOAIAGGRO);
-				//creature->clearOptionBit(OptionBitmask::INVULNERABLE);
+				creature->clearOptionBit(OptionBitmask::INVULNERABLE);
 			}
 		} else if (!trainedAsMount || !creature->isMount()) {
 			creature->clearOptionBit(0x1000);
 			if (globalVariables::petAllMountsUsedByAnyone == true) {
 				pet->removeObjectFlag(ObjectFlag::NOAIAGGRO);
-				//creature->clearOptionBit(OptionBitmask::INVULNERABLE);
+				creature->clearOptionBit(OptionBitmask::INVULNERABLE);
 			}
 		}
 	}
@@ -891,32 +898,6 @@ bool PetControlDeviceImplementation::canBeTradedTo(CreatureObject* player, Creat
 			return false;
 		}
 
-/*bool ch = player->hasSkill("outdoors_creaturehandler_novice");
-
-		if (ch) {
-			maxPets = player->getSkillMod("keep_creature");
-			maxLevelofPets = player->getSkillMod("tame_level");
-			if (creaturePet->getAdultLevel() > maxLevelofPets) {
-				player->sendSystemMessage("@pet/pet_menu:control_exceeded"); // Calling this pet would exceed your Control Level ability.
-			}
-		} else {
-			if (globalVariables::petAllMountsUsedByAnyone) {
-				if (!creaturePet->isMount()) {
-				 	if (creaturePet->getAdultLevel() > maxLevelofPets) {
-						player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
-						return;
-					}
-				}
-			} else {
-				if (creaturePet->getAdultLevel() > maxLevelofPets) {
-					player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
-					return;
-				}
-			}
-		}*/
-
-
-
 		for (int i = 0; i < datapad->getContainerObjectsSize(); ++i) {
 			ManagedReference<SceneObject*> object = datapad->getContainerObject(i);
 
@@ -935,6 +916,7 @@ bool PetControlDeviceImplementation::canBeTradedTo(CreatureObject* player, Creat
 		}
 
 		return true;
+
 	}
 
 	return false;
@@ -1229,6 +1211,14 @@ void PetControlDeviceImplementation::setDefaultCommands() {
 }
 
 void PetControlDeviceImplementation::setDefaultPetCommands() {
+	ManagedReference<TangibleObject*> controlledObject = this->controlledObject.get();
+	if (controlledObject == nullptr || !controlledObject->isAiAgent())
+		return;
+
+	AiAgent* pet = cast<AiAgent*>(controlledObject.get());
+	if (pet == nullptr)
+		return;
+		
 	trainedCommands.put(PetManager::FOLLOW, "follow");
 	trainedCommands.put(PetManager::ATTACK, "attack");
 	trainedCommands.put(PetManager::STORE, "store");
@@ -1244,9 +1234,21 @@ void PetControlDeviceImplementation::setDefaultPetCommands() {
 	trainedCommands.put(PetManager::GROUP, "group");
 	trainedCommands.put(PetManager::FOLLOWOTHER, "followother");
 	trainedCommands.put(PetManager::FRIEND, "friend");
-	trainedCommands.put(PetManager::RANGED_ATTACK, "rangedattack");
-	trainedCommands.put(PetManager::SPECIAL_ATTACK1, "specialattack1");
-	trainedCommands.put(PetManager::SPECIAL_ATTACK2, "specialattack2");
+	if (pet->hasRangedWeapon()) {
+		trainedCommands.put(PetManager::RANGED_ATTACK, "rangedattack");
+	} else { 
+		trainedCommands.remove(PetManager::RANGED_ATTACK);
+	}
+	if (pet->hasSpecialAttack(1)) {	
+		trainedCommands.put(PetManager::SPECIAL_ATTACK1, "specialattack1");
+	} else { 
+		trainedCommands.remove(PetManager::SPECIAL_ATTACK1);
+	}
+	if (pet->hasSpecialAttack(2)) {
+		trainedCommands.put(PetManager::SPECIAL_ATTACK2, "specialattack2");
+	} else { 
+		trainedCommands.remove(PetManager::SPECIAL_ATTACK2);
+	}
 	trainedCommands.put(PetManager::TRANSFER, "transfer");
 }
 

@@ -292,6 +292,7 @@ petStoreInCombatEnabled = true --default false
 petOutOfCombatHAMRegenMultiplier = 10 --default 1
 petAllMountsUsedByAnyone = true --default false   when set to true all mounts are invulnerable and AI will not attack..Pets also can not attack.
 petCallInCombatEnabled = true --default 1
+petDamageMultiplier = 5 --default 1
 
 --Player
 playerSamplingMultiplier = 10 --default 1

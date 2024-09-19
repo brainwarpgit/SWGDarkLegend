@@ -2523,9 +2523,14 @@ void AiAgentImplementation::activateHAMRegeneration(int latency) {
 	if (isIncapacitated() || isDead() || isInCombat() || isHamRegenDisabled())
 		return;
 
-	uint32 healthTick = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::HEALTH) / 300000.f * latency));
-	uint32 actionTick = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::ACTION) / 300000.f * latency));
-	uint32 mindTick   = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::MIND) / 300000.f * latency));
+	float modifier = (float)latency;
+	
+	if (isPet() && !isInCombat())
+		modifier *= globalVariables::petOutOfCombatHAMRegenMultiplier;
+
+	uint32 healthTick = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::HEALTH) / 300000.f * modifier));
+	uint32 actionTick = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::ACTION) / 300000.f * modifier));
+	uint32 mindTick   = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::MIND) / 300000.f * modifier));
 
 	healDamage(asCreatureObject(), CreatureAttribute::HEALTH, healthTick, true, false);
 	healDamage(asCreatureObject(), CreatureAttribute::ACTION, actionTick, true, false);
@@ -4312,7 +4317,7 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* creature) {
 		if (isMindTricked())
 			return false;
 			
-		if ((getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && /*(getOptionsBitmask() & OptionBitmask::INVULNERABLE) &&*/ globalVariables::petAllMountsUsedByAnyone == true) {
+		if ((getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && (getOptionsBitmask() & OptionBitmask::INVULNERABLE) && globalVariables::petAllMountsUsedByAnyone == true) {
 			return false;
 		}
 
@@ -4405,7 +4410,7 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* creature) {
 		if (thisFaction == 0 && creatureFaction > 0)
 			return false;
 
-		if (isPet() && (getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && /*(getOptionsBitmask() & OptionBitmask::INVULNERABLE) &&*/ globalVariables::petAllMountsUsedByAnyone == true) {
+		if (isPet() && (getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && (getOptionsBitmask() & OptionBitmask::INVULNERABLE) && globalVariables::petAllMountsUsedByAnyone == true) {
 			return false;
 		}
 		
