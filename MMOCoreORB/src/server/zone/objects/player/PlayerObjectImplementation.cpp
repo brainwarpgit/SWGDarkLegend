@@ -453,6 +453,8 @@ void PlayerObjectImplementation::sendBaselinesTo(SceneObject* player) {
 }
 
 void PlayerObjectImplementation::notifySceneReady() {
+	// info(true) << cast<CreatureObject*>(parent.get().get())->getDisplayedName() << " --- notifySceneReady called";
+
 	teleporting = false;
 	onLoadScreen = false;
 	forcedTransform = false;
@@ -462,8 +464,9 @@ void PlayerObjectImplementation::notifySceneReady() {
 
 	ManagedReference<CreatureObject*> creature = cast<CreatureObject*>(parent.get().get());
 
-	if (creature == nullptr)
+	if (creature == nullptr) {
 		return;
+	}
 
 	creature->broadcastPvpStatusBitmask();
 
@@ -486,8 +489,9 @@ void PlayerObjectImplementation::notifySceneReady() {
 
 	ZoneServer* zoneServer = getZoneServer();
 
-	if (zoneServer == nullptr || zoneServer->isServerLoading())
+	if (zoneServer == nullptr || zoneServer->isServerLoading()) {
 		return;
+	}
 
 	//Join GuildChat
 	ManagedReference<ChatManager*> chatManager = zoneServer->getChatManager();
@@ -495,6 +499,7 @@ void PlayerObjectImplementation::notifySceneReady() {
 
 	if (guild != nullptr) {
 		ManagedReference<ChatRoom*> guildChat = guild->getChatRoom();
+
 		if (guildChat != nullptr) {
 			guildChat->sendTo(creature);
 			chatManager->handleChatEnterRoomById(creature, guildChat->getRoomID(), -1, true);
@@ -505,23 +510,27 @@ void PlayerObjectImplementation::notifySceneReady() {
 	for (int i = 0; i < zoneServer->getZoneCount(); ++i) {
 		ManagedReference<Zone*> zone = zoneServer->getZone(i);
 
-		if (zone == nullptr)
+		if (zone == nullptr) {
 			continue;
+		}
 
 		ManagedReference<ChatRoom*> planetRoom = zone->getPlanetChatRoom();
-		if (planetRoom == nullptr)
+
+		if (planetRoom == nullptr) {
 			continue;
+		}
 
 		Locker clocker(planetRoom, creature);
 		planetRoom->removePlayer(creature);
 		planetRoom->sendDestroyTo(creature);
-
 	}
 
 	//Join current zone's Planet chat room
 	ManagedReference<Zone*> zone = creature->getZone();
+
 	if (zone != nullptr) {
 		ManagedReference<ChatRoom*> planetChat = zone->getPlanetChatRoom();
+
 		if (planetChat != nullptr) {
 			planetChat->sendTo(creature);
 			chatManager->handleChatEnterRoomById(creature, planetChat->getRoomID(), -1, true);
@@ -539,24 +548,32 @@ void PlayerObjectImplementation::notifySceneReady() {
 			room->sendTo(creature);
 			chatManager->handleChatEnterRoomById(creature, room->getRoomID(), -1);
 
-		} else
+		} else {
 			chatRooms.remove(i);
-	}
-
-	if (zone != nullptr && zone->getPlanetManager() != nullptr) {
-		ManagedReference<WeatherManager*> weatherManager = zone->getPlanetManager()->getWeatherManager();
-
-		if (weatherManager != nullptr) {
-			creature->setCurrentWind((byte)System::random(200));
-			creature->setCurrentWeather(0xFF);
-			weatherManager->sendWeatherTo(creature);
 		}
 	}
 
+	// Show Terms of Service window
 	checkAndShowTOS();
 
-	if (zone != nullptr && !zone->isSpaceZone())
+	if (zone != nullptr && !zone->isSpaceZone()) {
+		auto planetManager = zone->getPlanetManager();
+
+		if (planetManager != nullptr) {
+			ManagedReference<WeatherManager*> weatherManager = zone->getPlanetManager()->getWeatherManager();
+
+			if (weatherManager != nullptr) {
+				creature->setCurrentWind((byte)System::random(200));
+				creature->setCurrentWeather(0xFF);
+				weatherManager->sendWeatherTo(creature);
+			}
+		}
+
+		// Create or spawn the helper droid
 		createHelperDroid();
+	}
+
+	// info(true) << creature->getDisplayedName() << " --- notifySceneReady COMPLETE with Zone Name: " << zone->getZoneName() << " World Pos: " << creature->getWorldPosition().toString();
 }
 
 void PlayerObjectImplementation::sendFriendLists() {
