@@ -681,6 +681,12 @@ void SceneObjectImplementation::broadcastDestroy(SceneObject* object, bool sendS
 	broadcastDestroyPrivate(object, selfObject);
 }
 
+void SceneObjectImplementation::broadcastMessage(BasePacket* message, bool sendSelf, bool lockZone) {
+	SceneObject* selfObject = (sendSelf ? nullptr : asSceneObject());
+
+	broadcastMessagePrivate(message, selfObject, lockZone);
+}
+
 void SceneObjectImplementation::broadcastMessagePrivate(BasePacket* message, SceneObject* selfObject, bool lockZone) {
 	const ZoneServer* zoneServer = getZoneServer();
 
@@ -690,17 +696,17 @@ void SceneObjectImplementation::broadcastMessagePrivate(BasePacket* message, Sce
 	}
 
 	if (parent != nullptr) {
-		ManagedReference<SceneObject*> grandParent = getRootParent();
+		ManagedReference<SceneObject*> rootParent = getRootParent();
 
-		if (grandParent != nullptr) {
-			grandParent->broadcastMessagePrivate(message, selfObject, lockZone);
-
-			return;
-		} else {
+		if (rootParent == nullptr) {
 			delete message;
-
 			return;
 		}
+
+		// Broadcast message with root parent
+		rootParent->broadcastMessagePrivate(message, selfObject, lockZone);
+
+		return;
 	}
 
 	if (zone == nullptr) {
@@ -766,12 +772,6 @@ void SceneObjectImplementation::broadcastMessagePrivate(BasePacket* message, Sce
 #ifndef LOCKFREE_BCLIENT_BUFFERS
 	delete message;
 #endif
-}
-
-void SceneObjectImplementation::broadcastMessage(BasePacket* message, bool sendSelf, bool lockZone) {
-	SceneObject* selfObject = sendSelf ? nullptr : asSceneObject();
-
-	broadcastMessagePrivate(message, selfObject, lockZone);
 }
 
 void SceneObjectImplementation::broadcastMessagesPrivate(Vector<BasePacket*>* messages, SceneObject* selfObject) {
@@ -1310,25 +1310,58 @@ float SceneObjectImplementation::getDistanceTo(SceneObject* targetCreature) {
 	float x = targetWorldPosition.getX();
 	float y = targetWorldPosition.getY();
 
-	auto worldPosition = getWorldPosition();
+	auto currentWorldPos = getWorldPosition();
 
-	float deltaX = x - worldPosition.getX();
-	float deltaY = y - worldPosition.getY();
+	float deltaX = x - currentWorldPos.getX();
+	float deltaY = y - currentWorldPos.getY();
 
 	return Math::sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
+float SceneObjectImplementation::getDistanceTo3d(SceneObject* target) {
+	auto targetWorldPosition = target->getWorldPosition();
+
+	float x = targetWorldPosition.getX();
+	float y = targetWorldPosition.getY();
+	float z = targetWorldPosition.getZ();
+
+	auto currentWorldPos = getWorldPosition();
+
+	float deltaX = x - currentWorldPos.getX();
+	float deltaY = y - currentWorldPos.getY();
+	float deltaZ = z - currentWorldPos.getZ();
+
+	float rangeCalc = Math::sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+
+	// info(true) << "Current World Position: " << currentWorldPos.toString() << " Target World Position: " << targetWorldPosition.toString() << " Final Range: " << rangeCalc;
+
+	return rangeCalc;
+}
+
 float SceneObjectImplementation::getDistanceTo(Coordinate* coordinate) {
-	// TEMP till
 	float x = coordinate->getPositionX();
 	float y = coordinate->getPositionY();
 
-	auto worldPosition = getWorldPosition();
+	auto currentWorldPos = getWorldPosition();
 
-	float deltaX = x - worldPosition.getX();
-	float deltaY = y - worldPosition.getY();
+	float deltaX = x - currentWorldPos.getX();
+	float deltaY = y - currentWorldPos.getY();
 
 	return Math::sqrt(deltaX * deltaX + deltaY * deltaY);
+}
+
+float SceneObjectImplementation::getDistanceTo3d(Coordinate* coordinate) {
+	float x = coordinate->getPositionX();
+	float y = coordinate->getPositionY();
+	float z = coordinate->getPositionZ();
+
+	auto currentWorldPos = getWorldPosition();
+
+	float deltaX = x - currentWorldPos.getX();
+	float deltaY = y - currentWorldPos.getY();
+	float deltaZ = z - currentWorldPos.getZ();
+
+	return Math::sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
 }
 
 const Quaternion* SceneObjectImplementation::getDirection() const {
