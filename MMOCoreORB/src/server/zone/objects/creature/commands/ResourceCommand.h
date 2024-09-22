@@ -6,6 +6,7 @@
 #define RESOURCECOMMAND_H_
 
 #include "server/zone/managers/stringid/StringIdManager.h"
+#include "server/globalVariables.h"
 
 class ResourceCommand : public QueueCommand {
 public:
@@ -323,7 +324,7 @@ public:
 		String resName = "";
 		args->getStringToken(resName);
 
-		int quantity = ResourceManager::RESOURCE_DEED_QUANTITY;
+		int quantity = globalVariables::resourcesResourceDeedSize;
 		if (args->hasMoreTokens())
 			quantity = args->getIntToken();
 

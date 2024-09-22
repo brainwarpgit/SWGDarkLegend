@@ -399,11 +399,17 @@ playerXPBasedOnLevelEnabled = false --default true
 playerCHXPModEnabled = true --default false
 playerCHCombatXPEnabled = true --default false
 
+--Ranger
+rangerAreaTrackDistance = 2048 --default 512
+rangerAreaTrackCycleTime = 3 --default 6 in seconds
+rangerAreaTrackHighlightBabyEnabled = true --default false
+
 --Resources
 resourcesAddNameEnabled = true --default false
 resourcesMinimumQuality = 1000 --default 0
 resourcesMaximumQuality = 1000 --default 1000
 resourcesContainerSize = 10000000 --default 100000
+resourcesResourceDeedSize = 300000 --default 30000
 
 --Skills
 skillsInstantMasterPoliticianEnabled = true --default false

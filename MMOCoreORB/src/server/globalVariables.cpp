@@ -393,11 +393,17 @@ namespace globalVariables {
 	bool playerCHXPModEnabled = false;
 	bool playerCHCombatXPEnabled = false;
 
+//Ranger
+	int rangerAreaTrackDistance = 512;
+	float rangerAreaTrackCycleTime = 6;
+	bool rangerAreaTrackHighlightBabyEnabled = false;
+
 //Resources
 	bool resourcesAddNameEnabled = false;
 	int resourcesMinimumQuality = 0;
 	int resourcesMaximumQuality = 1000;
 	int resourcesContainerSize = 100000;
+	int resourcesResourceDeedSize = 30000;
 
 //Skills
 	bool skillsInstantMasterPoliticianEnabled = false;
@@ -835,12 +841,18 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerXPBasedOnLevelEnabled") == true || lua->getGlobalBoolean("playerXPBasedOnLevelEnabled") == false) playerXPBasedOnLevelEnabled = lua->getGlobalBoolean("playerXPBasedOnLevelEnabled");
 			if (lua->getGlobalBoolean("playerCHXPModEnabled") == true || lua->getGlobalBoolean("playerCHXPModEnabled") == false) playerCHXPModEnabled = lua->getGlobalBoolean("playerCHXPModEnabled");
 			if (lua->getGlobalBoolean("playerCHCombatXPEnabled") == true || lua->getGlobalBoolean("playerCHCombatXPEnabled") == false) playerCHCombatXPEnabled = lua->getGlobalBoolean("playerCHCombatXPEnabled");
-			
+
+			//Ranger
+			if (lua->getGlobalInt("rangerAreaTrackDistance") > 0) rangerAreaTrackDistance = lua->getGlobalInt("rangerAreaTrackDistance");
+			if (lua->getGlobalFloat("rangerAreaTrackCycleTime") >= 0) rangerAreaTrackCycleTime = lua->getGlobalFloat("rangerAreaTrackCycleTime");
+			if (lua->getGlobalBoolean("rangerAreaTrackHighlightBabyEnabled") == true || lua->getGlobalBoolean("rangerAreaTrackHighlightBabyEnabled") == false) rangerAreaTrackHighlightBabyEnabled = lua->getGlobalBoolean("rangerAreaTrackHighlightBabyEnabled");
+		
 			//Resources 
 			if (lua->getGlobalBoolean("resourcesAddNameEnabled") == true || lua->getGlobalBoolean("resourcesAddNameEnabled") == false) resourcesAddNameEnabled = lua->getGlobalBoolean("resourcesAddNameEnabled");
 			if (lua->getGlobalInt("resourcesMinimumQuality") >= 0 && lua->getGlobalInt("resourcesMinimumQuality") <= lua->getGlobalInt("resourcesMaximumQuality")) resourcesMinimumQuality = lua->getGlobalInt("resourcesMinimumQuality");
 			if (lua->getGlobalInt("resourcesMaximumQuality") <= 1000 && lua->getGlobalInt("resourcesMaximumQuality") >= lua->getGlobalInt("resourcesMinimumQuality")) resourcesMaximumQuality = lua->getGlobalInt("resourcesMaximumQuality");
 			if (lua->getGlobalInt("resourcesContainerSize") > 0) resourcesContainerSize = lua->getGlobalInt("resourcesContainerSize");
+			if (lua->getGlobalInt("resourcesResourceDeedSize") > 0) resourcesResourceDeedSize = lua->getGlobalInt("resourcesResourceDeedSize");
 			
 			//Skills
 			if (lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == false) skillsInstantMasterPoliticianEnabled = lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled");

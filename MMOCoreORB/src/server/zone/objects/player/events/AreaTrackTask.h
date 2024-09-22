@@ -13,6 +13,8 @@
 #ifndef AREATRACKTASK_H_
 #define AREATRACKTASK_H_
 
+#include "server/globalVariables.h"
+
 class AreaTrackTask: public Task {
 	ManagedReference<CreatureObject*> player;
 	int type;
@@ -69,8 +71,8 @@ public:
 			bool canGetDirection = player->hasSkill("outdoors_ranger_harvest_01");
 		    bool canGetDistance = player->hasSkill("outdoors_ranger_harvest_03");
 
-			SortedVector<ManagedReference<TreeEntry*> > objects(512, 512);
-			zone->getInRangeObjects(player->getPositionX(), player->getPositionZ(), player->getPositionY(), 512, &objects, true);
+			SortedVector<ManagedReference<TreeEntry*> > objects(globalVariables::rangerAreaTrackDistance, globalVariables::rangerAreaTrackDistance);
+			zone->getInRangeObjects(player->getPositionX(), player->getPositionZ(), player->getPositionY(), globalVariables::rangerAreaTrackDistance, &objects, true);
 
 			for (int i = 0; i < objects.size(); ++i) {
 				SceneObject* object = static_cast<SceneObject*>(objects.get(i).get());
@@ -101,7 +103,15 @@ public:
 					continue;
 				}
 
-				results << creature->getDisplayedName();
+				String creatureName = "";
+				
+				if (creature->getDisplayedName().contains("(baby)") && globalVariables::rangerAreaTrackHighlightBabyEnabled) {
+					creatureName = "\\#FFFF00" + creature->getDisplayedName();
+				} else {
+					creatureName = creature->getDisplayedName();
+				}
+				
+				results << creatureName;
 
 				String direction = "", distance = "";
 

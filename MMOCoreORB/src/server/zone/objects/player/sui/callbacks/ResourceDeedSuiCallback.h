@@ -9,7 +9,7 @@
 #define RESOURCEDEEDSUICALLBACK_H_
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
-
+#include "server/globalVariables.h"
 
 class ResourceDeedSuiCallback : public SuiCallback {
 	String nodeName;
@@ -83,7 +83,7 @@ public:
 				deed->destroyDeed();
 				clocker.release();
 
-				resourceManager->givePlayerResource(creature, nodeName, ResourceManager::RESOURCE_DEED_QUANTITY);
+				resourceManager->givePlayerResource(creature, nodeName, globalVariables::resourcesResourceDeedSize);
 
 				return;
 			}

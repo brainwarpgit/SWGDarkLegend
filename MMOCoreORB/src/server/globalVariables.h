@@ -395,12 +395,18 @@ namespace globalVariables {
 	extern bool playerCHXPModEnabled;
 	extern bool playerCHCombatXPEnabled;
 
+//Ranger
+	extern int rangerAreaTrackDistance;
+	extern float rangerAreaTrackCycleTime;
+	extern bool rangerAreaTrackHighlightBabyEnabled;
+
 //Resources
 	extern bool resourcesAddNameEnabled;
 	extern int resourcesMinimumQuality;
 	extern int resourcesMaximumQuality;
 	extern int resourcesContainerSize;
-
+	extern int resourcesResourceDeedSize;
+	
 //Skills
 	extern bool skillsInstantMasterPoliticianEnabled;
 	extern bool skillsInstantMasterMerchantEnabled;
