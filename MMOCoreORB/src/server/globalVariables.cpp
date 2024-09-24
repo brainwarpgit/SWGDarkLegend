@@ -156,7 +156,9 @@ namespace globalVariables {
 	float craftingAcidMaxResists = 100.0f;
 	float craftingStunMaxResists = 100.0f;
 	float craftingLightsaberMaxResists = 100.0f;
-	
+	float craftingAssemblyModifier = 0;
+	float craftingPracticeXPMultiplier = 1.05;
+
 //Creature
 	bool creatureRandomDifficultyEnabled = false;
 	int creatureMaxLevel = 336;
@@ -609,6 +611,8 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("craftingAcidMaxResists") >= 0 && lua->getGlobalFloat("craftingAcidMaxResists") <= 100) craftingAcidMaxResists = lua->getGlobalFloat("craftingAcidMaxResists");
 			if (lua->getGlobalFloat("craftingStunMaxResists") >= 0 && lua->getGlobalFloat("craftingStunMaxResists") <= 100) craftingStunMaxResists = lua->getGlobalFloat("craftingStunMaxResists");
 			if (lua->getGlobalFloat("craftingLightsaberMaxResists") >= 0 && lua->getGlobalFloat("craftingLightsaberMaxResists") <= 100) craftingLightsaberMaxResists = lua->getGlobalFloat("craftingLightsaberMaxResists");
+			if (lua->getGlobalFloat("craftingAssemblyModifier") >= 0) craftingAssemblyModifier = lua->getGlobalFloat("craftingAssemblyModifier");
+			if (lua->getGlobalFloat("craftingPracticeXPMultiplier") >= 0) craftingPracticeXPMultiplier = lua->getGlobalFloat("craftingPracticeXPMultiplier");
 			
 			//Creature 
 			if (lua->getGlobalBoolean("creatureRandomDifficultyEnabled") == true || lua->getGlobalBoolean("creatureRandomDifficultyEnabled") == false) creatureRandomDifficultyEnabled = lua->getGlobalBoolean("creatureRandomDifficultyEnabled");

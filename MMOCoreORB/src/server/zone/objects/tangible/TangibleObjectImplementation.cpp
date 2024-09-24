@@ -36,6 +36,7 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
+#include "server/zone/objects/tangible/tool/CraftingStation.h"
 #include "server/globalVariables.h"
 
 void TangibleObjectImplementation::initializeTransientMembers() {
@@ -1289,14 +1290,11 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 	}
 
 	//Condition is unrepairable
-	float repairMaxMod = 1.0f;	
 	if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled == false) {
 		StringIdChatParameter cantrepair("error_message", "sys_repair_unrepairable");
 		cantrepair.setTT(getDisplayedName());
 		player->sendSystemMessage(cantrepair); //%TT's condition is beyond repair even for your skills.
 		return;
-	} else if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled == true) {
-		repairMaxMod = globalVariables::craftingRepairMaxMod;
 	}
 
 	Reference<RepairToolTemplate*> repairTemplate = nullptr;
@@ -1340,15 +1338,17 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 		error ("No RepairTool given or found. Aborting");
 		return;
 	}
-	String result = "";
 
-	if (globalVariables::craftingNewRepairEnabled == false) {
-		/// Luck Roll + Profession Mod(25) + Luck Tapes
-		/// + Station Mod - BF
+	/// Luck Roll + Profession Mod(25) + Luck Tapes
+	/// + Station Mod - BF
 
-		/// Luck Roll
-		int roll = System::random(100);
-		int repairChance = roll;
+	/// Luck Roll
+	int roll = 0;	
+
+	int repairChance = 0;
+	if (!globalVariables::craftingNewRepairEnabled) {
+		roll = System::random(100);
+		repairChance = roll;
 
 		/// Profession Bonus
 		if (player->hasSkill(repairTemplate->getSkill()))
@@ -1359,65 +1359,57 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 		repairChance += player->getSkillMod("crafting_repair");
 		repairChance += player->getSkillMod("force_repair_bonus");
 
-		/// use tool quality to lower chances if bad tool
-		float quality = 1.f - (((100.f - repairTool->getQuality()) / 2) / 100.f);
-		repairChance *= quality;
+	} else {
+		roll = System::random(100 + System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck")));
+		if (player->hasSkill("crafting_tailor_novice") && repairTemplate->getRepairType() == 16777216) {
+			repairChance = player->getSkillMod("clothing_repair");
+		}
+		if (player->hasSkill("crafting_armorsmith_novice") && repairTemplate->getRepairType() == 256) {
+			repairChance =player->getSkillMod("armor_repair");
+		}
+		if (player->hasSkill("crafting_weaponsmith_novice") && repairTemplate->getRepairType() == 131072) {
+			repairChance = player->getSkillMod("weapon_repair");
+		}
+		repairChance += System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));	
+		repairChance += player->getSkillMod("force_repair_bonus");
+	
+	}
 
-		ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
+	/// use tool quality to lower chances if bad tool
+	float quality = 1.f - (((100.f - repairTool->getQuality()) / 2) / 100.f);
+	repairChance *= quality;
 
+	ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
+	ManagedReference<CraftingStation*> station = nullptr;
+		
+	if (!globalVariables::craftingNewRepairEnabled) {	
 		/// Increase if near station
 		if (playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType()) != nullptr) {
 			repairChance += 15;
 		}
-
-		/// Subtract battle fatigue
-		repairChance -= (player->getShockWounds() / 2);
-
-		/// Subtract complexity
-		repairChance -= (getComplexity() / 3);
-
-		/// 5% random failure
-		if (getMaxCondition() < 20 || roll < 5)
-			repairChance = 0;
-
-		if (roll > 95)
-			repairChance = 100;
-		
-		int luckSkill = 0;
-		repairMaxMod = 1;
-
-		result = repairAttempt(repairChance, luckSkill, repairMaxMod);
 	} else {
-		int repairChance = 0;
-		int repairmod = 0;
-		int forceBonus = 0;
-		int stationBonus = 0;
-		int toolQuality = 0;
-		int luckSkill = 0;
-		if (player->hasSkill("crafting_tailor_novice") && repairTemplate->getRepairType() == 16777216) {
-			repairmod = player->getSkillMod("clothing_repair");
+		station = playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType());
+		if (station != nullptr) {
+			repairChance += station->getEffectiveness();
 		}
-		if (player->hasSkill("crafting_armorsmith_novice") && repairTemplate->getRepairType() == 256) {
-			repairmod =player->getSkillMod("armor_repair");
-		}
-		if (player->hasSkill("crafting_weaponsmith_novice") && repairTemplate->getRepairType() == 131072) {
-			repairmod = player->getSkillMod("weapon_repair");
-		}
-		int luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));	
-		forceBonus += player->getSkillMod("force_repair_bonus");
-		toolQuality = repairTool->getQuality();
-		ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
-
-		/// Increase if near station
-		if (playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType()) != nullptr) {
-			stationBonus = 15;
-		}
-		repairChance = repairmod + forceBonus + luckRoll + toolQuality + stationBonus;
-		luckSkill = System::random(150) + forceBonus + luckRoll + toolQuality + stationBonus;
-		result = repairAttempt(repairChance, luckSkill, repairMaxMod);
 	}
-	Locker locker(repairTool);
 
+	/// Subtract battle fatigue
+	repairChance -= (player->getShockWounds() / 2);
+
+	/// Subtract complexity
+	repairChance -= (getComplexity() / 3);
+
+	/// 5% random failure
+	if (getMaxCondition() < 20 || roll < 5)
+		repairChance = 0;
+
+	if (roll > 95)
+		repairChance = 100;
+
+	String result = repairAttempt(repairChance);
+
+	Locker locker(repairTool);
 	repairTool->decreaseUseCount(1, true);
 
 	player->sendSystemMessage(result);

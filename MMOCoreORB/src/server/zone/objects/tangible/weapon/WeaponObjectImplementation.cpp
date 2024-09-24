@@ -230,7 +230,7 @@ void WeaponObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cr
 
 	/*if (usesRemaining > 0)
 		alm->insertAttribute("count", usesRemaining);*/
-	
+
 	for(int i = 0; i < wearableSkillMods.size(); ++i) {
 		const String& key = wearableSkillMods.elementAt(i).getKey();
 		String statname = "cat_skill_mod_bonus.@stat_n:" + key;
@@ -728,55 +728,36 @@ void WeaponObjectImplementation::decreasePowerupUses(CreatureObject* player) {
 	}
 }
 
-String WeaponObjectImplementation::repairAttempt(int repairChance, int luckSkill, float repairMaxMod) {
-	String message = "";		
-	if (globalVariables::craftingNewRepairEnabled == false ) {
-		if(repairChance < 25) {
-			message += "sys_repair_failed";
-			setMaxCondition(1, true);
-			setConditionDamage(0, true);
-		} else if(repairChance < 50) {
-			message += "sys_repair_imperfect";
-			setMaxCondition(getMaxCondition() * .65f, true);
-			setConditionDamage(0, true);
-		} else if(repairChance < 75) {
-			setMaxCondition(getMaxCondition() * .80f, true);
-			setConditionDamage(0, true);
-			message += "sys_repair_slight";
-		} else {
-			setMaxCondition(getMaxCondition() * .95f, true);
-			setConditionDamage(0, true);
-			message += "sys_repair_perfect";
-		}
-	} else {
-		float repairMaxMod = globalVariables::craftingRepairMaxMod;
-		if ((getMaxCondition() - getConditionDamage()) <= 0 && repairMaxMod < 1) {
-			message += "This item was broken. Reducing Max Condition by " + std::to_string(repairMaxMod * 100) + "%! ";
-			setMaxCondition(getMaxCondition() * repairMaxMod, true);
-		}
-		if(repairChance < 50 || luckSkill < 50) {
-			message += "You barely repaired this item to full condition.";
-			setMaxCondition(getMaxCondition() * .6f, true);
-			setConditionDamage(0, true);
-		} else if(repairChance < 100 || luckSkill < 100) {
-			message += "You somewhat repaired this item to full condition.";
-			setMaxCondition(getMaxCondition() * .7f, true);
-			setConditionDamage(0, true);
-		} else if(repairChance < 150 || luckSkill < 150) {
-			message += "You almost repaired this item to full condition.";
-			setMaxCondition(getMaxCondition() * .8f, true);
-			setConditionDamage(0, true);
-		} else if(repairChance < 200 || luckSkill < 200) {
-			message += "You completely repaired this item to full condition.";
-			setMaxCondition(getMaxCondition() * .9f, true);
-			setConditionDamage(0, true);
-		} else {
-			message += "You completely repaired this item to full condition.";
-			setMaxCondition(getMaxCondition(), true);
-			setConditionDamage(0, true);
-		}
+String WeaponObjectImplementation::repairAttempt(int repairChance) {
+	String message = "";
+
+	if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled) {
+		message += "This item was broken. Reduced Max Condition by " + std::to_string(globalVariables::craftingRepairMaxMod * 100) + "%! ";
+		setMaxCondition(getMaxCondition() * globalVariables::craftingRepairMaxMod, true);
 	}
-	return message;
+
+	message += "@error_message:";
+
+	if(repairChance < 25) {
+		message += "sys_repair_failed";
+		if (!globalVariables::craftingRepairBrokenEnabled) {
+			setMaxCondition(1, true);
+		}
+		setConditionDamage(0, true);
+	} else if(repairChance < 50) {
+		message += "sys_repair_imperfect";
+		setMaxCondition(getMaxCondition() * .65f, true);
+		setConditionDamage(0, true);
+	} else if(repairChance < 75) {
+		setMaxCondition(getMaxCondition() * .80f, true);
+		setConditionDamage(0, true);
+		message += "sys_repair_slight";
+	} else {
+		setMaxCondition(getMaxCondition() * .95f, true);
+		setConditionDamage(0, true);
+		message += "sys_repair_perfect";
+	}
+
 	return message;
 }
 

@@ -157,7 +157,8 @@ namespace globalVariables {
 	extern float craftingAcidMaxResists;
 	extern float craftingStunMaxResists;
 	extern float craftingLightsaberMaxResists;
-
+	extern float craftingAssemblyModifier;
+	extern float craftingPracticeXPMultiplier;
 
 // Creature
 	extern bool creatureRandomDifficultyEnabled;

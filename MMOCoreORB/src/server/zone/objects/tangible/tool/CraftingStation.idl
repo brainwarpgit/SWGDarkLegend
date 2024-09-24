@@ -24,7 +24,7 @@ class CraftingStation extends ToolTangibleObject {
 	public CraftingStation() {
 		Logger.setLoggingName("CraftingStation");
 		complexityLevel = 0;
-		effectiveness = 25;
+		effectiveness = 0;
 	}
 
 	public void initializeTransientMembers() {
@@ -72,6 +72,12 @@ class CraftingStation extends ToolTangibleObject {
 		return true;
 	}
 
+	@dirty
+	public float getEffectiveness() {
+		if (effectiveness < 25) effectiveness = 25;
+		return effectiveness;
+	}
+	
 	@dirty
 	public int getComplexityLevel() {
 		return complexityLevel;

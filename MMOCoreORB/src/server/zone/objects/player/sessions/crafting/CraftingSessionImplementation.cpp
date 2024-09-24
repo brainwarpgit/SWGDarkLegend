@@ -30,7 +30,6 @@
 #include "templates/params/RangedIntCustomizationVariable.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/globalVariables.h"
-#include "server/userVariables.h"
 
 // #define DEBUG_EXPERIMENTATION
 
@@ -40,17 +39,7 @@ int CraftingSessionImplementation::initializeSession(CraftingTool* tool, Craftin
 
 	ManagedReference<CreatureObject*> crafter = this->crafter.get();
 	ManagedReference<CraftingTool*> craftingTool = this->craftingTool.get();
-	ManagedReference<CraftingStation*> craftingStation = this->craftingStation.get();
-	
-	userVariables::setUserVariable("toolEffectiveness",crafter->getFirstName(),craftingTool->getEffectiveness());
-	
-	if (craftingStation != nullptr) {
-		auto strongStation = craftingStation.get();
-		userVariables::setUserVariable("stationNearby",crafter->getFirstName(),strongStation->isInRange(crafter, 7.0f));
-	} else {
-		userVariables::setUserVariable("stationNearby",crafter->getFirstName(),0);
-	}
-	
+
 	crafter->addActiveSession(SessionFacadeType::CRAFTING, _this.getReferenceUnsafeStaticCast());
 	craftingTool->addActiveSession(SessionFacadeType::CRAFTING, _this.getReferenceUnsafeStaticCast());
 
@@ -215,9 +204,6 @@ int CraftingSessionImplementation::cancelSession() {
 		crafter->sendSystemMessage("*** Canceling crafting session ***");
 	}
 
-	userVariables::setUserVariable("toolEffectiveness",crafter->getFirstName(),0);
-	userVariables::setUserVariable("stationNearby",crafter->getFirstName(),false);
-
 	return clearSession();
 }
 
@@ -288,7 +274,7 @@ int CraftingSessionImplementation::clearSession() {
 	if (crafterGhost != nullptr && crafterGhost->getDebug()) {
 		crafter->sendSystemMessage("*** Clearing crafting session ***");
 	}
-	
+
 	return 0;
 }
 
@@ -323,7 +309,6 @@ void CraftingSessionImplementation::closeCraftingWindow(int clientCounter, bool 
 	if (crafterGhost != nullptr && crafterGhost->getDebug()) {
 		crafter->sendSystemMessage("*** Closing crafting window ***");
 	}
-
 }
 
 void CraftingSessionImplementation::sendSlotMessage(int counter, int message) {
@@ -767,19 +752,19 @@ void CraftingSessionImplementation::initialAssembly(int clientCounter) {
 	experimentationPointsTotal = int(crafter->getSkillMod(expskill) / 10);
 	experimentationPointsUsed = 0;
 
+	float stationEffectiveness = 0.0f;
+	if (craftingStation != nullptr && globalVariables::craftingNewAssemblyEnabled) {
+		stationEffectiveness = craftingStation->getEffectiveness();
+	}
 	// Calculate exp failure for red bars
-	int experimentalFailureRate = craftingManager->calculateExperimentationFailureRate(crafter, manufactureSchematic, 0);
+	int experimentalFailureRate = craftingManager->calculateExperimentationFailureRate(crafter, manufactureSchematic, 0, stationEffectiveness + craftingTool->getEffectiveness());
 
 	// Get the level of customization
 	String custskill = draftSchematic->getCustomizationSkill();
 	int custpoints = int(crafter->getSkillMod(custskill));
 
 	// Determine the outcome of the craft, Amazing through Critical
-	float effectiveness = craftingTool->getEffectiveness();
-	if (globalVariables::craftingNewAssemblyEnabled == true) {
-		if (userVariables::getUserVariable("stationNearby",crafter->getFirstName()) == 1) effectiveness += 15;
-	}
-	assemblyResult = craftingManager->calculateAssemblySuccess(crafter, draftSchematic, effectiveness);
+	assemblyResult = craftingManager->calculateAssemblySuccess(crafter, draftSchematic, craftingTool->getEffectiveness() + stationEffectiveness);
 
 	if (assemblyResult != CraftingManager::AMAZINGSUCCESS && craftingTool->getForceCriticalAssembly() > 0) {
 		assemblyResult = CraftingManager::AMAZINGSUCCESS;
@@ -1016,9 +1001,6 @@ void CraftingSessionImplementation::finishAssembly(int clientCounter) {
 
 	crafter->sendMessage(objMsg);
 	// End Object Controller **************************************
-	
-	userVariables::setUserVariable("toolEffectiveness",crafter->getFirstName(),0);
-	userVariables::setUserVariable("stationNearby",crafter->getFirstName(),false);
 }
 
 
@@ -1036,6 +1018,7 @@ void CraftingSessionImplementation::experiment(int rowsAttempted, const String& 
 #endif // DEBUG_EXPERIMENTATION
 
 	ManagedReference<CraftingTool*> craftingTool = this->craftingTool.get();
+	ManagedReference<CraftingStation*> craftingStation = this->craftingStation.get();
 	ManagedReference<CreatureObject*> crafter = this->crafter.get();
 	ManagedReference<PlayerObject*> crafterGhost = this->crafterGhost.get();
 	ManagedReference<ManufactureSchematic*> manufactureSchematic = this->manufactureSchematic.get();
@@ -1104,20 +1087,19 @@ void CraftingSessionImplementation::experiment(int rowsAttempted, const String& 
 		}
 
 		experimentationPointsUsed += pointsAttempted;
+		float toolEffectiveness = craftingTool->getEffectiveness();
+		float stationEffectiveness = 0.0f;
+		if (craftingStation != nullptr && globalVariables::craftingNewAssemblyEnabled) {
+			stationEffectiveness = craftingStation->getEffectiveness();
+		}
 
 		// Each line gets it's own rolls
 		// Calcualte a new failure rate for each line of experimentation
-		failure = craftingManager->calculateExperimentationFailureRate(crafter, manufactureSchematic, pointsAttempted);
-		float effectiveness = craftingTool->getEffectiveness();
-		if (userVariables::getUserVariable("stationNearby",crafter->getFirstName()) == 1) effectiveness += 15;		
-	
+		failure = craftingManager->calculateExperimentationFailureRate(crafter, manufactureSchematic, pointsAttempted, toolEffectiveness + stationEffectiveness);
+
 		if (experimentationPointsUsed <= experimentationPointsTotal) {
 			// Set the experimentation result ie:  Amazing Success
-			if (globalVariables::craftingNewExperimentEnabled == true) {
-				experimentationResult = craftingManager->calculateExperimentationSuccess(crafter, manufactureSchematic->getDraftSchematic(), effectiveness);
-			} else {
-				experimentationResult = craftingManager->calculateExperimentationSuccess(crafter, manufactureSchematic->getDraftSchematic(), failure);
-			}
+			experimentationResult = craftingManager->calculateExperimentationSuccess(crafter, manufactureSchematic->getDraftSchematic(), failure);
 
 			if (experimentationResult != CraftingManager::AMAZINGSUCCESS && craftingTool->getForceCriticalExperiment() > 0) {
 				// We are going to mutute the tool, lock it
@@ -1386,7 +1368,6 @@ void CraftingSessionImplementation::finishStage2(int clientCounter) {
 	objMsg->insertInt(1);
 	objMsg->insertByte(clientCounter);
 	crafter->sendMessage(objMsg);
-	
 }
 
 void CraftingSessionImplementation::createPrototype(int clientCounter, bool createItem) {
@@ -1417,7 +1398,7 @@ void CraftingSessionImplementation::createPrototype(int clientCounter, bool crea
 		} else {
 			// This is for practicing
 			startCreationTasks(manufactureSchematic->getComplexity() * globalVariables::craftingToolCraftTimeMultiplier, true);
-			xp = round(xp * 1.05f);
+			xp = round(xp * globalVariables::craftingPracticeXPMultiplier);
 		}
 
 		Reference<PlayerManager*> playerManager = crafter->getZoneServer()->getPlayerManager();

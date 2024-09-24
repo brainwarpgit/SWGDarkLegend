@@ -825,7 +825,7 @@ class TangibleObject extends SceneObject {
 	public native void repair(CreatureObject player, RepairTool repairTool = null);
 
 	@dirty
-	public abstract string repairAttempt(int repairChance, int luckSkill, float repairMaxMod) {
+	public abstract string repairAttempt(int repairChance) {
 		return "Repairing is not implemented for this item";
 	}
 
