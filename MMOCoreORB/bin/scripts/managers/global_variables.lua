@@ -268,6 +268,8 @@ lootModifiersAffectLightsaberCrystalsEnabled = true --default false Also works w
 lootLevelToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
 lootModifierToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
 lootQualityToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
+lootSocketsOnWearablesEnabled = true --default false
+lootSocketsOnWearableContainersEnabled = false --default true
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours

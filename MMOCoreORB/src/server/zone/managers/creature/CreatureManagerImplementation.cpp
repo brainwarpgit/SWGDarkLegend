@@ -39,7 +39,6 @@
 #include "server/zone/objects/intangible/TheaterObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/globalVariables.h"
-#include "server/userVariables.h"
 
 Mutex CreatureManagerImplementation::loadMutex;
 

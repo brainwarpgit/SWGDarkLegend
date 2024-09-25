@@ -14,6 +14,7 @@
 #include "templates/SharedTangibleObjectTemplate.h"
 #include "server/zone/objects/scene/SceneObjectType.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
+#include "server/globalVariables.h"
 
 class LootItemTemplate: public LuaTemplate, public Logger {
 protected:
@@ -100,9 +101,9 @@ public:
 				const String& attribute = attributes->get(i);
 				const String& group = groups->get(i);
 
-				//if (attribute == "sockets") {
-				//	continue;
-				//}
+				if (attribute == "sockets" && !globalVariables::lootSocketsOnWearablesEnabled) {
+					continue;
+				}
 
 				float min = minValues->get(i);
 				float max = maxValues->get(i);

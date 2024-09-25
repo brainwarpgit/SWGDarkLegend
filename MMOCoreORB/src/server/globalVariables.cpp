@@ -269,6 +269,8 @@ namespace globalVariables {
 	bool lootLevelToItemDescriptionEnabled = false;
 	bool lootModifierToItemDescriptionEnabled = false;
 	bool lootQualityToItemDescriptionEnabled = false;
+	bool lootSocketsOnWearablesEnabled = false;
+	bool lootSocketsOnWearableContainersEnabled = true;
 	
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -689,11 +691,11 @@ namespace globalVariables {
 			if (lua->getGlobalInt("harvestMilkTime") >= 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
 			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
 
-			//Jedi jediForceCostToTuneEnabled
+			//Jedi 
 			if (lua->getGlobalBoolean("jediForceCostToTuneEnabled") == true || lua->getGlobalBoolean("jediForceCostToTuneEnabled") == false) jediForceCostToTuneEnabled = lua->getGlobalBoolean("jediForceCostToTuneEnabled");
 			if (lua->getGlobalInt("jediKnightRequirementNumberOfMasters") >= 0) jediKnightRequirementNumberOfMasters = lua->getGlobalInt("jediKnightRequirementNumberOfMasters");
 						
-			//Loot
+			//Loot 
 			if (lua->getGlobalInt("lootDistance") > 0) lootDistance = lua->getGlobalInt("lootDistance");
 			if (lua->getGlobalBoolean("lootAreaEnabled") == true || lua->getGlobalBoolean("lootAreaEnabled") == false) lootAreaEnabled = lua->getGlobalBoolean("lootAreaEnabled");
 			if (lua->getGlobalInt("lootCreditMultiplier") > 0) lootCreditMultiplier = lua->getGlobalInt("lootCreditMultiplier");
@@ -720,6 +722,8 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootLevelToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootNewLootQualityNaminlootLevelToItemDescriptionEnabledgEnabled") == false) lootLevelToItemDescriptionEnabled = lua->getGlobalBoolean("lootLevelToItemDescriptionEnabled");
 			if (lua->getGlobalBoolean("lootModifierToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootModifierToItemDescriptionEnabled") == false) lootModifierToItemDescriptionEnabled = lua->getGlobalBoolean("lootModifierToItemDescriptionEnabled");
 			if (lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled") == false) lootQualityToItemDescriptionEnabled = lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled");
+			if (lua->getGlobalBoolean("lootSocketsOnWearablesEnabled") == true || lua->getGlobalBoolean("lootSocketsOnWearablesEnabled") == false) lootSocketsOnWearablesEnabled = lua->getGlobalBoolean("lootSocketsOnWearablesEnabled");
+			if (lua->getGlobalBoolean("lootSocketsOnWearableContainersEnabled") == true || lua->getGlobalBoolean("lootSocketsOnWearableContainersEnabled") == false) lootSocketsOnWearableContainersEnabled = lua->getGlobalBoolean("lootSocketsOnWearableContainersEnabled");
 
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");

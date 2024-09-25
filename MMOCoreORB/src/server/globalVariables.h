@@ -270,6 +270,8 @@ namespace globalVariables {
 	extern bool lootLevelToItemDescriptionEnabled;
 	extern bool lootModifierToItemDescriptionEnabled;
 	extern bool lootQualityToItemDescriptionEnabled;
+	extern bool lootSocketsOnWearablesEnabled;
+	extern bool lootSocketsOnWearableContainersEnabled;
 
 //Mission
 	extern int missionBountyExpirationTime;

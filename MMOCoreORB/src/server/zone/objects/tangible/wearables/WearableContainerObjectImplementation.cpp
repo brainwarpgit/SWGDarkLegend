@@ -14,8 +14,10 @@
 #include "server/zone/objects/draftschematic/DraftSchematic.h"
 #include "server/zone/objects/tangible/attachment/Attachment.h"
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
+#include "server/zone/managers/player/PlayerManager.h"
+#include "server/zone/objects/tangible/tool/CraftingTool.h"
+#include "server/zone/objects/tangible/tool/CraftingStation.h"
 #include "server/globalVariables.h"
-#include "server/userVariables.h"
 
 void WearableContainerObjectImplementation::initializeTransientMembers() {
 	ContainerImplementation::initializeTransientMembers();
@@ -45,20 +47,45 @@ void WearableContainerObjectImplementation::updateCraftingValues(CraftingValues*
 }
 
 void WearableContainerObjectImplementation::generateSockets(CraftingValues* craftingValues) {
-	if (socketsGenerated) {
+	if (!globalVariables::lootSocketsOnWearableContainersEnabled) {
 		return;
-	}
-	ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
-	ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
-	ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
-	if (globalVariables::craftingNewGenerateSocketsEnabled == false) {
+	} else {
+		if (socketsGenerated) {
+			return;
+		}
 		int skill = 0;
 		int luck = 0;
 		if (craftingValues != nullptr) {
+			ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
 			if (manuSchematic != nullptr) {
+				ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
+				ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
 				if (player != nullptr && draftSchematic != nullptr) {
+					ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
+					ManagedReference<CraftingStation*> station = nullptr;
+					ManagedReference<CraftingTool*> craftingTool = nullptr;
+					if (globalVariables::craftingNewGenerateSocketsEnabled) {
+						if (playerMan != nullptr) {
+							station = playerMan->getNearbyCraftingStation(player, CraftingTool::CLOTHING);
+							if (station != nullptr) {
+								skill += station->getEffectiveness();
+								craftingTool = cast<CraftingTool*>(station->findCraftingTool(player));
+								if (craftingTool != nullptr) {
+									skill += craftingTool->getEffectiveness();
+								}
+							}
+						}
+						skill += player->getSkillMod("force_assembly");
+						if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
+							Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
+							if (buff != nullptr) {
+								skill += buff->getSkillModifierValue("craft_bonus");
+							}
+						}
+						skill += player->getSkillMod("private_spec_assembly");
+					}
 					String assemblySkill = draftSchematic->getAssemblySkill();
-					skill = player->getSkillMod(assemblySkill);
+					skill += player->getSkillMod(assemblySkill);
 					if (globalVariables::craftingMinSocketMod > skill)
 						return;
 					luck = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
@@ -66,6 +93,7 @@ void WearableContainerObjectImplementation::generateSockets(CraftingValues* craf
 			}
 		}
 		skill -= globalVariables::craftingMinSocketMod;
+		if (skill < 0) skill = 0;
 		int bonusMod = 65 - skill;
 		if (bonusMod <= 0) {
 			bonusMod = 0;
@@ -73,7 +101,12 @@ void WearableContainerObjectImplementation::generateSockets(CraftingValues* craf
 			bonusMod = System::random(bonusMod);
 		}
 		int skillAdjust = skill + System::random(luck) + bonusMod;
-		int maxMod = 65 + System::random(skill);
+		int maxMod = 0;
+		if (globalVariables::craftingNewGenerateSocketsEnabled) {
+			maxMod = 65 + System::random(skill + luck);
+		} else {
+			maxMod = 65 + System::random(skill);
+		}
 		float randomSkill = System::random(skillAdjust) * 10;
 		float roll = randomSkill / (400.f + maxMod);
 		float generatedCount = roll * globalVariables::craftingMaxSockets;
@@ -84,47 +117,6 @@ void WearableContainerObjectImplementation::generateSockets(CraftingValues* craf
 		}
 		usedSocketCount = 0;
 		socketCount = (int)generatedCount;
-		socketsGenerated = true;
-		return;
-	} else {
-		int stationNearby = 0;
-		float toolEffectiveness = 0;
-		int assemblySkill = 0;
-		int luckSkill = 0;
-		if (craftingValues != nullptr) {
-			if (manuSchematic != nullptr) {
-				if (player != nullptr && draftSchematic != nullptr) {
-					int cityBonus = player->getSkillMod("private_spec_assembly");
-					assemblySkill = player->getSkillMod("clothing_assembly");
-					int forceBonus = player->getSkillMod("force_assembly");
-					int luckRoll = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
-					int craftBonus = 0;
-					toolEffectiveness = userVariables::getUserVariable("toolEffectiveness",player->getFirstName());
-					if (userVariables::getUserVariable("stationNearby",player->getFirstName()) == 1.f) stationNearby = 15;
-					if (player->hasBuff(BuffCRC::FOOD_CRAFT_BONUS)) {
-						Buff* buff = player->getBuff(BuffCRC::FOOD_CRAFT_BONUS);
-
-						if (buff != nullptr) {
-							craftBonus = buff->getSkillModifierValue("craft_bonus");
-						}
-					}
-					luckSkill = System::random(125) + ((luckRoll + toolEffectiveness + stationNearby + cityBonus + forceBonus + craftBonus) / 2);
-					assemblySkill += (luckRoll + toolEffectiveness + stationNearby + cityBonus + forceBonus + craftBonus) / 2;
-				}
-			}
-		}
-		float assemblyDivisor = (globalVariables::craftingMaxSocketMod - globalVariables::craftingMinSocketMod) / globalVariables::craftingMaxSockets;
-		if (assemblySkill < globalVariables::craftingMinSocketMod || luckSkill < globalVariables::craftingMinSocketMod) {
-			return;
-		} else {	
-			for ( int i = globalVariables::craftingMaxSockets; i >= 1; --i) {
-				if (assemblySkill >= globalVariables::craftingMinSocketMod + (assemblyDivisor * i) || luckSkill >= globalVariables::craftingMinSocketMod + (assemblyDivisor * i)) {
-					socketCount = i;
-					break;
-				}
-			}
-		}
-		usedSocketCount = 0;
 		socketsGenerated = true;
 		return;
 	}
