@@ -210,7 +210,7 @@ lootableClothingAttachmentStatMods = {
 	"clothing_customization",
 	"clothing_experimentation",
 	"clothing_repair",
-	"crafting_repair"
+	"crafting_repair",
 	"dizzy_defense",
 	"dodge",
 	"droid_assembly",
