@@ -82,7 +82,7 @@ void ShipObjectImplementation::notifyLoadFromDatabase() {
 			StoreShipTask* storeTask = new StoreShipTask(owner, shipDevice, launchZone, launchLoc);
 
 			if (storeTask != nullptr) {
-				storeTask->schedule(5000);
+				storeTask->schedule(2000);
 			}
 		}
 	}
@@ -448,48 +448,80 @@ void ShipObjectImplementation::notifyObjectInsertedToZone(SceneObject* object) {
 	// info(true) << getDisplayedName() << " ShipObjectImplementation --- notifyObjectInsertedToZone - Object " << object->getDisplayedName();
 
 	auto closeObjectsVector = getCloseObjects();
-	SortedVector<TreeEntry*> closeObjects(200, 50);
+	Vector<TreeEntry*> closeObjects(closeObjectsVector->size(), 10);
 
 	if (closeObjectsVector != nullptr) {
 		closeObjectsVector->safeCopyTo(closeObjects);
-	} else {
-		auto zone = getZone();
-
-		if (zone != nullptr)
-			zone->getInRangeObjects(getWorldPositionX(), getWorldPositionZ(), getWorldPositionY(), zone->getZoneObjectRange(), &closeObjects, false);
 	}
+
+	// info(true) << getDisplayedName() << " notifyObjectInsertedToZone -- Total closeObjects: " << closeObjects.size();
 
 	for (int i = 0; i < closeObjects.size(); ++i) {
 		SceneObject* obj = static_cast<SceneObject*>(closeObjects.get(i));
 
-		if (obj == nullptr || !obj->isCreatureObject())
+		if (obj == nullptr || (!obj->isCreatureObject() && !obj->isShipObject())) {
 			continue;
+		}
 
-		if (obj->getRootParent() != _this.getReferenceUnsafe()) {
-			if (object->getCloseObjects() != nullptr)
-				object->addInRangeObject(obj, false);
-			else
+		if (obj->getRootParent() != asShipObject()) {
+			// info(true) << getDisplayedName() << " notifyObjectInsertedToZone -- adding in range object: " << obj->getDisplayedName();
+
+			if (object->getCloseObjects() != nullptr) {
+				object->addInRangeObject(obj, obj->isShipObject());
+			} else {
 				object->notifyInsert(obj);
+			}
 
-			if (obj->getCloseObjects() != nullptr)
+			if (obj->getCloseObjects() != nullptr) {
 				obj->addInRangeObject(object, false);
-			else
+			} else {
 				obj->notifyInsert(object);
+			}
 		}
 	}
 
 	notifyInsert(object);
 
-	if (object->getCloseObjects() != nullptr)
+	if (object->getCloseObjects() != nullptr) {
 		object->addInRangeObject(asShipObject(), false);
+	}
 
 	addInRangeObject(object, false);
 
 	Zone* zone = getZone();
 
 	if (zone != nullptr) {
+		auto tanO = object->asTangibleObject();
+
+		if (tanO != nullptr) {
+			zone->updateActiveAreas(tanO);
+		}
+
 		object->notifyInsertToZone(zone);
 	}
+}
+
+int ShipObjectImplementation::notifyObjectInserted(SceneObject* object) {
+	// info(true) << "Ship: " << getDisplayedName() << " -- ShipObjectImplementation::notifyObjectInserted called";
+
+	if (object == nullptr) {
+		return 0;
+	}
+
+	// info(true) << "Ship: " << getDisplayedName() << " -- notifying for object: " << object->getDisplayedName();
+
+	Reference<SceneObject*> sceneRef = object;
+	Reference<ShipObject*> shipRef = asShipObject();
+
+	Core::getTaskManager()->scheduleTask([shipRef, sceneRef] () {
+		if (shipRef == nullptr || sceneRef == nullptr) {
+			return;
+		}
+
+		shipRef->notifyObjectInsertedToZone(sceneRef);
+	}, "ShipNotifyInsertedLambda", 500);
+
+	return TangibleObjectImplementation::notifyObjectInserted(object);
 }
 
 void ShipObjectImplementation::notifyInsert(TreeEntry* object) {
@@ -1324,13 +1356,12 @@ void ShipObjectImplementation::sendPvpStatusTo(CreatureObject* player) {
 	// uint32 pvpStatus = pvpStatusBitmask;
 
 	TangibleObjectImplementation::sendPvpStatusTo(player);
-
-	// info(true) << "ShipObjectImplementation::sendPvpStatusTo - " << player->getDisplayedName() << " New Pvp Status: " << pvpStatus << " Old Pvp Status: " << pvpStatusBitmask;
 }
 
 bool ShipObjectImplementation::isAggressiveTo(TangibleObject* object) {
-	if (object == nullptr)
+	if (object == nullptr) {
 		return false;
+	}
 
 	if (!isShipLaunched())
 		return false;
@@ -1345,8 +1376,9 @@ bool ShipObjectImplementation::isAggressiveTo(TangibleObject* object) {
 				auto attackerOwner = objectShip->getOwner().get();
 
 				// Owner of the other player ship for pvp checks
-				if (attackerOwner != nullptr)
-					return thisOwner->isAttackableBy(attackerOwner);
+				if (attackerOwner != nullptr) {
+					return thisOwner->isAggressiveTo(attackerOwner);
+				}
 			}
 		} else {
 			thisOwner->isAggressiveTo(object);
@@ -1358,14 +1390,21 @@ bool ShipObjectImplementation::isAggressiveTo(TangibleObject* object) {
 
 // This will be called for non AI Ships. ShipAgents use their abstracted function in ShipAiAgent
 bool ShipObjectImplementation::isAttackableBy(TangibleObject* attackerTano) {
-	if (!isShipLaunched())
+	if (attackerTano == nullptr) {
 		return false;
+	}
+
+	if (!isShipLaunched()) {
+		return false;
+	}
 
 	auto optionsBit = getOptionsBitmask();
 
 	if ((optionsBit & OptionBitmask::DESTROYING) || (optionsBit & OptionBitmask::INVULNERABLE)) {
 		return false;
 	}
+
+	// info(true) << getDisplayedName() << " ShipObjectImplementation::isAttackableBy -- " << attackerTano->getDisplayedName();
 
 	auto thisOwner = getOwner().get();
 
@@ -1378,14 +1417,21 @@ bool ShipObjectImplementation::isAttackableBy(TangibleObject* attackerTano) {
 				auto attackerOwner = attackerShip->getOwner().get();
 
 				// Owner of the other player ship for pvp checks
-				if (attackerOwner != nullptr)
+				if (attackerOwner != nullptr) {
+					// info(true) << getDisplayedName() << "Using ship owners -- thisOwner: " << thisOwner->getDisplayedName() << " attackerOwner: " << attackerOwner->getDisplayedName();
+
 					return thisOwner->isAttackableBy(attackerOwner);
+				}
 			}
 		} else {
+			// info(true) << getDisplayedName() << "Using thisOwner: " << thisOwner->getDisplayedName() << " against tangible object: " << attackerTano->getDisplayedName();
+
 			// Attacking object is a TanO, likely another ship. Pass to CreO isAttackableBy TanO check
 			thisOwner->isAttackableBy(attackerTano);
 		}
 	} else if (attackerTano->isCreatureObject()) {
+		// info(true) << getDisplayedName() << " isAttackableBy creature: " << attackerTano->getDisplayedName();
+
 		return isAttackableBy(attackerTano->asCreatureObject());
 	}
 
