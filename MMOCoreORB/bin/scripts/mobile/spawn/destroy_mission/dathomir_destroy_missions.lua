@@ -167,7 +167,7 @@ dathomir_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(dathomir_destroy_missions.lairSpawns, {
 		lairTemplateName = "dathomir_rancor_ancient_bull_lair_neutral_large",
 		minDifficulty = 396,

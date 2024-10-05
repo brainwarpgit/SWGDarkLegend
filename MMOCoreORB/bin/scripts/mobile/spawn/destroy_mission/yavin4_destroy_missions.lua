@@ -113,7 +113,7 @@ yavin4_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(yavin4_destroy_missions.lairSpawns, {
 		lairTemplateName = "yavin4_stintaril_prowler_lair_neutral_medium",
 		minDifficulty = 221,

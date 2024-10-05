@@ -286,7 +286,8 @@ missionThemeParkFactionMultiplier = 10 --default 1
 missionThemeParkCreditMultiplier = 10 --default 1
 missionJediPadawanTrialsGrantXPEnabled = true --default false
 missionJediPadawanTrailsXP = 1250 --default 0   1250 to get enough for one novice box after trials.
-missionEnableJediKnightDestroyMissions = true --default false
+missionEnableJediKnightDestroyMissionsEnabled = true --default false
+missionRandomAttacksEnabled = true --default false
 
 --Pet
 petCallTime = 0 --default 15 in seconds

@@ -179,8 +179,14 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 
 	level = getTemplateLevel();
 
-	int creatureDifficulty = getCreatureDifficulty();
+	creatureDifficulty = getCreatureDifficulty();
 	int attackable = 1;
+	missionRandomAttack = getMissionRandomAttack();
+	if (missionRandomAttack > 0) {
+		level = System::random(50) + (missionRandomAttack - 1);
+		if (level > 450) level = 450;
+		newLevel = level;
+	}
 	
 	attackable = npcTemplate->getPvpBitmask();
 	
@@ -268,16 +274,16 @@ void AiAgentImplementation::loadTemplateData(CreatureTemplate* templateData) {
 			String newName = nm->makeCreatureName(npcTemplate->getRandomNameType(), templSpecies);
 			//if (creatureDifficulty >= 2 && creatureDifficulty <= 3 && attackable >= 1 && customaimap != 146400298) {			
 			if (attackable >= 1 && customaimap != 146400298) {			
-				newName += strdifficulty + "\\#FFFFFF (";
-			} else {
-				newName += "\\#FFFFFF (";
-			}
+				newName += strdifficulty;// + "\\#FFFFFF (";
+			} //else {
+				//newName += "\\#FFFFFF (";
+			//}
 			if (objectName == "")
-				newName += templateData->getCustomName();
-			else
-				newName += StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
+				newName += "\\#FFFFFF (" + templateData->getCustomName() + ")";
+			else if (missionRandomAttack == 0)
+				newName += "\\#FFFFFF (" + StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + ")";
 
-			newName += ")";
+			//newName += ")";
 			if (attackable >= 1 && customaimap != 146400298) {
 				setCustomObjectName(newName + "\\#C0C0C0 [" + std::to_string(level) + "] ", false);
 			}
@@ -527,7 +533,6 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 		txt << Math::getPrecision(getLightSaber(), 1) << "%";
 		alm->insertAttribute("cat_armor_special_protection.armor_eff_restraint", txt.toString());
 	}
-
 	if (getKinetic() > 0 && !isSpecialProtection(SharedWeaponObjectTemplate::KINETIC)) {
 		StringBuffer txt;
 		txt << Math::getPrecision(getKinetic(), 1) << "%";
@@ -609,6 +614,10 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 	if (getLightSaber() < 0)
 		alm->insertAttribute("cat_armor_vulnerability.armor_eff_restraint", "-");
 
+	alm->insertAttribute("max_damage",std::to_string(maxDamage));
+	alm->insertAttribute("min_damage",std::to_string(minDamage));
+	alm->insertAttribute("chance_hit",std::to_string(getChanceHit()));
+	
 	if (isPet())
 	{
 		ManagedReference<CreatureObject*> owner = getLinkedCreature().get();
@@ -871,7 +880,6 @@ void AiAgentImplementation::setupCombatStats() {
 		Logger::console.info(true) << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << ": " << *_this.getReferenceUnsafeStaticCast();
 		return;
 	}
-
 	// Damage is set from the Agents Template or Pet Deed
 	if (petDeed != nullptr) {
 		minDamage = petDeed->getMinDamage();
@@ -1353,31 +1361,58 @@ int AiAgentImplementation::calculateAttackMaxDamage(int level) {
 
 void AiAgentImplementation::setLevel(int lvl, bool randomHam) {
 	if (lvl <= 0)
+	//	Logger::console.info("lvl <=0", true)
 		return;
-
+	//Logger::console.info("lvl: " + std::to_string(lvl), true)
 	CreatureObjectImplementation::setLevel(lvl);
 
 	level = lvl;
-
+	//Logger::console.info("level: " + std::to_string(level), true)
 	if (npcTemplate == nullptr) {
+	//	Logger::console.info("npcTemplate = nullptr", true)
 		return;
 	}
 
 	int baseLevel = getTemplateLevel();
+	//Logger::console.info("baseLevel: " + std::to_string(baseLevel), true)
 
-	if (baseLevel == lvl)
+	if (baseLevel == lvl) {
+	//	Logger::console.info("baseLevel = lvl", true)
 		return;
-
-	minDamage = calculateAttackMinDamage(baseLevel);
-	maxDamage = calculateAttackMaxDamage(baseLevel);
-
+	}
+	
+	if (missionRandomAttack == 0) {
+		minDamage = calculateAttackMinDamage(baseLevel);
+		//Logger::console.info("minDamage1: " + std::to_string(minDamage), true)
+		maxDamage = calculateAttackMaxDamage(baseLevel);
+		//Logger::console.info("maxDamage1: " + std::to_string(maxDamage), true)
+	}
+	
 	float ratio = ((float)lvl) / (float)baseLevel;
+	//Logger::console.info("ratio: " + std::to_string(ratio), true)
 
-	minDamage *= ratio;
-	maxDamage *= ratio;
+	float baseCreatureDamageMax = 1;
+	float baseCreatureDamageMin = 1;
+	float baseCreatureHAM = 1;
+	float baseCreatureHAMmax = 1;
+	if (missionRandomAttack > 0) {
+		baseCreatureDamageMax = globalVariables::creatureBaseDamageMaxMultiplier;
+		baseCreatureDamageMin = globalVariables::creatureBaseDamageMinMultiplier;
+		baseCreatureHAM = globalVariables::creatureBaseHAMMultiplier;
+		baseCreatureHAMmax = globalVariables::creatureBaseHAMMaxMultiplier;
+		for(int i = 2; i <= creatureDifficulty; ++i) {
+			baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
+			baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
+			baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
+			baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
+		}	
+	}
 
-	int baseHamMax = ((float)getHamMaximum()) * ratio;
-	int baseHam = ((float)getHamBase()) * ratio;
+	minDamage = minDamage * ratio * baseCreatureDamageMin;
+	maxDamage = maxDamage * ratio * baseCreatureDamageMax;
+
+	int baseHamMax = ((float)getHamMaximum()) * ratio * baseCreatureHAMmax;
+	int baseHam = ((float)getHamBase()) * ratio * baseCreatureHAM;
 
 	int ham = 0;
 
@@ -4616,9 +4651,11 @@ float AiAgentImplementation::getReducedResist(float value) {
 	if (value == -1) {
 		return value;
 	}
-
-	float newValue = value;
-
+	float resistMultiplier = 1;
+	if (missionRandomAttack > 0) resistMultiplier = newLevel;
+	
+	float newValue = value * resistMultiplier;
+	
 	if (isPet()) {
 		float shockWounds = getShockWounds();
 

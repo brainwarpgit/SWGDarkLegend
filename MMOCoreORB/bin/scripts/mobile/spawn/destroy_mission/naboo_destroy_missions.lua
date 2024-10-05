@@ -227,7 +227,7 @@ naboo_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(naboo_destroy_missions.lairSpawns, {
 		lairTemplateName = "naboo_peko_peko_albatross",
 		minDifficulty = 396,

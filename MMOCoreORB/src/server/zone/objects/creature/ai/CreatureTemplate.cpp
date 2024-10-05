@@ -12,20 +12,21 @@
 #include <string>
 
 CreatureTemplate::CreatureTemplate() {
-	baseCreatureScale = 0;
-	baseCreatureXp = 0;
-	baseCreatureMeatAmount = 0;
-	baseCreatureHideAmount = 0;
-	baseCreatureBoneAmount = 0;
-	baseCreatureMilk = 0;
-	baseCreatureLevel = 0;
-	baseCreatureChanceHit = 0;
-	baseCreatureFerocity = 0;
-	baseCreatureDamageMax = 0;
-	baseCreatureDamageMin = 0;
-	baseCreatureHAM = 0;
-	baseCreatureHAMmax = 0;
-	baseCreatureResists = 0;
+	missionRandomAttack = 0;
+	baseCreatureScale = 1;
+	baseCreatureXp = 1;
+	baseCreatureMeatAmount = 1;
+	baseCreatureHideAmount = 1;
+	baseCreatureBoneAmount = 1;
+	baseCreatureMilk = 1;
+	baseCreatureLevel = 1;
+	baseCreatureChanceHit = 1;
+	baseCreatureFerocity = 1;
+	baseCreatureDamageMax = 1;
+	baseCreatureDamageMin = 1;
+	baseCreatureHAM = 1;
+	baseCreatureHAMmax = 1;
+	baseCreatureResists = 1;
 	conversationTemplate = 0;
 	kinetic = 0;
 	energy = 0;
@@ -155,6 +156,7 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	tauntable = templateData->getBooleanField("tauntable", true);
 	healerType = templateData->getStringField("healerType").trim();
 	lightsaberColor = templateData->getIntField("lightsaberColor");
+	missionRandomAttack = templateData->getIntField("missionRandomAttack");
 	if (globalVariables::creatureRandomDifficultyEnabled == false) {
 		creatureDifficulty = 1;
 	} else {
@@ -174,109 +176,107 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		milkType = templateData->getStringField("milkType").trim();
 	}
 	
-	baseCreatureScale = globalVariables::creatureBaseScaleMultiplier;
-	baseCreatureXp = globalVariables::creatureBaseXPMultiplier;
-	baseCreatureMeatAmount = globalVariables::creatureBaseMeatAmountMultiplier;
-	baseCreatureHideAmount = globalVariables::creatureBaseHideAmountMultiplier;
-	baseCreatureBoneAmount = globalVariables::creatureBaseBoneAmountMultiplier;
-	baseCreatureMilk = globalVariables::creatureBaseMilkMultiplier;
-	baseCreatureLevel = globalVariables::creatureBaseLevelMultiplier;
-	baseCreatureChanceHit = globalVariables::creatureBaseChanceHitMultiplier;
-	baseCreatureFerocity = globalVariables::creatureBaseFerocityMultiplier;
-	baseCreatureDamageMax = globalVariables::creatureBaseDamageMaxMultiplier;
-	baseCreatureDamageMin = globalVariables::creatureBaseDamageMinMultiplier;
-	baseCreatureHAM = globalVariables::creatureBaseHAMMultiplier;
-	baseCreatureHAMmax = globalVariables::creatureBaseHAMMaxMultiplier;
-	baseCreatureResists = globalVariables::creatureBaseResistsMultiplier;
-	std::string templateName = getTemplateName();
-	float levelPercentBase = ((float)level * baseCreatureLevel) / (float)globalVariables::creatureMaxLevel * 100.0f;
-	if (creatureDifficulty >=1 && creatureDifficulty <= 3) {
-		for(int i = 2; i <= creatureDifficulty; ++i) {
-			baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
-			baseCreatureXp += globalVariables::creatureModBaseXPModifier;
-			baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier;
-			baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier;
-			baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier;
-			baseCreatureMilk += globalVariables::creatureModBaseMilkModifier;
-			baseCreatureLevel += globalVariables::creatureModBaseLevelModifier;
-			baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier;
-			baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier;
-			baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
-			baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
-			baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
-			baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
-			baseCreatureResists += globalVariables::creatureModBaseResistsModifier;
+	float levelPercentDifference = 0;
+	if (missionRandomAttack == 0) {
+		baseCreatureScale = globalVariables::creatureBaseScaleMultiplier;
+		baseCreatureXp = globalVariables::creatureBaseXPMultiplier;
+		baseCreatureMeatAmount = globalVariables::creatureBaseMeatAmountMultiplier;
+		baseCreatureHideAmount = globalVariables::creatureBaseHideAmountMultiplier;
+		baseCreatureBoneAmount = globalVariables::creatureBaseBoneAmountMultiplier;
+		baseCreatureMilk = globalVariables::creatureBaseMilkMultiplier;
+		baseCreatureLevel = globalVariables::creatureBaseLevelMultiplier;
+		baseCreatureChanceHit = globalVariables::creatureBaseChanceHitMultiplier;
+		baseCreatureFerocity = globalVariables::creatureBaseFerocityMultiplier;
+		baseCreatureDamageMax = globalVariables::creatureBaseDamageMaxMultiplier;
+		baseCreatureDamageMin = globalVariables::creatureBaseDamageMinMultiplier;
+		baseCreatureHAM = globalVariables::creatureBaseHAMMultiplier;
+		baseCreatureHAMmax = globalVariables::creatureBaseHAMMaxMultiplier;
+		baseCreatureResists = globalVariables::creatureBaseResistsMultiplier;
+		std::string templateName = getTemplateName();
+		float levelPercentBase = ((float)level * baseCreatureLevel) / (float)globalVariables::creatureMaxLevel * 100.0f;
+		if (creatureDifficulty >=1 && creatureDifficulty <= 3) {
+			for(int i = 2; i <= creatureDifficulty; ++i) {
+				baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
+				baseCreatureXp += globalVariables::creatureModBaseXPModifier;
+				baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier;
+				baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier;
+				baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier;
+				baseCreatureMilk += globalVariables::creatureModBaseMilkModifier;
+				baseCreatureLevel += globalVariables::creatureModBaseLevelModifier;
+				baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier;
+				baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier;
+				baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
+				baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
+				baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
+				baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
+				baseCreatureResists += globalVariables::creatureModBaseResistsModifier;
+			}
+		} else if (creatureDifficulty >= 4) {
+			for(int i = 5; i <= creatureDifficulty; ++i) {
+				baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
+				baseCreatureXp += globalVariables::creatureModBaseXPModifier;
+				baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier;
+				baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier;
+				baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier;
+				baseCreatureMilk += globalVariables::creatureModBaseMilkModifier;
+				baseCreatureLevel += globalVariables::creatureModBaseLevelModifier;
+				baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier;
+				baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier;
+				baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
+				baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
+				baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
+				baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
+				baseCreatureResists += globalVariables::creatureModBaseResistsModifier;
+			}
 		}
-	} else if (creatureDifficulty >= 4) {
-		for(int i = 5; i <= creatureDifficulty; ++i) {
-			baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
-			baseCreatureXp += globalVariables::creatureModBaseXPModifier;
-			baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier;
-			baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier;
-			baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier;
-			baseCreatureMilk += globalVariables::creatureModBaseMilkModifier;
-			baseCreatureLevel += globalVariables::creatureModBaseLevelModifier;
-			baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier;
-			baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier;
-			baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
-			baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
-			baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
-			baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
-			baseCreatureResists += globalVariables::creatureModBaseResistsModifier;
+		if (creatureDifficulty >= 4) {
+			baseCreatureLevel *= cdpMultiplier;
+			baseCreatureChanceHit *= cdpMultiplier;
+			baseCreatureFerocity *= cdpMultiplier;
+			baseCreatureDamageMax *= cdpMultiplier;
+			baseCreatureDamageMin *= cdpMultiplier;
+			baseCreatureHAM *= cdpMultiplier;
+			baseCreatureHAMmax *= cdpMultiplier;
+			baseCreatureResists *= cdpMultiplier;
 		}
-	}	
-	if (creatureDifficulty >= 4) {
-		//baseCreatureXp *= cdpMultiplier;
-		//baseCreatureMeatAmount *= cdpMultiplier;
-		//baseCreatureHideAmount *= cdpMultiplier;
-		//baseCreatureBoneAmount *= cdpMultiplier;
-		//baseCreatureMilk *= cdpMultiplier;
-		baseCreatureLevel *= cdpMultiplier;
-		baseCreatureChanceHit *= cdpMultiplier;
-		baseCreatureFerocity *= cdpMultiplier;
-		baseCreatureDamageMax *= cdpMultiplier;
-		baseCreatureDamageMin *= cdpMultiplier;
-		baseCreatureHAM *= cdpMultiplier;
-		baseCreatureHAMmax *= cdpMultiplier;
-		baseCreatureResists *= cdpMultiplier;
+
+		scale *= baseCreatureScale;
+		baseXp *= baseCreatureXp;
+		meatAmount *= baseCreatureMeatAmount;
+		hideAmount *= baseCreatureHideAmount;
+		boneAmount *= baseCreatureBoneAmount;
+		milk *= baseCreatureMilk;
+		level *= baseCreatureLevel;
+		chanceHit *= baseCreatureChanceHit;
+		ferocity *= baseCreatureFerocity;
+		damageMax *= baseCreatureDamageMax;
+		damageMin *= baseCreatureDamageMin;
+		baseHAM *= baseCreatureHAM;
+		baseHAMmax *= baseCreatureHAMmax;
+		
+		if (creatureDifficulty == 2 && System::random(1000) > 975) armor += 1;
+		if (creatureDifficulty == 3 && System::random(1000) > 975) armor += 2;
+		if (creatureDifficulty == 4 && System::random(1000) > 975) armor += 1;
+		if (creatureDifficulty == 5 && System::random(1000) > 975) armor += 2;
+		if (creatureDifficulty == 6 && System::random(1000) > 975) armor += 3;
+		if (armor > 3) armor = 3;
+
+		float levelPercentModified = (float)level / (float)globalVariables::creatureMaxLevel * 100.0f;
+		levelPercentDifference = (levelPercentModified - levelPercentBase) * 1.25f;
+		if (creatureDifficulty <= 3) levelPercentDifference = 0.0f;
+
+	/*	if (creatureDifficulty >= 4) {
+			std::cout << "baseCreatureDamageMax" << baseCreatureDamageMax << "levelPercentBase: " << levelPercentBase << " levelPercentModified: " << levelPercentModified << " Level: " << level << " levelPercentDifference: " << levelPercentDifference << " Name: " << templateName << std::endl;
+		}*/
+		if (damageMin >= damageMax) damageMin = damageMax * 0.9;
+		if (baseHAMmax >= baseHAM) baseHAM = baseHAMmax * 0.9;
+		
+		level = std::max(1,std::min(globalVariables::creatureMaxLevel, level));
+		damageMin = std::max(1,damageMin);
+		damageMax = std::max(2,damageMax);
+		baseHAM = std::max(1,baseHAM);
+		baseHAMmax = std::max(2,baseHAMmax);
 	}
-
-	scale *= baseCreatureScale;
-	baseXp *= baseCreatureXp;
-	meatAmount *= baseCreatureMeatAmount;
-	hideAmount *= baseCreatureHideAmount;
-	boneAmount *= baseCreatureBoneAmount;
-	milk *= baseCreatureMilk;
-	level *= baseCreatureLevel;
-	chanceHit *= baseCreatureChanceHit;
-	ferocity *= baseCreatureFerocity;
-	damageMax *= baseCreatureDamageMax;
-	damageMin *= baseCreatureDamageMin;
-	baseHAM *= baseCreatureHAM;
-	baseHAMmax *= baseCreatureHAMmax;
-	
-	if (creatureDifficulty == 2 && System::random(1000) > 975) armor += 1;
-	if (creatureDifficulty == 3 && System::random(1000) > 975) armor += 2;
-	if (creatureDifficulty == 4 && System::random(1000) > 975) armor += 1;
-	if (creatureDifficulty == 5 && System::random(1000) > 975) armor += 2;
-	if (creatureDifficulty == 6 && System::random(1000) > 975) armor += 3;
-	if (armor > 3) armor = 3;
-
-	float levelPercentModified = (float)level / (float)globalVariables::creatureMaxLevel * 100.0f;
-	float levelPercentDifference = (levelPercentModified - levelPercentBase) * 1.25f;
-	if (creatureDifficulty <= 3) levelPercentDifference = 0.0f;
-
-/*	if (creatureDifficulty >= 4) {
-		std::cout << "baseCreatureDamageMax" << baseCreatureDamageMax << "levelPercentBase: " << levelPercentBase << " levelPercentModified: " << levelPercentModified << " Level: " << level << " levelPercentDifference: " << levelPercentDifference << " Name: " << templateName << std::endl;
-	}*/
-	if (damageMin >= damageMax) damageMin = damageMax * 0.9;
-	if (baseHAMmax >= baseHAM) baseHAM = baseHAMmax * 0.9;
-	
-	level = std::max(1,std::min(globalVariables::creatureMaxLevel, level));
-	damageMin = std::max(1,damageMin);
-	damageMax = std::max(2,damageMax);
-	baseHAM = std::max(1,baseHAM);
-	baseHAMmax = std::max(2,baseHAMmax);
 	
 	LuaObject res = templateData->getObjectField("resists");
 	if (res.getTableSize() == 9) {

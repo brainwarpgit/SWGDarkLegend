@@ -2000,7 +2000,12 @@ int CombatManager::calculateTargetPostureModifier(WeaponObject* weapon, Creature
 
 int CombatManager::getAttackerAccuracyModifier(TangibleObject* attacker, CreatureObject* defender, WeaponObject* weapon) const {
 	if (attacker->isAiAgent()) {
-		return cast<AiAgent*>(attacker)->getChanceHit() * 100;
+		AiAgent* aiAgent = cast<AiAgent*>(attacker);
+		if (aiAgent->getMissionRandomAttack() > 0) {
+			return aiAgent->getChanceHit() * aiAgent->getNewLevel() * 10;
+		} else {
+			return aiAgent->getChanceHit() * 100;
+		}
 	} else if (attacker->isInstallationObject()) {
 		return cast<InstallationObject*>(attacker)->getHitChance() * 100;
 	}
@@ -2163,6 +2168,9 @@ int CombatManager::getHitChance(TangibleObject* attacker, CreatureObject* creoDe
 
 		accuracyWeapon = getWeaponRangeModifier(distance, weapon);
 		accuracySkill = getAttackerAccuracyModifier(attacker, creoDefender, weapon);
+		/*if (attacker->isAiAgent()) {
+			Logger::console.info("accuracySkill: " + std::to_string(accuracySkill),true);
+		}*/
 
 		if (creoAttacker != nullptr) {
 			accuracyBonus = getAttackerAccuracyBonus(creoAttacker, weapon);

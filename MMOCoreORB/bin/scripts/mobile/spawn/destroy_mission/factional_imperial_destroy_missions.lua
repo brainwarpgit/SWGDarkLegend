@@ -180,7 +180,7 @@ factional_imperial_destroy_missions = {
 }
 
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(factional_imperial_destroy_missions.lairSpawns, {
 		lairTemplateName = "global_rebel_commando_camp2_rebel_large_theater",
 		minDifficulty = 396,

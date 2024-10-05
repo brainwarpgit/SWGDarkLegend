@@ -293,7 +293,7 @@ tatooine_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(tatooine_destroy_missions.lairSpawns, {
 		lairTemplateName = "tatooine_tusken_raider_large",
 		minDifficulty = 396,

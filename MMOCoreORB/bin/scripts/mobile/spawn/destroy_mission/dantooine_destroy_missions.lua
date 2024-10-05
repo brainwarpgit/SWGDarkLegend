@@ -191,7 +191,7 @@ dantooine_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(dantooine_destroy_missions.lairSpawns, {
 		lairTemplateName = "dantooine_graul_marauder_lair_neutral_large",
 		minDifficulty = 396,

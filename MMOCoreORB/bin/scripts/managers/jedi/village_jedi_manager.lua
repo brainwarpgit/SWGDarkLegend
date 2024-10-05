@@ -52,7 +52,15 @@ function VillageJediManager:onPlayerLoggedIn(pPlayer)
 	if (pPlayer == nil) then
 		return
 	end
+	
+	local selectedLevel = tostring(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel"))
+	
 
+	if (selectedLevel ~= "0" and selectedLevel ~= "") then
+		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep", "0")
+		mission_random_attacks:startStepDelay(pPlayer)
+	end	
+	
 	Glowing:onPlayerLoggedIn(pPlayer)
 
 	if (VillageJediManagerCommon.isVillageEligible(pPlayer) and not CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then

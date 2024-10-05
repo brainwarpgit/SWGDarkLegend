@@ -20,6 +20,7 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 	TerminalImplementation::fillObjectMenuResponse(menuResponse, player);
 
 	ManagedReference<CityRegion*> city = player->getCityRegion().get();
+	PlayerObject* pGhost = player->getPlayerObject();
 
 	if (city != nullptr && city->isMayor(player->getObjectID()) && getParent().get() == nullptr) {
 
@@ -30,6 +31,13 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 		menuResponse->addRadialMenuItemToRadialID(73, 75, 3, "@city/city:east"); // East
 		menuResponse->addRadialMenuItemToRadialID(73, 76, 3, "@city/city:south"); // South
 		menuResponse->addRadialMenuItemToRadialID(73, 77, 3, "@city/city:west"); // West
+	}
+	if (terminalType == "general") {
+		menuResponse->addRadialMenuItem(114, 3, "Choose Random Attacks");
+		if (pGhost == nullptr) {
+			return;
+		}
+		if (pGhost->isAdmin()) menuResponse->addRadialMenuItem(115, 3, "Admin Random Attacks");
 	}
 	if (terminalType == "general" || terminalType == "imperial" || terminalType == "rebel") {
 		if (globalVariables::missionLevelSelectionEnabled == true) {
@@ -107,8 +115,24 @@ int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player
 
 		mission_direction_choice->callFunction();
 		return 0;
-	}
+	} else if (selectedID == 114) {
+		Lua* lua = DirectorManager::instance()->getLuaInstance();
 
+		Reference<LuaFunction*> mission_random_attacks_choice = lua->createFunction("mission_random_attacks_choice", "openWindow", 0);
+		*mission_random_attacks_choice << player;
+
+		mission_random_attacks_choice->callFunction();
+		return 0;
+	} else if (selectedID == 115) {
+
+		Lua* lua = DirectorManager::instance()->getLuaInstance();
+
+		Reference<LuaFunction*> mission_random_attacks_choice_admin = lua->createFunction("mission_random_attacks_choice_admin", "openWindow", 0);
+		*mission_random_attacks_choice_admin << player;
+
+		mission_random_attacks_choice_admin->callFunction();
+		return 0;
+	}
 	return TangibleObjectImplementation::handleObjectMenuSelect(player, selectedID);
 }
 

@@ -197,7 +197,7 @@ factional_rebel_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(factional_rebel_destroy_missions.lairSpawns, {
 		lairTemplateName = "global_imperial_stormtrooper_commando_camp2_imperial_large_theater",
 		minDifficulty = 396,

@@ -257,7 +257,7 @@ endor_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(endor_destroy_missions.lairSpawns, {
 		lairTemplateName = "endor_blurrg_raptor_lair_neutral_small",
 		minDifficulty = 396,

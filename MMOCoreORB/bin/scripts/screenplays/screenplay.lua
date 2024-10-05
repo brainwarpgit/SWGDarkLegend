@@ -163,6 +163,10 @@ function ScreenPlay:spawnScreenPMobiles()
 end
 
 function ScreenPlay:spawnRandomMobScreenP(mobName)
+	local found = string.find(mobName, "_mra_")
+	if found then
+		Logger:logEvent("DEBUG MRA spawnRandomMobScreenP - mobName " .. mobName)
+	end
 	local mobs = {"", "_2", "_3"}
 	local randomNumber = getRandomNumber(1000)
 	local randomIndex
@@ -175,6 +179,12 @@ function ScreenPlay:spawnRandomMobScreenP(mobName)
 	end
 	local randomMob = mobs[randomIndex]
 	mobName = mobName .. randomMob
+	if found then
+		Logger:logEvent("DEBUG MRA spawnRandomMobScreenP2 - randomNumber " .. randomNumber)
+		Logger:logEvent("DEBUG MRA spawnRandomMobScreenP3 - randomIndex " .. randomIndex)
+		Logger:logEvent("DEBUG MRA spawnRandomMobScreenP4 - randomMob " .. randomMob)
+		Logger:logEvent("DEBUG MRA spawnRandomMobScreenP5 - mobName " .. mobName)
+	end
 	return mobName
 end
 

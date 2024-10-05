@@ -282,7 +282,7 @@ namespace globalVariables {
 	extern bool missionDirectionSelectionEnabled;
 	extern bool missionLevelSelectionEnabled;
 	extern int missionRewardMultiplier;
-
+	extern bool missionRandomAttacksEnabled;
 //Pet
 	extern int petCallTime;
 	extern int petGrowthCycleTime;

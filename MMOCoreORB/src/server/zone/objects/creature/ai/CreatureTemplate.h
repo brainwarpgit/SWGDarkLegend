@@ -27,6 +27,7 @@ protected:
 
 	unsigned int armor;
 	
+	int missionRandomAttack;
 	int creatureDifficulty;
 	float baseCreatureScale;
 	float baseCreatureXp;
@@ -255,6 +256,10 @@ public:
 		return creatureDifficulty;
 	}	
 	
+	inline unsigned int getMissionRandomAttack() const {
+		return missionRandomAttack;
+	}	
+
 	inline float getCDPMultiplier() const {
 		return cdpMultiplier;
 	}	

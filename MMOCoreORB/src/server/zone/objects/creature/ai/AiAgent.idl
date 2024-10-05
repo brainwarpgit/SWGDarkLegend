@@ -79,6 +79,9 @@ class AiAgent extends CreatureObject {
 	protected float weaponSpeed;
 	protected int minDamage;
 	protected int maxDamage;
+	protected int creatureDifficulty;
+	protected int missionRandomAttack;
+	protected int newLevel;
 
 	protected unsigned int primaryWeaponCrc;
 	protected unsigned int secondaryWeaponCrc;
@@ -336,11 +339,23 @@ class AiAgent extends CreatureObject {
 	        return npcTemplate.get().getCreatureDifficulty();    
 	}
  	
+ 	@read
+	public unsigned int getMissionRandomAttack() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getMissionRandomAttack();    
+	}
+ 	
  	public float getCDPMultiplier() {
 	        if (npcTemplate.get() == null)
 	            return 1;
         
 	        return npcTemplate.get().getCDPMultiplier();    
+	}
+	
+	public int getNewLevel() {
+		return newLevel;
 	}
     
 	/**

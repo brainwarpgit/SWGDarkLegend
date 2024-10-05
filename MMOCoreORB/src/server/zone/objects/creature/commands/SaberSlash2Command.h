@@ -37,6 +37,8 @@ public:
 			return "knockdown_1hmelee_1";
 		} else if (weapon->isJediTwoHandedWeapon()) {
 			return "knockdown_2hmelee_1";
+		} else if (weapon->isTwoHandMeleeWeapon()) {
+			return "knockdown_2hmelee_1";
 		} else if (weapon->isJediPolearmWeapon()) {
 			return "knockdown_polearm_1";
 		} else {

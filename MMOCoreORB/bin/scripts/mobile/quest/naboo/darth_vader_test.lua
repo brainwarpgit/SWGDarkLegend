@@ -11,7 +11,7 @@ darth_vader = Creature:new {
 	baseHAM = 10000000,
 	baseHAMmax = 10000001,
 	armor = 0,
-	resists = {0,0,0,0,0,0,0,0,-1},
+	resists = {0,0,0,0,0,0,0,0,0},
 	meatType = "",
 	meatAmount = 0,
 	hideType = "",
@@ -26,6 +26,7 @@ darth_vader = Creature:new {
 	optionsBitmask = AIENABLED,
 	diet = HERBIVORE,
   	scale = 1.25,
+ -- 	missionRandomAttack = 1,
 
 	templates = {"object/mobile/darth_vader.iff"},
 	lootGroups = {},

@@ -97,6 +97,8 @@ includeFile("weapon/groups/tusken_ranged.lua")
 includeFile("weapon/groups/commando_melee.lua")
 includeFile("weapon/groups/commando_ranged.lua")
 includeFile("weapon/groups/marauder_melee.lua")
+includeFile("weapon/groups/thug_mra_ranged_weapons.lua")
+includeFile("weapon/groups/thug_mra_melee_weapons.lua")
 
 -- Groups gotten from swgemu
 includeFile("weapon/groups/battle_droid_weapons.lua")

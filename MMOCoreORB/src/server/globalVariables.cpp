@@ -281,7 +281,7 @@ namespace globalVariables {
 	bool missionDirectionSelectionEnabled = false;
 	bool missionLevelSelectionEnabled = false;
 	int missionRewardMultiplier = 1;
-	
+	bool missionRandomAttacksEnabled = false;
 //Pet
 	int petCallTime = 15;
 	int petGrowthCycleTime = 720;
@@ -734,6 +734,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("missionDirectionSelectionEnabled") == true || lua->getGlobalBoolean("missionDirectionSelectionEnabled") == false) missionDirectionSelectionEnabled = lua->getGlobalBoolean("missionDirectionSelectionEnabled");
 			if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
 			if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
+			if (lua->getGlobalBoolean("missionRandomAttacksEnabled") == true || lua->getGlobalBoolean("missionRandomAttacksEnabled") == false) missionRandomAttacksEnabled = lua->getGlobalBoolean("missionRandomAttacksEnabled");
 			
 			//Pet 
 			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");

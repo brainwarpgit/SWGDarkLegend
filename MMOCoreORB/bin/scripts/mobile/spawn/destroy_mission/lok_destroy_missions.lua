@@ -161,7 +161,7 @@ lok_destroy_missions = {
 	}
 }
 
-if missionEnableJediKnightDestroyMissions then
+if missionEnableJediKnightDestroyMissionsEnabled then
 	table.insert(lok_destroy_missions.lairSpawns, {
 		lairTemplateName = "lok_enraged_kimogilla_lair_neutral_medium",
 		minDifficulty = 396,
