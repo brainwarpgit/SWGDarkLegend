@@ -233,6 +233,7 @@ namespace globalVariables {
 	int harvestMultiplier = 1;
 	int harvestMilkTime = 10;
 	float harvestDNASampleDistance = 16;
+	bool harvestInCombatEnabled = false;
 
 //Jedi
 	bool jediForceCostToTuneEnabled = true;
@@ -282,6 +283,7 @@ namespace globalVariables {
 	bool missionLevelSelectionEnabled = false;
 	int missionRewardMultiplier = 1;
 	bool missionRandomAttacksEnabled = false;
+
 //Pet
 	int petCallTime = 15;
 	int petGrowthCycleTime = 720;
@@ -683,14 +685,15 @@ namespace globalVariables {
 			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 			if (lua->getGlobalFloat("factionCapMultiplier") > 0) factionCapMultiplier = lua->getGlobalFloat("factionCapMultiplier");
 
-			//Harvest
+			//Harvest 
 			if (lua->getGlobalInt("harvestDistance") > 0) harvestDistance = lua->getGlobalInt("harvestDistance");
 			if (lua->getGlobalBoolean("harvestAreaEnabled") == true || lua->getGlobalBoolean("harvestAreaEnabled") == false) harvestAreaEnabled = lua->getGlobalBoolean("harvestAreaEnabled");
 			if (lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == true || lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == false) harvestAreaCommandOnlyEnabled = lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled");
 			if (lua->getGlobalInt("harvestMultiplier") > 0) harvestMultiplier = lua->getGlobalInt("harvestMultiplier");
 			if (lua->getGlobalInt("harvestMilkTime") >= 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
 			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
-
+			if (lua->getGlobalBoolean("harvestInCombatEnabled") == true || lua->getGlobalBoolean("harvestInCombatEnabled") == false) harvestInCombatEnabled = lua->getGlobalBoolean("harvestInCombatEnabled");
+			
 			//Jedi 
 			if (lua->getGlobalBoolean("jediForceCostToTuneEnabled") == true || lua->getGlobalBoolean("jediForceCostToTuneEnabled") == false) jediForceCostToTuneEnabled = lua->getGlobalBoolean("jediForceCostToTuneEnabled");
 			if (lua->getGlobalInt("jediKnightRequirementNumberOfMasters") >= 0) jediKnightRequirementNumberOfMasters = lua->getGlobalInt("jediKnightRequirementNumberOfMasters");

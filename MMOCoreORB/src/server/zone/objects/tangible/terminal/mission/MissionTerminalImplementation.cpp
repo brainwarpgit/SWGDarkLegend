@@ -32,7 +32,7 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 		menuResponse->addRadialMenuItemToRadialID(73, 76, 3, "@city/city:south"); // South
 		menuResponse->addRadialMenuItemToRadialID(73, 77, 3, "@city/city:west"); // West
 	}
-	if (terminalType == "general") {
+	if (terminalType == "general" && globalVariables::missionRandomAttacksEnabled == true) {
 		menuResponse->addRadialMenuItem(114, 3, "Choose Random Attacks");
 		if (pGhost == nullptr) {
 			return;

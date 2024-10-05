@@ -234,6 +234,7 @@ namespace globalVariables {
 	extern int harvestMultiplier;
 	extern int harvestMilkTime;
 	extern float harvestDNASampleDistance;
+	extern bool harvestInCombatEnabled;
 
 //Jedi
 	extern bool jediForceCostToTuneEnabled;

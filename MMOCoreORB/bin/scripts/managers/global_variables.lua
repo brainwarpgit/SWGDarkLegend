@@ -236,6 +236,7 @@ harvestAreaCommandOnlyEnabled = false --default false
 harvestMultiplier = 2 --default 1
 harvestMilkTime = 5 --default 10 in seconds
 harvestDNASampleDistance = 64 --default 16  
+harvestInCombatEnabled = true --default false
 
 --Jedi
 jediForceCostToTuneEnabled = false --default true
