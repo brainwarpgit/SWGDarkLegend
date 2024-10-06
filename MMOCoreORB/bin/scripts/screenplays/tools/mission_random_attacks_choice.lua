@@ -18,6 +18,7 @@ mission_random_attacks_choice = ScreenPlay:new {
 	
 	levelsDisable = {
 		{levelRange = "Disable Random Attacks", levelSelect = "0"},
+		{levelRange = "Next Random Attack", levelSelect = "1000"},
 	},
 
 	times = {
@@ -69,7 +70,9 @@ function mission_random_attacks_choice:showLevels(pPlayer)
 		end
 		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "levelChoice", "enable")
 	else
-		sui.add(self.levelsDisable[1].levelRange, "")
+		for i = 1,  #self.levelsDisable, 1 do
+			sui.add(self.levelsDisable[i].levelRange, "")
+		end
 		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "levelChoice", "disable")
 	end
 
@@ -81,10 +84,24 @@ function mission_random_attacks_choice:levelSelection(pPlayer, pSui, eventIndex,
 	local cancelPressed = (eventIndex == 1)
 
 	if (cancelPressed) then
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
 		return 
 	end
 
 	if (args == "-1") then
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
 		CreatureObject(pPlayer):sendSystemMessage("No level was selected...")
 		return
 	end
@@ -113,12 +130,19 @@ function mission_random_attacks_choice:levelSelection(pPlayer, pSui, eventIndex,
 		CreatureObject(pPlayer):sendSystemMessage("You have disabled random attacks. You may be attacked one more time before you can re-enable this feature!")
 		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep", "1")
 		return
+	elseif (selectedLevel == "1000") then
+		local readCurrentDelay = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay") - os.time())
+		local readCurrentDelayStep = readScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
+		if readCurrentDelay ~= 0 or readCurrentDelay ~= nil then
+			CreatureObject(pPlayer):sendSystemMessage("You currently have " .. math.floor((readCurrentDelay / 60 * 100 + 0.5) / 100) .. " minutes in step " .. readCurrentDelayStep .. ".")
+		else
+			CreatureObject(pPlayer):sendSystemMessage("There are no pending tasks.")
+		end	
 	else
 		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel", tostring(selectedLevel))
 		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange", selectedRange)
 		self:showTimeRange(pPlayer)
 	end
-
 end
 
 function mission_random_attacks_choice:showTimeRange(pPlayer)
@@ -126,7 +150,14 @@ function mission_random_attacks_choice:showTimeRange(pPlayer)
 	local cancelPressed = (eventIndex == 1)
 
 	if (cancelPressed) then
-		return
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
+		return 
 	end
 
 	local sui = SuiListBox.new("mission_random_attacks_choice", "timeSelection")
@@ -151,10 +182,24 @@ function mission_random_attacks_choice:timeSelection(pPlayer, pSui, eventIndex, 
 	local cancelPressed = (eventIndex == 1)
 
 	if (cancelPressed) then
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
 		return 
 	end
 
 	if (args == "-1") then
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
 		CreatureObject(pPlayer):sendSystemMessage("No time was selected...")
 		return
 	end

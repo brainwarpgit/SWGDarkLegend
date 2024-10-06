@@ -7,7 +7,7 @@
 	chanceHit = .1,
 	damageMin = 8,
 	damageMax = 12,
-	baseXp = 1,
+	baseXp = 87,
 	baseHAM = 1200,
 	baseHAMmax = 1450,
 	armor = 2,

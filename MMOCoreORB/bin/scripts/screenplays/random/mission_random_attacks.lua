@@ -14,8 +14,12 @@ function mission_random_attacks:startStepDelay(pPlayer)
 	end
 	local selectedTime = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))
 	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - selectedTime " .. selectedTime, LT_INFO) end
-	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 1000
+	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 60 * 1000
 	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - attackDelay " .. attackDelay, LT_INFO) end
+	writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay", attackDelay / 1000 + os.time())
+	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - currentDelay " .. attackDelay / 1000 + os.time(), LT_INFO) end
+	writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep", "Initial Encounter")
+	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - currentDelayStep", LT_INFO) end
 	createEvent(attackDelay, "mission_random_attacks", "doDelayedStep", pPlayer, "")
 	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - END", LT_INFO) end
 end
@@ -34,12 +38,16 @@ function mission_random_attacks:doDelayedStep(pPlayer)
 		return
 	end
 
-	if (CreatureObject(pPlayer):isDead() or CreatureObject(pPlayer):isIncapacitated() or not Encounter:isPlayerInPositionForEncounter(pPlayer)) then
+	if (CreatureObject(pPlayer):isDead() or CreatureObject(pPlayer):isIncapacitated()) then -- or not Encounter:isPlayerInPositionForEncounter(pPlayer)) then
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - creature is dead or incapped and not in position for encounter", LT_INFO) end
 		local selectedTime = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - selectedTime " .. selectedTime, LT_INFO) end
-		local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 1000
+		local attackDelay = 5 * 60 * 1000
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - attackDelay " .. attackDelay, LT_INFO) end
+		writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay", attackDelay / 1000 + os.time())
+		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - currentDelay " .. attackDelay / 1000 + os.time(), LT_INFO) end
+		writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep", "Retry when outside city limits")
+		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - currentDelayStep", LT_INFO) end
 		createEvent(attackDelay, "mission_random_attacks", "doDelayedStep", pPlayer, "")
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - looping to doDelayedStep", LT_INFO) end
 		return
@@ -124,8 +132,12 @@ function ScreenPlay:onDespawnScreen(pMobile)
 	end
 	local selectedTime = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))
 	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - selectedTime " .. selectedTime, LT_INFO) end
-	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 1000
+	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 60 * 1000
 	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - attackDelay " .. attackDelay, LT_INFO) end
+	writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay", attackDelay / 1000 + os.time())
+	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - currentDelay " .. attackDelay / 1000 + os.time(), LT_INFO) end
+	writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep", "Respawning Encounter")
+	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - currentDelayStep", LT_INFO) end
 	deleteData(mobID .. ":mobID")
 	deleteData(mobID .. ":playerID")
 	local readSelectedLevel = tostring(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel"))
@@ -138,6 +150,9 @@ function ScreenPlay:onDespawnScreen(pMobile)
 		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
 		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
 		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
+		CreatureObject(pPlayer):sendSystemMessage("Random Mission Attacks have now been cleared.")
 		return 1
 	end
 	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - END", LT_INFO) end

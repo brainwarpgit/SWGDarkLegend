@@ -205,7 +205,7 @@ void MissionManagerImplementation::handleMissionListRequest(MissionTerminal* mis
 	if (missionBag == nullptr)
 		return;
 
-	int maximumNumberOfItemsInMissionBag = 12;
+	int maximumNumberOfItemsInMissionBag = 50;
 
 
 	if (enableFactionalCraftingMissions) {
@@ -1001,13 +1001,13 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	if (surveySkill > 70) {
 		maxLevel += 10;
 	}
-	if (surveySkill > 90) {
+	/*if (surveySkill > 90) {
 		maxLevel += 10;
 	}
 	if (surveySkill > 100) {
 		//Max mission level is 95.
 		maxLevel += 5;
-	}
+	}*/
 
 	//Mission level used as needed concentration in increments of 5. I.e. 50, 55, 60 etc. up to 95.
 	int randLevel = minLevel + 5 * System::random((maxLevel - minLevel) / 5);
@@ -1045,7 +1045,7 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	mission->setTargetTemplate(templateObject);
 
 	//Reward depending on mission level.
-	mission->setRewardCredits(400 + (randLevel - minLevel) * 20 + System::random(100));
+	mission->setRewardCredits(8000 /*400*/ + (randLevel - minLevel) * 200 /*20*/ + System::random(100));
 
 	mission->setFaction(faction);
 
@@ -1368,8 +1368,8 @@ bool MissionManagerImplementation::randomGenericDeliverMission(CreatureObject* p
 
 	mission->setTargetTemplate(TemplateManager::instance()->getTemplate(STRING_HASHCODE("object/tangible/mission/mission_datadisk.iff")));
 
-	int baseCredits = 40;
-	int deliverDistanceCredits = (playerPosition.distanceTo(*(startNpc->getPosition())) + startNpc->getPosition()->distanceTo(*(endNpc->getPosition()))) / 10;
+	int baseCredits = 1000;//40;
+	int deliverDistanceCredits = (playerPosition.distanceTo(*(startNpc->getPosition())) + startNpc->getPosition()->distanceTo(*(endNpc->getPosition())));
 
 	mission->setRewardCredits(baseCredits + deliverDistanceCredits);
 
@@ -1513,9 +1513,9 @@ void MissionManagerImplementation::randomizeGenericEntertainerMission(CreatureOb
 
 	mission->setTargetTemplate(TemplateManager::instance()->getTemplate(STRING_HASHCODE("object/building/general/mun_all_guild_theater_s01.iff")));
 
-	int distanceReward = player->getWorldPosition().distanceTo(target->getPosition()) / 10;
+	int distanceReward = player->getWorldPosition().distanceTo(target->getPosition()); // / 10;
 
-	mission->setRewardCredits(100 + distanceReward + System::random(100));
+	mission->setRewardCredits(5000 /*100*/ + distanceReward + System::random(100));
 
 	mission->setFaction(faction);
 
@@ -1624,7 +1624,7 @@ void MissionManagerImplementation::randomizeGenericHuntingMission(CreatureObject
 		diffString = "hard";
 	}
 
-	int baseReward = 500 + (difficulty * 100 * randomLairSpawn->getMinDifficulty());
+	int baseReward = 6000 /*500*/ + (difficulty * 100 * randomLairSpawn->getMinDifficulty());
 	mission->setRewardCredits(baseReward + System::random(100));
 	mission->setMissionDifficulty(difficulty);
 	mission->setMissionTitle("mission/mission_npc_hunting_neutral_" + diffString, "m" + String::valueOf(randTexts) + "t");
@@ -1672,9 +1672,9 @@ void MissionManagerImplementation::randomizeGenericReconMission(CreatureObject* 
 
 	mission->setStartPosition(position.getX(), position.getY(), playerZone->getZoneName());
 
-	int reward = position.distanceTo(player->getWorldPosition()) / 5;
+	int reward = position.distanceTo(player->getWorldPosition()); // / 5;
 
-	mission->setRewardCredits(50 + reward);
+	mission->setRewardCredits(10000 + reward); //50 + reward);
 
 	switch (faction) {
 	case Factions::FACTIONIMPERIAL:

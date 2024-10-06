@@ -614,9 +614,9 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 	if (getLightSaber() < 0)
 		alm->insertAttribute("cat_armor_vulnerability.armor_eff_restraint", "-");
 
-	alm->insertAttribute("max_damage",std::to_string(maxDamage));
-	alm->insertAttribute("min_damage",std::to_string(minDamage));
-	alm->insertAttribute("chance_hit",std::to_string(getChanceHit()));
+	//alm->insertAttribute("max_damage",std::to_string(maxDamage));
+	//alm->insertAttribute("min_damage",std::to_string(minDamage));
+	//alm->insertAttribute("chance_hit",std::to_string(getChanceHit()));
 	
 	if (isPet())
 	{

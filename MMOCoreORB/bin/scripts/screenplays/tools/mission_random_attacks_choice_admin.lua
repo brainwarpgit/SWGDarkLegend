@@ -74,7 +74,7 @@ function mission_random_attacks_choice_admin:levelSelection(pPlayer, pSui, event
 	end
 	
 	if (selectedLevel == "1001") then
-		CreatureObject(pPlayer):sendSystemMessage("disbleStep: " .. readScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep"))
+		CreatureObject(pPlayer):sendSystemMessage("disableStep: " .. readScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep"))
 		CreatureObject(pPlayer):sendSystemMessage("selectedLevel: " .. readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel"))
 		CreatureObject(pPlayer):sendSystemMessage("selectedRange: " .. readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange"))
 		CreatureObject(pPlayer):sendSystemMessage("selectedTime: " .. readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))

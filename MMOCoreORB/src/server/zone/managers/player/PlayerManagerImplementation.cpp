@@ -1946,14 +1946,17 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 			}
 		}
 
-		if (ai != nullptr)
+		if (ai != nullptr) {
 			baseXp = ai->getBaseXp();
-
+			if (ai->getMissionRandomAttack() > 0) baseXp *= ai->getNewLevel();
+		}
 	} else {
 		ManagedReference<AiAgent*> ai = cast<AiAgent*>(destructedObject);
 
-		if (ai != nullptr)
+		if (ai != nullptr) {
 			baseXp = ai->getBaseXp();
+			if (ai->getMissionRandomAttack() > 0) baseXp *= ai->getNewLevel();
+		}
 	}
 
 	Vector<uint64> playerList;

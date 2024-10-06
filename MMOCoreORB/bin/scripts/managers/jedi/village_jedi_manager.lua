@@ -53,10 +53,19 @@ function VillageJediManager:onPlayerLoggedIn(pPlayer)
 		return
 	end
 	
-	local selectedLevel = tostring(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel"))
-	
+	local readSelectedLevel = tostring(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel"))
+	local readDisableStep = tostring(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep"))
 
-	if (selectedLevel ~= "0" and selectedLevel ~= "") then
+	if (readDisableStep == "1") then
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedLevel")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedRange")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTimeRange") 
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay")
+		deleteScreenPlayData(pPlayer, "mission_random_attacks", "currentDelayStep")
+		return 
+	elseif (readSelectedLevel ~= "0" and readSelectedLevel ~= "") then
 		writeScreenPlayData(pPlayer, "mission_random_attacks_choice", "disableStep", "0")
 		mission_random_attacks:startStepDelay(pPlayer)
 	end	
