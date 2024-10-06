@@ -3,7 +3,9 @@ local QuestManager = require("managers.quest.quest_manager")
 local Logger = require("utils.logger")
 
 mission_random_attacks = ScreenPlay:new {
-	debug = false,
+	debug = false, --default false
+	allowAttackAnywhere = true, --default false
+	timeMultiplier = 60, --default 60 (1 minute)
 }
 
 function mission_random_attacks:startStepDelay(pPlayer)
@@ -14,7 +16,7 @@ function mission_random_attacks:startStepDelay(pPlayer)
 	end
 	local selectedTime = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))
 	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - selectedTime " .. selectedTime, LT_INFO) end
-	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 60 * 1000
+	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * self.timeMultiplier * 1000
 	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - attackDelay " .. attackDelay, LT_INFO) end
 	writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay", attackDelay / 1000 + os.time())
 	if (self.debug) then Logger:logEvent("DEBUG MRA startStepDelay - currentDelay " .. attackDelay / 1000 + os.time(), LT_INFO) end
@@ -38,11 +40,11 @@ function mission_random_attacks:doDelayedStep(pPlayer)
 		return
 	end
 
-	if (CreatureObject(pPlayer):isDead() or CreatureObject(pPlayer):isIncapacitated()) then -- or not Encounter:isPlayerInPositionForEncounter(pPlayer)) then
+	if (CreatureObject(pPlayer):isDead() or CreatureObject(pPlayer):isIncapacitated() or (not self.allowAttackAnywhere and not Encounter:isPlayerInPositionForEncounter(pPlayer))) then
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - creature is dead or incapped and not in position for encounter", LT_INFO) end
 		local selectedTime = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - selectedTime " .. selectedTime, LT_INFO) end
-		local attackDelay = 5 * 60 * 1000
+		local attackDelay = 5 * self.timeMultiplier * 1000
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - attackDelay " .. attackDelay, LT_INFO) end
 		writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay", attackDelay / 1000 + os.time())
 		if (self.debug) then Logger:logEvent("DEBUG MRA doDelayedStep - currentDelay " .. attackDelay / 1000 + os.time(), LT_INFO) end
@@ -132,7 +134,7 @@ function ScreenPlay:onDespawnScreen(pMobile)
 	end
 	local selectedTime = tonumber(readScreenPlayData(pPlayer, "mission_random_attacks_choice", "selectedTime"))
 	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - selectedTime " .. selectedTime, LT_INFO) end
-	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * 60 * 1000
+	local attackDelay = getRandomNumber(selectedTime, selectedTime + 15) * self.timeMultiplier * 1000
 	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - attackDelay " .. attackDelay, LT_INFO) end
 	writeScreenPlayData(pPlayer, "mission_random_attacks", "currentDelay", attackDelay / 1000 + os.time())
 	if (self.debug) then Logger:logEvent("DEBUG MRA onDespawnScreen - currentDelay " .. attackDelay / 1000 + os.time(), LT_INFO) end
