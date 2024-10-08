@@ -27,8 +27,12 @@ includeFile("custom_content/draft_schematic/structure/vehicle_house_schem.lua")
 includeFile("custom_content/draft_schematic/structure/vipbunker_house_schem.lua")
 includeFile("custom_content/draft_schematic/structure/yoda_house_schem.lua")
 includeFile("custom_content/draft_schematic/structure/yt1300_house_schem.lua")
+includeFile("custom_content/draft_schematic/structure/wod_ns_hut.lua")
+includeFile("custom_content/draft_schematic/structure/wod_sm_hut.lua")
+includeFile("custom_content/draft_schematic/structure/barn_no_planet_restriction_schem.lua")
+includeFile("custom_content/draft_schematic/structure/diner_no_planet_restriction_schem.lua")
 
-includeFile("custom_content/draft_schematic/structure/generic_house_player_large_window.lua")
+--[[includeFile("custom_content/draft_schematic/structure/generic_house_player_large_window.lua")
 includeFile("custom_content/draft_schematic/structure/generic_house_player_large_window_s02.lua")
 includeFile("custom_content/draft_schematic/structure/generic_house_player_medium_windowed.lua")
 includeFile("custom_content/draft_schematic/structure/generic_house_player_medium_windowed_s02.lua")
@@ -43,6 +47,5 @@ includeFile("custom_content/draft_schematic/structure/installation_mining_ore_el
 includeFile("custom_content/draft_schematic/structure/installation_mining_organic_flora_elite.lua")
 includeFile("custom_content/draft_schematic/structure/kashyyyk_treehouse.lua")
 includeFile("custom_content/draft_schematic/structure/naboo_house_player_window_small_style_01.lua")
-includeFile("custom_content/draft_schematic/structure/wod_ns_hut.lua")
-includeFile("custom_content/draft_schematic/structure/wod_sm_hut.lua")
-includeFile("custom_content/draft_schematic/structure/yt1300_house.lua")
+
+includeFile("custom_content/draft_schematic/structure/yt1300_house.lua")--]]

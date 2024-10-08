@@ -48,7 +48,7 @@ object_draft_schematic_structure_yt1300_house_schem = object_draft_schematic_str
    --customObjectName = "Deed for: Large Corellia House",
 
    craftingToolTab = 1024, -- (See DraftSchemticImplementation.h)
-   complexity = 45, 
+   complexity = 25, 
    size = 14, 
 
    xpType = "crafting_structure_general", 

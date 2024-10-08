@@ -42,7 +42,36 @@
 
 
 object_draft_schematic_vehicle_component_armor_plating_mk2 = object_draft_schematic_vehicle_component_shared_armor_plating_mk2:new {
-    factoryCrateType = "object/factory/factory_crate_installation.iff"
-}
+   templateType = DRAFTSCHEMATIC,
+
+	customObjectName = "Armor Plating MK2",
+
+	craftingToolTab = 16, -- (See DraftSchematicObjectTemplate.h)
+	complexity = 18,
+	size = 1,
+	factoryCrateSize = 5,
+
+	xpType = "crafting_general",
+	xp = 2600,
+
+	assemblySkill = "general_assembly",
+	experimentingSkill = "general_experimentation",
+	customizationSkill = "vehicle_customization",
+
+	customizationOptions = {},
+	customizationStringNames = {},
+	customizationDefaults = {},
+
+	ingredientTemplateNames = {"craft_vehicle_ingredients_n", "craft_vehicle_ingredients_n"},
+	ingredientTitleNames = {"component_shell", "component_frame"},
+	ingredientSlotType = {0, 0},
+	resourceTypes = {"steel", "metal"},
+	resourceQuantities = {5000, 8000},
+	contribution = {100, 100},
+
+
+	targetTemplate = "object/tangible/component/vehicle/armor_plating_mk2.iff",
+
+	additionalTemplates = {}}
 
 ObjectTemplates:addTemplate(object_draft_schematic_vehicle_component_armor_plating_mk2, "object/draft_schematic/vehicle/component/armor_plating_mk2.iff")

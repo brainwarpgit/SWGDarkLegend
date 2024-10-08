@@ -19,6 +19,8 @@ includeFile("custom_content/draft_schematic/space/serverobjects.lua")
 includeFile("custom_content/draft_schematic/spices/serverobjects.lua")
 includeFile("custom_content/draft_schematic/structure/serverobjects.lua")
 includeFile("custom_content/draft_schematic/vehicle/civilian/serverobjects.lua")
+includeFile("custom_content/draft_schematic/vehicle/component/serverobjects.lua")
+
 includeFile("custom_content/draft_schematic/weapon/serverobjects.lua")
 
 -- Server Objects

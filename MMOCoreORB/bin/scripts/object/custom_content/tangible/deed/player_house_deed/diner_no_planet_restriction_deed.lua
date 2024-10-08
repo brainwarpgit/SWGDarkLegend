@@ -5,4 +5,3 @@ object_tangible_deed_player_house_deed_diner_no_planet_restriction_deed = object
 }
 
 ObjectTemplates:addTemplate(object_tangible_deed_player_house_deed_diner_no_planet_restriction_deed, "object/tangible/deed/player_house_deed/diner_no_planet_restriction_deed.iff")
-

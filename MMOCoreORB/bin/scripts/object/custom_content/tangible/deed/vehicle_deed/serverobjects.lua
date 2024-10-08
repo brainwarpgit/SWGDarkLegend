@@ -24,7 +24,7 @@ includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_ab1_deed.lua"
 includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_desert_skiff_deed.lua")
 includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_lava_skiff_deed.lua")
 includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_organa_deed.lua")
---includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_tantive4_adv_deed.lua") --
+includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_tantive4_adv_deed.lua")
 includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_tantive4_deed.lua")
 includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_usv5_deed.lua")
 includeFile("custom_content/tangible/deed/vehicle_deed/landspeeder_v35_deed.lua")
@@ -53,8 +53,8 @@ includeFile("custom_content/tangible/deed/vehicle_deed/swamp_speeder_deed.lua")
 --includeFile("custom_content/tangible/deed/vehicle_deed/swoopracer_silver_deed.lua") --
 includeFile("custom_content/tangible/deed/vehicle_deed/tcg_8_air_speeder_deed.lua")
 --includeFile("custom_content/tangible/deed/vehicle_deed/tcg_at_pt_walker.lua") --
---includeFile("custom_content/tangible/deed/vehicle_deed/tcg_hk47_jetpack_deed.lua") --
---includeFile("custom_content/tangible/deed/vehicle_deed/tcg_merr_sonn_jt12_jetpack_deed.lua") --
+includeFile("custom_content/tangible/deed/vehicle_deed/tcg_hk47_jetpack_deed.lua") --]]
+includeFile("custom_content/tangible/deed/vehicle_deed/tcg_merr_sonn_jt12_jetpack_deed.lua") --]]
 includeFile("custom_content/tangible/deed/vehicle_deed/tcg_military_transport_deed.lua")
 includeFile("custom_content/tangible/deed/vehicle_deed/tcg_republic_gunship_deed.lua")
 --includeFile("custom_content/tangible/deed/vehicle_deed/temp_walker1_deed.lua") --

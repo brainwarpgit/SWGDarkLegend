@@ -142,6 +142,22 @@ ObjectTemplates:addClientTemplate(object_draft_schematic_structure_shared_yt1300
 ------------------------------------------------------------------------------------------------------------------------------------
 
 
+object_draft_schematic_structure_shared_barn_no_planet_restriction = SharedDraftSchematicObjectTemplate:new {
+	clientTemplateFileName = "object/draft_schematic/structure/shared_barn_no_planet_restriction_schem.iff"
+}
+
+ObjectTemplates:addClientTemplate(object_draft_schematic_structure_shared_barn_no_planet_restriction, "object/draft_schematic/structure/shared_barn_no_planet_restriction_schem.iff")
+------------------------------------------------------------------------------------------------------------------------------------
+
+
+object_draft_schematic_structure_shared_diner_no_planet_restriction = SharedDraftSchematicObjectTemplate:new {
+	clientTemplateFileName = "object/draft_schematic/structure/shared_diner_no_planet_restriction_schem.iff"
+}
+
+ObjectTemplates:addClientTemplate(object_draft_schematic_structure_shared_diner_no_planet_restriction, "object/draft_schematic/structure/shared_diner_no_planet_restriction_schem.iff")
+------------------------------------------------------------------------------------------------------------------------------------
+
+
 object_draft_schematic_structure_shared_atat_house_schem = SharedDraftSchematicObjectTemplate:new {
 	clientTemplateFileName = "object/draft_schematic/structure/shared_atat_house_schem.iff"
 }

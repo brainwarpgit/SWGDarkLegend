@@ -94,7 +94,7 @@ veteranRewards = {
 		{templateFile = "object/tangible/space/veteran_reward/sorosuub_space_yacht_deed.iff", milestone=1, oneTime=false, description="@veteran_new:sorosuub", jtlReward = true},
 
 		-- 2 Day Rewards
-		{templateFile = "object/tangible/deed/vehicle_deed/speederbike_flash_deed.iff", milestone=2, oneTime=false},
+		--{templateFile = "object/tangible/deed/vehicle_deed/speederbike_flash_deed.iff", milestone=2, oneTime=false},
 		{templateFile = "object/tangible/wearables/goggles/goggles_s01.iff", milestone=2, oneTime=false, description="Special Edition Goggles Style 1", jtlReward = false},
 		{templateFile = "object/tangible/wearables/goggles/goggles_s02.iff", milestone=2, oneTime=false, description="Special Edition Goggles Style 2", jtlReward = false},
 		{templateFile = "object/tangible/wearables/goggles/goggles_s03.iff", milestone=2, oneTime=false, description="Special Edition Goggles Style 3", jtlReward = false},
@@ -175,6 +175,7 @@ veteranRewards = {
 		{templateFile = "object/tangible/veteran_reward/one_year_anniversary/painting_07.iff", milestone=11, oneTime=false, description="Painting: Smuggler's Run", jtlReward = false},
 		{templateFile = "object/tangible/veteran_reward/one_year_anniversary/painting_08.iff", milestone=11, oneTime=false, description="Painting: Imperial Oppression (TIE Oppressor)", jtlReward = false},
 		{templateFile = "object/tangible/veteran_reward/one_year_anniversary/painting_09.iff", milestone=11, oneTime=false, description="Painting: Emperor's Eyes (TIE Sentinel)", jtlReward = false},
+		{templateFile = "object/tangible/veteran_reward/one_year_anniversary/painting_10.iff", milestone=11, oneTime=false, description="Painting: Dusk in Kachirho", jtlReward = false},
 
 }
 

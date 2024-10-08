@@ -1,1 +1,7 @@
 includeFile("custom_content/tangible/component/vehicle/panning_droid.lua")
+includeFile("custom_content/tangible/component/vehicle/custom_veh_autopilot_control_module.lua")
+includeFile("custom_content/tangible/component/vehicle/custom_veh_body_panel.lua")
+includeFile("custom_content/tangible/component/vehicle/custom_veh_engine_casing.lua")
+includeFile("custom_content/tangible/component/vehicle/custom_veh_gravity_pump.lua")
+includeFile("custom_content/tangible/component/vehicle/custom_veh_power_converter.lua")
+includeFile("custom_content/tangible/component/vehicle/custom_veh_turbine_control_module.lua")

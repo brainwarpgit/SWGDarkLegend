@@ -42,7 +42,37 @@
 
 
 object_draft_schematic_vehicle_component_power_plant_mk1 = object_draft_schematic_vehicle_component_shared_power_plant_mk1:new {
-    factoryCrateType = "object/factory/factory_crate_installation.iff"
+	templateType = DRAFTSCHEMATIC,
+
+	customObjectName = "Power Plant MK1",
+
+	craftingToolTab = 16, -- (See DraftSchematicObjectTemplate.h)
+	complexity = 18,
+	size = 10,
+	factoryCrateSize = 5,
+
+	xpType = "crafting_general",
+	xp = 1850,
+
+	assemblySkill = "general_assembly",
+	experimentingSkill = "general_experimentation",
+	customizationSkill = "clothing_customization",
+
+	customizationOptions = {},
+	customizationStringNames = {},
+	customizationDefaults = {},
+
+	ingredientTemplateNames = {"craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n"},
+	ingredientTitleNames = {"energy_gathering_array", "turbine_cradle", "magnetic_reaction_mass", "cradle_fittings", "charge_leakage_insulation_material", "turbine_rotor", "reaction_mass"},
+	ingredientSlotType = {0, 0, 0, 0, 0, 0, 0},
+	resourceTypes = {"copper", "steel", "ore_carbonate", "metal_nonferrous", "chemical", "aluminum", "gas_reactive"},
+	resourceQuantities = {250, 50, 250, 150, 50, 500, 200},
+	contribution = {100, 100, 100, 100, 100, 100, 100},
+
+
+	targetTemplate = "object/tangible/component/vehicle/veh_power_plant_mk1.iff",
+
+	additionalTemplates = {}
 }
 
 ObjectTemplates:addTemplate(object_draft_schematic_vehicle_component_power_plant_mk1, "object/draft_schematic/vehicle/component/power_plant_mk1.iff")

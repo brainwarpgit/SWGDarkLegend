@@ -42,7 +42,36 @@
 
 
 object_draft_schematic_vehicle_component_reactor_unit = object_draft_schematic_vehicle_component_shared_reactor_unit:new {
-    factoryCrateType = "object/factory/factory_crate_installation.iff"
+templateType = DRAFTSCHEMATIC,
+
+	customObjectName = "Vehicle Reactor Unit",
+
+	craftingToolTab = 16, -- (See DraftSchematicObjectTemplate.h)
+	complexity = 18,
+	size = 10,
+	factoryCrateSize = 5,
+
+	xpType = "crafting_general",
+	xp = 1850,
+
+	assemblySkill = "general_assembly",
+	experimentingSkill = "general_experimentation",
+	customizationSkill = "vehicle_customization",
+
+	customizationOptions = {},
+	customizationStringNames = {},
+	customizationDefaults = {},
+
+	ingredientTemplateNames = {"craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n", "craft_structure_ingredients_n"},
+	ingredientTitleNames = {"sub_assembly_frame", "micro_turbine_and_charge_accumulator", "shock_and_vibration_isolation_assembly", "thermal_insulator_and_charge_leakage_preventor", "mini_turbo_generator", "energy_flow_modulator_and_filter", "energy_distribution_net"},
+	ingredientSlotType = {0, 0, 0, 0, 1, 1, 1},
+	resourceTypes = {"steel", "metal_nonferrous", "ore_carbonate", "ore", "object/tangible/component/vehicle/shared_veh_power_plant_mk1.iff", "object/tangible/component/item/shared_electronic_power_conditioner.iff", "object/tangible/component/item/shared_electronic_energy_distributor.iff"},
+	resourceQuantities = {750, 4500, 2800, 1200, 2, 1, 1},
+	contribution = {100, 100, 100, 100, 100, 100, 100},
+
+	targetTemplate = "object/tangible/component/vehicle/reactor_unit.iff",
+
+	additionalTemplates = {}
 }
 
 ObjectTemplates:addTemplate(object_draft_schematic_vehicle_component_reactor_unit, "object/draft_schematic/vehicle/component/reactor_unit.iff")
