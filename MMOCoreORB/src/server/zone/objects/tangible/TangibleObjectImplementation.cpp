@@ -1611,6 +1611,14 @@ bool TangibleObjectImplementation::isVendor() {
 	return true;
 }
 
+bool TangibleObjectImplementation::isInvulnerable()  {
+	return optionsBitmask & OptionBitmask::INVULNERABLE;
+}
+
+bool TangibleObjectImplementation::isDestroying()  {
+	return optionsBitmask & OptionBitmask::DESTROYING;
+}
+
 TangibleObject* TangibleObject::asTangibleObject() {
 	return this;
 }

@@ -1129,6 +1129,11 @@ class SceneObject extends TreeEntry implements Logger, Metrics {
 	@mock
 	public abstract native SceneObject getInventory();
 
+	@dirty
+	@reference
+	@mock
+	public abstract native SceneObject getDatapad();
+
 	@read
 	public int getSlotDescriptorSize() {
 		if (templateObject.getSlotDescriptors())
@@ -1559,6 +1564,10 @@ class SceneObject extends TreeEntry implements Logger, Metrics {
 	@nativeStub
 	@virtualStub
 	public native abstract boolean isShipAiAgent();
+
+	@dirty
+	@local
+	public native abstract boolean isPlayerShip();
 
 	@mock
 	@dirty

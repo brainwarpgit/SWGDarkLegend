@@ -20,6 +20,7 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/Zone.h"
 #include "server/zone/managers/combat/CombatManager.h"
+#include "server/zone/objects/player/events/StoreSpawnedChildrenTask.h"
 
 const char LuaCreatureObject::className[] = "LuaCreatureObject";
 
@@ -165,6 +166,10 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "attemptPeace", &LuaCreatureObject::attemptPeace },
 		{ "forcePeace", &LuaCreatureObject::forcePeace },
 		{ "isPilotingShip", &LuaCreatureObject::isPilotingShip },
+		{ "storePets", &LuaCreatureObject::storePets },
+		{ "isRebelPilot", &LuaCreatureObject::isRebelPilot },
+		{ "isImperialPilot", &LuaCreatureObject::isImperialPilot },
+		{ "isFreelancePilot", &LuaCreatureObject::isFreelancePilot },
 		{ 0, 0 }
 };
 
@@ -1345,6 +1350,72 @@ int LuaCreatureObject::isPilotingShip(lua_State* L) {
 	bool isPiloting = realObject->isPilotingShip();
 
 	lua_pushboolean(L, isPiloting);
+
+	return 1;
+}
+
+int LuaCreatureObject::storePets(lua_State* L) {
+	Locker lock(realObject);
+
+	ManagedReference<SceneObject*> datapad = realObject->getDatapad();
+
+	if (datapad == nullptr) {
+		return 0;
+	}
+
+	Vector<ManagedReference<ControlDevice*> > devicesToStore;
+
+	for (int i = 0; i < datapad->getContainerObjectsSize(); ++i) {
+		ManagedReference<SceneObject*> object = datapad->getContainerObject(i);
+
+		if (object == nullptr || !object->isPetControlDevice()) {
+			continue;
+		}
+
+		ControlDevice* device = cast<ControlDevice*>(object.get());
+
+		if (device == nullptr) {
+			continue;
+		}
+
+		devicesToStore.add(device);
+	}
+
+	StoreSpawnedChildrenTask* task = new StoreSpawnedChildrenTask(realObject, std::move(devicesToStore));
+
+	if (task != nullptr) {
+		task->execute();
+	}
+
+	return 0;
+}
+
+int LuaCreatureObject::isRebelPilot(lua_State* L) {
+	Locker lock(realObject);
+
+	bool check = realObject->hasSkill("pilot_rebel_navy_novice");
+
+	lua_pushboolean(L, check);
+
+	return 1;
+}
+
+int LuaCreatureObject::isImperialPilot(lua_State* L) {
+	Locker lock(realObject);
+
+	bool check = realObject->hasSkill("pilot_imperial_navy_novice");
+
+	lua_pushboolean(L, check);
+
+	return 1;
+}
+
+int LuaCreatureObject::isFreelancePilot(lua_State* L) {
+	Locker lock(realObject);
+
+	bool check = realObject->hasSkill("pilot_neutral_novice");
+
+	lua_pushboolean(L, check);
 
 	return 1;
 }
