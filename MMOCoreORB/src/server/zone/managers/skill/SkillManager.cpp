@@ -23,6 +23,7 @@
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/objects/player/sui/callbacks/SurrenderPilotSuiCallback.h"
 #include "templates/faction/Factions.h"
+#include "server/globalVariables.h"
 
 SkillManager::SkillManager()
 	: Logger("SkillManager") {
@@ -395,6 +396,24 @@ bool SkillManager::awardSkill(const String& skillName, CreatureObject* creature,
 
 	SkillModManager::instance()->verifySkillBoxSkillMods(creature);
 
+	if (skill->getSkillName() == "social_politician_novice" && globalVariables::skillsInstantMasterPoliticianEnabled == true) { 
+		awardSkill("social_politician_master", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "crafting_merchant_novice" && globalVariables::skillsInstantMasterMerchantEnabled == true) { 
+		awardSkill("crafting_merchant_master", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_dark_rank_05" || creature->hasSkill("force_rank_dark_rank_05")) {
+		awardSkill("force_title_jedi_rank_04", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_light_rank_05" || creature->hasSkill("force_rank_light_rank_05")) {
+		awardSkill("force_title_jedi_rank_04", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_dark_rank_10" || creature->hasSkill("force_rank_dark_rank_10")) {
+		awardSkill("force_title_jedi_master", creature, true, true, true);
+	}
+	if (skill->getSkillName() == "force_rank_light_rank_10" || creature->hasSkill("force_rank_light_rank_10")) {
+		awardSkill("force_title_jedi_master", creature, true, true, true);
+	}
 	return true;
 }
 
