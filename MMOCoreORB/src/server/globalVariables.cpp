@@ -1,11 +1,23 @@
 #include "globalVariables.h"
 #include "engine/lua/Lua.h"
-
-//#include <string>
+#include <thread>
+#include <chrono>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <limits.h>
+#include <cerrno>
+#include <cstring>
 
 namespace globalVariables {
 
 //Variables
+	Lua* lua = nullptr;
+	time_t lastModifiedTime = 0;
+	bool stopWatch = false;
+
+//Armor
+	float armorPSGDecayRateMultiplier = 0.2;
+	float armorDecayRateMultiplier = 0.2;
 
 //Auction
 	int auctionMaxBazaarPrice = 20000;
@@ -453,19 +465,65 @@ namespace globalVariables {
 	bool vendorSkimSalesForMaintenanceEnabled = false;
 	float vendorSkimSalesForMaintenancePercent = 5;
 
+//Weapon
+	int weaponDecayRateChance = 5;
+	int weaponDecayRateWithPowerUpChance = 10;
+	float weaponCrystalDamagePerTick = 1;
+	float weaponDamagePerTicket = 1;
+
 //Wearables
 	bool wearablesFactionEnabled = true;
 	bool wearablesAllPlayerRacesEnabled = false;
 
 //Initializer
+	bool fileExists(const std::string& filePath) {
+		return (access(filePath.c_str(), F_OK) != -1);  // F_OK checks for existence
+	}
+
+	std::string getCurrentWorkingDir() {
+		char buff[PATH_MAX];
+		getcwd(buff, sizeof(buff));
+		return std::string(buff);
+	}
+	time_t getFileModifiedTime(const std::string& filePath) {
+		struct stat fileInfo;
+		if (stat(filePath.c_str(), &fileInfo) != 0) {
+			std::cout << "GLOBALVARIABLES - Error getting file status for: " << filePath << std::endl;
+			return 0;
+		}
+		return fileInfo.st_mtime;
+	}
+
 	bool loadConfigData() {
-		Lua* lua = new Lua();
-		lua->init();			
-		if (!lua->runFile("scripts/managers/global_variables.lua")) {
-			delete lua;
+		const std::string luaFilePath = "scripts/managers/global_variables.lua";
+		
+		if (!fileExists(luaFilePath)) {
+			std::cerr << "File does not exist: " << luaFilePath << std::endl;
+			return 0;
+		}
+		
+		time_t modifiedTime = getFileModifiedTime(luaFilePath);
+		if (modifiedTime == lastModifiedTime) {
+			return true;
+		}
+		
+		if (lastModifiedTime == 0) {
+			std::cout << "GLOBALVARIABLES - Initial Load" << std::endl;
+		} else if (lastModifiedTime != modifiedTime) {
+			std::cout << "GLOBALVARIABLES - Reloading due to change in global_variables.lua" << std::endl;
+		}
+
+		lastModifiedTime = modifiedTime;
+		
+		if (!lua->runFile(luaFilePath.c_str())) {
+			std::cout << "GLOBALVARIABLES - failed to load file" << std::endl;
 			return false;
 		}
 		try {
+			//Armor
+			if (lua->getGlobalFloat("armorPSGDecayRateMultiplier") > 0) armorPSGDecayRateMultiplier = lua->getGlobalFloat("armorPSGDecayRateMultiplier");
+			if (lua->getGlobalFloat("armorDecayRateMultiplier") > 0) armorDecayRateMultiplier = lua->getGlobalFloat("armorDecayRateMultiplier");
+			
 			//Auction
 			if (lua->getGlobalInt("auctionMaxBazaarPrice") > 0) auctionMaxBazaarPrice = lua->getGlobalInt("auctionMaxBazaarPrice");
 			if (lua->getGlobalInt("auctionMaxSales") > 0) auctionMaxSales = lua->getGlobalInt("auctionMaxSales");
@@ -908,25 +966,48 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled") == true || lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled") == false) vendorSkimSalesForMaintenanceEnabled = lua->getGlobalBoolean("vendorSkimSalesForMaintenanceEnabled");
 			if (lua->getGlobalFloat("vendorSkimSalesForMaintenancePercent") > 0) vendorSkimSalesForMaintenancePercent = lua->getGlobalFloat("vendorSkimSalesForMaintenancePercent");
 			
+			//Weapon
+			if (lua->getGlobalInt("weaponDecayRateChance") > 0) weaponDecayRateChance = lua->getGlobalInt("weaponDecayRateChance");
+			if (lua->getGlobalInt("weaponDecayRateWithPowerUpChance") > 0) weaponDecayRateWithPowerUpChance = lua->getGlobalInt("weaponDecayRateWithPowerUpChance");
+			if (lua->getGlobalFloat("weaponCrystalDamagePerTick") > 0) weaponCrystalDamagePerTick = lua->getGlobalFloat("weaponCrystalDamagePerTick");
+			if (lua->getGlobalFloat("weaponDamagePerTicket") > 0) weaponDamagePerTicket = lua->getGlobalFloat("weaponDamagePerTicket");
+
 			//Wearables
 			if (lua->getGlobalBoolean("wearablesFactionEnabled") == true || lua->getGlobalBoolean("wearablesFactionEnabled") == false) wearablesFactionEnabled = lua->getGlobalBoolean("wearablesFactionEnabled");
 			if (lua->getGlobalBoolean("wearablesAllPlayerRacesEnabled") == true || lua->getGlobalBoolean("wearablesAllPlayerRacesEnabled") == false) wearablesAllPlayerRacesEnabled = lua->getGlobalBoolean("wearablesAllPlayerRacesEnabled");
 			
 		} catch (const Exception& e) {
-			delete lua;
+			std::cerr << "GLOBALVARIABLES - Error retrieving LUA varaibles: " << e.what() << std::endl;
 			return false;
 		}
-		delete lua;
 		return true;
 	}
 
-// Static initializer to run loadConfigData when globalVariables.cpp is initialized
+	void startVariableReloading() {
+		while(!stopWatch) {
+			std::this_thread::sleep_for(std::chrono::seconds(1));
+			loadConfigData();
+		}
+		std::cerr << "GLOBALVARIABLES - stopConfigWatcher called ending startVariableReloading" << std::endl;
+	}
+	
+	void stopConfigWatcher() {
+		stopWatch = true;
+	}
+
 	namespace {
 		struct GlobalsInitializer {
 			GlobalsInitializer() {
+				lua = new Lua();
+				lua->init();
 				if (!loadConfigData()) {
-					//std::cerr << "Failed to load config data." << std::endl;
+					std::cerr << "GLOBALVARIABLES - loadConfigData() FAILED" << std::endl;
 				}
+				std::thread reloadThread(startVariableReloading);
+				reloadThread.detach();
+			}
+			~GlobalsInitializer() {
+				delete lua;
 			}
 		};
 		GlobalsInitializer globalsInitializer;  // This will run at program startup

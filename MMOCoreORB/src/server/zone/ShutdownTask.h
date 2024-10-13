@@ -11,6 +11,7 @@
 #include "server/ServerCore.h"
 #include "server/zone/ZoneServer.h"
 #include "server/chat/ChatManager.h"
+#include "server/globalVariables.h"
 
 class ShutdownTask : public Task {
 	int minutesRemaining;
@@ -43,7 +44,8 @@ public:
 		}
 
 		Logger::console.info(true) << shutdownMsg.toString();
-
+		globalVariables::stopConfigWatcher();
+		
 		zoneServer->getChatManager()->broadcastGalaxy(nullptr, shutdownMsg.toString());
 
 		if (minutesRemaining <= 0) {

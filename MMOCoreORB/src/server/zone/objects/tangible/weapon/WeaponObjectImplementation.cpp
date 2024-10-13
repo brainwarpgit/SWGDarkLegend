@@ -767,10 +767,10 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 	}
 
 	int roll = System::random(100);
-	int chance = 5;
+	int chance = globalVariables::weaponDecayRateChance;
 
 	if (hasPowerup())
-		chance += 10;
+		chance += globalVariables::weaponDecayRateWithPowerUpChance;
 
 	if (roll < chance) {
 		Locker locker(_this.getReferenceUnsafeStaticCast());
@@ -786,11 +786,11 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 				ManagedReference<LightsaberCrystalComponent*> crystal = saberInv->getContainerObject(i).castTo<LightsaberCrystalComponent*>();
 
 				if (crystal != nullptr) {
-					crystal->inflictDamage(crystal, 0, 1, true, true);
+					crystal->inflictDamage(crystal, 0, globalVariables::weaponCrystalDamagePerTick, true, true);
 				}
 			}
 		} else {
-			inflictDamage(_this.getReferenceUnsafeStaticCast(), 0, 1, true, true);
+			inflictDamage(_this.getReferenceUnsafeStaticCast(), 0, globalVariables::weaponDamagePerTicket, true, true);
 
 			if (((float)conditionDamage - 1 / (float)maxCondition < 0.75) && ((float)conditionDamage / (float)maxCondition > 0.75))
 				user->sendSystemMessage("@combat_effects:weapon_quarter");

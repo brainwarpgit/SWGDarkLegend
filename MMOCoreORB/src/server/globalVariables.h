@@ -8,6 +8,10 @@ namespace globalVariables {
 
 //Variables
 
+//Armor
+	extern float armorPSGDecayRateMultiplier;
+	extern float armorDecayRateMultiplier;
+
 //Auction
 	extern int auctionMaxBazaarPrice;
 	extern int auctionMaxSales;
@@ -453,12 +457,19 @@ namespace globalVariables {
 	extern bool vendorSkimSalesForMaintenanceEnabled;
 	extern float vendorSkimSalesForMaintenancePercent;
 
+//Weapon
+	extern int weaponDecayRateChance;
+	extern int weaponDecayRateWithPowerUpChance;
+	extern float weaponCrystalDamagePerTick;
+	extern float weaponDamagePerTicket;
+	
 //Wearables
 	extern bool wearablesFactionEnabled;
 	extern bool wearablesAllPlayerRacesEnabled;
 	
 //Initializer
 	bool loadConfigData();
+	void stopConfigWatcher();
 }
 
 #endif /*GLOBALVARIABLES_H_*/
