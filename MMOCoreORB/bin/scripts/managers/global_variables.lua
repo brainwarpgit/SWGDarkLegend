@@ -158,6 +158,7 @@ craftingStunMaxResists = 80 --default 100
 craftingLightsaberMaxResists = 40 --default 100
 craftingAssemblyModifier = 0 --default 0 --default 0 Setting this does not give more than top experimental values of crafted items.   small increments for small boosts.
 craftingPracticeXPMultiplier = 1.2 --default 1.05
+craftingWhileEntertainingEnabled = true --default false
 
 --Creature
 creatureRandomDifficultyEnabled = true --default false

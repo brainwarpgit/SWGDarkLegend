@@ -163,7 +163,8 @@ namespace globalVariables {
 	extern float craftingLightsaberMaxResists;
 	extern float craftingAssemblyModifier;
 	extern float craftingPracticeXPMultiplier;
-
+	extern bool craftingWhileEntertainingEnabled;
+	
 // Creature
 	extern bool creatureRandomDifficultyEnabled;
 	extern int creatureMaxLevel;

@@ -11,6 +11,7 @@
 #include "server/zone/objects/player/sessions/crafting/CraftingSession.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/objects/player/sessions/TradeSession.h"
+#include "server/globalVariables.h"
 
 class RequestCraftingSessionCommand : public QueueCommand {
 public:
@@ -53,13 +54,48 @@ public:
 			return INVALIDSTATE;
 		}
 
-		if (!checkInvalidLocomotions(creature)) {
-			if (craftingTool != nullptr && creature->isPlayerCreature()) {
-				String message = "@ui_craft:err_start";
-				craftingTool->sendToolStartFailure(creature, message);
+		if (creature->isEntertaining()) {
+			if (!globalVariables::craftingWhileEntertainingEnabled) {
+				if (!checkInvalidLocomotions(creature)) {
+					if (craftingTool != nullptr && creature->isPlayerCreature()) {
+						String message = "@ui_craft:err_start";
+						craftingTool->sendToolStartFailure(creature, message);
+					}
+				return INVALIDLOCOMOTION;
+				}
 			}
-			return INVALIDLOCOMOTION;
 		}
+		
+		/*if (!globalVariables::craftingWhileEntertainingEnabled) {
+			if (!checkInvalidLocomotions(creature)) {
+				if (craftingTool != nullptr && creature->isPlayerCreature()) {
+					String message = "@ui_craft:err_start";
+					craftingTool->sendToolStartFailure(creature, message);
+				}
+				return INVALIDLOCOMOTION;
+			}
+		} else { 
+			if (!creature->isEntertaining) {
+				if (!checkInvalidLocomotions(creature)) {
+					if (craftingTool != nullptr && creature->isPlayerCreature()) {
+						String message = "@ui_craft:err_start";
+						craftingTool->sendToolStartFailure(creature, message);
+					}
+					return INVALIDLOCOMOTION;
+				}
+			}
+		}*/
+			
+		
+		/*if (!creature->isDancing() && !creature->isPlayingMusic() && globalVariables::craftingWhileEntertainingEnabled) {
+			if (!checkInvalidLocomotions(creature)) {
+				if (craftingTool != nullptr && creature->isPlayerCreature()) {
+					String message = "@ui_craft:err_start";
+					craftingTool->sendToolStartFailure(creature, message);
+				}
+				return INVALIDLOCOMOTION;
+			}
+		}*/
 
 		/// If they are both null, we can't craft
 		if (craftingTool == nullptr && craftingStation == nullptr) {
