@@ -991,6 +991,27 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	if (playerZone == nullptr)
 		return;
 
+	int toolType = 0;
+	
+	if (globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
+		toolType = System::random(14) + 1; // Using SOLAR1, CHEMICAL2, FLORA3, GAS4, MINERAL6, WATER7, WIND8
+		
+		if (toolType == 5 || toolType > 12) // Geothermal isn't supported and let's make mineral the most popular
+			toolType = 6;
+		
+		if (toolType > 9) // Let's make chemical the second most popular
+			toolType = 2;
+			
+		if (toolType > 7) // Let's also make flora more popular
+			toolType = 3;
+			
+		// Adjust for lower possible percentages on Solar and Wind energy
+		if (toolType == 1 || toolType == 8){
+			maxLevel = 25;
+			minLevel = 15;
+		}
+	}
+	
 	long long surveySkill = player->getSkillMod("surveying");
 	if (surveySkill > 30) {
 		maxLevel += 10;
@@ -1001,13 +1022,15 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	if (surveySkill > 70) {
 		maxLevel += 10;
 	}
-	/*if (surveySkill > 90) {
-		maxLevel += 10;
+	if (!globalVariables::missionSurveyMissionLimitToLessThanNinetyEnabled) {
+		if (surveySkill > 90) {
+			maxLevel += 10;
+		}
+		if (surveySkill > 100) {
+			//Max mission level is 95.
+			maxLevel += 5;
+		}
 	}
-	if (surveySkill > 100) {
-		//Max mission level is 95.
-		maxLevel += 5;
-	}*/
 
 	//Mission level used as needed concentration in increments of 5. I.e. 50, 55, 60 etc. up to 95.
 	int randLevel = minLevel + 5 * System::random((maxLevel - minLevel) / 5);
@@ -1021,13 +1044,17 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 
 	Vector<ManagedReference<ResourceSpawn*> > resources;
 
-	int toolType = SurveyTool::MINERAL;
+	
+	if (!globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
 
-	//75 % mineral, 25 % chemical.
-	if (System::random(3) == 0) {
-		toolType = SurveyTool::CHEMICAL;
+		toolType = SurveyTool::MINERAL;
+		
+		//75 % mineral, 25 % chemical.
+		if (System::random(3) == 0) {
+			toolType = SurveyTool::CHEMICAL;
+		}
 	}
-
+	
 	manager->getResourceListByType(resources, toolType, zoneName);
 
 	ManagedReference<ResourceSpawn*> spawn = resources.get(System::random(resources.size() - 1));
@@ -1041,7 +1068,20 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	if (texts == 0)
 		texts = 1;
 
-	mission->setMissionTargetName(spawn->getSurveyMissionSpawnFamilyName());
+	if (!globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
+		mission->setMissionTargetName(spawn->getSurveyMissionSpawnFamilyName());
+	} else {
+		String familyName = spawn->getSurveyMissionSpawnFamilyName();
+		
+		if (toolType == 1 || toolType == 8)
+			familyName = "Solar or Wind Energy"; // Easier to read
+		
+		if (toolType == 7)
+			familyName = "Water"; // Water doesn't have a family name
+			
+		mission->setMissionTargetName(familyName);
+	}	
+	
 	mission->setTargetTemplate(templateObject);
 
 	//Reward depending on mission level.

@@ -16,6 +16,7 @@
 #include "server/zone/objects/tangible/tool/sui/SurveyToolSetRangeSuiCallback.h"
 #include "server/zone/objects/tangible/tool/sui/SurveyToolApproveRadioactiveSuiCallback.h"
 #include "server/zone/objects/player/sessions/survey/SurveySession.h"
+#include "server/globalVariables.h"
 
 void SurveyToolImplementation::loadTemplateData(SharedObjectTemplate* templateData) {
 	TangibleObjectImplementation::loadTemplateData(templateData);
@@ -50,7 +51,7 @@ int SurveyToolImplementation::handleObjectMenuSelect(CreatureObject* player, byt
 		if (selectedID == 20) { // use object
 			int range = getRange(player);
 
-			if(range <= 0 || range > 384) {
+			if(range <= 0 || range > 576) {
 				sendRangeSui(player);
 				return 0;
 			}
@@ -94,23 +95,52 @@ void SurveyToolImplementation::sendRangeSui(CreatureObject* player) {
 	suiToolRangeBox->setPromptTitle("@base_player:swg");
 	suiToolRangeBox->setPromptText("@survey:select_range");
 
-	if (surveyMod >= 20)
-		suiToolRangeBox->addMenuItem("64m x 3pts", 0);
+	if (!globalVariables::playerSurveyExtendedDistanceEnabled) {
+		if (surveyMod >= 20)
+			suiToolRangeBox->addMenuItem("64m x 3pts", 0);
 
-	if (surveyMod >= 35)
-		suiToolRangeBox->addMenuItem("128m x 4pts", 1);
+		if (surveyMod >= 35)
+			suiToolRangeBox->addMenuItem("128m x 4pts", 1);
 
-	if (surveyMod >= 55)
-		suiToolRangeBox->addMenuItem("192m x 4pts", 2);
+		if (surveyMod >= 55)
+			suiToolRangeBox->addMenuItem("192m x 4pts", 2);
 
-	if (surveyMod >= 75)
-		suiToolRangeBox->addMenuItem("256m x 5pts", 3);
+		if (surveyMod >= 75)
+			suiToolRangeBox->addMenuItem("256m x 5pts", 3);
 
-	if (surveyMod >= 100)
-		suiToolRangeBox->addMenuItem("320m x 5pts", 4);
+		if (surveyMod >= 100)
+			suiToolRangeBox->addMenuItem("320m x 5pts", 4);
 
-	if (surveyMod >= 120)
-		suiToolRangeBox->addMenuItem("384m x 5pts", 5);
+		if (surveyMod >= 120)
+			suiToolRangeBox->addMenuItem("384m x 5pts", 5);
+	} else {
+		if (surveyMod >= 20)
+			suiToolRangeBox->addMenuItem("64m x 3pts", 0);
+
+		if (surveyMod >= 40)
+			suiToolRangeBox->addMenuItem("128m x 4pts", 1);
+
+		if (surveyMod >= 60)
+			suiToolRangeBox->addMenuItem("192m x 4pts", 2);
+
+		if (surveyMod >= 80)
+			suiToolRangeBox->addMenuItem("256m x 5pts", 3);
+
+		if (surveyMod >= 100)
+			suiToolRangeBox->addMenuItem("320m x 5pts", 4);
+
+		if (surveyMod >= 120)
+			suiToolRangeBox->addMenuItem("384m x 5pts", 5);
+
+		if (surveyMod >= 140)
+			suiToolRangeBox->addMenuItem("448 x 5pts", 6);
+
+		if (surveyMod >= 160)
+			suiToolRangeBox->addMenuItem("512 x 5pts", 7);
+
+		if (surveyMod >= 180)
+			suiToolRangeBox->addMenuItem("576 x 5pts", 8);
+	}
 
 	suiToolRangeBox->setUsingObject(_this.getReferenceUnsafeStaticCast());
 	suiToolRangeBox->setCallback(new SurveyToolSetRangeSuiCallback(server->getZoneServer()));
@@ -131,18 +161,39 @@ int SurveyToolImplementation::getRange(CreatureObject* player) {
 
 int SurveyToolImplementation::getSkillBasedRange(int skillLevel) {
 
-	if (skillLevel >= 120)
-		return 384;
-	else if (skillLevel >= 100)
-		return 320;
-	else if (skillLevel >= 75)
-		return 256;
-	else if (skillLevel >= 55)
-		return 192;
-	else if (skillLevel >= 35)
-		return 128;
-	else if (skillLevel >= 20)
-		return 64;
+	if (!globalVariables::playerSurveyExtendedDistanceEnabled) {
+		if (skillLevel >= 120)
+			return 384;
+		else if (skillLevel >= 100)
+			return 320;
+		else if (skillLevel >= 75)
+			return 256;
+		else if (skillLevel >= 55)
+			return 192;
+		else if (skillLevel >= 35)
+			return 128;
+		else if (skillLevel >= 20)
+			return 64;
+	} else {
+		if (skillLevel >= 180)
+			return 576;
+		else if (skillLevel >= 160)
+			return 512;
+		else if (skillLevel >= 140)
+			return 448;
+		else if (skillLevel >= 120)
+			return 384;
+		else if (skillLevel >= 100)
+			return 320;
+		else if (skillLevel >= 80)
+			return 256;
+		else if (skillLevel >= 60)
+			return 192;
+		else if (skillLevel >= 40)
+			return 128;
+		else if (skillLevel >= 20)
+			return 64;
+	}
 
 	return 0;
 }

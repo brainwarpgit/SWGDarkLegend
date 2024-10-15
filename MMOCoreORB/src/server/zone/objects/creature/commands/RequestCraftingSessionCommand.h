@@ -66,37 +66,6 @@ public:
 			}
 		}
 		
-		/*if (!globalVariables::craftingWhileEntertainingEnabled) {
-			if (!checkInvalidLocomotions(creature)) {
-				if (craftingTool != nullptr && creature->isPlayerCreature()) {
-					String message = "@ui_craft:err_start";
-					craftingTool->sendToolStartFailure(creature, message);
-				}
-				return INVALIDLOCOMOTION;
-			}
-		} else { 
-			if (!creature->isEntertaining) {
-				if (!checkInvalidLocomotions(creature)) {
-					if (craftingTool != nullptr && creature->isPlayerCreature()) {
-						String message = "@ui_craft:err_start";
-						craftingTool->sendToolStartFailure(creature, message);
-					}
-					return INVALIDLOCOMOTION;
-				}
-			}
-		}*/
-			
-		
-		/*if (!creature->isDancing() && !creature->isPlayingMusic() && globalVariables::craftingWhileEntertainingEnabled) {
-			if (!checkInvalidLocomotions(creature)) {
-				if (craftingTool != nullptr && creature->isPlayerCreature()) {
-					String message = "@ui_craft:err_start";
-					craftingTool->sendToolStartFailure(creature, message);
-				}
-				return INVALIDLOCOMOTION;
-			}
-		}*/
-
 		/// If they are both null, we can't craft
 		if (craftingTool == nullptr && craftingStation == nullptr) {
 			creature->sendSystemMessage("Error starting crafting session, no tool or station found.  Please report this error");

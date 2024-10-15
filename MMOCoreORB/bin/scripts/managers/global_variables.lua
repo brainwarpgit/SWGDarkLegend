@@ -287,6 +287,11 @@ missionJediPadawanTrialsGrantXPEnabled = true --default false
 missionJediPadawanTrailsXP = 1250 --default 0   1250 to get enough for one novice box after trials.
 missionEnableJediKnightDestroyMissionsEnabled = true --default false
 missionRandomAttacksEnabled = true --default false
+missionSurveyMissionRewardsResourcesEnabled = true --default false
+missionSurveyMissionRewardsResourcesMultiplier = .5 --default 1 based on mission creditreward
+missionSurveyMissionLimitToLessThanNinetyEnabled = true --default false
+missionSurveyMissionEnableMoreResourcesEnabled = true --default false
+missionSurveyMissionCompletionDistance = 0 --default 1024
 
 --Pet
 petCallTime = 0 --default 15 in seconds
@@ -340,6 +345,7 @@ playerSpeedMultiplier = 2 --default 1
 playerMeditateTickTime = 2 --default 5 in seconds.
 playerJediForceMeditateMultiplier = 10 --default 3
 playerMaxLevelNonCHMount = 15 --default 10 overridden when creatureAllMountsAllowedForAllPlayersEnabled = true
+playerSurveyExtendedDistanceEnabled = false --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

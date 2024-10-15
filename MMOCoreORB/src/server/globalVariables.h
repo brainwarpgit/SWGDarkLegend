@@ -289,6 +289,12 @@ namespace globalVariables {
 	extern bool missionLevelSelectionEnabled;
 	extern int missionRewardMultiplier;
 	extern bool missionRandomAttacksEnabled;
+	extern bool missionSurveyMissionRewardsResourcesEnabled;
+	extern float missionSurveyMissionRewardsResourcesMultiplier;
+	extern bool missionSurveyMissionLimitToLessThanNinetyEnabled;
+	extern bool missionSurveyMissionEnableMoreResourcesEnabled;
+	extern float missionSurveyMissionCompletionDistance;
+
 //Pet
 	extern int petCallTime;
 	extern int petGrowthCycleTime;
@@ -341,6 +347,7 @@ namespace globalVariables {
 	extern float playerMeditateTickTime;
 	extern float playerJediForceMeditateMultiplier;
 	extern int playerMaxLevelNonCHMount;
+	extern bool playerSurveyExtendedDistanceEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

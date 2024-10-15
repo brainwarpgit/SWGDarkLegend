@@ -296,6 +296,11 @@ namespace globalVariables {
 	bool missionLevelSelectionEnabled = false;
 	int missionRewardMultiplier = 1;
 	bool missionRandomAttacksEnabled = false;
+	bool missionSurveyMissionRewardsResourcesEnabled = false;
+	float missionSurveyMissionRewardsResourcesMultiplier = 1;
+	bool missionSurveyMissionLimitToLessThanNinetyEnabled = false;
+	bool missionSurveyMissionEnableMoreResourcesEnabled = false;
+	float missionSurveyMissionCompletionDistance = 1024;
 
 //Pet
 	int petCallTime = 15;
@@ -349,6 +354,7 @@ namespace globalVariables {
 	float playerMeditateTickTime = 5;
 	float playerJediForceMeditateMultiplier = 3;
 	int playerMaxLevelNonCHMount = 10;
+	bool playerSurveyExtendedDistanceEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -798,6 +804,11 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
 			if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
 			if (lua->getGlobalBoolean("missionRandomAttacksEnabled") == true || lua->getGlobalBoolean("missionRandomAttacksEnabled") == false) missionRandomAttacksEnabled = lua->getGlobalBoolean("missionRandomAttacksEnabled");
+			if (lua->getGlobalBoolean("missionSurveyMissionRewardsResourcesEnabled") == true || lua->getGlobalBoolean("missionSurveyMissionRewardsResourcesEnabled") == false) missionSurveyMissionRewardsResourcesEnabled = lua->getGlobalBoolean("missionSurveyMissionRewardsResourcesEnabled");
+			if (lua->getGlobalFloat("missionSurveyMissionRewardsResourcesMultiplier") > 0) missionSurveyMissionRewardsResourcesMultiplier = lua->getGlobalFloat("missionSurveyMissionRewardsResourcesMultiplier");
+			if (lua->getGlobalBoolean("missionSurveyMissionLimitToLessThanNinetyEnabled") == true || lua->getGlobalBoolean("missionSurveyMissionLimitToLessThanNinetyEnabled") == false) missionSurveyMissionLimitToLessThanNinetyEnabled = lua->getGlobalBoolean("missionSurveyMissionLimitToLessThanNinetyEnabled");
+			if (lua->getGlobalBoolean("missionSurveyMissionEnableMoreResourcesEnabled") == true || lua->getGlobalBoolean("missionSurveyMissionEnableMoreResourcesEnabled") == false) missionSurveyMissionEnableMoreResourcesEnabled = lua->getGlobalBoolean("missionSurveyMissionEnableMoreResourcesEnabled");
+			if (lua->getGlobalFloat("missionSurveyMissionCompletionDistance") >= 0) missionSurveyMissionCompletionDistance = lua->getGlobalFloat("missionSurveyMissionCompletionDistance");
 			
 			//Pet 
 			if (lua->getGlobalInt("petCallTime") >= 0) petCallTime = lua->getGlobalInt("petCallTime");
@@ -851,6 +862,7 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerMeditateTickTime") >= 0) playerMeditateTickTime = lua->getGlobalFloat("playerMeditateTickTime");
 			if (lua->getGlobalFloat("playerJediForceMeditateMultiplier") >= 0) playerJediForceMeditateMultiplier = lua->getGlobalFloat("playerJediForceMeditateMultiplier");
 			if (lua->getGlobalInt("playerMaxLevelNonCHMount") >= 1) playerMaxLevelNonCHMount = lua->getGlobalInt("playerMaxLevelNonCHMount");
+			if (lua->getGlobalBoolean("playerSurveyExtendedDistanceEnabled") == true || lua->getGlobalBoolean("playerSurveyExtendedDistanceEnabled") == false) playerSurveyExtendedDistanceEnabled = lua->getGlobalBoolean("playerSurveyExtendedDistanceEnabled");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
