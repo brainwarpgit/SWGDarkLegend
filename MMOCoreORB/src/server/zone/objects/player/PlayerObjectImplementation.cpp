@@ -1527,7 +1527,10 @@ void PlayerObjectImplementation::notifyOnline() {
 			playerCreature->setRunSpeed(speedTempl.get(0));
 		}
 	}
-
+	PlayerObject* ghost = playerCreature->getPlayerObject();
+	if (ghost != nullptr && globalVariables::playerCreationJoinGalaxyChatEnabled == true) {	
+		ghost->addChatRoom(chatManager->getGalaxyRoom()->getRoomID());
+	}
 	if (playerCreature->isInGuild()) {
 		ManagedReference<GuildObject*> guild = playerCreature->getGuildObject().get();
 		uint64 playerId = playerCreature->getObjectID();

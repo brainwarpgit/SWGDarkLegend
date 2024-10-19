@@ -229,6 +229,9 @@ namespace globalVariables {
 	extern float dungeonGeonosianBioLabMultiplier;
 	extern float dungeonWarrenMultiplier;
 
+//Group
+	extern int groupMaxSize;
+
 //Faction
 	extern int factionMaxRank;
 	extern float factionCapMultiplier;
@@ -241,6 +244,8 @@ namespace globalVariables {
 	extern int harvestMilkTime;
 	extern float harvestDNASampleDistance;
 	extern bool harvestInCombatEnabled;
+	extern int harvestMinimumHarvest;
+	extern bool harvestMinimumHarvestEnabled;
 
 //Jedi
 	extern bool jediForceCostToTuneEnabled;
@@ -352,6 +357,7 @@ namespace globalVariables {
 	extern bool playerAttachmentSplittingEnabled;
 	extern int playerAttachmentSplittingCostPerPoint;
 	extern bool playerAttachmentApplicationModEnabled;
+	extern bool playerPlayersOnlineAtLoginEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

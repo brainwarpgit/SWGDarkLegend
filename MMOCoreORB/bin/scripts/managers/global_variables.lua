@@ -224,6 +224,9 @@ dungeonDeathWatchBunkerMultiplier = 5 --default 1
 dungeonGeonosianBioLabMultiplier = 5 --default 1
 dungeonWarrenMultiplier = 5 --default 1
 
+--Group
+groupMaxSize = 50 --default 20
+
 --Faction
 factionMaxRank = 21 --default 15  max 21
 factionCapMultiplier = 100 --default 1
@@ -236,6 +239,8 @@ harvestMultiplier = 2 --default 1
 harvestMilkTime = 5 --default 10 in seconds
 harvestDNASampleDistance = 64 --default 16  
 harvestInCombatEnabled = true --default false
+harvestMinimumHarvest = 15 --default 2 no real SWG default
+harvestMinimumHarvestEnabled = true --default false
 
 --Jedi
 jediForceCostToTuneEnabled = false --default true
@@ -350,6 +355,7 @@ playerSurveyExtendedDistanceEnabled = false --default false
 playerAttachmentSplittingEnabled = true --default false
 playerAttachmentSplittingCostPerPoint = 1000 --default 1000
 playerAttachmentApplicationModEnabled = true --default false
+playerPlayersOnlineAtLoginEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

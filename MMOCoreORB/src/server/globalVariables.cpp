@@ -236,6 +236,9 @@ namespace globalVariables {
 	float dungeonGeonosianBioLabMultiplier = 1; 
 	float dungeonWarrenMultiplier = 1;
 
+//Group
+	int groupMaxSize = 20;
+	
 //Faction
 	int factionMaxRank = 15;
 	float factionCapMultiplier = 1.0f;
@@ -248,6 +251,8 @@ namespace globalVariables {
 	int harvestMilkTime = 10;
 	float harvestDNASampleDistance = 16;
 	bool harvestInCombatEnabled = false;
+	int harvestMinimumHarvest = 0;
+	bool harvestMinimumHarvestEnabled = false;
 
 //Jedi
 	bool jediForceCostToTuneEnabled = true;
@@ -359,6 +364,7 @@ namespace globalVariables {
 	bool playerAttachmentSplittingEnabled = false;
 	int playerAttachmentSplittingCostPerPoint = 1000;
 	bool playerAttachmentApplicationModEnabled = false;
+	bool playerPlayersOnlineAtLoginEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -752,7 +758,10 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("dungeonGeonosianBioLabMultiplier") > 0) dungeonGeonosianBioLabMultiplier = lua->getGlobalFloat("dungeonGeonosianBioLabMultiplier");
 			if (lua->getGlobalFloat("dungeonWarrenMultiplier") > 0) dungeonWarrenMultiplier = lua->getGlobalFloat("dungeonWarrenMultiplier");
 						
-			//Faction
+			//Group
+			if (lua->getGlobalInt("groupMaxSize") >= 2) groupMaxSize = lua->getGlobalInt("groupMaxSize");
+			
+			//Faction 
 			if (lua->getGlobalInt("factionMaxRank") >= 1 && lua->getGlobalInt("factionMaxRank") <= 21) factionMaxRank = lua->getGlobalInt("factionMaxRank");
 			if (lua->getGlobalFloat("factionCapMultiplier") > 0) factionCapMultiplier = lua->getGlobalFloat("factionCapMultiplier");
 
@@ -764,6 +773,8 @@ namespace globalVariables {
 			if (lua->getGlobalInt("harvestMilkTime") >= 0) harvestMilkTime = lua->getGlobalInt("harvestMilkTime");
 			if (lua->getGlobalFloat("harvestDNASampleDistance") > 0) harvestDNASampleDistance = lua->getGlobalFloat("harvestDNASampleDistance");
 			if (lua->getGlobalBoolean("harvestInCombatEnabled") == true || lua->getGlobalBoolean("harvestInCombatEnabled") == false) harvestInCombatEnabled = lua->getGlobalBoolean("harvestInCombatEnabled");
+			if (lua->getGlobalInt("harvestMinimumHarvest") >= 0) harvestMinimumHarvest = lua->getGlobalInt("harvestMinimumHarvest");
+			if (lua->getGlobalBoolean("harvestMinimumHarvestEnabled") == true || lua->getGlobalBoolean("harvestMinimumHarvestEnabled") == false) harvestMinimumHarvestEnabled = lua->getGlobalBoolean("harvestMinimumHarvestEnabled");
 			
 			//Jedi 
 			if (lua->getGlobalBoolean("jediForceCostToTuneEnabled") == true || lua->getGlobalBoolean("jediForceCostToTuneEnabled") == false) jediForceCostToTuneEnabled = lua->getGlobalBoolean("jediForceCostToTuneEnabled");
@@ -871,6 +882,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerAttachmentSplittingEnabled") == false) playerAttachmentSplittingEnabled = lua->getGlobalBoolean("playerAttachmentSplittingEnabled");
 			if (lua->getGlobalInt("playerAttachmentSplittingCostPerPoint") >= 1) playerAttachmentSplittingCostPerPoint = lua->getGlobalInt("playerAttachmentSplittingCostPerPoint");
 			if (lua->getGlobalBoolean("playerAttachmentApplicationModEnabled") == true || lua->getGlobalBoolean("playerAttachmentApplicationModEnabled") == false) playerAttachmentApplicationModEnabled = lua->getGlobalBoolean("playerAttachmentApplicationModEnabled");
+			if (lua->getGlobalBoolean("playerPlayersOnlineAtLoginEnabled") == true || lua->getGlobalBoolean("playerPlayersOnlineAtLoginEnabled") == false) playerPlayersOnlineAtLoginEnabled = lua->getGlobalBoolean("playerPlayersOnlineAtLoginEnabled");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");

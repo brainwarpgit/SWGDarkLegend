@@ -856,6 +856,9 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 	int droidBonus = DroidMechanics::determineDroidSkillBonus(ownerSkill,harvestBonus,quantityExtracted);
 
 	quantityExtracted += droidBonus;
+	if (quantityExtracted < globalVariables::harvestMinimumHarvest && globalVariables::harvestMinimumHarvestEnabled) {
+		quantityExtracted = globalVariables::harvestMinimumHarvest;
+	}
 	// add to droid inventory if there is space available, otherwise to player
 	DroidObject* pet = cast<DroidObject*>(droid);
 
@@ -882,8 +885,11 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 	StringIdChatParameter harvestMessage("skl_use", creatureHealth);
 
 	harvestMessage.setDI(quantityExtracted);
-	harvestMessage.setTU(resourceSpawn->getFinalClass());
-
+	if (globalVariables::resourcesAddNameEnabled) {
+		harvestMessage.setTU(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
+	} else {
+		harvestMessage.setTU(resourceSpawn->getFinalClass());
+	}
 	owner->sendSystemMessage(harvestMessage);
 
 	/// Send bonus message
@@ -900,7 +906,11 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 
 		bonusMessage.setTU(droid->getDisplayedName());
 		bonusMessage.setDI(quantityExtracted);
-		bonusMessage.setTO(resourceSpawn->getFinalClass());
+		if (globalVariables::resourcesAddNameEnabled) {
+			bonusMessage.setTO(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
+		} else {
+			bonusMessage.setTO(resourceSpawn->getFinalClass());
+		}
 		bonusMessage.setTT(creature->getObjectNameStringIdFile(), creature->getObjectNameStringIdName());
 
 		ChatSystemMessage* sysMessage = new ChatSystemMessage(bonusMessage);
@@ -1025,6 +1035,9 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 		quantityExtracted = 1;
 	
 	quantityExtracted *= globalVariables::harvestMultiplier;
+	if (quantityExtracted < globalVariables::harvestMinimumHarvest && globalVariables::harvestMinimumHarvestEnabled) {
+		quantityExtracted = globalVariables::harvestMinimumHarvest;
+	}
 
 	TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 	resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);
@@ -1034,8 +1047,11 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 	StringIdChatParameter harvestMessage("skl_use", creatureHealth);
 
 	harvestMessage.setDI(quantityExtracted);
-	harvestMessage.setTU(resourceSpawn->getFinalClass());
-
+	if (globalVariables::resourcesAddNameEnabled) {
+		harvestMessage.setTU(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
+	} else {
+		harvestMessage.setTU(resourceSpawn->getFinalClass());
+	}
 	player->sendSystemMessage(harvestMessage);
 
 	/// Send bonus message
@@ -1052,7 +1068,11 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 
 		bonusMessage.setTU(player->getFirstName());
 		bonusMessage.setDI(quantityExtracted);
-		bonusMessage.setTO(resourceSpawn->getFinalClass());
+		if (globalVariables::resourcesAddNameEnabled) {
+			bonusMessage.setTO(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
+		} else {
+			bonusMessage.setTO(resourceSpawn->getFinalClass());
+		}
 		bonusMessage.setTT(creature->getObjectNameStringIdFile(), creature->getObjectNameStringIdName());
 
 		ChatSystemMessage* sysMessage = new ChatSystemMessage(bonusMessage);

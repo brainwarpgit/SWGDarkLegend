@@ -321,10 +321,12 @@ void ChatManagerImplementation::initiateRooms() {
 	auctionRoom = createRoom("Auction", galaxyRoom);
 	auctionRoom->setCanEnter(true);
 	auctionRoom->setChatRoomType(ChatRoom::AUCTION);
+	auctionRoom->setTitle("Auction Channel");
 	
 	galaxyChatRoom = createRoom("Galaxy Chat", galaxyRoom);
 	galaxyChatRoom->setCanEnter(true);
 	galaxyChatRoom->setChatRoomType(ChatRoom::CUSTOM);
+	galaxyChatRoom->setTitle("Galaxy Chat");
 	
 	if (ConfigManager::instance()->isPvpBroadcastChannelEnabled()) {
 		pvpBroadcastRoom = createRoom("PvPBroadcasts", galaxyRoom);

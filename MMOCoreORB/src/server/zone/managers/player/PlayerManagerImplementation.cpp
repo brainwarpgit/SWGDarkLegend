@@ -2538,6 +2538,12 @@ void PlayerManagerImplementation::sendLoginMessage(CreatureObject* creature) {
 
 	ChatSystemMessage* csm = new ChatSystemMessage(UnicodeString(motd), ChatSystemMessage::DISPLAY_CHATONLY);
 	creature->sendMessage(csm);
+		
+	if (globalVariables::playerPlayersOnlineAtLoginEnabled) {
+		ChatSystemMessage* strOnline = new ChatSystemMessage(UnicodeString("There are currently " + std::to_string(creature->getZoneServer()->getConnectionCount()) + " player(s) online."), ChatSystemMessage::DISPLAY_CHATONLY);
+		creature->sendMessage(strOnline);
+	}
+		
 }
 
 void PlayerManagerImplementation::resendLoginMessageToAll() {
