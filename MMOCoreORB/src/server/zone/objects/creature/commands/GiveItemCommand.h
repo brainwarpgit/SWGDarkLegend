@@ -106,10 +106,47 @@ public:
 			if (wearable == nullptr) {
 				return GENERALERROR;
 			}
+			
+			if (globalVariables::playerAttachmentApplicationModEnabled) {
+				VectorMap<String, int>* skillModifiers = attachment->getSkillMods();
+				VectorMap<String, int>* wearableSkillModifiers = wearable->getWearableSkillMods();
+				bool attachmentExists = false;
+				int attachmentValue = 0;
+				for (int i = 0; i < wearableSkillModifiers->size(); i++) {
+					if (wearableSkillModifiers->elementAt(i).getKey() == skillModifiers->elementAt(0).getKey()) {
+						attachmentExists = true;
+						attachmentValue = wearableSkillModifiers->elementAt(i).getValue();
+						break;
+					}
+				}
+				if (wearable->isEquipped()) {
+					creature->sendSystemMessage("ERROR: You must unequip this item before applying an attachment.");
+					return GENERALERROR;
+				}
+				if (skillModifiers->size() > 1) {
+					creature->sendSystemMessage("ERROR: You can not apply an attachment with multiple skill mods.  Split your attachment first.");
+					return GENERALERROR;
+				}
+				if (attachmentExists == true && attachmentValue >= globalVariables::lootAttachmentMax) {
+					creature->sendSystemMessage("ERROR: Skill mod already maxed.");
+					return GENERALERROR;
+				}
+				if (attachmentExists == true && wearable->getRemainingSockets() == 0) {
+					wearable->applyAttachment(creature, attachment);
+					return SUCCESS;
+				}
+				if (wearable->getRemainingSockets() < skillModifiers->size()) {
+					creature->sendSystemMessage("ERROR: Not enough sockets available.");
+					return GENERALERROR;
+				} else {
+					wearable->applyAttachment(creature, attachment);
+					return SUCCESS;
+				}
+			} else {
+				wearable->applyAttachment(creature, attachment);
+				return SUCCESS;
+			}
 
-			wearable->applyAttachment(creature, attachment);
-
-			return SUCCESS;
 		// Target is a npc/creature style vendor or event perk
 		} else if (targetObject->isCreatureObject() && (targetObject->isVendor() || (parentPerk != nullptr && parentPerk->isEventPerk()))) {
 			Locker clocker(targetObject, creature);

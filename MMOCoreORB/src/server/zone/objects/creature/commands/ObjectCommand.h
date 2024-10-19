@@ -10,6 +10,7 @@
 #include "server/zone/managers/crafting/CraftingManager.h"
 #include "server/zone/managers/crafting/ComponentMap.h"
 #include "server/zone/objects/tangible/terminal/characterbuilder/CharacterBuilderTerminal.h"
+#include "server/globalVariables.h"
 
 
 class ObjectCommand : public QueueCommand {
@@ -136,7 +137,55 @@ public:
 				} else {
 					trx.abort() << "createLoot failed for lootGroup " << lootGroup << " level " << level;
 				}
-			} else if (commandType.beginsWith("createresource")) {
+			} else if (commandType.beginsWith("createattachment") && globalVariables::commandObjectCreateAttachmentEnabled == true) {
+				//Syntax exmaple /object createattachment clothing mindblast_accuracy 25
+				String attachmentType;
+				String skillMod;
+				args.getStringToken(attachmentType);
+				if (attachmentType != "armor" && attachmentType != "clothing"){
+					creature->sendSystemMessage("You must specify armor or clothing.");
+					return INVALIDPARAMETERS;
+				}
+				if (args.hasMoreTokens())
+					args.getStringToken(skillMod);
+				
+				int skillBonus = 1;
+				if (args.hasMoreTokens())
+					skillBonus = args.getIntToken();
+				ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
+				if (inventory == nullptr || inventory->isContainerFullRecursive()) {
+					creature->sendSystemMessage("Your inventory is full, so the item could not be created.");
+					return INVALIDPARAMETERS;
+				}
+				ManagedReference<LootManager*> lootManager = creature->getZoneServer()->getLootManager();
+				 
+				if (lootManager == nullptr)
+					return INVALIDPARAMETERS;
+					
+				if (attachmentType == "armor") {
+					attachmentType = "attachment_armor";
+				} else {
+					attachmentType = "attachment_clothing";
+				}
+				
+				LootGroupMap* lootGroupMap = LootGroupMap::instance();
+				Reference<const LootItemTemplate*> itemTemplate = lootGroupMap->getLootItemTemplate(attachmentType);
+											
+				ManagedReference<SceneObject*> ca = lootManager->createLootAttachment(itemTemplate,skillMod, skillBonus); 
+				if (ca != nullptr){
+					Attachment* attachment = cast<Attachment*>(ca.get());
+					if (attachment != nullptr){
+						Locker objLocker(attachment);
+						if (inventory->transferObject(ca, -1, true, true)) { //Transfer tape to player inventory
+							inventory->broadcastObject(ca, true);
+						} else {
+							ca->destroyObjectFromDatabase(true);
+							creature->sendSystemMessage("Unable to place Skill Attachment in player's inventory!");
+							return INVALIDPARAMETERS;
+						}
+					}
+				}
+			 } else if (commandType.beginsWith("createresource")) {
 				String resourceName;
 				args.getStringToken(resourceName);
 
@@ -254,9 +303,9 @@ public:
 			creature->sendSystemMessage("SYNTAX: /object createresource <resourceName> [<quantity>]");
 			creature->sendSystemMessage("SYNTAX: /object createloot <loottemplate> [<level>]");
 			creature->sendSystemMessage("SYNTAX: /object createarealoot <loottemplate> [<range>] [<level>]");
+			creature->sendSystemMessage("SYNTAX: /object createattachment <armor/clothing> <skillModName> [<bonus>]");
 			creature->sendSystemMessage("SYNTAX: /object checklooted");
 			creature->sendSystemMessage("SYNTAX: /object characterbuilder");
-
 			return INVALIDPARAMETERS;
 		}
 

@@ -142,7 +142,8 @@ namespace globalVariables {
 //Command
 	bool commandCheckForceStatusCommandEnabled = true;
 	bool commandMeditateMergeEnabled = false;
-	
+	bool commandObjectCreateAttachmentEnabled = false;
+
 //Crafting
 	int craftingFactoryCrateMaxSize = 100;
 	int craftingFactoryRunTimeMultiplier = 8;
@@ -355,6 +356,9 @@ namespace globalVariables {
 	float playerJediForceMeditateMultiplier = 3;
 	int playerMaxLevelNonCHMount = 10;
 	bool playerSurveyExtendedDistanceEnabled = false;
+	bool playerAttachmentSplittingEnabled = false;
+	int playerAttachmentSplittingCostPerPoint = 1000;
+	bool playerAttachmentApplicationModEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -651,9 +655,10 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("combatDamageJediForcePowerMultiplier") > 0) combatDamageJediForcePowerMultiplier = lua->getGlobalFloat("combatDamageJediForcePowerMultiplier");
 			if (lua->getGlobalFloat("combatDamageAllMultiplier") > 0) combatDamageAllMultiplier = lua->getGlobalFloat("combatDamageAllMultiplier");
 
-			//Command
+			//Command 
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
 			if (lua->getGlobalBoolean("commandMeditateMergeEnabled") == true || lua->getGlobalBoolean("commandMeditateMergeEnabled") == false) commandMeditateMergeEnabled = lua->getGlobalBoolean("commandMeditateMergeEnabled");
+			if (lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == true || lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == false) commandObjectCreateAttachmentEnabled = lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled");
 			
 			//Crafting 
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
@@ -863,6 +868,9 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerJediForceMeditateMultiplier") >= 0) playerJediForceMeditateMultiplier = lua->getGlobalFloat("playerJediForceMeditateMultiplier");
 			if (lua->getGlobalInt("playerMaxLevelNonCHMount") >= 1) playerMaxLevelNonCHMount = lua->getGlobalInt("playerMaxLevelNonCHMount");
 			if (lua->getGlobalBoolean("playerSurveyExtendedDistanceEnabled") == true || lua->getGlobalBoolean("playerSurveyExtendedDistanceEnabled") == false) playerSurveyExtendedDistanceEnabled = lua->getGlobalBoolean("playerSurveyExtendedDistanceEnabled");
+			if (lua->getGlobalBoolean("playerAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerAttachmentSplittingEnabled") == false) playerAttachmentSplittingEnabled = lua->getGlobalBoolean("playerAttachmentSplittingEnabled");
+			if (lua->getGlobalInt("playerAttachmentSplittingCostPerPoint") >= 1) playerAttachmentSplittingCostPerPoint = lua->getGlobalInt("playerAttachmentSplittingCostPerPoint");
+			if (lua->getGlobalBoolean("playerAttachmentApplicationModEnabled") == true || lua->getGlobalBoolean("playerAttachmentApplicationModEnabled") == false) playerAttachmentApplicationModEnabled = lua->getGlobalBoolean("playerAttachmentApplicationModEnabled");
 			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");

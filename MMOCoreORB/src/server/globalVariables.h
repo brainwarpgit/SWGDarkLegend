@@ -135,6 +135,7 @@ namespace globalVariables {
 //Command
 	extern bool commandCheckForceStatusCommandEnabled;
 	extern bool commandMeditateMergeEnabled;
+	extern bool commandObjectCreateAttachmentEnabled;
 
 //Crafting
 	extern int craftingFactoryCrateMaxSize;
@@ -348,6 +349,9 @@ namespace globalVariables {
 	extern float playerJediForceMeditateMultiplier;
 	extern int playerMaxLevelNonCHMount;
 	extern bool playerSurveyExtendedDistanceEnabled;
+	extern bool playerAttachmentSplittingEnabled;
+	extern int playerAttachmentSplittingCostPerPoint;
+	extern bool playerAttachmentApplicationModEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

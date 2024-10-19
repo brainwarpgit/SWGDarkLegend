@@ -155,23 +155,44 @@ void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attac
 	// Select the next mod in the SEA, sorted high-to-low. If that skill mod is already on the
 	// wearable, with higher or equal value, don't apply and continue. Break once one mod
 	// is applied.
-	for (int i = 0; i < sortedMods.size(); i++) {
-		String modName = sortedMods.elementAt(i).getKey();
-		int modValue = sortedMods.elementAt(i).getValue();
-
-		int existingValue = -26;
-
-		if (wearableSkillMods.contains(modName)) {
-			existingValue = wearableSkillMods.get(modName);
+	
+	if (globalVariables::playerAttachmentApplicationModEnabled) {
+		int modValue = 0;
+		int existingValue = 0;
+		for (int i = 0; i < sortedMods.size(); i++) {
+			String modName = sortedMods.elementAt(i).getKey();
+			modValue = sortedMods.elementAt(i).getValue();
+			if (wearableSkillMods.contains(modName)) {
+				existingValue = wearableSkillMods.get(modName);
+			}
+			if ((existingValue + modValue) <= globalVariables::lootAttachmentMax || (existingValue + modValue) >= globalVariables::lootAttachmentMax) {
+				modValue = existingValue + modValue;
+				if (modValue > globalVariables::lootAttachmentMax) modValue = globalVariables::lootAttachmentMax;
+				wearableSkillMods.put(modName, modValue);
+			}
+			if (modValue == existingValue) {
+				continue;
+			}
+			if (existingValue == 0) {
+				usedSocketCount++;
+			}
 		}
-
-		if (modValue > existingValue) {
-			wearableSkillMods.put(modName, modValue);
-			break;
+	} else {
+		for (int i = 0; i < sortedMods.size(); i++) {
+			String modName = sortedMods.elementAt(i).getKey();
+			int modValue = sortedMods.elementAt(i).getValue();
+			int existingValue = -26;
+			if (wearableSkillMods.contains(modName)) {
+				existingValue = wearableSkillMods.get(modName);
+			}
+			if (modValue > existingValue) {
+				wearableSkillMods.put(modName, modValue);
+				break;
+			}
 		}
+		usedSocketCount++;
 	}
 
-	usedSocketCount++;
 	addMagicBit(true);
 	Locker clocker(attachment, player);
 	TransactionLog trx(player, asSceneObject(), attachment, TrxCode::APPLYATTACHMENT);

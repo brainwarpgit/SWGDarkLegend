@@ -130,6 +130,7 @@ combatDamageAllMultiplier = 1 --default 1 stacks with all other multipliers
 --Commands
 commandCheckForceStatusCommandEnabled = true --default true
 commandMeditateMergeEnabled = true --default false   merges /meditate and /forcemeditate together so it works if you have the skill from either.
+commandObjectCreateAttachmentEnabled = true --default false
 
 --Crafting
 craftingFactoryCrateMaxSize = 1000 --default 100
@@ -246,9 +247,9 @@ lootAreaEnabled = true --default false
 lootCreditMultiplier = 1 --default 1
 lootAttachmentMax = 50 --default 25
 lootAttachmentMin = 1 --default 1
-lootAttachmentMaxLevel = 400 --default 250  max Corresponds to creatureMaxLevel
+lootAttachmentMaxLevel = 450 --default 250  max Corresponds to creatureMaxLevel
 lootAttachmentNameEnabled = true --default false
-lootAttachmentModCount = 1 --default 2
+lootAttachmentModCount = 3 --default 2
 lootDropAttachmentModCount = 3 --default 2
 lootCreditLuckModifier = true --default false
 lootMaxLevel = 450 --default 300
@@ -346,6 +347,9 @@ playerMeditateTickTime = 2 --default 5 in seconds.
 playerJediForceMeditateMultiplier = 10 --default 3
 playerMaxLevelNonCHMount = 15 --default 10 overridden when creatureAllMountsAllowedForAllPlayersEnabled = true
 playerSurveyExtendedDistanceEnabled = false --default false
+playerAttachmentSplittingEnabled = true --default false
+playerAttachmentSplittingCostPerPoint = 1000 --default 1000
+playerAttachmentApplicationModEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

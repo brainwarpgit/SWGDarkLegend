@@ -19,6 +19,7 @@
 #include "server/zone/managers/resource/ResourceManager.h"
 #include "server/zone/Zone.h"
 #include "templates/params/creature/CreatureAttribute.h"
+#include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/globalVariables.h"
 
 // #define DEBUG_LOOT_MAN
@@ -521,7 +522,103 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 #ifdef DEBUG_LOOT_MAN
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
+	if (prototype->isAttachment() && globalVariables::lootAttachmentNameEnabled == true){
+		Attachment* sea = cast<Attachment*>( prototype.get());
+		
+		if (sea == NULL)
+			return prototype;
+	
+		SortedVector<ModSortingHelper> sortedMods;
+		VectorMap<String, int>* skillMods = sea->getSkillMods();
+ 		
+ 		for (int i = 0; i < skillMods->size(); i++) {
+			auto key = skillMods->elementAt(i).getKey();
+			auto value = skillMods->elementAt(i).getValue();
+			sortedMods.put(ModSortingHelper(key, value));
+		}
+ 		
+ 		String modKey = sortedMods.elementAt(0).getKey();
+ 		int modValue = sortedMods.elementAt(0).getValue();
 
+ 		StringId attachmentName;
+
+ 		String attachmentType = "AA";
+
+		if(sea->isClothingAttachment()){
+			attachmentType = "CA";
+		}
+
+ 		//iterator.getNextKeyAndValue(key, value);
+ 		attachmentName.setStringId("stat_n", modKey);
+ 		prototype->setObjectName(attachmentName, false);
+ 		
+		prototype->setCustomObjectName(attachmentType + ": " + prototype->getDisplayedName() + " " + String::valueOf(modValue), false);
+	}
+	
+	return prototype;
+}
+
+TangibleObject* LootManagerImplementation::createLootAttachment(const LootItemTemplate* templateObject, const String& modName, int value) {
+
+	const String& directTemplateObject = templateObject->getDirectObjectTemplate();
+
+	ManagedReference<TangibleObject*> prototype = zoneServer->createObject(directTemplateObject.hashCode(), 2).castTo<TangibleObject*>();
+
+	if (prototype == nullptr) {
+		error() << "could not create loot object: " << directTemplateObject;
+		return nullptr;
+	}
+
+	// Lock the loot item
+	Locker objLocker(prototype);
+
+	// Create child objects of loot item
+	prototype->createChildObjects();
+
+	// Add a seriel number for objects that do not hide them
+	if (!templateObject->getSuppressSerialNumber()) {
+		String serial = craftingManager->generateSerial();
+		prototype->setSerialNumber(serial);
+	}
+
+	// Set loot item customization and object name
+	setCustomizationData(templateObject, prototype);
+
+	setCustomObjectName(prototype, templateObject, 0.0f);
+
+	if (prototype->isAttachment()){
+		Attachment* sea = cast<Attachment*>( prototype.get());
+		sea->updateAttachmentValues(modName, value);	
+		if (sea == NULL)
+			return prototype;
+	
+		SortedVector<ModSortingHelper> sortedMods;
+		VectorMap<String, int>* skillMods = sea->getSkillMods();
+ 		
+ 		for (int i = 0; i < skillMods->size(); i++) {
+			auto key = skillMods->elementAt(i).getKey();
+			auto value = skillMods->elementAt(i).getValue();
+			sortedMods.put(ModSortingHelper(key, value));
+		}
+ 		
+ 		String modKey = sortedMods.elementAt(0).getKey();
+ 		int modValue = sortedMods.elementAt(0).getValue();
+
+ 		StringId attachmentName;
+
+ 		String attachmentType = "AA";
+
+		if(sea->isClothingAttachment()){
+			attachmentType = "CA";
+		}
+
+ 		//iterator.getNextKeyAndValue(key, value);
+ 		attachmentName.setStringId("stat_n", modKey);
+ 		prototype->setObjectName(attachmentName, false);
+ 		
+		prototype->setCustomObjectName(attachmentType + ": " + prototype->getDisplayedName() + " " + String::valueOf(modValue), false);
+	}
+	
 	return prototype;
 }
 

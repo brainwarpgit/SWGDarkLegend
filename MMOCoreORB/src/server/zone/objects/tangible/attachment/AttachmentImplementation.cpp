@@ -2,7 +2,7 @@
  * AttachmentImplementation.cpp
  *
  *  Created on: Mar 10, 2011
- *      Author: polonel
+ *	  Author: polonel
  */
 
 #include "server/zone/objects/tangible/attachment/Attachment.h"
@@ -103,29 +103,20 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 	TangibleObjectImplementation::fillAttributeList(msg, object);
 
 	StringBuffer name;
-
+	
 	for (int i = 0; i < skillModifiers.size(); i++) {
 		auto key = skillModifiers.elementAt(i).getKey();
 		auto value = skillModifiers.elementAt(i).getValue();
 
 		name << "cat_skill_mod_bonus.@stat_n:" << key;
-
+		
 		msg->insertAttribute(name.toString(), value);
 
-		if (globalVariables::lootAttachmentNameEnabled == true) {
-			StringId SEAName;
-			SEAName.setStringId("stat_n", key);
-			setCustomObjectName("", false);
-			setObjectName(SEAName, false);
-			setCustomObjectName(getDisplayedName() + " +" + String::valueOf(value), true);
-			StringId originalName;
-			if (isArmorAttachment())
-			    originalName.setStringId("item_n", "socket_gem_armor");
-			else
-			    originalName.setStringId("item_n", "socket_gem_clothing");
-			setObjectName(originalName, true);
-        	}
-        	
-        	name.deleteAll();
+		name.deleteAll();
 	}
 }
+
+void AttachmentImplementation::updateAttachmentValues(const String& modName, int value) {
+	skillModifiers.put(modName,value);
+}
+
