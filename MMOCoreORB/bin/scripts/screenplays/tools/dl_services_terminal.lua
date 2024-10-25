@@ -248,7 +248,7 @@ function swgdl_buff_terminal:healWounds(pPlayer)
 		else
 			local diff = price - playerCash
 			CreatureObject(pPlayer):subtractCashCredits(playerCash)
-			CreatureObject(pPlayer):setBankCredits(playerBank-diff)
+			CreatureObject(pPlayer):subtractBankCredits(diff)
 		end		
 	end
 
@@ -277,7 +277,7 @@ function swgdl_buff_terminal:woundWounds(pPlayer)
 		else
 			local diff = price - playerCash
 			CreatureObject(pPlayer):subtractCashCredits(playerCash)
-			CreatureObject(pPlayer):setBankCredits(playerBank-diff)
+			CreatureObject(pPlayer):subtractBankCredits(diff)
 		end		
 	end
 
@@ -307,7 +307,7 @@ function swgdl_buff_terminal:applyBuff(pPlayer, buffSelected)
 		else
 			local diff = price - playerCash
 			CreatureObject(pPlayer):subtractCashCredits(playerCash)
-			CreatureObject(pPlayer):setBankCredits(playerBank-diff)
+			CreatureObject(pPlayer):subtractBankCredits(diff)
 		end	
 	end
 	
@@ -429,7 +429,7 @@ function swgdl_buff_terminal:giveNewbItems(pPlayer)
 		else
 			local diff = price - playerCash
 			CreatureObject(pPlayer):subtractCashCredits(playerCash)
-			CreatureObject(pPlayer):setBankCredits(playerBank-diff)
+			CreatureObject(pPlayer):subtractBankCredits(diff)
 		end		
 	end
 
