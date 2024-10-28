@@ -171,6 +171,8 @@ Luna<LuaCreatureObject>::RegType LuaCreatureObject::Register[] = {
 		{ "isImperialPilot", &LuaCreatureObject::isImperialPilot },
 		{ "isNeutralPilot", &LuaCreatureObject::isNeutralPilot },
 		{ "hasShips", &LuaCreatureObject::hasShips },
+		{ "incrementPilotTier", &LuaCreatureObject::incrementPilotTier },
+		{ "resetPilotTier", &LuaCreatureObject::resetPilotTier },
 		{ 0, 0 }
 };
 
@@ -1440,4 +1442,20 @@ int LuaCreatureObject::hasShips(lua_State* L) {
 	lua_pushboolean(L, hasShip);
 
 	return 1;
+}
+
+int LuaCreatureObject::incrementPilotTier(lua_State* L) {
+	Locker lock(realObject);
+
+	realObject->incrementPilotTier();
+
+	return 0;
+}
+
+int LuaCreatureObject::resetPilotTier(lua_State* L) {
+	Locker lock(realObject);
+
+	realObject->resetPilotTier();
+
+	return 0;
 }

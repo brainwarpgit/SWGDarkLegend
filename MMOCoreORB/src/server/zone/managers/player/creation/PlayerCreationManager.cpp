@@ -20,20 +20,13 @@
 #include "templates/creation/SkillDataForm.h"
 #include "templates/creature/PlayerCreatureTemplate.h"
 #include "server/ServerCore.h"
-#include "server/zone/objects/intangible/ShipControlDevice.h"
-#include "server/zone/objects/ship/ShipObject.h"
 #include "templates/customization/CustomizationIdManager.h"
 #include "server/zone/managers/skill/imagedesign/ImageDesignManager.h"
 #include "server/zone/managers/jedi/JediManager.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/zone/objects/ship/ShipObject.h"
-#include "server/zone/managers/ship/ShipManager.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/player/creation/SendJtlRecruitment.h"
 
-#define JTL_DEBUG
-
-PlayerCreationManager::PlayerCreationManager() :
-		Logger("PlayerCreationManager") {
+PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager") {
 	setLogging(false);
 	setGlobalLogging(false);
 
@@ -56,7 +49,6 @@ PlayerCreationManager::PlayerCreationManager() :
 }
 
 PlayerCreationManager::~PlayerCreationManager() {
-
 }
 
 void PlayerCreationManager::loadRacialCreationData() {
@@ -230,8 +222,7 @@ void PlayerCreationManager::loadDefaultCharacterItems() {
 }
 
 void PlayerCreationManager::loadHairStyleInfo() {
-	IffStream* iffStream = TemplateManager::instance()->openIffFile(
-			"creation/default_pc_hairstyles.iff");
+	IffStream* iffStream = TemplateManager::instance()->openIffFile("creation/default_pc_hairstyles.iff");
 
 	if (iffStream == nullptr) {
 		error("Couldn't load creation hair styles.");
@@ -289,24 +280,19 @@ void PlayerCreationManager::loadLuaStartingItems(Lua* lua) {
 		// Read professions.
 		Vector < String > professions;
 		LuaObject professionsLuaObject = lua->getGlobalObject("professions");
-		for (int professionNumber = 1;
-				professionNumber <= professionsLuaObject.getTableSize();
-				professionNumber++) {
+
+		for (int professionNumber = 1; professionNumber <= professionsLuaObject.getTableSize(); professionNumber++) {
 			professions.add(professionsLuaObject.getStringAt(professionNumber));
 		}
+
 		professionsLuaObject.pop();
 
 		// Read profession specific items.
-		LuaObject professionSpecificItems = lua->getGlobalObject(
-				"professionSpecificItems");
-		for (int professionNumber = 0; professionNumber < professions.size();
-				professionNumber++) {
-			LuaObject professionSpecificItemList =
-					professionSpecificItems.getObjectField(
-							professions.get(professionNumber));
-			for (int itemNumber = 1;
-					itemNumber <= professionSpecificItemList.getTableSize();
-					itemNumber++) {
+		LuaObject professionSpecificItems = lua->getGlobalObject("professionSpecificItems");
+		for (int professionNumber = 0; professionNumber < professions.size(); professionNumber++) {
+			LuaObject professionSpecificItemList = professionSpecificItems.getObjectField(professions.get(professionNumber));
+
+			for (int itemNumber = 1; itemNumber <= professionSpecificItemList.getTableSize(); itemNumber++) {
 				auto& val = professionDefaultsInfo.get(professions.get(professionNumber));
 				auto itemObj = professionSpecificItemList.getStringAt(itemNumber);
 				val->getStartingItems()->add(itemObj);
@@ -316,13 +302,9 @@ void PlayerCreationManager::loadLuaStartingItems(Lua* lua) {
 		professionSpecificItems.pop();
 
 		// Read common starting items.
-		LuaObject commonStartingItemsLuaObject = lua->getGlobalObject(
-				"commonStartingItems");
-		for (int itemNumber = 1;
-				itemNumber <= commonStartingItemsLuaObject.getTableSize();
-				itemNumber++) {
-			commonStartingItems.add(
-					commonStartingItemsLuaObject.getStringAt(itemNumber));
+		LuaObject commonStartingItemsLuaObject = lua->getGlobalObject("commonStartingItems");
+		for (int itemNumber = 1; itemNumber <= commonStartingItemsLuaObject.getTableSize(); itemNumber++) {
+			commonStartingItems.add(commonStartingItemsLuaObject.getStringAt(itemNumber));
 		}
 		commonStartingItemsLuaObject.pop();
 	} catch (Exception& e) {
@@ -338,7 +320,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	auto maxchars = ConfigManager::instance()->getInt("Core3.PlayerCreationManager.MaxCharactersPerGalaxy", 10);
 
 	if (client->getCharacterCount(zoneServer.get()->getGalaxyID()) >= maxchars) {
-		ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are limited to " + std::to_string(maxchars) + " characters per galaxy.", 0x0);
+		ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are limited to 10 characters per galaxy.", 0x0);
 		client->sendMessage(errMsg);
 
 		return false;
@@ -361,9 +343,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	uint32 serverObjectCRC = raceFile.hashCode();
 
-	PlayerCreatureTemplate* playerTemplate =
-			dynamic_cast<PlayerCreatureTemplate*>(templateManager->getTemplate(
-					serverObjectCRC));
+	PlayerCreatureTemplate* playerTemplate = dynamic_cast<PlayerCreatureTemplate*>(templateManager->getTemplate(serverObjectCRC));
 
 	if (playerTemplate == nullptr) {
 		error("Unknown player template selected: " + raceFile);
@@ -371,8 +351,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	}
 
 	String fileName = playerTemplate->getTemplateFileName();
-	String clientTemplate = templateManager->getTemplateFile(
-			playerTemplate->getClientObjectCRC());
+	String clientTemplate = templateManager->getTemplateFile(playerTemplate->getClientObjectCRC());
 
 	RacialCreationData* raceData = racialCreationData.get(fileName);
 
@@ -390,8 +369,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	callback->getHairCustomization(hairCustomization);
 
 	float height = callback->getHeight();
-	height = Math::max(Math::min(height, playerTemplate->getMaxScale()),
-			playerTemplate->getMinScale());
+	height = Math::max(Math::min(height, playerTemplate->getMaxScale()), playerTemplate->getMinScale());
 
 	//validate biography
 	UnicodeString bio;
@@ -399,9 +377,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	bool doTutorial = ConfigManager::instance()->getBool("Core3.PlayerCreationManager.EnableTutorial", callback->getTutorialFlag());
 
-	ManagedReference<CreatureObject*> playerCreature =
-			zoneServer.get()->createObject(
-					serverObjectCRC, 2).castTo<CreatureObject*>();
+	ManagedReference<CreatureObject*> playerCreature = zoneServer.get()->createObject(serverObjectCRC, 2).castTo<CreatureObject*>();
 
 	if (playerCreature == nullptr) {
 		error("Could not create player with template: " + raceFile);
@@ -420,6 +396,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	// Set starting cash and starting bank
 	playerCreature->clearCashCredits(false);
 	playerCreature->clearBankCredits(false);
+
 	{
 		TransactionLog trx(TrxCode::CHARACTERCREATION, playerCreature, startingCash, true);
 		playerCreature->addCashCredits(startingCash, false);
@@ -441,27 +418,13 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	addHair(playerCreature, hairTemplate, hairCustomization);
 
 	if (!doTutorial) {
-		addProfessionStartingItems(playerCreature, profession, clientTemplate,
-				false);
+		addProfessionStartingItems(playerCreature, profession, clientTemplate, false);
 		addStartingItems(playerCreature, clientTemplate, false);
-		addRacialMods(playerCreature, fileName,
-				&playerTemplate->getStartingSkills(),
-				&playerTemplate->getStartingItems(), false);
+		addRacialMods(playerCreature, fileName, &playerTemplate->getStartingSkills(), &playerTemplate->getStartingItems(), false);
 	} else {
-		addProfessionStartingItems(playerCreature, profession, clientTemplate,
-				true);
+		addProfessionStartingItems(playerCreature, profession, clientTemplate, true);
 		addStartingItems(playerCreature, clientTemplate, true);
 		addRacialMods(playerCreature, fileName, &playerTemplate->getStartingSkills(), &playerTemplate->getStartingItems(), true);
-	}
-
-	auto shipManager = ShipManager::instance();
-
-	// Handle JTL Ship creation
-	if (shipManager != nullptr) {
-		shipManager->createPlayerShip(playerCreature, "player_xwing", "", true);
-		shipManager->createPlayerShip(playerCreature, "player_tiefighter", "", true);
-		shipManager->createPlayerShip(playerCreature, "player_hutt_medium_s01", "", true);
-		shipManager->createPlayerShip(playerCreature, "player_sorosuub_space_yacht", "", true);
 	}
 
 	if (ghost != nullptr) {
@@ -499,8 +462,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 							Time timeVal(sec);
 
-							if (timeVal.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
-								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
+							if (timeVal.miliDifference() < 3600000) {
+								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per hour. Repeat attempts prior to 1 hour elapsing will reset the timer.", 0x0);
 								client->sendMessage(errMsg);
 
 								playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -516,8 +479,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 					if (lastCreatedCharacter.containsKey(accID)) {
 						Time lastCreatedTime = lastCreatedCharacter.get(accID);
 
-						if (lastCreatedTime.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
-							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
+						if (lastCreatedTime.miliDifference() < 3600000) {
+							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per hour. Repeat attempts prior to 1 hour elapsing will reset the timer.", 0x0);
 							client->sendMessage(errMsg);
 
 							playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -587,19 +550,22 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	JediManager::instance()->onPlayerCreated(playerCreature);
 
-	chatManager->sendMail("SWG-DarkLegend", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
-	
-	String mailBody = "You can now visit any Force Shrine to start your Jedi path.\n\nBecoming One with the Force, you will be visited by a mysterious character.  You will eventually be pointed to an even more mysterious village.\n\nThere are villagers that need your help.  Some may need help multiple times.  Fear not, soon to be Jedi, you are not required to help these people to continue on your path.  You will, however, need to attain all 16 trees in Force Sensitivity.  Paemos will help you take your current knowledge and give you force knowledge that you can use to train your skills.\n\nPeamos converts at a high cost if you have not explored the galaxy.   Mastering professions and visiting famous places can heighten your sense of the Force and allow for better conversions.\n\nOnce you have completed this task, you will be be visited again and will need to dispatch Mellichae and his band of thugs.  At this point, you will begin your Padawan Trials.   Complete these tasks to continue your Jedi journey.\n\nYou can also unlock the old way if you like, but it is a perilous journey as well.\n\nOnce you have mastered " + std::to_string(globalVariables::jediKnightRequirementNumberOfMasters) + " disciplines of Jedi Knowledge, you will be eligible for the Jedi Knight Trials.";
-	chatManager->sendMail("SWG-DarkLegend", "Jedi Unlock Path", mailBody , playerCreature->getFirstName());
+	// Welcome Mail
+	chatManager->sendMail("system", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
+
+	// Schedule Task to send out JTL Recruitment Mail
+	SendJtlRecruitment* jtlMailTask = new SendJtlRecruitment(playerCreature);
+
+	if (jtlMailTask != nullptr) {
+		jtlMailTask->schedule(10000);
+	}
 
 	//Join auction chat room
 	ghost->addChatRoom(chatManager->getAuctionRoom()->getRoomID());
-	if (globalVariables::playerCreationJoinGalaxyChatEnabled == true) {	
-		ghost->addChatRoom(chatManager->getGalaxyRoom()->getRoomID());
-	}
+
 	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(playerCreature, SuiWindowType::NONE);
 	box->setPromptTitle("PLEASE NOTE");
-	box->setPromptText("You are limited to creating one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Attempting to create another character or deleting your character before the " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minute timer expires will reset the timer.");
+	box->setPromptText("You are limited to creating one character per hour. Attempting to create another character or deleting your character before the 1 hour timer expires will reset the timer.");
 
 	ghost->addSuiBox(box);
 	playerCreature->sendMessage(box->generateMessage());
@@ -724,41 +690,8 @@ void PlayerCreationManager::addProfessionStartingItems(CreatureObject* creature,
 	//Reference<Skill*> startingSkill = SkillManager::instance()->getSkill("crafting_artisan_novice");
 
 	//Starting skill.
-	if (globalVariables::playerCreationGrantAllNoviceSkillsEnabled == false) {
-		SkillManager::instance()->awardSkill(startingSkill->getSkillName(), creature, false, true, true);
-	} else {
-		SkillManager::instance()->awardSkill("crafting_artisan_novice", creature, false, true, true);
-		SkillManager::instance()->awardSkill("social_entertainer_novice", creature, false, true, true);
-		SkillManager::instance()->awardSkill("combat_brawler_novice", creature, false, true, true);
-		SkillManager::instance()->awardSkill("combat_marksman_novice", creature, false, true, true);
-		SkillManager::instance()->awardSkill("outdoors_scout_novice", creature, false, true, true);
-		SkillManager::instance()->awardSkill("science_medic_novice", creature, false, true, true);
-	}			
-
-	if (globalVariables::playerCreationAllLanguagesEnabled == true) {
-		SkillManager::instance()->awardSkill("social_language_basic_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_basic_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_rodian_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_rodian_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_trandoshan_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_trandoshan_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_moncalamari_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_moncalamari_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_wookiee_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_wookiee_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_bothan_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_bothan_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_twilek_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_twilek_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_zabrak_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_zabrak_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_lekku_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_lekku_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_ithorian_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_ithorian_comprehend", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_sullustan_speak", creature, true, true, true);
-		SkillManager::instance()->awardSkill("social_language_sullustan_comprehend", creature, true, true, true);
-	}
+	SkillManager::instance()->awardSkill(startingSkill->getSkillName(),
+			creature, false, true, true);
 
 	//Set the hams.
 	for (int i = 0; i < 9; ++i) {
@@ -846,14 +779,14 @@ void PlayerCreationManager::addHair(CreatureObject* creature,
 		return;
 	}
 
-	/*if (hairAssetData->getServerPlayerTemplate()
+	if (hairAssetData->getServerPlayerTemplate()
 			!= creature->getObjectTemplate()->getFullTemplateString()) {
 		error(
 				"hair " + hairTemplate
 						+ " is not compatible with this creature player "
 						+ creature->getObjectTemplate()->getFullTemplateString());
 		return;
-	}*/
+	}
 
 	if (!hairAssetData->isAvailableAtCreation()) {
 		error("hair " + hairTemplate + " not available at creation");

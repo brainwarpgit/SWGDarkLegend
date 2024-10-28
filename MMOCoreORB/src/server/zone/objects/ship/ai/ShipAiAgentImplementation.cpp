@@ -28,13 +28,13 @@
 #include "server/zone/managers/collision/PathFinderManager.h"
 #include "server/zone/managers/space/SpaceAiMap.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
-#include "server/zone/packets/object/StartNpcConversation.h"
 #include "server/zone/packets/scene/AttributeListMessage.h"
 #include "server/zone/packets/ship/ShipUpdateTransformMessage.h"
 #include "templates/SharedObjectTemplate.h"
 #include "templates/tangible/ship/SharedShipObjectTemplate.h"
 #include "server/zone/objects/ship/ai/events/ShipAiBehaviorEvent.h"
 #include "server/zone/objects/ship/ai/events/DespawnAiShipOnNoPlayersInRange.h"
+#include "server/zone/objects/ship/ai/events/DespawnShipAgentTask.h"
 #include "templates/params/ship/ShipFlag.h"
 #include "templates/params/creature/ObjectFlag.h"
 #include "server/zone/objects/ship/ai/events/RotationLookupTable.h"
@@ -46,9 +46,11 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/objects/ship/ai/events/ShipAiPatrolPathFinder.h"
 #include "server/zone/managers/spacecombat/projectile/ShipMissile.h"
+#include "server/zone/managers/reaction/ReactionManager.h"
 
 // #define DEBUG_SHIP_AI
 // #define DEBUG_FINDNEXTPOSITION
+// #define DEBUG_SHIP_DESPAWN
 
 /*
 
@@ -78,6 +80,9 @@ void ShipAiAgentImplementation::loadTemplateData(SharedShipObjectTemplate* shipT
 
 	// Special AI Template behavior tree
 	customShipAiMap = shipTemp->getCustomShipAiMap();
+
+	experienceValue = Math::max(50, shipTemp->getExperienceValue());
+	factionMultiplier = shipTemp->getFactionMultiplier();
 
 	const auto& componentNames = shipTemp->getComponentNames();
 	const auto& componentValues = shipTemp->getComponentValues();
@@ -331,7 +336,7 @@ void ShipAiAgentImplementation::notifyDissapear(TreeEntry* entry) {
 	activateAiBehavior();
 }
 
-void ShipAiAgentImplementation::notifyDespawn(Zone* zone) {
+void ShipAiAgentImplementation::notifyDespawn() {
 #ifdef DEBUG_SHIP_DESPAWN
 	info(true) << "notifyDespawn called for - " << getDisplayedName() << " ID: " << getObjectID();
 #endif // DEBUG_SHIP_DESPAWN
@@ -343,10 +348,6 @@ void ShipAiAgentImplementation::notifyDespawn(Zone* zone) {
 	wipeBlackboard();
 
 	clearPatrolPoints();
-
-	if (threatMap != nullptr) {
-		threatMap->removeAll(true);
-	}
 
 	ManagedReference<SceneObject*> home = homeObject.get();
 
@@ -676,12 +677,12 @@ SpacePatrolPoint ShipAiAgentImplementation::getNextEvadePosition() {
 	return SpacePatrolPoint(evadePosition);
 }
 
-Vector3 ShipAiAgentImplementation::getInterceptPosition(ShipObject* target, float speed, int slot) {
-	Vector3 tPosition = target->getPosition();
-	Vector3 tPrevious = target->getPreviousPosition();
+Vector3 ShipAiAgentImplementation::getInterceptPosition(ShipObject* target, float speed, int slot, int targetSlot) {
+	Vector3 sPosition = getWorldPosition();
 
 	if (slot != Components::CHASSIS) {
-		auto data = ShipManager::instance()->getCollisionData(target);
+		const Matrix4& sRotation = *getConjugateMatrix();
+		auto data = ShipManager::instance()->getCollisionData(asShipAiAgent());
 
 		if (data != nullptr) {
 			const auto& slotName = Components::shipComponentSlotToString(slot);
@@ -690,27 +691,41 @@ Vector3 ShipAiAgentImplementation::getInterceptPosition(ShipObject* target, floa
 			if (hardpoints.size() > 0) {
 				const auto& hardpoint = hardpoints.get(0);
 				const auto& hPosition = hardpoint.getSphere().getCenter();
-				const auto& hRotation = *target->getConjugateMatrix();
 
-				Vector3 localPoint = hPosition * hRotation;
-				tPosition = localPoint + tPosition;
-				tPrevious = localPoint + tPrevious;
+				Vector3 localPoint = hPosition * sRotation;
+				sPosition = Vector3(localPoint.getX(), localPoint.getZ(), localPoint.getY()) + sPosition;
 			}
 		}
 	}
 
-	const Vector3& sPosition = getPosition();
+	const Matrix4& tRotation = *target->getConjugateMatrix();
+	Vector3 tPosition = target->getWorldPosition();
 
-	Vector3 deltaT = tPosition - tPrevious;
+	if (targetSlot != Components::CHASSIS) {
+		auto data = ShipManager::instance()->getCollisionData(target);
+
+		if (data != nullptr) {
+			const auto& slotName = Components::shipComponentSlotToString(targetSlot);
+			const auto& hardpoints = data->getHardpoints(slotName);
+
+			if (hardpoints.size() > 0) {
+				const auto& hardpoint = hardpoints.get(0);
+				const auto& hPosition = hardpoint.getSphere().getCenter();
+
+				Vector3 localPoint = hPosition * tRotation;
+				tPosition = Vector3(localPoint.getX(), localPoint.getZ(), localPoint.getY()) + tPosition;
+			}
+		}
+	}
+
+	Vector3 deltaT = Vector3(tRotation[2][0], tRotation[2][2], tRotation[2][1]);
 	Vector3 deltaV = tPosition - sPosition;
 
 	float vRange = qNormalize(deltaV);
-	float tRange = qNormalize(deltaT);
-
 	float tSpeed = target->getCurrentSpeed();
-	float vSpeed = Math::clamp(0.f, vRange / speed, 5.f);
+	float vTime = Math::clamp(0.f, vRange / speed, 10.f);
 
-	return (deltaT * tSpeed * vSpeed) + tPosition;
+	return (deltaT * tSpeed * vTime) + tPosition;
 }
 
 int ShipAiAgentImplementation::setDestination() {
@@ -1539,7 +1554,7 @@ bool ShipAiAgentImplementation::fireTurretAtTarget(ShipObject* targetShip, const
 
 	const Matrix4& shipRotation = *getConjugateMatrix();
 	const Vector3& shipPosition = getPosition();
-	const Vector3& targetPosition = getInterceptPosition(targetShip, projectileData->getSpeed(), targetSlot);
+	const Vector3& targetPosition = getInterceptPosition(targetShip, projectileData->getSpeed(), slot, targetSlot);
 	const Vector3& hardpointPosition = hardpoint.getSphere().getCenter();
 
 	Vector3 turretGlobal = (hardpointPosition * shipRotation);
@@ -1825,6 +1840,43 @@ bool ShipAiAgentImplementation::validateTarget(ShipObject* targetShip) {
 	return true;
 }
 
+int ShipAiAgentImplementation::notifyObjectDestructionObservers(TangibleObject* attacker, int condition, bool isCombatAction) {
+	if (getOptionsBitmask() & OptionBitmask::DESTROYING) {
+		return 1;
+	}
+
+	setOptionBit(OptionBitmask::DESTROYING, false);
+
+	if (attacker == nullptr) {
+		attacker = asShipAiAgent();
+	} else if (attacker->isPlayerShip()) {
+		sendReactionChat(attacker, ReactionManager::DEATH);
+	}
+
+	// info(true) << "ShipAiAgentImplementation::notifyObjectDestructionObservers -- ShipAgent: " << getDisplayedName();
+
+	ShipManager* shipManager = ShipManager::instance();
+
+	if (shipManager != nullptr) {
+		shipManager->notifyDestruction(attacker->asShipObject(), asShipAiAgent(), condition, isCombatAction);
+	}
+
+	return TangibleObjectImplementation::notifyObjectDestructionObservers(attacker, condition, isCombatAction);
+}
+
+void ShipAiAgentImplementation::sendReactionChat(SceneObject* object, int type, int state, bool force) {
+	if (object == nullptr) {
+		return;
+	}
+
+	// TODO: Ship Agent Needs reaction chats
+
+	// ReactionManager* reactionManager = getZoneServer()->getReactionManager();
+
+	// if (reactionManager != nullptr)
+	//	reactionManager->sendChatReaction(asAiAgent(), object, type, state, force);
+}
+
 /*
 
 	Various Management Functions
@@ -1845,6 +1897,30 @@ void ShipAiAgentImplementation::setDespawnOnNoPlayerInRange(bool val) {
 		if (!despawnEvent->isScheduled()) {
 			despawnEvent->schedule(300000);
 		}
+	}
+}
+
+void ShipAiAgentImplementation::scheduleDespawn(int timeToDespawn, bool force) {
+	// info(true) << getDisplayedName() << " calling - scheduleDespawn()";
+
+	Reference<DespawnShipAgentTask*> despawn = getPendingTask("despawn").castTo<DespawnShipAgentTask*>();
+
+	if (!force && despawn != nullptr) {
+		return;
+	}
+
+	if (despawn != nullptr) {
+		despawn->cancel();
+		despawn->reschedule(timeToDespawn * 1000);
+	} else {
+		despawn = new DespawnShipAgentTask(asShipAiAgent());
+
+		if (despawn == nullptr) {
+			error() << "ShipAiAgent failed to create a despawn task." << __FILE__ << ":" << __LINE__ << ":" << __FUNCTION__ << ": " << *_this.getReferenceUnsafeStaticCast();
+			return;
+		}
+
+		addPendingTask("despawn", despawn, timeToDespawn * 1000);
 	}
 }
 
