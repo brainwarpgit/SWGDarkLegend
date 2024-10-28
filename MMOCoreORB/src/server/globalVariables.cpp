@@ -222,6 +222,7 @@ namespace globalVariables {
 	int creatureBabySpawnChanceDestroyMissionLair = 1000;
 	int creatureBabySpawnChanceDynamicSpawn = 500;
 	int creatureBabySpawnChanceDynamicLair = 500;
+	bool creatureShowRunSpeedEnabled = false;
 
 //Creature Handler
 	int creatureTamingMaxDistance = 8;
@@ -317,6 +318,7 @@ namespace globalVariables {
 	bool petAllMountsUsedByAnyone = false;
 	bool petCallInCombatEnabled = false;
 	float petDamageMultiplier = 1;
+	bool petSpeedSameAsPlayerEnabled = false;
 
 //Player
 	int playerSamplingMultiplier = 1;
@@ -365,6 +367,12 @@ namespace globalVariables {
 	int playerAttachmentSplittingCostPerPoint = 1000;
 	bool playerAttachmentApplicationModEnabled = false;
 	bool playerPlayersOnlineAtLoginEnabled = false;
+	bool playerBurstRunToggleEnabled = true;
+	float playerBurstRunCoolDownTimer = 300;
+	float playerBurstRunDuration = 30;
+	float playerBurstRunHamCost = 100;
+	float playerBurstRunSpeedAndAccelerationModifier = 1.822;
+	float playerDefaultRunSpeed = 5.376;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -475,6 +483,7 @@ namespace globalVariables {
 	bool vehicleInitialDecayEnabled = true;
 	int vehicleCallTime = 15;
 	bool vehicleStoreInCombatEnabled = false;
+	bool vehicleShowVehicleSpeedEnabled = false;
 
 //Vendor
 	bool vendorLowMaintenanceEmailEnabled = false;
@@ -744,7 +753,8 @@ namespace globalVariables {
 			if (lua->getGlobalInt("creatureBabySpawnChanceDestroyMissionLair") > 0) creatureBabySpawnChanceDestroyMissionLair = lua->getGlobalInt("creatureBabySpawnChanceDestroyMissionLair");
 			if (lua->getGlobalInt("creatureBabySpawnChanceDynamicSpawn") > 0) creatureBabySpawnChanceDynamicSpawn = lua->getGlobalInt("creatureBabySpawnChanceDynamicSpawn");
 			if (lua->getGlobalInt("creatureBabySpawnChanceDynamicLair") > 0) creatureBabySpawnChanceDynamicLair = lua->getGlobalInt("creatureBabySpawnChanceDynamicLair");
-
+			if (lua->getGlobalBoolean("creatureShowRunSpeedEnabled") == true || lua->getGlobalBoolean("creatureShowRunSpeedEnabled") == false) creatureShowRunSpeedEnabled = lua->getGlobalBoolean("creatureShowRunSpeedEnabled");
+			
 			//Creature Handler 
 			if (lua->getGlobalInt("creatureTamingMaxDistance") > 0) creatureTamingMaxDistance = lua->getGlobalInt("creatureTamingMaxDistance");
 			if (lua->getGlobalFloat("creatureTamingCycleTime") > 0) creatureTamingCycleTime = lua->getGlobalFloat("creatureTamingCycleTime");
@@ -835,6 +845,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("petAllMountsUsedByAnyone") == true || lua->getGlobalBoolean("petAllMountsUsedByAnyone") == false) petAllMountsUsedByAnyone = lua->getGlobalBoolean("petAllMountsUsedByAnyone");
 			if (lua->getGlobalBoolean("petCallInCombatEnabled") == true || lua->getGlobalBoolean("petCallInCombatEnabled") == false) petCallInCombatEnabled = lua->getGlobalBoolean("petCallInCombatEnabled");
 			if (lua->getGlobalFloat("petDamageMultiplier") > 0) petDamageMultiplier = lua->getGlobalFloat("petDamageMultiplier");
+			if (lua->getGlobalBoolean("petSpeedSameAsPlayerEnabled") == true || lua->getGlobalBoolean("petSpeedSameAsPlayerEnabled") == false) petSpeedSameAsPlayerEnabled = lua->getGlobalBoolean("petSpeedSameAsPlayerEnabled");
 			
 			//Player 
 			if (lua->getGlobalInt("playerSamplingMultiplier") > 0) playerSamplingMultiplier = lua->getGlobalInt("playerSamplingMultiplier");
@@ -883,7 +894,13 @@ namespace globalVariables {
 			if (lua->getGlobalInt("playerAttachmentSplittingCostPerPoint") >= 1) playerAttachmentSplittingCostPerPoint = lua->getGlobalInt("playerAttachmentSplittingCostPerPoint");
 			if (lua->getGlobalBoolean("playerAttachmentApplicationModEnabled") == true || lua->getGlobalBoolean("playerAttachmentApplicationModEnabled") == false) playerAttachmentApplicationModEnabled = lua->getGlobalBoolean("playerAttachmentApplicationModEnabled");
 			if (lua->getGlobalBoolean("playerPlayersOnlineAtLoginEnabled") == true || lua->getGlobalBoolean("playerPlayersOnlineAtLoginEnabled") == false) playerPlayersOnlineAtLoginEnabled = lua->getGlobalBoolean("playerPlayersOnlineAtLoginEnabled");
-			
+			if (lua->getGlobalBoolean("playerBurstRunToggleEnabled") == true || lua->getGlobalBoolean("playerBurstRunToggleEnabled") == false) playerBurstRunToggleEnabled = lua->getGlobalBoolean("playerBurstRunToggleEnabled");
+			if (lua->getGlobalFloat("playerBurstRunCoolDownTimer") >= 0) playerBurstRunCoolDownTimer = lua->getGlobalFloat("playerBurstRunCoolDownTimer");
+			if (lua->getGlobalFloat("playerBurstRunDuration") >= 0) playerBurstRunDuration = lua->getGlobalFloat("playerBurstRunDuration");
+			if (lua->getGlobalFloat("playerBurstRunHamCost") >= 0) playerBurstRunHamCost = lua->getGlobalFloat("playerBurstRunHamCost");
+			if (lua->getGlobalFloat("playerBurstRunSpeedAndAccelerationModifier") >= 0) playerBurstRunSpeedAndAccelerationModifier = lua->getGlobalFloat("playerBurstRunSpeedAndAccelerationModifier");
+			if (lua->getGlobalFloat("playerDefaultRunSpeed") >= 0) playerDefaultRunSpeed = lua->getGlobalFloat("playerDefaultRunSpeed");
+
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");
@@ -987,12 +1004,13 @@ namespace globalVariables {
 			if (lua->getGlobalInt("structureInstallationQuickAddPowerAmount") > 0 && lua->getGlobalInt("structureInstallationQuickAddPowerAmount") <= 100) structureInstallationQuickAddPowerAmount = lua->getGlobalInt("structureInstallationQuickAddPowerAmount");
 			if (lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == true || lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == false) structureInstallationResourcesRetrieveAllEnabled = lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled");
 			
-			//Vehicle
+			//Vehicle 
 			if (lua->getGlobalInt("vehicleBaseDecayCycle") >= 0) vehicleBaseDecayCycle = lua->getGlobalInt("vehicleBaseDecayCycle");
 			if (lua->getGlobalInt("vehicleBaseDecayRate") >= 0) vehicleBaseDecayRate = lua->getGlobalInt("vehicleBaseDecayRate");
 			if (lua->getGlobalBoolean("vehicleInitialDecayEnabled") == true || lua->getGlobalBoolean("vehicleInitialDecayEnabled") == false) vehicleInitialDecayEnabled = lua->getGlobalBoolean("vehicleInitialDecayEnabled");
 			if (lua->getGlobalInt("vehicleCallTime") >= 0) vehicleCallTime = lua->getGlobalInt("vehicleCallTime");
 			if (lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == true || lua->getGlobalBoolean("vehicleStoreInCombatEnabled") == false) vehicleStoreInCombatEnabled = lua->getGlobalBoolean("vehicleStoreInCombatEnabled");
+			if (lua->getGlobalBoolean("vehicleShowVehicleSpeedEnabled") == true || lua->getGlobalBoolean("vehicleShowVehicleSpeedEnabled") == false) vehicleShowVehicleSpeedEnabled = lua->getGlobalBoolean("vehicleShowVehicleSpeedEnabled");
 			
 			//Vendor
 			if (lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled") == true || lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled") == false) vendorLowMaintenanceEmailEnabled = lua->getGlobalBoolean("vendorLowMaintenanceEmailEnabled");

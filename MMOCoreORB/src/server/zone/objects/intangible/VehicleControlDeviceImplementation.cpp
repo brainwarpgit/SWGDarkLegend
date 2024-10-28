@@ -311,6 +311,9 @@ void VehicleControlDeviceImplementation::fillAttributeList(AttributeListMessage*
 	if (vehicle == nullptr)
 		return;
 
+	if (globalVariables::vehicleShowVehicleSpeedEnabled) {
+		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(vehicle->getRunSpeed() * globalVariables::playerSpeedMultiplier));
+	}
 	if (vehicle->getPaintCount() > 0) {
 		alm->insertAttribute("customization_cnt", vehicle->getPaintCount());
 	}

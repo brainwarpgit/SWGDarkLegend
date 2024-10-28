@@ -82,7 +82,6 @@
 #include "server/ServerCore.h"
 #include "server/zone/managers/gcw/GCWManager.h"
 #include "server/zone/objects/ship/ShipObject.h"
-#include "server/globalVariables.h"
 
 #ifdef WITH_SESSION_API
 #include "server/login/SessionAPIClient.h"
@@ -1524,7 +1523,7 @@ void PlayerObjectImplementation::notifyOnline() {
 		if (playerTemplate != nullptr) {
 			auto speedTempl = playerTemplate->getSpeed();
 
-			playerCreature->setRunSpeed(speedTempl.get(0));
+			playerCreature->setRunSpeed(globalVariables::playerDefaultRunSpeed * globalVariables::playerSpeedMultiplier);
 		}
 	}
 	PlayerObject* ghost = playerCreature->getPlayerObject();

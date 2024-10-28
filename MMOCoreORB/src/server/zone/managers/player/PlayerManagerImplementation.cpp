@@ -101,6 +101,7 @@
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/objects/creature/events/BurstRunNotifyAvailableEvent.h"
+#include "server/zone/objects/creature/events/BurstRunFinishedEvent.h"
 #include "server/zone/objects/creature/ai/DroidObject.h"
 #include "server/zone/objects/tangible/components/droid/DroidPlaybackModuleDataComponent.h"
 #include "server/zone/objects/player/badges/Badge.h"
@@ -6199,6 +6200,7 @@ bool PlayerManagerImplementation::shouldDeleteCharacter(uint64 characterID, int 
 }
 
 bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamModifier, float cooldownModifier) {
+	PlayerObject* ghost = player->getPlayerObject();
 	if (player == nullptr)
 		return false;
 
@@ -6208,7 +6210,17 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	}
 
 	if (player->hasBuff(STRING_HASHCODE("gallop")) || player->hasBuff(STRING_HASHCODE("burstrun")) || player->hasBuff(STRING_HASHCODE("retreat"))) {
-		player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
+		player->removeBuff(STRING_HASHCODE("burstrun"));
+		player->removePendingTask("burst_run_finished");	
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr) {
+					pet->setRunSpeed(pet->getRunSpeed() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+				}
+			}
+		}	
 		return false;
 	}
 
@@ -6232,15 +6244,15 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		return false;
 	}
 
-	if (!player->checkCooldownRecovery("burstrun")) {
+	if (!player->checkCooldownRecovery("burstrun") && !globalVariables::playerBurstRunToggleEnabled && !ghost->isAdmin()) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); //You are too tired to Burst Run.
 		return false;
 	}
 
 	uint32 crc = STRING_HASHCODE("burstrun");
-	float hamCost = 100.0f;
-	float duration = 30;
-	float cooldown = 300;
+	float hamCost = globalVariables::playerBurstRunHamCost;
+	float duration = globalVariables::playerBurstRunDuration;
+	float cooldown = globalVariables::playerBurstRunCoolDownTimer;
 
 	float burstRunMod = (float) player->getSkillMod("burst_run");
 	hamModifier += (burstRunMod / 100.f);
@@ -6259,6 +6271,12 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); // You are too tired to Burst Run.
 		return false;
 	}
+
+	if (globalVariables::playerBurstRunToggleEnabled) {
+		healthCost = hamCost / 3;
+		actionCost = hamCost / 3;
+		mindCost = hamCost / 3;
+	}	
 
 	player->inflictDamage(player, CreatureAttribute::HEALTH, healthCost, true);
 	player->inflictDamage(player, CreatureAttribute::ACTION, actionCost, true);
@@ -6280,8 +6298,8 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	Locker locker(buff);
 
-	buff->setSpeedMultiplierMod(1.822f);
-	buff->setAccelerationMultiplierMod(1.822f);
+	buff->setSpeedMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+	buff->setAccelerationMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
 
 	if (cooldownModifier == 0.f)
 		buff->setStartMessage(startStringId);
@@ -6298,11 +6316,25 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	player->addBuff(buff);
 
+	if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+			if (pet != nullptr) {
+				pet->setRunSpeed(pet->getRunSpeed() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+				pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+			}
+		}
+	}
+	
 	player->updateCooldownTimer("burstrun", (newCooldown + duration) * 1000);
 
-	Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
-	player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
+	Reference<BurstRunFinishedEvent*> finishTask = new BurstRunFinishedEvent(player);
+	player->addPendingTask("burst_run_finished", finishTask, (duration * 1000));
 
+	if (!globalVariables::playerBurstRunToggleEnabled) {
+		Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
+		player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
+	}
 	return true;
 }
 

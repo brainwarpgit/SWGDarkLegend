@@ -9,6 +9,7 @@
 #include "server/zone/objects/intangible/ControlDevice.h"
 #include "templates/creature/SharedCreatureObjectTemplate.h"
 #include "server/zone/packets/object/DataTransform.h"
+#include "server/globalVariables.h"
 
 class DismountCommand : public QueueCommand {
 	Vector<uint32> restrictedBuffCRCs;
@@ -27,6 +28,8 @@ public:
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
+		PlayerObject* ghost = creature->getPlayerObject();
+		
 		if (!checkStateMask(creature))
 			return INVALIDSTATE;
 
@@ -55,7 +58,10 @@ public:
 		creature->clearState(CreatureState::RIDINGMOUNT);
 
 		ManagedReference<SceneObject*> mount = creature->getParent().get();
-
+		ManagedReference<CreatureObject*> creatureMount = mount->asCreatureObject();
+		auto mountTemplateData = creatureMount->getObjectTemplate();
+		auto mountTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(mountTemplateData);
+		
 		// Handle dismount, removal of gallop and storing of Jetpacks
 		if (mount != nullptr && mount->isCreatureObject()) {
 			handleMount(creature, mount);
@@ -85,15 +91,19 @@ public:
 		changeBuffer->add(SpeedModChange(creature->getSpeedMultiplierMod()));
 
 		Vector<FloatParam> speedTempl = playerTemplate->getSpeed();
+		Vector<FloatParam> mountSpeedTempl = mountTemplate->getSpeed();
 
 		// Reset Run Speed from template
-		creature->setRunSpeed(speedTempl.get(0));
+		creature->setRunSpeed(globalVariables::playerDefaultRunSpeed * globalVariables::playerSpeedMultiplier);
+		creatureMount->setRunSpeed(mountSpeedTempl.get(0));
 
  		// Reset Force Sensitive control mods to default.
 		creature->updateSpeedAndAccelerationMods();
+		creatureMount->updateSpeedAndAccelerationMods();
 
 		// Update players stats in the database
 		creature->updateToDatabase();
+		creatureMount->updateToDatabase();
 
 		creature->updateCooldownTimer("mount_dismount", 2000);
 		creature->setNextAllowedMoveTime(500);
@@ -101,6 +111,14 @@ public:
 		// these are already removed off the player - Just remove it off the mount
 		creature->removeMountedCombatSlow(false);
 
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr) {
+					pet->setRunSpeed(creature->getFullSpeed() * 3);
+				}
+			}
+		}
 		return SUCCESS;
 	}
 

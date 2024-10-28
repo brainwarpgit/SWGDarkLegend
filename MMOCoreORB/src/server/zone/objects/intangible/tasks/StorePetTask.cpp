@@ -8,6 +8,7 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/managers/group/GroupManager.h"
 #include "server/zone/managers/creature/PetManager.h"
+#include "templates/creature/SharedCreatureObjectTemplate.h"
 
 StorePetTask::StorePetTask(CreatureObject* player, AiAgent* pet) {
 	this->play = player;
@@ -50,6 +51,12 @@ void StorePetTask::run() {
 	pet->setPosture(CreaturePosture::UPRIGHT, true);
 	pet->clearState(CreatureState::SWIMMING);
 	pet->clearCombatState(true);
+	
+	auto petTemplateData = pet->getObjectTemplate();
+	auto petTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(petTemplateData);
+	Vector<FloatParam> petSpeedTempl = petTemplate->getSpeed();
+	pet->setRunSpeed(petSpeedTempl.get(0));
+	
 	pet->setOblivious();
 	pet->storeFollowObject();
 

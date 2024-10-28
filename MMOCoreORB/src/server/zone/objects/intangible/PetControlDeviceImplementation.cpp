@@ -29,7 +29,6 @@
 #include "server/zone/managers/frs/FrsManager.h"
 #include "server/zone/objects/creature/commands/QueueCommand.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
-#include "server/globalVariables.h"
 
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	if ((player->isInCombat() && globalVariables::petCallInCombatEnabled == false) || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
@@ -526,6 +525,10 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 	setLastCommander(player);
 	setLastCommandTarget(nullptr);
 	setLastCommand(PetManager::FOLLOW);
+	
+	if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		pet->setRunSpeed(player->getFullSpeed() * 3);
+	}
 }
 
 void PetControlDeviceImplementation::cancelSpawnObject(CreatureObject* player) {
@@ -941,6 +944,10 @@ void PetControlDeviceImplementation::fillAttributeList(AttributeListMessage* alm
 	} else {
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(this->controlledObject.get().get());
 
+		if (globalVariables::creatureShowRunSpeedEnabled) {
+			alm->insertAttribute("@obj_attr_n:pet_run_speed",std::to_string(pet->getRunSpeed()));
+		}
+		
 		if (pet != nullptr) {
 			int petLevel = pet->getLevel();
 
@@ -1220,10 +1227,21 @@ void PetControlDeviceImplementation::setDefaultPetCommands() {
 		return;
 		
 	trainedCommands.put(PetManager::FOLLOW, "follow");
-	trainedCommands.put(PetManager::ATTACK, "attack");
 	trainedCommands.put(PetManager::STORE, "store");
+	ManagedReference<DroidObject*> droid = this->controlledObject.get().castTo<DroidObject*>();
+	if (droid != nullptr) {
+		if (droid->isCombatDroid()) {
+			trainedCommands.put(PetManager::ATTACK, "attack");
+			trainedCommands.put(PetManager::GUARD, "guard");
+		} else {
+			trainedCommands.remove(PetManager::ATTACK);
+			trainedCommands.remove(PetManager::GUARD);
+		}
+	} else {
+		trainedCommands.put(PetManager::ATTACK, "attack");
+		trainedCommands.put(PetManager::GUARD, "guard");
+	}
 	trainedCommands.put(PetManager::STAY, "stay");
-	trainedCommands.put(PetManager::GUARD, "guard");
 	trainedCommands.put(PetManager::PATROL, "patrol");
 	trainedCommands.put(PetManager::GETPATROLPOINT, "getpatrolpoint");
 	trainedCommands.put(PetManager::CLEARPATROLPOINTS, "clearpatrolpoints");
@@ -1234,6 +1252,7 @@ void PetControlDeviceImplementation::setDefaultPetCommands() {
 	trainedCommands.put(PetManager::GROUP, "group");
 	trainedCommands.put(PetManager::FOLLOWOTHER, "followother");
 	trainedCommands.put(PetManager::FRIEND, "friend");
+	trainedCommands.put(PetManager::TRANSFER, "transfer");
 	if (pet->hasRangedWeapon()) {
 		trainedCommands.put(PetManager::RANGED_ATTACK, "rangedattack");
 	} else { 
@@ -1249,7 +1268,6 @@ void PetControlDeviceImplementation::setDefaultPetCommands() {
 	} else { 
 		trainedCommands.remove(PetManager::SPECIAL_ATTACK2);
 	}
-	trainedCommands.put(PetManager::TRANSFER, "transfer");
 }
 
 void PetControlDeviceImplementation::setTrainingCommand(unsigned int commandID) {

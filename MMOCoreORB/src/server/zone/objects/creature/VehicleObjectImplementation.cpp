@@ -32,6 +32,10 @@ void VehicleObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* men
 
 void VehicleObjectImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object){
 
+	if (globalVariables::vehicleShowVehicleSpeedEnabled) {
+		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(getRunSpeed() * globalVariables::playerSpeedMultiplier));
+	}
+	
 	alm->insertAttribute("armorrating", "@obj_attr_n:armor_pierce_none"); //None
 
 	StringBuffer kin;

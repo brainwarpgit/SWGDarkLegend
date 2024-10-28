@@ -614,9 +614,10 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 	if (getLightSaber() < 0)
 		alm->insertAttribute("cat_armor_vulnerability.armor_eff_restraint", "-");
 
-	//alm->insertAttribute("max_damage",std::to_string(maxDamage));
-	//alm->insertAttribute("min_damage",std::to_string(minDamage));
-	//alm->insertAttribute("chance_hit",std::to_string(getChanceHit()));
+	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+	if ((player->hasSkill("outdoors_ranger_master") || ghost->isAdmin()) && globalVariables::creatureShowRunSpeedEnabled) {
+		alm->insertAttribute("creature_run_speed",std::to_string(getRunSpeed()));
+	}
 	
 	if (isPet())
 	{

@@ -26,7 +26,6 @@ public:
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 		ZoneServer* zoneServer = server->getZoneServer();
-
 		if (zoneServer == nullptr || !creature->checkCooldownRecovery("mount_dismount"))
 			return GENERALERROR;
 
@@ -157,23 +156,38 @@ public:
 
 		// add speed multiplier mod for existing buffs
 		if(vehicle->getSpeedMultiplierMod() != 0)
-			newSpeed *= vehicle->getSpeedMultiplierMod();
-
+			newSpeed *= vehicle->getSpeedMultiplierMod() * globalVariables::playerSpeedMultiplier;
+		
+		// Force Sensitive SkillMods
+		if (vehicle->isVehicleObject()) {
+			creature->setSpeedMultiplierMod(globalVariables::playerSpeedMultiplier);
+			newAccel += creature->getSkillMod("force_vehicle_speed");
+			newTurn += creature->getSkillMod("force_vehicle_control");
+		}
+		
 		// Add our change to the buffer history
 		changeBuffer->add(SpeedModChange(newSpeed / creature->getRunSpeed()));
 
 		creature->updateToDatabase();
-
-		// Force Sensitive SkillMods
-		if (vehicle->isVehicleObject()) {
-			newAccel += creature->getSkillMod("force_vehicle_speed");
-			newTurn += creature->getSkillMod("force_vehicle_control");
-		}
-
+	
 		creature->setRunSpeed(newSpeed);
 		creature->setTurnScale(newTurn, true);
-		creature->setAccelerationMultiplierMod(newAccel, true);
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			if (creature->getAccelerationMultiplierMod() > 10) {
+				creature->setAccelerationMultiplierMod(newAccel, true);
+			}
+		}
 		creature->addMountedCombatSlow();
+		
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			PlayerObject* ghost = creature->getPlayerObject();
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr && !pet->hasRidingCreature()) {
+					pet->setRunSpeed(newSpeed * 3);
+				}
+			}
+		}
 
 		return SUCCESS;
 	}

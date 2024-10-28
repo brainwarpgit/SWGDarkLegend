@@ -215,7 +215,8 @@ namespace globalVariables {
 	extern int creatureBabySpawnChanceDestroyMissionLair;
 	extern int creatureBabySpawnChanceDynamicSpawn;
 	extern int creatureBabySpawnChanceDynamicLair;
-	
+	extern bool creatureShowRunSpeedEnabled;
+
 //Creature Handler
 	extern int creatureTamingMaxDistance;
 	extern float creatureTamingCycleTime;
@@ -310,6 +311,7 @@ namespace globalVariables {
 	extern bool petAllMountsUsedByAnyone;
 	extern bool petCallInCombatEnabled;
 	extern float petDamageMultiplier;
+	extern bool petSpeedSameAsPlayerEnabled;
 	
 //Player
 	extern int playerSamplingMultiplier;
@@ -358,6 +360,7 @@ namespace globalVariables {
 	extern int playerAttachmentSplittingCostPerPoint;
 	extern bool playerAttachmentApplicationModEnabled;
 	extern bool playerPlayersOnlineAtLoginEnabled;
+	extern float playerDefaultRunSpeed;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
@@ -420,6 +423,11 @@ namespace globalVariables {
 	extern bool playerXPBasedOnLevelEnabled;
 	extern bool playerCHXPModEnabled;
 	extern bool playerCHCombatXPEnabled;
+	extern bool playerBurstRunToggleEnabled;
+	extern float playerBurstRunCoolDownTimer;
+	extern float playerBurstRunDuration;
+	extern float playerBurstRunHamCost;
+	extern float playerBurstRunSpeedAndAccelerationModifier;
 
 //Ranger
 	extern int rangerAreaTrackDistance;
@@ -468,6 +476,7 @@ namespace globalVariables {
 	extern bool vehicleInitialDecayEnabled;
 	extern int vehicleCallTime;
 	extern bool vehicleStoreInCombatEnabled;
+	extern bool vehicleShowVehicleSpeedEnabled;
 
 //Vendor
 	extern bool vendorLowMaintenanceEmailEnabled;

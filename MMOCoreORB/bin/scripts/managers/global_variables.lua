@@ -210,6 +210,7 @@ creatureBabyRandomDifficultyEnabled = true --default false
 creatureBabySpawnChanceDestroyMissionLair = 750 --default 1000
 creatureBabySpawnChanceDynamicSpawn = 350 --default 500
 creatureBabySpawnChanceDynamicLair = 350 --default 500
+creatureShowRunSpeedEnabled = true --default false
 
 --Creature Handler
 creatureTamingMaxDistance = 64 --default 8
@@ -308,6 +309,7 @@ petOutOfCombatHAMRegenMultiplier = 10 --default 1
 petAllMountsUsedByAnyone = true --default false   when set to true all mounts are invulnerable and AI will not attack..Pets also can not attack.
 petCallInCombatEnabled = true --default 1
 petDamageMultiplier = 5 --default 1
+petSpeedSameAsPlayerEnabled = true --default false  Changes pet speed to match player.   mounted / dismounted / force run1,2,3 (damage also reduced same as player) / burst run / does not affect any other speed modifiers(for now)
 
 --Player
 playerSamplingMultiplier = 10 --default 1
@@ -356,6 +358,12 @@ playerAttachmentSplittingEnabled = true --default false
 playerAttachmentSplittingCostPerPoint = 1000 --default 1000
 playerAttachmentApplicationModEnabled = true --default false
 playerPlayersOnlineAtLoginEnabled = true --default false
+playerBurstRunToggleEnabled = true --default false
+playerBurstRunCoolDownTimer = 300 --default 300
+playerBurstRunDuration = 30 --default 30
+playerBurstRunHamCost = 6000 --default 100 divided amount HAM pools
+playerBurstRunSpeedAndAccelerationModifier = 1.866 --default 1.866
+playerDefaultRunSpeed = 5.376 --default 1.866
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
@@ -467,6 +475,7 @@ vehicleBaseDecayRate = 15 --default 15
 vehicleInitialDecayEnabled = false --default true
 vehicleCallTime = 0 --default 15 in seconds
 vehicleStoreInCombatEnabled = true --default false
+vehicleShowVehicleSpeedEnabled = true --default false
 
 --Vendor
 vendorLowMaintenanceEmailEnabled = true --default false

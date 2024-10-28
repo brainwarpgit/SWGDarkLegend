@@ -1668,7 +1668,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getAccelerationMultiplierMod() {
-		return accelerationMultiplierMod * globalVariables.playerSpeedMultiplier;
+		return accelerationMultiplierMod;
 	}
 
 	@read
@@ -1678,7 +1678,12 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getSpeedMultiplierMod() {
-		return speedMultiplierMod * globalVariables.playerSpeedMultiplier;
+		return speedMultiplierMod;
+	}
+	
+	@read
+	public float getFullSpeed() {
+		return getRunSpeed() * getSpeedMultiplierMod();
 	}
 
 	@mock
@@ -1745,7 +1750,7 @@ class CreatureObject extends TangibleObject {
 
 	@read
 	public float getTurnScale() {
-		return turnScale + (turnScale / globalVariables.playerSpeedMultiplier);
+		return turnScale;
 	}
 
 	@read
