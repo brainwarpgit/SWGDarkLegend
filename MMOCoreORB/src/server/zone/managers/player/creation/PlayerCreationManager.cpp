@@ -25,6 +25,7 @@
 #include "server/zone/managers/jedi/JediManager.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/managers/player/creation/SendJtlRecruitment.h"
+#include "server/globalVariables.h"
 
 PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager") {
 	setLogging(false);
@@ -49,6 +50,7 @@ PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager")
 }
 
 PlayerCreationManager::~PlayerCreationManager() {
+
 }
 
 void PlayerCreationManager::loadRacialCreationData() {
@@ -222,7 +224,8 @@ void PlayerCreationManager::loadDefaultCharacterItems() {
 }
 
 void PlayerCreationManager::loadHairStyleInfo() {
-	IffStream* iffStream = TemplateManager::instance()->openIffFile("creation/default_pc_hairstyles.iff");
+	IffStream* iffStream = TemplateManager::instance()->openIffFile(
+			"creation/default_pc_hairstyles.iff");
 
 	if (iffStream == nullptr) {
 		error("Couldn't load creation hair styles.");
@@ -320,7 +323,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	auto maxchars = ConfigManager::instance()->getInt("Core3.PlayerCreationManager.MaxCharactersPerGalaxy", 10);
 
 	if (client->getCharacterCount(zoneServer.get()->getGalaxyID()) >= maxchars) {
-		ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are limited to 10 characters per galaxy.", 0x0);
+		ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are limited to " + std::to_string(maxchars) + " characters per galaxy.", 0x0);
 		client->sendMessage(errMsg);
 
 		return false;
@@ -462,8 +465,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 							Time timeVal(sec);
 
-							if (timeVal.miliDifference() < 3600000) {
-								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per hour. Repeat attempts prior to 1 hour elapsing will reset the timer.", 0x0);
+							if (timeVal.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
+								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
 								client->sendMessage(errMsg);
 
 								playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -479,8 +482,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 					if (lastCreatedCharacter.containsKey(accID)) {
 						Time lastCreatedTime = lastCreatedCharacter.get(accID);
 
-						if (lastCreatedTime.miliDifference() < 3600000) {
-							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per hour. Repeat attempts prior to 1 hour elapsing will reset the timer.", 0x0);
+						if (lastCreatedTime.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
+							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
 							client->sendMessage(errMsg);
 
 							playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -551,7 +554,10 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	JediManager::instance()->onPlayerCreated(playerCreature);
 
 	// Welcome Mail
-	chatManager->sendMail("system", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
+	chatManager->sendMail("SWG-DarkLegend", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
+	
+	String mailBody = "You can now visit any Force Shrine to start your Jedi path.\n\nBecoming One with the Force, you will be visited by a mysterious character.  You will eventually be pointed to an even more mysterious village.\n\nThere are villagers that need your help.  Some may need help multiple times.  Fear not, soon to be Jedi, you are not required to help these people to continue on your path.  You will, however, need to attain all 16 trees in Force Sensitivity.  Paemos will help you take your current knowledge and give you force knowledge that you can use to train your skills.\n\nPeamos converts at a high cost if you have not explored the galaxy.   Mastering professions and visiting famous places can heighten your sense of the Force and allow for better conversions.\n\nOnce you have completed this task, you will be be visited again and will need to dispatch Mellichae and his band of thugs.  At this point, you will begin your Padawan Trials.   Complete these tasks to continue your Jedi journey.\n\nYou can also unlock the old way if you like, but it is a perilous journey as well.\n\nOnce you have mastered " + std::to_string(globalVariables::jediKnightRequirementNumberOfMasters) + " disciplines of Jedi Knowledge, you will be eligible for the Jedi Knight Trials.";
+	chatManager->sendMail("SWG-DarkLegend", "Jedi Unlock Path", mailBody , playerCreature->getFirstName());
 
 	// Schedule Task to send out JTL Recruitment Mail
 	SendJtlRecruitment* jtlMailTask = new SendJtlRecruitment(playerCreature);
@@ -562,10 +568,12 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	//Join auction chat room
 	ghost->addChatRoom(chatManager->getAuctionRoom()->getRoomID());
-
+	if (globalVariables::playerCreationJoinGalaxyChatEnabled == true) {	
+		ghost->addChatRoom(chatManager->getGalaxyRoom()->getRoomID());
+	}
 	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(playerCreature, SuiWindowType::NONE);
 	box->setPromptTitle("PLEASE NOTE");
-	box->setPromptText("You are limited to creating one character per hour. Attempting to create another character or deleting your character before the 1 hour timer expires will reset the timer.");
+	box->setPromptText("You are limited to creating one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Attempting to create another character or deleting your character before the " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minute timer expires will reset the timer.");
 
 	ghost->addSuiBox(box);
 	playerCreature->sendMessage(box->generateMessage());
@@ -690,8 +698,41 @@ void PlayerCreationManager::addProfessionStartingItems(CreatureObject* creature,
 	//Reference<Skill*> startingSkill = SkillManager::instance()->getSkill("crafting_artisan_novice");
 
 	//Starting skill.
-	SkillManager::instance()->awardSkill(startingSkill->getSkillName(),
-			creature, false, true, true);
+	if (globalVariables::playerCreationGrantAllNoviceSkillsEnabled == false) {
+		SkillManager::instance()->awardSkill(startingSkill->getSkillName(), creature, false, true, true);
+	} else {
+		SkillManager::instance()->awardSkill("crafting_artisan_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("social_entertainer_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("combat_brawler_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("combat_marksman_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("outdoors_scout_novice", creature, false, true, true);
+		SkillManager::instance()->awardSkill("science_medic_novice", creature, false, true, true);
+	}			
+
+	if (globalVariables::playerCreationAllLanguagesEnabled == true) {
+		SkillManager::instance()->awardSkill("social_language_basic_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_basic_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_rodian_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_rodian_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_trandoshan_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_trandoshan_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_moncalamari_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_moncalamari_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_wookiee_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_wookiee_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_bothan_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_bothan_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_twilek_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_twilek_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_zabrak_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_zabrak_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_lekku_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_lekku_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_ithorian_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_ithorian_comprehend", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_sullustan_speak", creature, true, true, true);
+		SkillManager::instance()->awardSkill("social_language_sullustan_comprehend", creature, true, true, true);
+	}
 
 	//Set the hams.
 	for (int i = 0; i < 9; ++i) {
@@ -779,14 +820,14 @@ void PlayerCreationManager::addHair(CreatureObject* creature,
 		return;
 	}
 
-	if (hairAssetData->getServerPlayerTemplate()
+	/*if (hairAssetData->getServerPlayerTemplate()
 			!= creature->getObjectTemplate()->getFullTemplateString()) {
 		error(
 				"hair " + hairTemplate
 						+ " is not compatible with this creature player "
 						+ creature->getObjectTemplate()->getFullTemplateString());
 		return;
-	}
+	}*/
 
 	if (!hairAssetData->isAvailableAtCreation()) {
 		error("hair " + hairTemplate + " not available at creation");
