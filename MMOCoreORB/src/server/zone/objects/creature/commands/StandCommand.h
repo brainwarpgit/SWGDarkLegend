@@ -15,6 +15,8 @@ public:
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
+		//creature->sendSystemMessage("Run Speed is " + std::to_string(creature->getRunSpeed()));
+		//creature->sendSystemMessage("Current Speed is " + std::to_string(creature->getCurrentSpeed()));
 		if (!checkStateMask(creature)) {
 			return INVALIDSTATE;
 		}

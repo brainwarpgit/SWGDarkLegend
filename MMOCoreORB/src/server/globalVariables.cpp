@@ -370,9 +370,12 @@ namespace globalVariables {
 	bool playerBurstRunToggleEnabled = true;
 	float playerBurstRunCoolDownTimer = 300;
 	float playerBurstRunDuration = 30;
-	float playerBurstRunHamCost = 100;
+	float playerBurstRunHamCostPercent = 25;
 	float playerBurstRunSpeedAndAccelerationModifier = 1.822;
 	float playerDefaultRunSpeed = 5.376;
+	bool playerGallopToggleEnabled = false;
+	float playerGallopDamagePercent = 0;
+	float playerBurstRunHamCost = 100.0f;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -898,9 +901,12 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerBurstRunCoolDownTimer") >= 0) playerBurstRunCoolDownTimer = lua->getGlobalFloat("playerBurstRunCoolDownTimer");
 			if (lua->getGlobalFloat("playerBurstRunDuration") >= 0) playerBurstRunDuration = lua->getGlobalFloat("playerBurstRunDuration");
 			if (lua->getGlobalFloat("playerBurstRunHamCost") >= 0) playerBurstRunHamCost = lua->getGlobalFloat("playerBurstRunHamCost");
+			if (lua->getGlobalFloat("playerBurstRunHamCostPercent") >= 0 && lua->getGlobalFloat("playerBurstRunHamCostPercent") <= 100) playerBurstRunHamCostPercent = lua->getGlobalFloat("playerBurstRunHamCostPercent");
 			if (lua->getGlobalFloat("playerBurstRunSpeedAndAccelerationModifier") >= 0) playerBurstRunSpeedAndAccelerationModifier = lua->getGlobalFloat("playerBurstRunSpeedAndAccelerationModifier");
 			if (lua->getGlobalFloat("playerDefaultRunSpeed") >= 0) playerDefaultRunSpeed = lua->getGlobalFloat("playerDefaultRunSpeed");
-
+			if (lua->getGlobalBoolean("playerGallopToggleEnabled") == true || lua->getGlobalBoolean("playerGallopToggleEnabled") == false) playerGallopToggleEnabled = lua->getGlobalBoolean("playerGallopToggleEnabled");
+			if (lua->getGlobalFloat("playerGallopDamagePercent") >= 0 && lua->getGlobalFloat("playerGallopDamagePercent") <= 100) playerGallopDamagePercent = lua->getGlobalFloat("playerGallopDamagePercent");
+			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");

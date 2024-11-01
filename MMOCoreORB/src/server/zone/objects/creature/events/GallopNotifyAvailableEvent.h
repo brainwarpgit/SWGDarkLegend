@@ -16,19 +16,19 @@ public:
 	}
 
 	void run() {
-		ManagedReference<CreatureObject*> mount = creo.get();
+		ManagedReference<CreatureObject*> creature = creo.get();
 
-		if (mount == nullptr)
+		if (creature == nullptr)
 			return;
 
-		Locker locker(mount);
+		Locker locker(creature);
 
-		mount->removePendingTask("gallop_notify");
+		creature->removePendingTask("gallop_notify");
 
-		ManagedReference<CreatureObject*> owner = mount->getLinkedCreature().get();
+		//ManagedReference<CreatureObject*> owner = mount->getLinkedCreature().get();
 
-		if (owner != nullptr)
-			owner->sendSystemMessage("@combat_effects:mount_not_tired"); // Your mount is no longer winded.
+		//if (owner != nullptr)
+			creature->sendSystemMessage("@combat_effects:mount_not_tired"); // Your mount is no longer winded.
 	}
 
 };

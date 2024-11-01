@@ -361,6 +361,14 @@ namespace globalVariables {
 	extern bool playerAttachmentApplicationModEnabled;
 	extern bool playerPlayersOnlineAtLoginEnabled;
 	extern float playerDefaultRunSpeed;
+	extern bool playerBurstRunToggleEnabled;
+	extern float playerBurstRunCoolDownTimer;
+	extern float playerBurstRunDuration;
+	extern float playerBurstRunHamCostPercent;
+	extern float playerBurstRunSpeedAndAccelerationModifier;
+	extern bool playerGallopToggleEnabled;
+	extern float playerGallopDamagePercent;
+	extern float playerBurstRunHamCost;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;
@@ -423,11 +431,6 @@ namespace globalVariables {
 	extern bool playerXPBasedOnLevelEnabled;
 	extern bool playerCHXPModEnabled;
 	extern bool playerCHCombatXPEnabled;
-	extern bool playerBurstRunToggleEnabled;
-	extern float playerBurstRunCoolDownTimer;
-	extern float playerBurstRunDuration;
-	extern float playerBurstRunHamCost;
-	extern float playerBurstRunSpeedAndAccelerationModifier;
 
 //Ranger
 	extern int rangerAreaTrackDistance;

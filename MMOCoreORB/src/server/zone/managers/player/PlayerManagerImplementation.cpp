@@ -6348,8 +6348,12 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	}
 
 	if (player->hasBuff(STRING_HASHCODE("gallop")) || player->hasBuff(STRING_HASHCODE("burstrun")) || player->hasBuff(STRING_HASHCODE("retreat"))) {
-		player->removeBuff(STRING_HASHCODE("burstrun"));
-		player->removePendingTask("burst_run_finished");	
+		if (globalVariables::playerBurstRunToggleEnabled) {
+			player->removeBuff(STRING_HASHCODE("burstrun"));
+			player->removePendingTask("burst_run_finished");
+		} else {
+			player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
+		}
 		if (globalVariables::petSpeedSameAsPlayerEnabled) {
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
@@ -6388,7 +6392,12 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	}
 
 	uint32 crc = STRING_HASHCODE("burstrun");
-	float hamCost = globalVariables::playerBurstRunHamCost;
+	float hamCost = 0;
+	if (globalVariables::playerBurstRunToggleEnabled) {
+		hamCost = globalVariables::playerBurstRunHamCostPercent / 100;
+	} else {
+		hamCost = globalVariables::playerBurstRunHamCost;
+	}
 	float duration = globalVariables::playerBurstRunDuration;
 	float cooldown = globalVariables::playerBurstRunCoolDownTimer;
 
@@ -6401,21 +6410,26 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	float hamReduction = 1.f - hamModifier;
 
-	int healthCost = (int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
-	int actionCost = (int) (player->calculateCostAdjustment(CreatureAttribute::QUICKNESS, hamCost) * hamReduction);
-	int mindCost = (int) (player->calculateCostAdjustment(CreatureAttribute::FOCUS, hamCost) * hamReduction);
+	float healthCost = 0;
+	float actionCost = 0;
+	float mindCost = 0;
+	
+	if (globalVariables::playerBurstRunToggleEnabled) {
+		healthCost = player->getMaxHAM(CreatureAttribute::HEALTH) * (globalVariables::playerGallopDamagePercent / 100);
+		actionCost = player->getMaxHAM(CreatureAttribute::ACTION) * (globalVariables::playerGallopDamagePercent / 100);
+		mindCost = player->getMaxHAM(CreatureAttribute::MIND) * (globalVariables::playerGallopDamagePercent / 100);
+			
+	} else {
+		healthCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
+		actionCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::QUICKNESS, hamCost) * hamReduction);
+		mindCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::FOCUS, hamCost) * hamReduction);
+	}
 
 	if (player->getHAM(CreatureAttribute::HEALTH) <= healthCost || player->getHAM(CreatureAttribute::ACTION) <= actionCost || player->getHAM(CreatureAttribute::MIND) <= mindCost) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); // You are too tired to Burst Run.
 		return false;
 	}
-
-	if (globalVariables::playerBurstRunToggleEnabled) {
-		healthCost = hamCost / 3;
-		actionCost = hamCost / 3;
-		mindCost = hamCost / 3;
-	}	
-
+	
 	player->inflictDamage(player, CreatureAttribute::HEALTH, healthCost, true);
 	player->inflictDamage(player, CreatureAttribute::ACTION, actionCost, true);
 	player->inflictDamage(player, CreatureAttribute::MIND, mindCost, true);

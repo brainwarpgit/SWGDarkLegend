@@ -364,6 +364,10 @@ playerBurstRunDuration = 30 --default 30
 playerBurstRunHamCost = 6000 --default 100 divided amount HAM pools
 playerBurstRunSpeedAndAccelerationModifier = 1.866 --default 1.866
 playerDefaultRunSpeed = 5.376 --default 1.866
+playerGallopToggleEnabled = true --default false  also disabled gallop stop command
+playerGallopDamagePercent = 25 --default 0 damage on each pool
+playerBurstRunHamCostPercent = 25 --default 0 damage on each pool  used when playerBurstRunToggleEnabled = true
+playerBurstRunHamCost = 3000 --default 100 damage on each pool  used when playerBurstRunToggleEnabled = false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

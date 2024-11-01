@@ -17,6 +17,10 @@ public:
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 
+		if (globalVariables::playerGallopToggleEnabled) {
+			creature->sendSystemMessage("Gallop Stop is disabled!");
+			return GENERALERROR;
+		}
 		if (!checkStateMask(creature))
 			return INVALIDSTATE;
 
@@ -25,6 +29,7 @@ public:
 
 		ManagedReference<SceneObject*> parent = creature->getParent().get();
 
+		PlayerObject* ghost = creature->getPlayerObject();
 		if (parent == nullptr || !parent->isMount()) {
 			creature->sendSystemMessage("@combat_effects:cant_stop_gallop_not_mounted"); // You can't stop galloping if you aren't mounted.
 			return GENERALERROR;
@@ -38,7 +43,7 @@ public:
 
 		uint32 crc = STRING_HASHCODE("gallop");
 
-		if (!mount->hasBuff(crc)) {
+		if (!creature->hasBuff(crc)) {
 			creature->sendSystemMessage("@combat_effects:cant_stop_galloping_not_galloping"); // You can't stop galloping if you aren't already galloping.
 			return GENERALERROR;
 		}
@@ -57,12 +62,23 @@ public:
 			return GENERALERROR;
 
 		int cooldown = mountSpeedData->getGallopCooldown();
-
+		auto mountTemplateData = mount->getObjectTemplate();
+		auto mountTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(mountTemplateData);
+		Vector<FloatParam> mountSpeedTempl = mountTemplate->getSpeed();		
+		creature->setRunSpeed(mountSpeedData->getRunSpeed() * globalVariables::playerSpeedMultiplier);
+		mount->setRunSpeed(mountSpeedData->getRunSpeed() * globalVariables::playerSpeedMultiplier);
 		creature->removeBuff(crc);
 		mount->removeBuff(crc);
 		creature->getCooldownTimerMap()->updateToCurrentAndAddMili("gallop", cooldown * 1000);
 		creature->removePendingTask("gallop_notify");
-
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr && mount->getObjectID() != pet->getObjectID()) {
+					pet->setRunSpeed(creature->getFullSpeed() * 3);
+				}
+			}
+		}
 		Reference<GallopNotifyAvailableEvent*> task = new GallopNotifyAvailableEvent(creature);
 		creature->addPendingTask("gallop_notify", task, cooldown * 1000);
 
