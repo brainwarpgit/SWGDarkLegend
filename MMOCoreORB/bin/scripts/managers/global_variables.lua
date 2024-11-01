@@ -131,6 +131,8 @@ combatDamageAllMultiplier = 1 --default 1 stacks with all other multipliers
 commandCheckForceStatusCommandEnabled = true --default true
 commandMeditateMergeEnabled = true --default false   merges /meditate and /forcemeditate together so it works if you have the skill from either.
 commandObjectCreateAttachmentEnabled = true --default false
+commandfsVillageEnabled = true --default false
+commandRegrantSkillsEnabled = true --default false
 
 --Crafting
 craftingFactoryCrateMaxSize = 1000 --default 100
@@ -443,6 +445,9 @@ resourcesMaximumQuality = 1000 --default 1000
 resourcesContainerSize = 10000000 --default 100000
 resourcesResourceDeedSize = 300000 --default 30000
 
+--Server
+serverDrawDistance = 512 --default 192
+
 --Skills
 skillsInstantMasterPoliticianEnabled = true --default false
 skillsInstantMasterMerchantEnabled = true --default false
@@ -472,6 +477,7 @@ structureInstallationQuickAddMaintenanceAmount = 50 --default 10 in k credits Ma
 structureInstallationQuickAddPowerEnabled = true --default false
 structureInstallationQuickAddPowerAmount = 50 --default 10 in k power Max 100
 structureInstallationResourcesRetrieveAllEnabled = true --default false
+structureRemoveDestroyCodeEnabled = true --default false
 
 --Vehicle
 vehicleBaseDecayCycle = 600 -- default 600 in seconds

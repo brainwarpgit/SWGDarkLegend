@@ -136,6 +136,8 @@ namespace globalVariables {
 	extern bool commandCheckForceStatusCommandEnabled;
 	extern bool commandMeditateMergeEnabled;
 	extern bool commandObjectCreateAttachmentEnabled;
+	extern bool commandfsVillageEnabled;
+	extern bool commandRegrantSkillsEnabled;
 
 //Crafting
 	extern int craftingFactoryCrateMaxSize;
@@ -444,6 +446,9 @@ namespace globalVariables {
 	extern int resourcesContainerSize;
 	extern int resourcesResourceDeedSize;
 	
+//Server
+	extern float serverDrawDistance;
+
 //Skills
 	extern bool skillsInstantMasterPoliticianEnabled;
 	extern bool skillsInstantMasterMerchantEnabled;
@@ -472,6 +477,7 @@ namespace globalVariables {
 	extern bool structureInstallationQuickAddPowerEnabled;
 	extern int structureInstallationQuickAddPowerAmount;
 	extern bool structureInstallationResourcesRetrieveAllEnabled;
+	extern bool structureRemoveDestroyCodeEnabled;
 
 //Vehicle
 	extern int vehicleBaseDecayCycle;

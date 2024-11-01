@@ -2004,9 +2004,9 @@ bool BuildingObjectImplementation::isBuildingObject() {
 
 float BuildingObjectImplementation::getOutOfRangeDistance() const {
 #ifdef COV_BUILDING_QUAD_RANGE
-	return ZoneServer::CLOSEOBJECTRANGE * 4;
+	return globalVariables::serverDrawDistance * 4;
 #else // COV_BUILDING_QUAD_RANGE
-	return ZoneServer::CLOSEOBJECTRANGE;
+	return globalVariables::serverDrawDistance;
 #endif // COV_BUILDING_QUAD_RANGE
 }
 

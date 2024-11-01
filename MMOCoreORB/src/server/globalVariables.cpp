@@ -143,6 +143,8 @@ namespace globalVariables {
 	bool commandCheckForceStatusCommandEnabled = true;
 	bool commandMeditateMergeEnabled = false;
 	bool commandObjectCreateAttachmentEnabled = false;
+	bool commandfsVillageEnabled = false;
+	bool commandRegrantSkillsEnabled = false;
 
 //Crafting
 	int craftingFactoryCrateMaxSize = 100;
@@ -451,6 +453,9 @@ namespace globalVariables {
 	int resourcesContainerSize = 100000;
 	int resourcesResourceDeedSize = 30000;
 
+//Server
+	float serverDrawDistance = 192;
+
 //Skills
 	bool skillsInstantMasterPoliticianEnabled = false;
 	bool skillsInstantMasterMerchantEnabled = false;
@@ -479,6 +484,7 @@ namespace globalVariables {
 	bool structureInstallationQuickAddPowerEnabled = false;
 	int structureInstallationQuickAddPowerAmount = 10000;
 	bool structureInstallationResourcesRetrieveAllEnabled = false;
+	bool structureRemoveDestroyCodeEnabled = false;
 
 //Vehicle
 	int vehicleBaseDecayCycle = 600;
@@ -677,6 +683,8 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
 			if (lua->getGlobalBoolean("commandMeditateMergeEnabled") == true || lua->getGlobalBoolean("commandMeditateMergeEnabled") == false) commandMeditateMergeEnabled = lua->getGlobalBoolean("commandMeditateMergeEnabled");
 			if (lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == true || lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == false) commandObjectCreateAttachmentEnabled = lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled");
+			if (lua->getGlobalBoolean("commandfsVillageEnabled") == true || lua->getGlobalBoolean("commandfsVillageEnabled") == false) commandfsVillageEnabled = lua->getGlobalBoolean("commandfsVillageEnabled");
+			if (lua->getGlobalBoolean("commandRegrantSkillsEnabled") == true || lua->getGlobalBoolean("commandRegrantSkillsEnabled") == false) commandRegrantSkillsEnabled = lua->getGlobalBoolean("commandRegrantSkillsEnabled");
 			
 			//Crafting 
 			if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
@@ -981,6 +989,9 @@ namespace globalVariables {
 			if (lua->getGlobalInt("resourcesContainerSize") > 0) resourcesContainerSize = lua->getGlobalInt("resourcesContainerSize");
 			if (lua->getGlobalInt("resourcesResourceDeedSize") > 0) resourcesResourceDeedSize = lua->getGlobalInt("resourcesResourceDeedSize");
 			
+			//Server
+			if (lua->getGlobalFloat("serverDrawDistance") > 0) serverDrawDistance = lua->getGlobalFloat("serverDrawDistance");
+						
 			//Skills
 			if (lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled") == false) skillsInstantMasterPoliticianEnabled = lua->getGlobalBoolean("skillsInstantMasterPoliticianEnabled");
 			if (lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled") == true || lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled") == false) skillsInstantMasterMerchantEnabled = lua->getGlobalBoolean("skillsInstantMasterMerchantEnabled");
@@ -992,7 +1003,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("slicingArmorPierceSliceEnabled") == true || lua->getGlobalBoolean("slicingArmorPierceSliceEnabled") == false) slicingArmorPierceSliceEnabled = lua->getGlobalBoolean("slicingArmorPierceSliceEnabled");
 			if (lua->getGlobalBoolean("slicingWeaponPierceSliceEnabled") == true || lua->getGlobalBoolean("slicingWeaponPierceSliceEnabled") == false) slicingWeaponPierceSliceEnabled = lua->getGlobalBoolean("slicingWeaponPierceSliceEnabled");
 
-			//Structure
+			//Structure 
 			if (lua->getGlobalInt("structureMaxItemsPerLot") > 0) structureMaxItemsPerLot = lua->getGlobalInt("structureMaxItemsPerLot");
 			if (lua->getGlobalInt("structureMaxCivicBuildingItems") >= 0) structureMaxCivicBuildingItems = lua->getGlobalInt("structureMaxCivicBuildingItems");
 			if (lua->getGlobalInt("structureMaxZeroLotBuildingItems") >= 0) structureMaxZeroLotBuildingItems = lua->getGlobalInt("structureMaxZeroLotBuildingItems");
@@ -1009,6 +1020,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled") == true || lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled") == false) structureInstallationQuickAddPowerEnabled = lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled");
 			if (lua->getGlobalInt("structureInstallationQuickAddPowerAmount") > 0 && lua->getGlobalInt("structureInstallationQuickAddPowerAmount") <= 100) structureInstallationQuickAddPowerAmount = lua->getGlobalInt("structureInstallationQuickAddPowerAmount");
 			if (lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == true || lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == false) structureInstallationResourcesRetrieveAllEnabled = lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled");
+			if (lua->getGlobalBoolean("structureRemoveDestroyCodeEnabled") == true || lua->getGlobalBoolean("structureRemoveDestroyCodeEnabled") == false) structureRemoveDestroyCodeEnabled = lua->getGlobalBoolean("structureRemoveDestroyCodeEnabled");
 			
 			//Vehicle 
 			if (lua->getGlobalInt("vehicleBaseDecayCycle") >= 0) vehicleBaseDecayCycle = lua->getGlobalInt("vehicleBaseDecayCycle");

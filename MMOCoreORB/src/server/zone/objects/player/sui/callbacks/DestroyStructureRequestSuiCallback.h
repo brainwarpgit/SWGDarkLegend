@@ -29,7 +29,11 @@ public:
 			return;
 		}
 
-		session->sendDestroyCode();
+		if(!globalVariables::structureRemoveDestroyCodeEnabled){
+			session->sendDestroyCode();
+		} else {
+			session->destroyStructure();
+		}
 	}
 };
 

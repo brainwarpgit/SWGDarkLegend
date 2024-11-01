@@ -354,7 +354,7 @@ public:
 					}
 				}
 			} else {
-				float covDist = ZoneServer::CLOSEOBJECTRANGE;
+				float covDist = globalVariables::serverDrawDistance;
 
 				// Use the range set for the zone when possible
 				if (spaceZone) {

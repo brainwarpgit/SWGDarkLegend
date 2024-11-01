@@ -249,5 +249,5 @@ float ZoneImplementation::getBoundingRadius() {
 }
 
 float ZoneImplementation::getZoneObjectRange() {
-	return ZoneServer::CLOSEOBJECTRANGE;
+	return globalVariables::serverDrawDistance;
 }

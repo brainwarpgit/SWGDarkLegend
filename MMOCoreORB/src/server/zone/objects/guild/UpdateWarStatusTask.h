@@ -68,7 +68,7 @@ public:
 			for (int j = 0; j < onlineMembers2.size(); ++j) {
 				CreatureObject* creo2 = onlineMembers2.get(j);
 
-				if (creo->isInRange(creo2, ZoneServer::CLOSEOBJECTRANGE)) {
+				if (creo->isInRange(creo2, globalVariables::serverDrawDistance)) {
 					creo->sendPvpStatusTo(creo2);
 					creo2->sendPvpStatusTo(creo);
 				}

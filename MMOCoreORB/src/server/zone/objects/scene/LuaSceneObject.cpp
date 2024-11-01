@@ -849,7 +849,7 @@ int LuaSceneObject::setObjectName(lua_State* L) {
 int LuaSceneObject::setRadius(lua_State* L) {
 	float radius = lua_tonumber(L, -1);
 
-	float radiusCheck = ZoneServer::CLOSEOBJECTRANGE;
+	float radiusCheck = globalVariables::serverDrawDistance;
 	auto zone = realObject->getZone();
 
 	if (zone != nullptr)
