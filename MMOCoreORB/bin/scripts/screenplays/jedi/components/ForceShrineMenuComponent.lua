@@ -2,7 +2,11 @@ ForceShrineMenuComponent = {}
 
 function ForceShrineMenuComponent:fillObjectMenuResponse(pSceneObject, pMenuResponse, pPlayer)
 	local menuResponse = LuaObjectMenuResponse(pMenuResponse)
-
+	local pObject = CreatureObject(pPlayer):getPlayerObject()
+	if pObject == nil then
+		CreatureObject(pPlayer):sendSystemMessage("Nil pObject")
+	end
+	
 	if (CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then
 		menuResponse:addRadialMenuItem(120, 3, "@jedi_trials:meditate") -- Meditate
 	end
@@ -14,6 +18,12 @@ function ForceShrineMenuComponent:fillObjectMenuResponse(pSceneObject, pMenuResp
 	if (not CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then
 		menuResponse:addRadialMenuItem(122, 3, "Become One with the Force!")
 	end
+	
+	if (PlayerObject(pObject):isAdmin()) then
+		menuResponse:addRadialMenuItem(123, 3, "Finish Village")
+		menuResponse:addRadialMenuItem(124, 3, "Finish Padawan Trials")
+		menuResponse:addRadialMenuItem(125, 3, "Finish Knight Trials")
+	end
 end
 
 function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selectedID)
@@ -21,7 +31,7 @@ function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selec
 		return 0
 	end
 
-	if (selectedID == 120 and CreatureObject(pPlayer):hasSkill("force_title_jedi_novice")) then
+	if (selectedID == 120 and (CreatureObject(pPlayer):hasSkill("force_title_jedi_novice"))) then
 		if (CreatureObject(pPlayer):getPosture() ~= CROUCHED) then
 			CreatureObject(pPlayer):sendSystemMessage("@jedi_trials:show_respect") -- Must respect
 		else
@@ -34,6 +44,24 @@ function ForceShrineMenuComponent:handleObjectMenuSelect(pObject, pPlayer, selec
 			CreatureObject(pPlayer):sendSystemMessage("To properly meditate here, you must do so respectfully.")
 		else
 			self:makeForceSensitive(pPlayer)
+		end
+	elseif (selectedID == 123) then
+		if (CreatureObject(pPlayer):getPosture() ~= CROUCHED) then
+			CreatureObject(pPlayer):sendSystemMessage("To properly meditate here, you must do so respectfully.")
+		else
+			FsOutro:completeVillageOutroFrog(pPlayer)
+		end
+	elseif (selectedID == 124) then
+		if (CreatureObject(pPlayer):getPosture() ~= CROUCHED) then
+			CreatureObject(pPlayer):sendSystemMessage("To properly meditate here, you must do so respectfully.")
+		else
+			JediTrials:unlockJediPadawan(pPlayer)
+		end
+	elseif (selectedID == 125) then
+		if (CreatureObject(pPlayer):getPosture() ~= CROUCHED) then
+			CreatureObject(pPlayer):sendSystemMessage("To properly meditate here, you must do so respectfully.")
+		else
+			JediTrials:unlockJediKnight(pPlayer)
 		end
 	end
 
@@ -83,8 +111,6 @@ function ForceShrineMenuComponent:doMeditate(pObject, pPlayer)
 		else
 			KnightTrials:showCurrentTrial(pPlayer)
 		end
-	else
-		CreatureObject(pPlayer):sendSystemMessage("@jedi_trials:force_shrine_wisdom_" .. getRandomNumber(1, 15))
 	end
 end
 
@@ -100,17 +126,6 @@ function ForceShrineMenuComponent:recoverRobe(pPlayer)
 		return
 	end
 
-	--local robeTemplate
-	--if (CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_03")) then
-		--local councilType = JediTrials:getJediCouncil(pPlayer)
-
-		--if (councilType == JediTrials.COUNCIL_LIGHT) then
-		--	robeTemplate = "object/tangible/wearables/robe/robe_jedi_light_s01.iff"
-		--else
-		--	robeTemplate = "object/tangible/wearables/robe/robe_jedi_dark_s01.iff"
-		--end
-	--else
-	--	robeTemplate = "object/tangible/wearables/robe/robe_jedi_padawan.iff"
 	if CreatureObject(pPlayer):hasSkill("force_title_jedi_rank_02") then
 		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_padawan.iff", -1)
 	end
@@ -145,7 +160,6 @@ function ForceShrineMenuComponent:recoverRobe(pPlayer)
 		giveItem(pInventory, "object/tangible/wearables/robe/robe_jedi_light_s05.iff", -1)
 	end
 	
-	--giveItem(pInventory, robeTemplate, -1)
 	CreatureObject(pPlayer):sendSystemMessage("@force_rank:items_recovered")
 end
 
@@ -185,7 +199,5 @@ function ForceShrineMenuComponent:forceSelection(pPlayer, pSui, eventIndex, args
 		
 	VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_GLOWING)
 	FsIntro:startPlayerOnIntro(pPlayer)
-	--local intVar1 = getVariable("intVariable1")
-	--CreatureObject(pPlayer):sendSystemMessage(tostring(intVar1))
 	CreatureObject(pPlayer):sendSystemMessage(sayings[getRandomNumber(#sayings)])	
 end
