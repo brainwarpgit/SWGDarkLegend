@@ -151,7 +151,7 @@ void FactionManager::awardFactionStanding(CreatureObject* player, const String& 
 	}
 }
 
-void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 typeHash, const String& factionName, uint32 shipLevel, int totalShipmates, float factionMultiplier) {
+void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 shipTypeHash, const String& factionName, uint32 shipLevel, int totalShipmates, int imperialReward, int rebelReward) {
 	if (player == nullptr || !factionMap.contains(factionName)) {
 		return;
 	}
@@ -168,7 +168,19 @@ void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 type
 		return;
 	}
 
-	float multiplier = 16.f + factionMultiplier;
+	float gain = 0.f;
+	float loss = 0.f;
+
+	if (imperialReward > 0) {
+		gain = imperialReward;
+		loss = rebelReward;
+	} else {
+		gain = rebelReward;
+		loss = imperialReward;
+	}
+
+	/*
+	float multiplier = 4.f;
 	int pilotTier = player->getPilotTier();
 
 	const uint32 tier1 = STRING_HASHCODE("tier1");
@@ -176,8 +188,6 @@ void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 type
 	const uint32 tier3 = STRING_HASHCODE("tier3");
 	const uint32 tier4 = STRING_HASHCODE("tier4");
 	const uint32 tier5 = STRING_HASHCODE("tier5");
-
-	float gain = 0.f;
 
 	switch(pilotTier) {
 		case 1: {
@@ -225,9 +235,9 @@ void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 type
 		case 5: {
 			if (shipLevel == tier4) {
 				gain = ((multiplier * 5.f) / 2.f);
-			} else if (typeHash == STRING_HASHCODE("star_destroyer")) {
+			} else if (shipTypeHash == STRING_HASHCODE("star_destroyer")) {
 				gain = 500.f;
-			} else if (shipLevel == tier5 || typeHash == STRING_HASHCODE("corvette")) {
+			} else if (shipLevel == tier5 || shipTypeHash == STRING_HASHCODE("corvette")) {
 				gain = multiplier * 5.f;
 			}
 
@@ -237,8 +247,7 @@ void FactionManager::awardSpaceFactionPoints(CreatureObject* player, uint32 type
 			break;
 		}
 	}
-
-	float loss = gain * 2;
+	*/
 
 	// info(true) << "awardSpaceFactionPoints -- Player Tier: " << pilotTier << " ShipLevel: " << shipLevel << " Gain: " << gain << " Loss: " << loss;
 
