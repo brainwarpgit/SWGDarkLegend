@@ -1475,12 +1475,20 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 		return 0;
 	}
 
+	uint32 crc = STRING_HASHCODE("pet_damage_divisor");
+		
 	String xpType;
 	if (data.isForceAttack()) {
 		xpType = "jedi_general";
 	} else if (attacker->isPet()) {
 		xpType = "creaturehandler";
 		damage *= globalVariables::petDamageMultiplier;
+		CreatureObject* pet = attacker->asCreatureObject();
+		if (pet != nullptr) {
+			if (pet->hasBuff(crc)) {
+				damage *= 0.05f;
+			}
+		}
 	} else {
 		xpType = weapon->getXpType();
 	}
@@ -1687,13 +1695,18 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 		damage *= damageMultiplier;
 
 	defenderHitList->setInitialDamage(damage);
-
+	
+	uint32 crc = STRING_HASHCODE("pet_damage_divisor");
+		
 	String xpType;
 	if (data.isForceAttack()) {
 		xpType = "jedi_general";
 	} else if (attacker->isPet()) {
 		xpType = "creaturehandler";
 		damage *= globalVariables::petDamageMultiplier;
+		if (attacker->hasBuff(crc)) {
+			damage *= 0.05f;
+		}
 	} else {
 		xpType = weapon->getXpType();
 	}

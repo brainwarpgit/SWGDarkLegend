@@ -26,6 +26,8 @@ public:
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 		int res = creature->hasBuff(buffCRC) ? NOSTACKJEDIBUFF : doJediSelfBuffCommand(creature);
 
+		uint32 crc = STRING_HASHCODE("pet_damage_divisor");
+		
 		if (res == NOSTACKJEDIBUFF) {
 			if (globalVariables::playerJediForceRunToggleEnabled == false) {
 				creature->sendSystemMessage("@jedi_spam:already_force_running"); // You are already force running.
@@ -33,6 +35,16 @@ public:
 			} else {
 				creature->sendSystemMessage("You feel the Force leave your body, and you return to normal movement speed."); // Toggle Force Run off.
 				creature->removeBuff(BuffCRC::JEDI_FORCE_RUN_2);
+				if (globalVariables::petSpeedSameAsPlayerEnabled) {
+					PlayerObject* ghost = creature->getPlayerObject();
+					for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+						ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+						if (pet != nullptr) {
+							pet->removeBuff(crc);
+							pet->setRunSpeed(creature->getFullSpeed() * 3);
+						}
+					}
+				}
 			}
 		}
 
@@ -62,6 +74,20 @@ public:
 		if (creature->hasBuff(STRING_HASHCODE("burstrun")) || creature->hasBuff(STRING_HASHCODE("retreat"))) {
 			creature->removeBuff(STRING_HASHCODE("burstrun"));
 			creature->removeBuff(STRING_HASHCODE("retreat"));
+		}
+		
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			PlayerObject* ghost = creature->getPlayerObject();
+			ManagedReference<Buff*> petBuff = new Buff(creature, crc, duration, BuffType::SKILL);
+			Locker petLocker(petBuff);
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr and petBuff != nullptr) {
+					pet->addBuff(petBuff);
+					pet->setRunSpeed(creature->getFullSpeed() * 3);
+				}	
+			}
+			petLocker.release();
 		}
 
 		return SUCCESS;

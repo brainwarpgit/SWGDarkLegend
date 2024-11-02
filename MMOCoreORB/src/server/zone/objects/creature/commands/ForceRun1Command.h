@@ -36,6 +36,15 @@ public:
 			} else {
 				creature->sendSystemMessage("You feel the Force leave your body, and you return to normal movement speed."); // Toggle Force Run off.
 				creature->removeBuff(BuffCRC::JEDI_FORCE_RUN_1);
+				if (globalVariables::petSpeedSameAsPlayerEnabled) {
+					PlayerObject* ghost = creature->getPlayerObject();
+					for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+						ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+						if (pet != nullptr) {
+							pet->setRunSpeed(creature->getFullSpeed() * 3);
+						}
+					}
+				}
 			}
 		}
 		// Return if something is in error.
@@ -47,6 +56,17 @@ public:
 		if (creature->hasBuff(STRING_HASHCODE("burstrun")) || creature->hasBuff(STRING_HASHCODE("retreat"))) {
 			creature->removeBuff(STRING_HASHCODE("burstrun"));
 			creature->removeBuff(STRING_HASHCODE("retreat"));
+			creature->removeBuff(STRING_HASHCODE("gallop"));
+		}
+
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			PlayerObject* ghost = creature->getPlayerObject();
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr) {
+					pet->setRunSpeed(creature->getFullSpeed() * 3);
+				}
+			}
 		}
 
 		// Return.
