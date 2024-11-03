@@ -36,7 +36,7 @@ void WeaponObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject,
 	}
 	
 	PlayerObject* ghost = player->getPlayerObject();
-	if ((sceneObject->isWeaponObject() && player->hasSkill("crafting_weaponsmith_master") && globalVariables::playerAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
+	if ((sceneObject->isWeaponObject() && player->hasSkill("crafting_weaponsmith_master") && globalVariables::playerWeaponAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
 		if (weapon != nullptr) {
 			const VectorMap<String, int>* skillMods = weapon->getWearableSkillMods();
 			if (skillMods->size() >= 1) {

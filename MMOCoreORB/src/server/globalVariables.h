@@ -371,6 +371,9 @@ namespace globalVariables {
 	extern bool playerGallopToggleEnabled;
 	extern float playerGallopDamagePercent;
 	extern float playerBurstRunHamCost;
+	extern bool playerClothingAttachmentSplittingEnabled;
+	extern bool playerArmorAttachmentSplittingEnabled;
+	extern bool playerWeaponAttachmentSplittingEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

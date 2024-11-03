@@ -54,7 +54,7 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	}
 	
 	PlayerObject* ghost = player->getPlayerObject();
-	if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && player->hasSkill("crafting_tailor_master") && globalVariables::playerAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
+	if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && player->hasSkill("crafting_tailor_master") && globalVariables::playerClothingAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
 		WearableObject* wearable = cast<WearableObject*>( sceneObject);
 		if (wearable != nullptr) {
 			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
@@ -64,7 +64,7 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 		}
 	}
 	
-	if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && player->hasSkill("crafting_armorsmith_master") && globalVariables::playerAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
+	if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && player->hasSkill("crafting_armorsmith_master") && globalVariables::playerArmorAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
 		WearableObject* wearable = cast<WearableObject*>( sceneObject);
 		if (wearable != nullptr) {
 			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();

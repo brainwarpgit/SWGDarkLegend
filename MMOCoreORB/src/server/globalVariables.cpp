@@ -378,6 +378,9 @@ namespace globalVariables {
 	bool playerGallopToggleEnabled = false;
 	float playerGallopDamagePercent = 0;
 	float playerBurstRunHamCost = 100.0f;
+	bool playerClothingAttachmentSplittingEnabled = false;
+	bool playerArmorAttachmentSplittingEnabled = false;
+	bool playerWeaponAttachmentSplittingEnabled = false;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -914,7 +917,10 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("playerDefaultRunSpeed") >= 0) playerDefaultRunSpeed = lua->getGlobalFloat("playerDefaultRunSpeed");
 			if (lua->getGlobalBoolean("playerGallopToggleEnabled") == true || lua->getGlobalBoolean("playerGallopToggleEnabled") == false) playerGallopToggleEnabled = lua->getGlobalBoolean("playerGallopToggleEnabled");
 			if (lua->getGlobalFloat("playerGallopDamagePercent") >= 0 && lua->getGlobalFloat("playerGallopDamagePercent") <= 100) playerGallopDamagePercent = lua->getGlobalFloat("playerGallopDamagePercent");
-			
+			if (lua->getGlobalBoolean("playerClothingAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerClothingAttachmentSplittingEnabled") == false) playerClothingAttachmentSplittingEnabled = lua->getGlobalBoolean("playerClothingAttachmentSplittingEnabled");
+			if (lua->getGlobalBoolean("playerArmorAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerArmorAttachmentSplittingEnabled") == false) playerArmorAttachmentSplittingEnabled = lua->getGlobalBoolean("playerArmorAttachmentSplittingEnabled");
+			if (lua->getGlobalBoolean("playerWeaponAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerWeaponAttachmentSplittingEnabled") == false) playerWeaponAttachmentSplittingEnabled = lua->getGlobalBoolean("playerWeaponAttachmentSplittingEnabled");
+		
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");

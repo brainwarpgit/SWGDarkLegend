@@ -370,6 +370,9 @@ playerGallopToggleEnabled = true --default false  also disabled gallop stop comm
 playerGallopDamagePercent = 25 --default 0 damage on each pool
 playerBurstRunHamCostPercent = 25 --default 0 damage on each pool  used when playerBurstRunToggleEnabled = true
 playerBurstRunHamCost = 3000 --default 100 damage on each pool  used when playerBurstRunToggleEnabled = false
+playerClothingAttachmentSplittingEnabled = true --default false
+playerArmorAttachmentSplittingEnabled = true --default false
+playerWeaponAttachmentSplittingEnabled = true --default false
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes
