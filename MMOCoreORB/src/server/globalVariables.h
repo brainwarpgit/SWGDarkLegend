@@ -131,6 +131,10 @@ namespace globalVariables {
 	extern float combatDamageJediPolearmWeaponMultiplier;
 	extern float combatDamageJediForcePowerMultiplier;
 	extern float combatDamageAllMultiplier;
+	extern bool combatCriticalDamageEnabled;
+	extern float combatCriticalMultilier;
+	extern float combatLegendaryCriticalMultiplier;
+	extern float combatCriticalMaxRollModifier;
 	
 //Command
 	extern bool commandCheckForceStatusCommandEnabled;

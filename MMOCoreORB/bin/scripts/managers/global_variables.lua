@@ -126,6 +126,10 @@ combatDamageJediTwoHandWeaponMultiplier = 1 --default 1
 combatDamageJediPolearmWeaponMultiplier = 1 --default 1
 combatDamageJediForcePowerMultiplier = 1 --default 1
 combatDamageAllMultiplier = 1 --default 1 stacks with all other multipliers
+combatCriticalDamageEnabled = true --default false
+combatCriticalMultilier = 1.5 --default 1
+combatLegendaryCriticalMultiplier = 2.0 --default 1
+combatCriticalMaxRollModifier = 200 --default 200
 
 --Commands
 commandCheckForceStatusCommandEnabled = true --default true

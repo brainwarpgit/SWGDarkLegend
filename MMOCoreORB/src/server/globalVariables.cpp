@@ -138,6 +138,10 @@ namespace globalVariables {
 	float combatDamageJediPolearmWeaponMultiplier = 1;
 	float combatDamageJediForcePowerMultiplier = 1;
 	float combatDamageAllMultiplier = 1;
+	bool combatCriticalDamageEnabled = false;
+	float combatCriticalMultilier = 1.0;
+	float combatLegendaryCriticalMultiplier = 1.0;
+	float combatCriticalMaxRollModifier = 200;
 	
 //Command
 	bool commandCheckForceStatusCommandEnabled = true;
@@ -661,7 +665,7 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("poiYavin4ImperialBaseMultiplier") > 0) poiYavin4ImperialBaseMultiplier = lua->getGlobalFloat("poiYavin4ImperialBaseMultiplier");
 			if (lua->getGlobalFloat("poiYavin4WoolamanderTempleMultiplier") > 0) poiYavin4WoolamanderTempleMultiplier = lua->getGlobalFloat("poiYavin4WoolamanderTempleMultiplier");
 			
-			//Combat
+			//Combat 
 			if (lua->getGlobalFloat("combatDamageMeleeWeaponMultiplier") > 0) combatDamageMeleeWeaponMultiplier = lua->getGlobalFloat("combatDamageMeleeWeaponMultiplier");
 			if (lua->getGlobalFloat("combatDamageUnarmedWeaponMultiplier") > 0) combatDamageUnarmedWeaponMultiplier = lua->getGlobalFloat("combatDamageUnarmedWeaponMultiplier");
 			if (lua->getGlobalFloat("combatDamageOneHandWeaponMultiplier") > 0) combatDamageOneHandWeaponMultiplier = lua->getGlobalFloat("combatDamageOneHandWeaponMultiplier");
@@ -681,6 +685,10 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("combatDamageJediPolearmWeaponMultiplier") > 0) combatDamageJediPolearmWeaponMultiplier = lua->getGlobalFloat("combatDamageJediPolearmWeaponMultiplier");
 			if (lua->getGlobalFloat("combatDamageJediForcePowerMultiplier") > 0) combatDamageJediForcePowerMultiplier = lua->getGlobalFloat("combatDamageJediForcePowerMultiplier");
 			if (lua->getGlobalFloat("combatDamageAllMultiplier") > 0) combatDamageAllMultiplier = lua->getGlobalFloat("combatDamageAllMultiplier");
+			if (lua->getGlobalBoolean("combatCriticalDamageEnabled") == true || lua->getGlobalBoolean("combatCriticalDamageEnabled") == false) combatCriticalDamageEnabled = lua->getGlobalBoolean("combatCriticalDamageEnabled");
+			if (lua->getGlobalFloat("combatCriticalMultilier") >= 1) combatCriticalMultilier = lua->getGlobalFloat("combatCriticalMultilier");
+			if (lua->getGlobalFloat("combatLegendaryCriticalMultiplier") >= 1) combatLegendaryCriticalMultiplier = lua->getGlobalFloat("combatLegendaryCriticalMultiplier");
+			if (lua->getGlobalFloat("combatCriticalMaxRollModifier") >= 1) combatCriticalMaxRollModifier = lua->getGlobalFloat("combatCriticalMaxRollModifier");
 
 			//Command 
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
