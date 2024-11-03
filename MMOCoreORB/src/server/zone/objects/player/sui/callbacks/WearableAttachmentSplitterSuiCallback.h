@@ -1,12 +1,12 @@
 /*
- * AttachmentSplitterSuiCallback.h
+ * WearableAttachmentSplitterSuiCallback.h
  *
  *  Created on: 10/16/2024
  *	  Author: Genmi
  */
 
-#ifndef ATTACHMENTSPLITTERSUICALLBACK_H_
-#define ATTACHMENTSPLITTERSUICALLBACK_H_
+#ifndef WEARABLEATTACHMENTSPLITTERSUICALLBACK_H_
+#define WEARABLEATTACHMENTSPLITTERSUICALLBACK_H_
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/PlayerObject.h"
@@ -19,19 +19,19 @@
 #include "server/zone/managers/loot/LootGroupMap.h"
 #include "server/globalVariables.h"
 
-class AttachmentSplitterSuiCallback : public SuiCallback {
-	ManagedWeakReference<TangibleObject*> tangibleObject;
+class WearableAttachmentSplitterSuiCallback : public SuiCallback {
+	ManagedWeakReference<WearableObject*> wearableObject;
 	ManagedWeakReference<SceneObject*> sceneObject;
 
 public:
-	AttachmentSplitterSuiCallback(ZoneServer* serv, TangibleObject* tano, SceneObject* sceneo) : SuiCallback(serv) {
-		tangibleObject = tano;
+	WearableAttachmentSplitterSuiCallback(ZoneServer* serv, WearableObject* wearable, SceneObject* sceneo) : SuiCallback(serv) {
+		wearableObject = wearable;
 		sceneObject = sceneo;
 	}
 
 	void run(CreatureObject* creature, SuiBox* sui, uint32 eventIndex, Vector<UnicodeString>* args) {
 		ManagedReference<SceneObject*> sceneo = sceneObject;
-		ManagedReference<TangibleObject*> tano = tangibleObject;
+		ManagedReference<WearableObject*> wearable = wearableObject;
 		
 		if (creature == nullptr) {
 			return;
@@ -51,17 +51,16 @@ public:
 			return;
 		}
 
-		Attachment* sea = cast<Attachment*>(tano.get());
 		String attachmentType = "";
-		if (sea->isClothingAttachment()) {
+		if (!wearable->isArmorObject()) {
 			attachmentType = "attachment_clothing";
 		} else {
 			attachmentType = "attachment_armor";
 		}
 		int jobCost = 0;
-		if (sea != nullptr) {
+		if (wearable != nullptr) {
 			SortedVector<ModSortingHelper> sortedMods;
-			VectorMap<String, int>* skillMods = sea->getSkillMods();
+			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
 			for (int i = 0; i < skillMods->size(); i++) {
 				auto key = skillMods->elementAt(i).getKey();
 				auto value = skillMods->elementAt(i).getValue();
@@ -98,12 +97,12 @@ public:
 					}
 				}
 			}
-			sea->destroyObjectFromWorld(true);
-			sea->destroyObjectFromDatabase(true);
+			wearable->destroyObjectFromWorld(true);
+			wearable->destroyObjectFromDatabase(true);
 			creature->subtractBankCredits(jobCost);
 			creature->sendSystemMessage("Your attachment split has been completed.  You have paid " + std::to_string(jobCost) + " credits.");
 		}
 	}
 };
 
-#endif /* ATTACHMENTSPLITTERSUICALLBACK_H_ */
+#endif /* WEARABLEATTACHMENTSPLITTERSUICALLBACK_H_ */

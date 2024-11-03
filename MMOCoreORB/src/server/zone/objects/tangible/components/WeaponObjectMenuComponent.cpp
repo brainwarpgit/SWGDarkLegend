@@ -11,6 +11,9 @@
 #include "WeaponObjectMenuComponent.h"
 #include "server/zone/packets/object/ObjectMenuResponse.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
+#include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
+#include "server/zone/objects/player/sui/callbacks/WeaponAttachmentSplitterSuiCallback.h"
+#include "server/globalVariables.h"
 
 void WeaponObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 
@@ -31,6 +34,17 @@ void WeaponObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject,
 			menuResponse->addRadialMenuItem(70, 3, "@sui:repair"); // Slice
 		}
 	}
+	
+	PlayerObject* ghost = player->getPlayerObject();
+	if ((sceneObject->isWeaponObject() && player->hasSkill("crafting_weaponsmith_master") && globalVariables::playerAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
+		if (weapon != nullptr) {
+			const VectorMap<String, int>* skillMods = weapon->getWearableSkillMods();
+			if (skillMods->size() >= 1) {
+				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");
+			}
+		}
+	}
+
 
 	TangibleObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);
 
@@ -90,6 +104,39 @@ int WeaponObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 			player->sendSystemMessage(message);
 
 			return 1;
+		}
+		
+		if (selectedID == 80) {
+			ZoneServer* server = player->getZoneServer();
+			if (server != nullptr) {
+				if (weapon != nullptr) {
+					SortedVector<ModSortingHelper> sortedMods;
+					const VectorMap<String, int>* skillMods = weapon->getWearableSkillMods();
+					ManagedReference<SuiListBox*> sui = new SuiListBox(player, 0x00);
+					sui->setUsingObject(player);
+					sui->setCallback(new WeaponAttachmentSplitterSuiCallback(server, weapon, sceneObject));
+					sui->setPromptTitle("Attachment Splitter");
+					int jobCost = 0;
+					for (int i = 0; i < skillMods->size(); i++) {
+						auto key = skillMods->elementAt(i).getKey();
+						auto value = skillMods->elementAt(i).getValue();
+						jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+						sortedMods.put(ModSortingHelper(key, value));
+					}
+					sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in your BANK account.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.  The original item will be lost.");
+					for (int i = 0; i < sortedMods.size(); i++) {
+						auto key = sortedMods.elementAt(i).getKey();
+						auto value = sortedMods.elementAt(i).getValue();
+						String attachmentName = "@stat_n:" + key;
+						sui->addMenuItem(attachmentName + " | +" + std::to_string(value));
+					}
+					sui->setCancelButton(true,"@cancel");
+					sui->setOkButton(true,"@ok");
+					ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+					ghost->addSuiBox(sui);
+					player->sendMessage(sui->generateMessage());
+				}
+			}
 		}
 	}
 

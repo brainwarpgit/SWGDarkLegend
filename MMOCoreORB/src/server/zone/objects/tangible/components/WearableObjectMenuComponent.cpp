@@ -16,6 +16,10 @@
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/objects/player/sui/callbacks/wipeinventorySuiCallback.h"
 #include "templates/customization/AssetCustomizationManagerTemplate.h"
+#include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
+#include "server/zone/objects/player/sui/listbox/SuiListBox.h"
+#include "server/zone/objects/player/sui/callbacks/AttachmentSplitterSuiCallback.h"
+#include "server/zone/objects/player/sui/callbacks/WearableAttachmentSplitterSuiCallback.h"
 #include "server/globalVariables.h"
 
 void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
@@ -45,6 +49,27 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 					String optionName = "Color " + String::valueOf(i + 1);
 					menuResponse->addRadialMenuItemToRadialID(71, (72 + i), 3, optionName); // sub-menu
 				}
+			}
+		}
+	}
+	
+	PlayerObject* ghost = player->getPlayerObject();
+	if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && player->hasSkill("crafting_tailor_master") && globalVariables::playerAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
+		WearableObject* wearable = cast<WearableObject*>( sceneObject);
+		if (wearable != nullptr) {
+			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
+			if (skillMods->size() >= 1) {
+				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");
+			}
+		}
+	}
+	
+	if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && player->hasSkill("crafting_armorsmith_master") && globalVariables::playerAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
+		WearableObject* wearable = cast<WearableObject*>( sceneObject);
+		if (wearable != nullptr) {
+			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
+			if (skillMods->size() >= 1) {
+				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");
 			}
 		}
 	}
@@ -113,6 +138,38 @@ int WearableObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject
 		ghost->addSuiBox(cbox);
 		player->sendMessage(cbox->generateMessage());
 
+	} else if (selectedID == 80) {
+		ZoneServer* server = player->getZoneServer();
+		if (server != nullptr) {
+			WearableObject* wearable = cast<WearableObject*>( sceneObject);
+			if (wearable != nullptr) {
+				SortedVector<ModSortingHelper> sortedMods;
+				VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
+				ManagedReference<SuiListBox*> sui = new SuiListBox(player, 0x00);
+				sui->setUsingObject(player);
+				sui->setCallback(new WearableAttachmentSplitterSuiCallback(server, wearable, sceneObject));
+				sui->setPromptTitle("Attachment Splitter");
+				int jobCost = 0;
+				for (int i = 0; i < skillMods->size(); i++) {
+					auto key = skillMods->elementAt(i).getKey();
+					auto value = skillMods->elementAt(i).getValue();
+					jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+					sortedMods.put(ModSortingHelper(key, value));
+				}
+				sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in your BANK account.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.  The original item will be lost.");
+				for (int i = 0; i < sortedMods.size(); i++) {
+					auto key = sortedMods.elementAt(i).getKey();
+					auto value = sortedMods.elementAt(i).getValue();
+					String attachmentName = "@stat_n:" + key;
+					sui->addMenuItem(attachmentName + " | +" + std::to_string(value));
+				}
+				sui->setCancelButton(true,"@cancel");
+				sui->setOkButton(true,"@ok");
+				ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
+				ghost->addSuiBox(sui);
+				player->sendMessage(sui->generateMessage());
+			}
+		}
 	}
 
 	return TangibleObjectMenuComponent::handleObjectMenuSelect(sceneObject, player, selectedID);

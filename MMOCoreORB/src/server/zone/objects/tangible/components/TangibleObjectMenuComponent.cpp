@@ -138,12 +138,11 @@ int TangibleObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject
 					jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
 					sortedMods.put(ModSortingHelper(key, value));
 				}
-				sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in BANK.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.");
+				sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in your BANK account.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.  The original item will be lost.");
 				for (int i = 0; i < sortedMods.size(); i++) {
 					auto key = sortedMods.elementAt(i).getKey();
 					auto value = sortedMods.elementAt(i).getValue();
 					String attachmentName = "@stat_n:" + key;
-					//attachmentName.setStringId("stat_n", key);
 					sui->addMenuItem(attachmentName + " | +" + std::to_string(value));
 				}
 				sui->setCancelButton(true,"@cancel");

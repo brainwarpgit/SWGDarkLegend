@@ -1,12 +1,12 @@
 /*
- * AttachmentSplitterSuiCallback.h
+ * WeaponAttachmentSplitterSuiCallback.h
  *
  *  Created on: 10/16/2024
  *	  Author: Genmi
  */
 
-#ifndef ATTACHMENTSPLITTERSUICALLBACK_H_
-#define ATTACHMENTSPLITTERSUICALLBACK_H_
+#ifndef WEAPONATTACHMENTSPLITTERSUICALLBACK_H_
+#define WEAPONATTACHMENTSPLITTERSUICALLBACK_H_
 
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/PlayerObject.h"
@@ -19,19 +19,19 @@
 #include "server/zone/managers/loot/LootGroupMap.h"
 #include "server/globalVariables.h"
 
-class AttachmentSplitterSuiCallback : public SuiCallback {
-	ManagedWeakReference<TangibleObject*> tangibleObject;
+class WeaponAttachmentSplitterSuiCallback : public SuiCallback {
+	ManagedWeakReference<WeaponObject*> weaponObject;
 	ManagedWeakReference<SceneObject*> sceneObject;
 
 public:
-	AttachmentSplitterSuiCallback(ZoneServer* serv, TangibleObject* tano, SceneObject* sceneo) : SuiCallback(serv) {
-		tangibleObject = tano;
+	WeaponAttachmentSplitterSuiCallback(ZoneServer* serv, WeaponObject* weapon, SceneObject* sceneo) : SuiCallback(serv) {
+		weaponObject = weapon;
 		sceneObject = sceneo;
 	}
 
 	void run(CreatureObject* creature, SuiBox* sui, uint32 eventIndex, Vector<UnicodeString>* args) {
 		ManagedReference<SceneObject*> sceneo = sceneObject;
-		ManagedReference<TangibleObject*> tano = tangibleObject;
+		ManagedReference<WeaponObject*> weapon = weaponObject;
 		
 		if (creature == nullptr) {
 			return;
@@ -51,17 +51,11 @@ public:
 			return;
 		}
 
-		Attachment* sea = cast<Attachment*>(tano.get());
 		String attachmentType = "";
-		if (sea->isClothingAttachment()) {
-			attachmentType = "attachment_clothing";
-		} else {
-			attachmentType = "attachment_armor";
-		}
 		int jobCost = 0;
-		if (sea != nullptr) {
+		if (weapon != nullptr) {
 			SortedVector<ModSortingHelper> sortedMods;
-			VectorMap<String, int>* skillMods = sea->getSkillMods();
+			const VectorMap<String, int>* skillMods = weapon->getWearableSkillMods();
 			for (int i = 0; i < skillMods->size(); i++) {
 				auto key = skillMods->elementAt(i).getKey();
 				auto value = skillMods->elementAt(i).getValue();
@@ -82,6 +76,11 @@ public:
 				auto value = sortedMods.elementAt(i).getValue();
 				LootManager* lootManager = creature->getZoneServer()->getLootManager();
 				LootGroupMap* lootGroupMap = LootGroupMap::instance();
+				if (System::random(100) <= 50) {
+					attachmentType = "attachment_clothing";
+				} else {
+					attachmentType = "attachment_armor";
+				}
 				Reference<const LootItemTemplate*> itemTemplate = lootGroupMap->getLootItemTemplate(attachmentType);
 				ManagedReference<TangibleObject*> caTano = lootManager->createLootAttachment(itemTemplate, key, value); 
 				if (caTano != nullptr){
@@ -98,12 +97,12 @@ public:
 					}
 				}
 			}
-			sea->destroyObjectFromWorld(true);
-			sea->destroyObjectFromDatabase(true);
+			weapon->destroyObjectFromWorld(true);
+			weapon->destroyObjectFromDatabase(true);
 			creature->subtractBankCredits(jobCost);
 			creature->sendSystemMessage("Your attachment split has been completed.  You have paid " + std::to_string(jobCost) + " credits.");
 		}
 	}
 };
 
-#endif /* ATTACHMENTSPLITTERSUICALLBACK_H_ */
+#endif /* WEAPONATTACHMENTSPLITTERSUICALLBACK_H_ */
