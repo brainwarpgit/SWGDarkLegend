@@ -109,14 +109,18 @@ public:
 					creature->sendSystemMessage("Error transferring object to inventory.");
 				}
 			} else if (commandType.beginsWith("createloot")) {
+				//Syntax exmaple /object createloot armor_all 450 6
 				String lootGroup;
 				args.getStringToken(lootGroup);
 
 				int level = 1;
+				int creatureDifficulty = 1;
 
-				if (args.hasMoreTokens())
+				if (args.hasMoreTokens()) {
 					level = args.getIntToken();
-
+					creatureDifficulty = args.getIntToken();
+				}
+				
 				ManagedReference<SceneObject*> inventory = creature->getSlottedObject("inventory");
 
 				if (inventory == nullptr || inventory->isContainerFullRecursive()) {
@@ -131,7 +135,7 @@ public:
 
 				TransactionLog trx(TrxCode::ADMINCOMMAND, creature);
 				trx.addState("commandType", commandType);
-				if (lootManager->createLoot(trx, inventory, lootGroup, level) > 0) {
+				if (lootManager->createLoot(trx, inventory, lootGroup, level, false, creatureDifficulty) > 0) {
 					creature->info(true) << "/object creatloot " << lootGroup << " trxId: " << trx.getTrxID();
 					trx.commit(true);
 				} else {
