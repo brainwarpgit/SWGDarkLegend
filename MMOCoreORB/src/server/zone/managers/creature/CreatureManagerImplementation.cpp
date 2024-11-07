@@ -1039,6 +1039,21 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 		quantityExtracted = globalVariables::harvestMinimumHarvest;
 	}
 
+	float criticalMultiplier = 1;
+	int roll = 0;
+	int rollMod = 0;
+	if (globalVariables::harvestCriticalEnabled) {
+		rollMod = player->getSkillMod("harvesting_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
+		roll = System::random(1000 + rollMod);
+		if (roll > 925) criticalMultiplier = globalVariables::harvestCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = globalVariables::harvestLegendaryCriticalMultiplier;
+	}
+
+	quantityExtracted *= criticalMultiplier;
+
+	if (criticalMultiplier == globalVariables::harvestCriticalMultiplier) creature->showFlyText("combat_effects", "critical_harvest", 0, 0xFF, 0);
+	if (criticalMultiplier == globalVariables::harvestLegendaryCriticalMultiplier) creature->showFlyText("combat_effects", "legendary_harvest", 0xFF, 0, 0);
+
 	TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 	resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);
 	trx.commit();

@@ -139,9 +139,8 @@ namespace globalVariables {
 	float combatDamageJediForcePowerMultiplier = 1;
 	float combatDamageAllMultiplier = 1;
 	bool combatCriticalDamageEnabled = false;
-	float combatCriticalMultilier = 1.0;
+	float combatCriticalMultiplier = 1.0;
 	float combatLegendaryCriticalMultiplier = 1.0;
-	float combatCriticalMaxRollModifier = 200;
 	
 //Command
 	bool commandCheckForceStatusCommandEnabled = true;
@@ -260,6 +259,9 @@ namespace globalVariables {
 	bool harvestInCombatEnabled = false;
 	int harvestMinimumHarvest = 0;
 	bool harvestMinimumHarvestEnabled = false;
+	bool harvestCriticalEnabled = false;
+	float harvestCriticalMultiplier = 1;
+	float harvestLegendaryCriticalMultiplier = 1;
 
 //Jedi
 	bool jediForceCostToTuneEnabled = true;
@@ -385,6 +387,13 @@ namespace globalVariables {
 	bool playerClothingAttachmentSplittingEnabled = false;
 	bool playerArmorAttachmentSplittingEnabled = false;
 	bool playerWeaponAttachmentSplittingEnabled = false;
+	bool playerSamplingCriticalEnabled = false;
+	float playerSamplingCriticalMultiplier = 1;
+	float playerSamplingLegendaryCriticalMultiplier = 1;
+	bool playerHealingCriticalEnabled = false;
+	float playerHealingCriticalMultiplier = 1;
+	float playerHealingLegendaryCriticalMultiplier = 1;
+	bool playerJediXPLossEnabled = true;
 
 //Player Creation
 	int playerCreationNewCreationTime = 60;
@@ -686,9 +695,8 @@ namespace globalVariables {
 			if (lua->getGlobalFloat("combatDamageJediForcePowerMultiplier") > 0) combatDamageJediForcePowerMultiplier = lua->getGlobalFloat("combatDamageJediForcePowerMultiplier");
 			if (lua->getGlobalFloat("combatDamageAllMultiplier") > 0) combatDamageAllMultiplier = lua->getGlobalFloat("combatDamageAllMultiplier");
 			if (lua->getGlobalBoolean("combatCriticalDamageEnabled") == true || lua->getGlobalBoolean("combatCriticalDamageEnabled") == false) combatCriticalDamageEnabled = lua->getGlobalBoolean("combatCriticalDamageEnabled");
-			if (lua->getGlobalFloat("combatCriticalMultilier") >= 1) combatCriticalMultilier = lua->getGlobalFloat("combatCriticalMultilier");
+			if (lua->getGlobalFloat("combatCriticalMultiplier") >= 1) combatCriticalMultiplier = lua->getGlobalFloat("combatCriticalMultiplier");
 			if (lua->getGlobalFloat("combatLegendaryCriticalMultiplier") >= 1) combatLegendaryCriticalMultiplier = lua->getGlobalFloat("combatLegendaryCriticalMultiplier");
-			if (lua->getGlobalFloat("combatCriticalMaxRollModifier") >= 1) combatCriticalMaxRollModifier = lua->getGlobalFloat("combatCriticalMaxRollModifier");
 
 			//Command 
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
@@ -807,7 +815,10 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("harvestInCombatEnabled") == true || lua->getGlobalBoolean("harvestInCombatEnabled") == false) harvestInCombatEnabled = lua->getGlobalBoolean("harvestInCombatEnabled");
 			if (lua->getGlobalInt("harvestMinimumHarvest") >= 0) harvestMinimumHarvest = lua->getGlobalInt("harvestMinimumHarvest");
 			if (lua->getGlobalBoolean("harvestMinimumHarvestEnabled") == true || lua->getGlobalBoolean("harvestMinimumHarvestEnabled") == false) harvestMinimumHarvestEnabled = lua->getGlobalBoolean("harvestMinimumHarvestEnabled");
-			
+			if (lua->getGlobalBoolean("harvestCriticalEnabled") == true || lua->getGlobalBoolean("harvestCriticalEnabled") == false) harvestCriticalEnabled = lua->getGlobalBoolean("harvestCriticalEnabled");
+			if (lua->getGlobalFloat("harvestCriticalMultiplier") > 0) harvestCriticalMultiplier = lua->getGlobalFloat("harvestCriticalMultiplier");
+			if (lua->getGlobalFloat("harvestLegendaryCriticalMultiplier") > 0) harvestLegendaryCriticalMultiplier = lua->getGlobalFloat("harvestLegendaryCriticalMultiplier");
+	
 			//Jedi 
 			if (lua->getGlobalBoolean("jediForceCostToTuneEnabled") == true || lua->getGlobalBoolean("jediForceCostToTuneEnabled") == false) jediForceCostToTuneEnabled = lua->getGlobalBoolean("jediForceCostToTuneEnabled");
 			if (lua->getGlobalInt("jediKnightRequirementNumberOfMasters") >= 0) jediKnightRequirementNumberOfMasters = lua->getGlobalInt("jediKnightRequirementNumberOfMasters");
@@ -928,7 +939,14 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("playerClothingAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerClothingAttachmentSplittingEnabled") == false) playerClothingAttachmentSplittingEnabled = lua->getGlobalBoolean("playerClothingAttachmentSplittingEnabled");
 			if (lua->getGlobalBoolean("playerArmorAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerArmorAttachmentSplittingEnabled") == false) playerArmorAttachmentSplittingEnabled = lua->getGlobalBoolean("playerArmorAttachmentSplittingEnabled");
 			if (lua->getGlobalBoolean("playerWeaponAttachmentSplittingEnabled") == true || lua->getGlobalBoolean("playerWeaponAttachmentSplittingEnabled") == false) playerWeaponAttachmentSplittingEnabled = lua->getGlobalBoolean("playerWeaponAttachmentSplittingEnabled");
-		
+			if (lua->getGlobalBoolean("playerSamplingCriticalEnabled") == true || lua->getGlobalBoolean("playerSamplingCriticalEnabled") == false) playerSamplingCriticalEnabled = lua->getGlobalBoolean("playerSamplingCriticalEnabled");
+			if (lua->getGlobalFloat("playerSamplingCriticalMultiplier") >= 1) playerSamplingCriticalMultiplier = lua->getGlobalFloat("playerSamplingCriticalMultiplier");
+			if (lua->getGlobalFloat("playerSamplingLegendaryCriticalMultiplier") >= 1) playerSamplingLegendaryCriticalMultiplier = lua->getGlobalFloat("playerSamplingLegendaryCriticalMultiplier");
+			if (lua->getGlobalBoolean("playerHealingCriticalEnabled") == true || lua->getGlobalBoolean("playerHealingCriticalEnabled") == false) playerHealingCriticalEnabled = lua->getGlobalBoolean("playerHealingCriticalEnabled");
+			if (lua->getGlobalFloat("playerHealingCriticalMultiplier") >= 1) playerHealingCriticalMultiplier = lua->getGlobalFloat("playerHealingCriticalMultiplier");
+			if (lua->getGlobalFloat("playerHealingLegendaryCriticalMultiplier") >= 1) playerHealingLegendaryCriticalMultiplier = lua->getGlobalFloat("playerHealingLegendaryCriticalMultiplier");
+			if (lua->getGlobalBoolean("playerJediXPLossEnabled") == true || lua->getGlobalBoolean("playerJediXPLossEnabled") == false) playerJediXPLossEnabled = lua->getGlobalBoolean("playerJediXPLossEnabled");
+			
 			//Player Creation 
 			if (lua->getGlobalInt("playerCreationNewCreationTime") >= 0) playerCreationNewCreationTime = lua->getGlobalInt("playerCreationNewCreationTime");
 			if (lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == true || lua->getGlobalBoolean("playerCreationAllLanguagesEnabled") == false) playerCreationAllLanguagesEnabled = lua->getGlobalBoolean("playerCreationAllLanguagesEnabled");

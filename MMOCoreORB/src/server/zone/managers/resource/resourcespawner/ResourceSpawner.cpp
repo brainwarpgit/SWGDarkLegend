@@ -1029,6 +1029,21 @@ void ResourceSpawner::sendSampleResults(TransactionLog& trx, CreatureObject* pla
 		}
 	}
 
+	float criticalMultiplier = 1;
+	int roll = 0;
+	int rollMod = 0;
+	if (globalVariables::playerSamplingCriticalEnabled) {
+		rollMod = player->getSkillMod("sampling_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
+		roll = System::random(1000 + rollMod);
+		if (roll > 925) criticalMultiplier = globalVariables::playerSamplingCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = globalVariables::playerSamplingLegendaryCriticalMultiplier;
+	}
+	
+	unitsExtracted *= criticalMultiplier;
+	
+	if (criticalMultiplier == globalVariables::playerSamplingCriticalMultiplier) player->showFlyText("combat_effects", "critical_sample", 0, 0xFF, 0);
+	if (criticalMultiplier == globalVariables::playerSamplingLegendaryCriticalMultiplier) player->showFlyText("combat_effects", "legendary_sample", 0xFF, 0, 0);
+
 	if (unitsExtracted < 2) {
 		// Send message to player about trace amounts
 		StringIdChatParameter message("survey", "trace_amount");

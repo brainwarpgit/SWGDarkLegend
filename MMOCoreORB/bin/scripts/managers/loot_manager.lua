@@ -126,8 +126,6 @@ lootableArmorAttachmentStatMods = {
 	"healing_range_speed",
 	"healing_wound_speed",
 	"healing_wound_treatment",
-	"heavyweapon_accuracy",
-	"heavyweapon_speed",
 	"heavy_acid_beam_accuracy",
 	"heavy_acid_beam_speed",
 	"heavy_flame_thrower_accuracy",
@@ -195,7 +193,10 @@ lootableArmorAttachmentStatMods = {
 	"unarmed_speed",
 	"unarmed_toughness",
 	"volley",
-	"warcry"
+	"warcry",
+	"melee_crit_chance",
+	"ranged_crit_chance",
+
 }
 
 lootableClothingAttachmentStatMods = {
@@ -285,7 +286,10 @@ lootableClothingAttachmentStatMods = {
 	"twohandlightsaber_toughness",
 	"weapon_assembly",
 	"weapon_experimentation",
-	"weapon_repair"
+	"weapon_repair",
+	"healing_crit_chance",
+	"sampling_crit_chance",
+	"harvesting_crit_chance",
 }
 
 lootableArmorStatMods = {
@@ -347,7 +351,9 @@ lootableArmorStatMods = {
 	"taunt",
 	"trapping",
 	"volley",
-	"warcry"
+	"warcry",
+	"melee_crit_chance",
+	"ranged_crit_chance",
 }
 
 lootableClothingStatMods = {
@@ -441,7 +447,10 @@ lootableClothingStatMods = {
 	"twohandlightsaber_toughness",
 	"weapon_assembly",
 	"weapon_experimentation",
-	"weapon_repair"
+	"weapon_repair",
+	"healing_crit_chance",
+	"sampling_crit_chance",
+	"harvesting_crit_chance",
 }
 
 lootableOneHandedMeleeStatMods = {
@@ -463,7 +472,8 @@ lootableOneHandedMeleeStatMods = {
 	"posture_change_down_defense",
 	"ranged_defense",
 	"taunt",
-	"warcry"
+	"warcry",
+	"melee_crit_chance",
 }
 
 lootableTwoHandedMeleeStatMods = {
@@ -484,7 +494,8 @@ lootableTwoHandedMeleeStatMods = {
 	"twohandmelee_center_of_being_efficacy",
 	"twohandmelee_speed",
 	"twohandmelee_toughness",
-	"warcry"
+	"warcry",
+	"melee_crit_chance",
 }
 
 lootableUnarmedStatMods = {
@@ -507,7 +518,8 @@ lootableUnarmedStatMods = {
 	"unarmed_passive_defense",
 	"unarmed_speed",
 	"unarmed_toughness",
-	"warcry"
+	"warcry",
+	"melee_crit_chance",
 }
 
 lootablePistolStatMods = {
@@ -525,7 +537,8 @@ lootablePistolStatMods = {
 	"pistol_speed",
 	"posture_change_down_defense",
 	"ranged_defense",
-	"stun_defense"
+	"stun_defense",
+	"ranged_crit_chance",
 }
 
 lootableRifleStatMods = {
@@ -543,7 +556,8 @@ lootableRifleStatMods = {
 	"rifle_hit_while_moving",
 	"rifle_speed",
 	"stun_defense",
-	"take_cover"
+	"take_cover",
+	"ranged_crit_chance",
 }
 
 lootableCarbineStatMods = {
@@ -556,7 +570,8 @@ lootableCarbineStatMods = {
 	"counterattack",
 	"intimidate_defense",
 	"knockdown_defense",
-	"ranged_defense"
+	"ranged_defense",
+	"ranged_crit_chance",
 }
 
 lootablePolearmStatMods = {
@@ -576,15 +591,14 @@ lootablePolearmStatMods = {
 	"ranged_defense",
 	"stun_defense",
 	"taunt",
-	"warcry"
+	"warcry",
+	"melee_crit_chance",
 }
 
 lootableHeavyWeaponStatMods = {
 	"aim",
 	"alert",
 	"berserk",
-	"heavyweapon_accuracy",
-	"heavyweapon_speed",
 	"heavy_acid_beam_accuracy",
 	"heavy_acid_beam_speed",
 	"heavy_flame_thrower_accuracy",
@@ -606,7 +620,8 @@ lootableHeavyWeaponStatMods = {
 	"taunt",
 	"thrown_accuracy",
 	"thrown_speed",
-	"warcry"
+	"warcry",
+	"ranged_crit_chance",
 }
 
 -- Values used to generate lightsaber crystal stats

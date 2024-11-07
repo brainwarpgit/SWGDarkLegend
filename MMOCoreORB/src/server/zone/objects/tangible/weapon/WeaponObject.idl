@@ -498,7 +498,7 @@ class WeaponObject extends TangibleObject {
 
 	@read
 	public boolean isRangedWeapon() {
-		return attackType == SharedWeaponObjectTemplate.RANGEDATTACK;
+		return attackType == SharedWeaponObjectTemplate.RANGEDATTACK || attackType == SharedWeaponObjectTemplate.GRENADEATTACK || attackType == SharedWeaponObjectTemplate.FORCEATTACK || attackType == SharedWeaponObjectTemplate.HEAVYACIDBEAMATTACK || attackType == SharedWeaponObjectTemplate.HEAVYLIGHTNINGBEAMATTACK || attackType == SharedWeaponObjectTemplate.HEAVYPARTICLEBEAMATTACK || attackType == SharedWeaponObjectTemplate.HEAVYROCKETLAUNCHERATTACK || attackType == SharedWeaponObjectTemplate.HEAVYLAUNCHERATTACK;
 	}
 
 	@read

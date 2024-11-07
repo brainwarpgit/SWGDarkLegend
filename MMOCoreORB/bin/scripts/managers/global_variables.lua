@@ -127,9 +127,8 @@ combatDamageJediPolearmWeaponMultiplier = 1 --default 1
 combatDamageJediForcePowerMultiplier = 1 --default 1
 combatDamageAllMultiplier = 1 --default 1 stacks with all other multipliers
 combatCriticalDamageEnabled = true --default false
-combatCriticalMultilier = 1.5 --default 1
+combatCriticalMultiplier = 1.5 --default 1
 combatLegendaryCriticalMultiplier = 2.0 --default 1
-combatCriticalMaxRollModifier = 200 --default 200
 
 --Commands
 commandCheckForceStatusCommandEnabled = true --default true
@@ -248,6 +247,9 @@ harvestDNASampleDistance = 64 --default 16
 harvestInCombatEnabled = true --default false
 harvestMinimumHarvest = 15 --default 2 no real SWG default
 harvestMinimumHarvestEnabled = true --default false
+harvestCriticalEnabled = true --default false
+harvestCriticalMultiplier = 1.5 --default 1
+harvestLegendaryCriticalMultiplier = 2.0 --default 1
 
 --Jedi
 jediForceCostToTuneEnabled = false --default true
@@ -374,9 +376,16 @@ playerGallopToggleEnabled = true --default false  also disabled gallop stop comm
 playerGallopDamagePercent = 25 --default 0 damage on each pool
 playerBurstRunHamCostPercent = 25 --default 0 damage on each pool  used when playerBurstRunToggleEnabled = true
 playerBurstRunHamCost = 3000 --default 100 damage on each pool  used when playerBurstRunToggleEnabled = false
-playerClothingAttachmentSplittingEnabled = true --default false
-playerArmorAttachmentSplittingEnabled = true --default false
-playerWeaponAttachmentSplittingEnabled = true --default false
+playerClothingAttachmentSplittingEnabled = true --default false  split clothing
+playerArmorAttachmentSplittingEnabled = true --default false  split armor
+playerWeaponAttachmentSplittingEnabled = true --default false  split weapons
+playerSamplingCriticalEnabled = true --default false
+playerSamplingCriticalMultiplier = 1.5 --default 1
+playerSamplingLegendaryCriticalMultiplier = 2.0 --default 1
+playerHealingCriticalEnabled = true --default false  only affects heals and wounds  not enhancements or states     Also does not affect Jedi Healing
+playerHealingCriticalMultiplier = 1.5 --default 1
+playerHealingLegendaryCriticalMultiplier = 2.0 --default 1
+playerJediXPLossEnabled = false --default true
 
 --Player Creation
 playerCreationNewCreationTime = 5 --default 60 in minutes

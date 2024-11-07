@@ -132,9 +132,8 @@ namespace globalVariables {
 	extern float combatDamageJediForcePowerMultiplier;
 	extern float combatDamageAllMultiplier;
 	extern bool combatCriticalDamageEnabled;
-	extern float combatCriticalMultilier;
+	extern float combatCriticalMultiplier;
 	extern float combatLegendaryCriticalMultiplier;
-	extern float combatCriticalMaxRollModifier;
 	
 //Command
 	extern bool commandCheckForceStatusCommandEnabled;
@@ -253,6 +252,9 @@ namespace globalVariables {
 	extern bool harvestInCombatEnabled;
 	extern int harvestMinimumHarvest;
 	extern bool harvestMinimumHarvestEnabled;
+	extern bool harvestCriticalEnabled;
+	extern float harvestCriticalMultiplier;
+	extern float harvestLegendaryCriticalMultiplier;
 
 //Jedi
 	extern bool jediForceCostToTuneEnabled;
@@ -378,6 +380,13 @@ namespace globalVariables {
 	extern bool playerClothingAttachmentSplittingEnabled;
 	extern bool playerArmorAttachmentSplittingEnabled;
 	extern bool playerWeaponAttachmentSplittingEnabled;
+	extern bool playerSamplingCriticalEnabled;
+	extern float playerSamplingCriticalMultiplier;
+	extern float playerSamplingLegendaryCriticalMultiplier;
+	extern bool playerHealingCriticalEnabled;
+	extern float playerHealingCriticalMultiplier;
+	extern float playerHealingLegendaryCriticalMultiplier;
+	extern bool playerJediXPLossEnabled;
 
 //Player Creation
 	extern int playerCreationNewCreationTime;

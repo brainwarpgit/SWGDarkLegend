@@ -325,6 +325,21 @@ public:
 
 		uint32 woundPower = woundPack->calculatePower(creature, creatureTarget);
 
+		float criticalMultiplier = 1;
+		int roll = 0;
+		int rollMod = 0;
+		if (globalVariables::playerHealingCriticalEnabled) {
+			rollMod = creature->getSkillMod("healing_crit_chance") + ((creature->getSkillMod("luck") + creature->getSkillMod("force_luck")) / 5);
+			roll = System::random(1000 + rollMod);
+			if (roll > 925) criticalMultiplier = globalVariables::playerHealingCriticalMultiplier;
+			if (roll > 1050) criticalMultiplier = globalVariables::playerHealingLegendaryCriticalMultiplier;
+		}
+
+		woundPower *= criticalMultiplier;
+
+		if (criticalMultiplier == globalVariables::playerHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
+		if (criticalMultiplier == globalVariables::playerHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
+
 		int woundHealed = creatureTarget->healWound(creature, attribute, woundPower * globalVariables::playerWoundHealingMultiplier);
 
 		woundHealed = abs(woundHealed);

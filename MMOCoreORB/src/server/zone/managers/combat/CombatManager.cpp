@@ -1131,13 +1131,13 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 
 	damage += defender->getSkillMod("private_damage_susceptibility");
 
-/*	if (attacker->isPlayerCreature()) {
+	if (attacker->isPlayerCreature()) {
 		if (data.isForceAttack() && !defender->isPlayerCreature())
 			damage *= 2 + System::random(1);
 		else if (!data.isForceAttack())
 			damage *= 1.5;
 	}
-*/	
+	
 	//PvE Weapon Type Multipliers
 	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && !data.isForceAttack()) {
 		if (weapon->isMeleeWeapon() && !weapon->isJediWeapon())
@@ -1481,18 +1481,17 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && globalVariables::combatCriticalDamageEnabled) {
 		String weaponType;
 		if (weapon->isMeleeWeapon()) {
-			weaponType = "melee_accuracy";
+			weaponType = "melee";
 		} else {
-			weaponType = "ranged_accuracy";
+			weaponType = "ranged";
 		}
 		CreatureObject* player = attacker->asCreatureObject();
 		if (player != nullptr && player->isPlayerCreature()) {
-			rollMod = player->getSkillMod(weapon->getWeaponType() + "_accuracy") + player->getSkillMod("luck") + player->getSkillMod("force_luck") + player->getSkillMod(weaponType);
+			rollMod = player->getSkillMod(weaponType + "_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
 		}
-		if (rollMod > globalVariables::combatCriticalMaxRollModifier) rollMod = globalVariables::combatCriticalMaxRollModifier;
 		roll = System::random(1000 + rollMod);
-		if (roll > 800) criticalMultiplier = globalVariables::combatCriticalMultilier;
-		if (roll > 1000) criticalMultiplier = globalVariables::combatLegendaryCriticalMultiplier;
+		if (roll > 925) criticalMultiplier = globalVariables::combatCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = globalVariables::combatLegendaryCriticalMultiplier;
 	}
 
 	uint32 crc = STRING_HASHCODE("pet_damage_divisor");
@@ -1515,8 +1514,14 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 
 	damage *= criticalMultiplier;
 
-	if (criticalMultiplier == globalVariables::combatCriticalMultilier) defender->showFlyText("combat_effects", "critical_attack", 0, 0xFF, 0);
-	if (criticalMultiplier == globalVariables::combatLegendaryCriticalMultiplier) defender->showFlyText("combat_effects", "legendary_attack", 0xFF, 0, 0);
+	if (criticalMultiplier == globalVariables::combatCriticalMultiplier) {
+		defender->showFlyText("combat_effects", "critical_attack", 0, 0xFF, 0);
+		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","critical_attack",0); //1 = red, 0 = white, didn't check any others.
+	}
+	if (criticalMultiplier == globalVariables::combatLegendaryCriticalMultiplier) {
+		defender->showFlyText("combat_effects", "legendary_attack", 0, 0xFF, 0);
+		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","legendary_attack",0);
+	}
 
 	bool healthDamaged = (!!(poolsToDamage & HEALTH) && data.getHealthDamageMultiplier() > 0.0f);
 	bool actionDamaged = (!!(poolsToDamage & ACTION) && data.getActionDamageMultiplier() > 0.0f);
@@ -1727,15 +1732,14 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && globalVariables::combatCriticalDamageEnabled) {
 		String weaponType;
 		if (weapon->isMeleeWeapon()) {
-			weaponType = "melee_accuracy";
+			weaponType = "melee";
 		} else {
-			weaponType = "ranged_accuracy";
+			weaponType = "ranged";
 		}
-		rollMod = attacker->getSkillMod(weapon->getWeaponType() + "_accuracy") + attacker->getSkillMod("luck") + attacker->getSkillMod("force_luck") + attacker->getSkillMod(weaponType);
-		if (rollMod > globalVariables::combatCriticalMaxRollModifier) rollMod = globalVariables::combatCriticalMaxRollModifier;
+		rollMod = attacker->getSkillMod(weaponType + "_crit_chance") + ((attacker->getSkillMod("luck") + attacker->getSkillMod("force_luck")) / 5);
 		roll = System::random(1000 + rollMod);
-		if (roll > 800) criticalMultiplier = globalVariables::combatCriticalMultilier;
-		if (roll > 1000) criticalMultiplier = globalVariables::combatLegendaryCriticalMultiplier;
+		if (roll > 925) criticalMultiplier = globalVariables::combatCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = globalVariables::combatLegendaryCriticalMultiplier;
 	}
 
 	uint32 crc = STRING_HASHCODE("pet_damage_divisor");
@@ -1755,8 +1759,14 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 
 	damage *= criticalMultiplier;
 
-	if (criticalMultiplier == globalVariables::combatCriticalMultilier) defender->showFlyText("combat_effects", "critical_attack", 0, 0xFF, 0);
-	if (criticalMultiplier == globalVariables::combatLegendaryCriticalMultiplier) defender->showFlyText("combat_effects", "legendary_attack", 0xFF, 0, 0);
+	if (criticalMultiplier == globalVariables::combatCriticalMultiplier) {
+		defender->showFlyText("combat_effects", "critical_attack", 0, 0xFF, 0);
+		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","critical_attack",0);
+	}
+	if (criticalMultiplier == globalVariables::combatLegendaryCriticalMultiplier) {
+		defender->showFlyText("combat_effects", "legendary_attack", 0, 0xFF, 0);
+		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","legendary_attack",0);
+	}
 
 	if (defender->isTurret()) {
 		int damageType = 0, armorPiercing = 1;
