@@ -9,6 +9,7 @@ import engine.core.ManagedService;
 import system.thread.atomic.AtomicInteger;
 import server.zone.objects.scene.SceneObject;
 import server.zone.objects.creature.ai.AiAgent;
+import server.zone.objects.ship.ai.ShipAiAgent;
 import server.zone.managers.crafting.CraftingManager;
 import server.zone.managers.object.ObjectManager;
 import engine.lua.LuaObject;
@@ -173,19 +174,16 @@ class LootManager extends ManagedService implements Logger {
 	private native void setCustomizationData(final LootItemTemplate templateObject, TangibleObject prototype);
 
 	@local
-	private native void setSkillMods(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
+	private native void setSkillMods(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
 
 	@local
 	private native void setCustomObjectName(TangibleObject object, final LootItemTemplate templateObject, float excMod);
 
 	@local
-	private native void setCustomObjectNameNew(TangibleObject object, final LootItemTemplate templateObject, float modifier);
-
-	@local
 	private native void setJunkValue(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
 
 	@local
-	private native void addRandomDots(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
+	private native void addRandomDots(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod);
 
 	@local
 	private native void addStaticDots(TangibleObject object, final LootItemTemplate templateObject, int level);
@@ -197,33 +195,36 @@ class LootManager extends ManagedService implements Logger {
 	private native void loadLootableMods( LuaObject modTable, SortedVector<string> mods );
 
 	@local
-	public native float setRandomLootValues(@dereferenced TransactionLog trx, TangibleObject prototype, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
+	public native void setRandomLootValues(@dereferenced TransactionLog trx, TangibleObject prototype, final LootItemTemplate templateObject, int level, float excMod);
 
 	@local
-	public native TangibleObject createLootObject(@dereferenced TransactionLog trx, final LootItemTemplate templateObject, int level, boolean maxCondition = false, int creatureDifficulty = 1, int luckSkill = 0);
+	public native TangibleObject createLootObject(@dereferenced TransactionLog trx, final LootItemTemplate templateObject, int level, boolean maxCondition = false);
 
 	@local
-    	public native TangibleObject createLootAttachment(final LootItemTemplate templateObject, final string modName, int value);
+	public native TangibleObject createShipComponent(@dereferenced TransactionLog trx, final LootItemTemplate templateObject);
 
 	@local
-	public native TangibleObject createLootResource(@dereferenced final string resourceTypeName, @dereferenced final string resourceZoneName, int level, int creatureDifficulty, int luckSkill);
+	public native TangibleObject createLootResource(@dereferenced final string resourceTypeName, @dereferenced final string resourceZoneName);
 
 	@local
 	public native string getRandomLootableMod( unsigned int sceneObjectType );
 
-	public native int calculateLootCredits(int level, int luckSkill);
+	public native int calculateLootCredits(int level);
 
 	@local
-	public native boolean createLoot(@dereferenced TransactionLog trx, SceneObject container, AiAgent creature, int luckSkill);
+	public native boolean createLoot(@dereferenced TransactionLog trx, SceneObject container, AiAgent creature);
 
 	@local
-	public native boolean createLootFromCollection(@dereferenced TransactionLog trx, SceneObject container, final LootGroupCollection collection, int level, int creatureDifficulty, int luckSkill);
+	public native unsigned long createLoot(@dereferenced TransactionLog trx, SceneObject container, ShipAiAgent shipAgent);
 
 	@local
-	public native unsigned long createLoot(@dereferenced TransactionLog trx, SceneObject container, final string lootGroup, int level = -1, boolean maxCondition = false, int creatureDifficulty = 1, int luckSkill = 0);
+	public native boolean createLootFromCollection(@dereferenced TransactionLog trx, SceneObject container, final LootGroupCollection collection, int level);
 
 	@local
-	public native boolean createLootSet(@dereferenced TransactionLog trx, SceneObject container, final string lootGroup, int level, boolean maxCondition, int setSize);
+	public native unsigned long createLoot(@dereferenced TransactionLog trx, SceneObject container, final string lootGroup, int level = -1, boolean maxCondition = false);
+
+	@local
+	public native boolean createLootSet(@dereferenced TransactionLog trx, SceneObject container, final string lootGroup, int level, boolean maxCondition,int setSize);
 
 	@read
 	public unsigned int getYellowLooted() {
@@ -253,5 +254,5 @@ class LootManager extends ManagedService implements Logger {
 	}
 
 	@local
-	private native float getRandomModifier(final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
+	private native float getRandomModifier(final LootItemTemplate templateObject, int level, float excMod);
 }
