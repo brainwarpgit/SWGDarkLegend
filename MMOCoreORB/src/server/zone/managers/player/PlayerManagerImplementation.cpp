@@ -2273,7 +2273,7 @@ void PlayerManagerImplementation::disseminateSpaceExperience(ShipAiAgent* destru
 		Locker shipLock(playerShip, destructedObject);
 
 		// Range check
-		if (!destructedObject->isInRange3dZoneless(playerShip, ZoneServer::SPACEOBJECTRANGE)) {
+		if (!destructedObject->isInRange3dZoneless(playerShip, ZoneServer::SPACECLOSEOBJECTRANGE)) {
 			continue;
 		}
 
