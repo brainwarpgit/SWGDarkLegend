@@ -1921,7 +1921,12 @@ void PlayerObjectImplementation::giveCoaBonus(const String& factionName, float a
 	if (player == nullptr)
 		return;
 
-	float bonus = amount * 0.1f;
+	int bonus = amount * 0.1f;
+
+	if (bonus < 1) {
+		return;
+	}
+
 	float newStanding = bonus + currentStanding;
 
 	newStanding = Math::min((float) FactionManager::instance()->getFactionPointsCap(player->getFactionRank()), newStanding);
