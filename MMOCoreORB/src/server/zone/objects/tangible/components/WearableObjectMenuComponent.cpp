@@ -35,28 +35,30 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	}
 
 	TangibleObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);
-
-	if ((sceneObject->isArmorObject() || sceneObject->isWearableObject()) && globalVariables::playerChangeWearableColorsEnabled == true) {
-		String appearanceFilename = sceneObject->getObjectTemplate()->getAppearanceFilename();
-		VectorMap<String, Reference<CustomizationVariable*> > variables;
-		AssetCustomizationManagerTemplate::instance()->getCustomizationVariables(appearanceFilename.hashCode(), variables, false);
-		String varkey = variables.elementAt(0).getKey();
-		if (varkey.contains("color")) {
-			menuResponse->addRadialMenuItem(71, 3, "Change Colors");
-			for(int i = 0; i< variables.size(); ++i){
-				varkey = variables.elementAt(i).getKey();
-				if (varkey.contains("color")) {
-					String optionName = "Color " + String::valueOf(i + 1);
-					menuResponse->addRadialMenuItemToRadialID(71, (72 + i), 3, optionName); // sub-menu
+	WearableObject* wearable = cast<WearableObject*>( sceneObject);
+		
+	if (wearable != nullptr) {
+		if ((sceneObject->isArmorObject() || sceneObject->isWearableObject()) && !wearable->isEquipped() && !player->isInCombat() && globalVariables::playerChangeWearableColorsEnabled == true) {
+			String appearanceFilename = sceneObject->getObjectTemplate()->getAppearanceFilename();
+			VectorMap<String, Reference<CustomizationVariable*> > variables;
+			AssetCustomizationManagerTemplate::instance()->getCustomizationVariables(appearanceFilename.hashCode(), variables, false);
+			String varkey = variables.elementAt(0).getKey();
+			if (varkey.contains("color")) {
+				menuResponse->addRadialMenuItem(71, 3, "Change Colors");
+				for(int i = 0; i< variables.size(); ++i){
+					varkey = variables.elementAt(i).getKey();
+					if (varkey.contains("color")) {
+						String optionName = "Color " + String::valueOf(i + 1);
+						menuResponse->addRadialMenuItemToRadialID(71, (72 + i), 3, optionName); // sub-menu
+					}
 				}
 			}
 		}
 	}
 	
 	PlayerObject* ghost = player->getPlayerObject();
-	if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && player->hasSkill("crafting_tailor_master") && globalVariables::playerClothingAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
-		WearableObject* wearable = cast<WearableObject*>( sceneObject);
-		if (wearable != nullptr) {
+	if (wearable != nullptr) {
+		if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && !wearable->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_tailor_master") && globalVariables::playerClothingAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !wearable->isEquipped() && !player->isInCombat())) {
 			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
 			if (skillMods->size() >= 1) {
 				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");
@@ -64,9 +66,8 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 		}
 	}
 	
-	if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && player->hasSkill("crafting_armorsmith_master") && globalVariables::playerArmorAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin())) {
-		WearableObject* wearable = cast<WearableObject*>( sceneObject);
-		if (wearable != nullptr) {
+	if (wearable != nullptr) {
+		if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && !wearable->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_armorsmith_master") && globalVariables::playerArmorAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !wearable->isEquipped() && !player->isInCombat())) {
 			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
 			if (skillMods->size() >= 1) {
 				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");

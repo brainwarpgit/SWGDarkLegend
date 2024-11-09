@@ -53,7 +53,11 @@ void ContainerImplementation::loadTemplateData(SharedObjectTemplate* templateDat
 
 void ContainerImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	TangibleObjectImplementation::fillObjectMenuResponse(menuResponse, player);
-
+	ManagedReference<SceneObject*> wearableParent = getParentRecursively(SceneObjectType::WEARABLECONTAINER);
+	ManagedReference<WearableContainerObject*> wearable = nullptr;
+	if (wearableParent != nullptr) {
+		wearable = cast<WearableContainerObject*>(wearableParent.get());
+	}	
 	if (checkContainerPermission(player, ContainerPermissions::MOVECONTAINER && getParent().get() != nullptr && getParent().get()->checkContainerPermission(player, ContainerPermissions::MOVEOUT) && !(_this.getReferenceUnsafeStaticCast()->isRecycleToolObject()) && !(_this.getReferenceUnsafeStaticCast()->isAntiDecayKitObject())))
 
 		menuResponse->addRadialMenuItem(50, 3, "@base_player:set_name"); // Set Name
@@ -61,8 +65,10 @@ void ContainerImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuRes
 	if (isSliceable() && isContainerLocked() && player->hasSkill("combat_smuggler_novice"))
 		menuResponse->addRadialMenuItem(69, 3, "@slicing/slicing:slice"); // Slice
 
-	if (getGameObjectType() == SceneObjectType::WEARABLECONTAINER && globalVariables::playerBackpackWipeEnabled == true) {
-		menuResponse->addRadialMenuItem(82, 3, "WIPE ALL NON-EQUIPPED ITEMS"); // wipe
+	if (wearable != nullptr) {
+		if (getGameObjectType() == SceneObjectType::WEARABLECONTAINER && wearable->isEquipped() && !player->isInCombat() && globalVariables::playerBackpackWipeEnabled == true) {
+			menuResponse->addRadialMenuItem(82, 3, "WIPE ALL NON-EQUIPPED ITEMS"); // wipe
+		}
 	}
 }
 

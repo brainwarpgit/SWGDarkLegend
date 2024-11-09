@@ -64,7 +64,7 @@ void TangibleObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	}
 	
 	PlayerObject* ghost = player->getPlayerObject();
-	if (((tano->isAttachment() && player->hasSkill("crafting_tailor_master") && globalVariables::playerAttachmentSplittingEnabled)) || (ghost != nullptr && ghost->isAdmin())) {
+	if (((tano->isAttachment() && !player->isInCombat() && player->hasSkill("crafting_tailor_master") && globalVariables::playerAttachmentSplittingEnabled)) || (ghost != nullptr && ghost->isAdmin() && !player->isInCombat())) {
 		Attachment* sea = cast<Attachment*>( sceneObject);
 		if (sea != nullptr) {
 			VectorMap<String, int>* skillMods = sea->getSkillMods();
