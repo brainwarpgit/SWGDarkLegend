@@ -141,6 +141,8 @@ namespace globalVariables {
 	bool combatCriticalDamageEnabled = false;
 	float combatCriticalMultiplier = 1.0;
 	float combatLegendaryCriticalMultiplier = 1.0;
+	bool combatAIFleeEnabled = true;
+	bool combatAICallForHelpEnabled = true;
 	
 //Command
 	bool commandCheckForceStatusCommandEnabled = true;
@@ -697,8 +699,10 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("combatCriticalDamageEnabled") == true || lua->getGlobalBoolean("combatCriticalDamageEnabled") == false) combatCriticalDamageEnabled = lua->getGlobalBoolean("combatCriticalDamageEnabled");
 			if (lua->getGlobalFloat("combatCriticalMultiplier") >= 1) combatCriticalMultiplier = lua->getGlobalFloat("combatCriticalMultiplier");
 			if (lua->getGlobalFloat("combatLegendaryCriticalMultiplier") >= 1) combatLegendaryCriticalMultiplier = lua->getGlobalFloat("combatLegendaryCriticalMultiplier");
+			if (lua->getGlobalBoolean("combatAIFleeEnabled") == true || lua->getGlobalBoolean("combatAIFleeEnabled") == false) combatAIFleeEnabled = lua->getGlobalBoolean("combatAIFleeEnabled");
+			if (lua->getGlobalBoolean("combatAICallForHelpEnabled") == true || lua->getGlobalBoolean("combatAICallForHelpEnabled") == false) combatAICallForHelpEnabled = lua->getGlobalBoolean("combatAICallForHelpEnabled");
 
-			//Command 
+		//Command 
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
 			if (lua->getGlobalBoolean("commandMeditateMergeEnabled") == true || lua->getGlobalBoolean("commandMeditateMergeEnabled") == false) commandMeditateMergeEnabled = lua->getGlobalBoolean("commandMeditateMergeEnabled");
 			if (lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == true || lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == false) commandObjectCreateAttachmentEnabled = lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled");

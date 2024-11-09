@@ -134,6 +134,8 @@ namespace globalVariables {
 	extern bool combatCriticalDamageEnabled;
 	extern float combatCriticalMultiplier;
 	extern float combatLegendaryCriticalMultiplier;
+	extern bool combatAIFleeEnabled;
+	extern bool combatAICallForHelpEnabled;
 	
 //Command
 	extern bool commandCheckForceStatusCommandEnabled;

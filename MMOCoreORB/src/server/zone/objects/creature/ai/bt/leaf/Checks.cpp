@@ -247,6 +247,9 @@ template<> bool CheckRetreat::check(AiAgent* agent) const {
 }
 
 template<> bool CheckFlee::check(AiAgent* agent) const {
+	if (!globalVariables::combatAIFleeEnabled)
+		return false;
+
 	if (agent == nullptr || agent->getParent().get() != nullptr || agent->getParentID() > 0)
 		return false;
 
@@ -603,6 +606,9 @@ template<> bool CheckChatDelay::check(AiAgent* agent) const {
 }
 
 template<> bool CheckCallForHelp::check(AiAgent* agent) const {
+	if (!globalVariables::combatAICallForHelpEnabled)
+		return false;
+
 	if (agent == nullptr || agent->isDead())
 		return false;
 
