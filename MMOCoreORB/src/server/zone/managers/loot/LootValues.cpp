@@ -262,14 +262,16 @@ void LootValues::setLootCraftingValues(const LootItemTemplate* lootTemplate, Tan
 			setCurrentValue(attribute, value);
 			continue;
 		}
-		if (prototype->isArmorObject() && attribute == "armor_effectiveness" && globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
-			float resistAdjust = getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier;
-			if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
-			setCurrentValue(attribute, resistAdjust);
-		}
-		if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled  == true && (attribute == "mindamage" || attribute == "maxdamage")) {
-			if (globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
-				setCurrentValue(attribute, getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier);
+		if (prototype != nullptr) {
+			if (prototype->isArmorObject() && attribute == "armor_effectiveness" && globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
+				float resistAdjust = getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier;
+				if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
+				setCurrentValue(attribute, resistAdjust);
+			}
+			if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled  == true && (attribute == "mindamage" || attribute == "maxdamage")) {
+				if (globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
+					setCurrentValue(attribute, getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier);
+				}
 			}
 		}
 	}

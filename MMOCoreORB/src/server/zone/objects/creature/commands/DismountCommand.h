@@ -209,7 +209,7 @@ public:
 		// Store Jetpack
 		ManagedReference<ControlDevice*> device = vehicle->getControlDevice().get();
 
-		if (device != nullptr && vehicle->getServerObjectCRC() == 0x32F87A54) { // Auto-store jetpack on dismount.
+		if (device != nullptr && (vehicle->getServerObjectCRC() == 0x32F87A54 || vehicle->getServerObjectCRC() == 0x3A19A20D || vehicle->getServerObjectCRC() == 0x5C3FA920)) { // Auto-store jetpack on dismount.
 			device->storeObject(creature);
 			creature->sendSystemMessage("@pet/pet_menu:jetpack_dismount"); // "You have been dismounted from the jetpack, and it has been stored."
 		}

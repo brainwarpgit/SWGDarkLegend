@@ -150,11 +150,16 @@ void VehicleControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		decayTask->execute();
 	}
 
-	if (vehicle != nullptr && controlledObject->getServerObjectCRC() == 0x32F87A54) { // Jetpack
-		controlledObject->setCustomizationVariable("/private/index_hover_height", 40, true);				  // Illusion of flying.
+	if (vehicle != nullptr && (controlledObject->getServerObjectCRC() == 0x32F87A54 || controlledObject->getServerObjectCRC() == 0x3A19A20D || controlledObject->getServerObjectCRC() == 0x5C3FA920)) { // Jetpacks
+		controlledObject->setCustomizationVariable("/private/index_hover_height", 40, true); // Illusion of flying.
 		player->executeObjectControllerAction(STRING_HASHCODE("mount"), controlledObject->getObjectID(), ""); // Auto mount.
 	}
+	/*int test = controlledObject->getServerObjectCRC();
+	std::ostringstream stream;
+	stream << std::hex << std::uppercase << test; // Convert `test` to hex with uppercase letters
 
+	Logger::console.info("Vehicle Server Object CRC() = " + stream.str(),true);*/
+	
 	updateStatus(1);
 
 	if (vehicleControlObserver != nullptr) {
