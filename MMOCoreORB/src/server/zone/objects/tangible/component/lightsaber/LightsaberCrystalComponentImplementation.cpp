@@ -17,7 +17,6 @@
 #include "server/zone/managers/loot/CrystalData.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/ZoneServer.h"
-#include "server/globalVariables.h"
 
 void LightsaberCrystalComponentImplementation::initializeTransientMembers() {
 	ComponentImplementation::initializeTransientMembers();
@@ -90,33 +89,33 @@ void LightsaberCrystalComponentImplementation::generateCrystalStats(float modifi
 
 		damage = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinHealthSac();// * modifier;
-		maxStat = crystalData->getMaxHealthSac();// * modifier;
+		minStat = crystalData->getMinHealthSac();
+		maxStat = crystalData->getMaxHealthSac();
 
 		sacHealth = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinActionSac();// * modifier;
-		maxStat = crystalData->getMaxActionSac();// * modifier;
+		minStat = crystalData->getMinActionSac();
+		maxStat = crystalData->getMaxActionSac();
 
 		sacAction = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinMindSac();// * modifier;
-		maxStat = crystalData->getMaxMindSac();// * modifier;
+		minStat = crystalData->getMinMindSac();
+		maxStat = crystalData->getMaxMindSac();
 
 		sacMind = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		minStat = crystalData->getMinWoundChance();// * modifier;
-		maxStat = crystalData->getMaxWoundChance();// * modifier;
+		minStat = crystalData->getMinWoundChance();
+		maxStat = crystalData->getMaxWoundChance();
 
 		woundChance = getRandomizedStat(minStat, maxStat, itemLevel);
 
-		float minFloatStat = crystalData->getMinForceCost();// * modifier;
-		float maxFloatStat = crystalData->getMaxForceCost();// * modifier;
+		float minFloatStat = crystalData->getMinForceCost();
+		float maxFloatStat = crystalData->getMaxForceCost();
 
 		floatForceCost = getRandomizedStat(minFloatStat, maxFloatStat, itemLevel);
 
-		minFloatStat = crystalData->getMinAttackSpeed();// * modifier;
-		maxFloatStat = crystalData->getMaxAttackSpeed();// * modifier;
+		minFloatStat = crystalData->getMinAttackSpeed();
+		maxFloatStat = crystalData->getMaxAttackSpeed();
 
 		attackSpeed = Math::getPrecision(getRandomizedStat(minFloatStat, maxFloatStat, itemLevel), 2);
 	}
@@ -297,12 +296,13 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 		} else {
 			alm->insertAttribute("crystal_owner", ownerName);
 		}
+
 		if (getColor() != 31) {
 			StringBuffer str3;
 			str3 << "@jedi_spam:saber_color_" << getColor();
 			alm->insertAttribute("color", str3);
 		} else {
-			if (ownerID !=0 || player->isPrivileged()) {
+			if (ownerID != 0 || player->isPrivileged()) {
 				alm->insertAttribute("mindamage", damage);
 				alm->insertAttribute("maxdamage", damage);
 				alm->insertAttribute("wpn_attack_speed", attackSpeed);
@@ -329,6 +329,14 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 					lootQualityString = globalVariables::lootYellowModifierName;
 				}
 				alm->insertAttribute("LootQuality", lootQualityString);
+
+				// For debugging
+				if (player->isPrivileged()) {
+					StringBuffer str;
+					str << "@jedi_spam:crystal_quality_" << getQuality();
+					alm->insertAttribute("challenge_level", itemLevel);
+					alm->insertAttribute("crystal_quality", str);
+				}
 			} else {
 				StringBuffer str;
 				str << "@jedi_spam:crystal_quality_" << getQuality();
@@ -357,13 +365,10 @@ void LightsaberCrystalComponentImplementation::fillObjectMenuResponse(ObjectMenu
 
 	PlayerObject* ghost = player->getPlayerObject();
 	if (ghost != nullptr && ghost->isPrivileged()) {
-		menuResponse->addRadialMenuItem(129, 3, "Staff Commands");
-
 		if (getColor() == 31)
-			menuResponse->addRadialMenuItemToRadialID(129, 130, 3, "Recalculate Stats");
-
+			menuResponse->addRadialMenuItem(130, 3, "Recalculate Stats");
 		if (ownerID != 0)
-			menuResponse->addRadialMenuItemToRadialID(129, 131, 3, "Untune Crystal");
+			menuResponse->addRadialMenuItem(131, 3, "Untune Crystal");
 	}
 
 	ComponentImplementation::fillObjectMenuResponse(menuResponse, player);
@@ -389,37 +394,17 @@ int LightsaberCrystalComponentImplementation::handleObjectMenuSelect(CreatureObj
 			generateCrystalStats(modifier, lootQuality);
 		} else if (selectedID == 131 && ownerID != 0) {
 			ownerID = 0;
+			ownerName = "";
 
-			//String tuneName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
-			String tuneName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
-			if (getCustomObjectName().toString().contains("(Exceptional) (tuned)"))
-				if (getCustomObjectName().toString().contains("Crystal"))
-					tuneName = "\\#00FF00Crystal (Exceptional)\\#.";
-				else
-					tuneName = "\\#00FF00Krayt Dragon Pearl (Exceptional)\\#.";
-			else if (getCustomObjectName().toString().contains("(Legendary) (tuned)"))
-				if (getCustomObjectName().toString().contains("Crystal"))
-					tuneName = "\\#00FF00Crystal (Legendary)\\#.";
-				else
-					tuneName = "\\#00FF00Krayt Dragon Pearl (Legendary)\\#.";
-			else if (getCustomObjectName().toString().contains("(" + globalVariables::lootYellowModifierName + ") (tuned)"))
-				if (getCustomObjectName().toString().contains("Crystal"))
-					tuneName = "\\#00FF00Crystal (" + globalVariables::lootYellowModifierName + ")\\#.";
-				else
-					tuneName = "\\#00FF00Krayt Dragon Pearl (" + globalVariables::lootYellowModifierName + ")\\#.";
-			else
-				if (getCustomObjectName().toString().contains("Crystal"))
-					tuneName = "\\#FFFFFFCrystal\\#.";
-				else
-					tuneName = "\\#FFFFFFKrayt Dragon Pearl\\#.";
-				
-			setCustomObjectName(tuneName, true);
-			//if (getCustomObjectName().toString().contains("(Exceptional)"))
-			//	tuneName = tuneName + " (Exceptional)\\#.";
-			//else if (getCustomObjectName().toString().contains("(Legendary)"))
-			//	tuneName = tuneName + " (Legendary)\\#.";
-			//else
-			//	tuneName = tuneName + "\\#.";
+			std::string tuneName = getCustomObjectName().toString();
+			std::string toRemove = " \\#00FF00(tuned)\\#.";
+			size_t pos = tuneName.find(toRemove);
+
+			if (pos != std::string::npos) {
+				tuneName.erase(pos, toRemove.length());
+			}
+
+			setCustomObjectName(UnicodeString(tuneName), true);
 		}
 	}
 
@@ -480,16 +465,13 @@ void LightsaberCrystalComponentImplementation::tuneCrystal(CreatureObject* playe
 		ownerName = player->getDisplayedName();
 
 		// Color code is lime green.
-		String tuneName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString();
-		if (getCustomObjectName().toString().contains("(Exceptional)"))
-			tuneName = "\\#00FF00" + tuneName + " (Exceptional) (tuned)\\#.";
-		else if (getCustomObjectName().toString().contains("(Legendary)"))
-			tuneName = "\\#00FF00" + tuneName + " (Legendary) (tuned)\\#.";
-		else if (getCustomObjectName().toString().contains("(" + globalVariables::lootYellowModifierName + ")"))
-			tuneName = "\\#00FF00" + tuneName + " (" + globalVariables::lootYellowModifierName + ") (tuned)\\#.";
-		else
-			tuneName = "\\#00FF00" + tuneName + " (tuned)\\#.";
-
+		String tuneName = "";
+		if (getCustomObjectName().toString() == "") {
+			tuneName = StringIdManager::instance()->getStringId(objectName.getFullPath().hashCode()).toString() + " \\#00FF00(tuned)\\#.";
+		} else {
+			tuneName = getCustomObjectName().toString() + " \\#00FF00(tuned)\\#.";
+		}
+		
 		setCustomObjectName(tuneName, true);
 		player->notifyObservers(ObserverEventType::TUNEDCRYSTAL, _this.getReferenceUnsafeStaticCast(), 0);
 		player->sendSystemMessage("@jedi_spam:crystal_tune_success");

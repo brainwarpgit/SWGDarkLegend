@@ -302,6 +302,7 @@ namespace globalVariables {
 	bool lootQualityToItemDescriptionEnabled = false;
 	bool lootSocketsOnWearablesEnabled = false;
 	bool lootSocketsOnWearableContainersEnabled = true;
+	bool lootColorCrystalColorInNameEnabled = false;
 	
 //Mission
 	int missionBountyExpirationTime = 48;
@@ -702,7 +703,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("combatAIFleeEnabled") == true || lua->getGlobalBoolean("combatAIFleeEnabled") == false) combatAIFleeEnabled = lua->getGlobalBoolean("combatAIFleeEnabled");
 			if (lua->getGlobalBoolean("combatAICallForHelpEnabled") == true || lua->getGlobalBoolean("combatAICallForHelpEnabled") == false) combatAICallForHelpEnabled = lua->getGlobalBoolean("combatAICallForHelpEnabled");
 
-		//Command 
+			//Command 
 			if (lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == true || lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled") == false) commandCheckForceStatusCommandEnabled = lua->getGlobalBoolean("commandCheckForceStatusCommandEnabled");
 			if (lua->getGlobalBoolean("commandMeditateMergeEnabled") == true || lua->getGlobalBoolean("commandMeditateMergeEnabled") == false) commandMeditateMergeEnabled = lua->getGlobalBoolean("commandMeditateMergeEnabled");
 			if (lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == true || lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled") == false) commandObjectCreateAttachmentEnabled = lua->getGlobalBoolean("commandObjectCreateAttachmentEnabled");
@@ -856,6 +857,7 @@ namespace globalVariables {
 			if (lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled") == true || lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled") == false) lootQualityToItemDescriptionEnabled = lua->getGlobalBoolean("lootQualityToItemDescriptionEnabled");
 			if (lua->getGlobalBoolean("lootSocketsOnWearablesEnabled") == true || lua->getGlobalBoolean("lootSocketsOnWearablesEnabled") == false) lootSocketsOnWearablesEnabled = lua->getGlobalBoolean("lootSocketsOnWearablesEnabled");
 			if (lua->getGlobalBoolean("lootSocketsOnWearableContainersEnabled") == true || lua->getGlobalBoolean("lootSocketsOnWearableContainersEnabled") == false) lootSocketsOnWearableContainersEnabled = lua->getGlobalBoolean("lootSocketsOnWearableContainersEnabled");
+			if (lua->getGlobalBoolean("lootColorCrystalColorInNameEnabled") == true || lua->getGlobalBoolean("lootColorCrystalColorInNameEnabled") == false) lootColorCrystalColorInNameEnabled = lua->getGlobalBoolean("lootColorCrystalColorInNameEnabled");
 
 			//Mission 
 			if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");

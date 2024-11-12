@@ -295,6 +295,7 @@ namespace globalVariables {
 	extern bool lootQualityToItemDescriptionEnabled;
 	extern bool lootSocketsOnWearablesEnabled;
 	extern bool lootSocketsOnWearableContainersEnabled;
+	extern bool lootColorCrystalColorInNameEnabled;
 
 //Mission
 	extern int missionBountyExpirationTime;

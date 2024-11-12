@@ -22,7 +22,7 @@
 #include "server/zone/objects/ship/components/ShipComponent.h"
 #include "server/zone/objects/ship/ai/ShipAiAgent.h"
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/stringid/StringIdManager.h"
 
 // #define DEBUG_LOOT_MAN
 
@@ -317,13 +317,14 @@ void LootManagerImplementation::setCustomObjectNameNew(TangibleObject* object, c
 		}
 	}
 		
-	int crystalColor = 0;
+	int crystalColor = -1;
+	LightsaberCrystalComponent* crystal = nullptr;
 	if (object->isLightsaberCrystalObject()) {
-		LightsaberCrystalComponent* crystal = cast<LightsaberCrystalComponent*> (object);
-		crystalColor = crystal->getColor();
+		crystal = cast<LightsaberCrystalComponent*> (object);
+		if (crystal != nullptr) {
+			crystalColor = crystal->getColor();
+		}
 	}
-	
-//	Logger::console.info("modCount: " + std::to_string(modCount) + " useCount: " + std::to_string(useCountOnly) + " color: " + std::to_string(crystalColor) + " objectName: " + object->getDisplayedName(),true);
 	
 	if (object->isWeaponObject() || object->isArmorObject() || (object->isComponent() && useCountOnly == 0) || (object->isComponent() && crystalColor == 31)) {
 		if (modifier >= legendaryModifier) {
@@ -335,7 +336,10 @@ void LootManagerImplementation::setCustomObjectNameNew(TangibleObject* object, c
 		}
 	}
 
-	if (suffixName != "") {
+	if (crystalColor >= 0 && crystalColor < 31 && globalVariables::lootColorCrystalColorInNameEnabled) {
+		StringId attrName("jedi_spam", "saber_color_" + std::to_string(crystalColor));
+		object->setCustomObjectName(StringIdManager::instance()->getStringId(attrName).toString() + " " + object->getDisplayedName(), false);
+	} else if (suffixName != "") {
 		object->setCustomObjectName(object->getDisplayedName() + suffixName, false);
 		object->addMagicBit(false);
 	}

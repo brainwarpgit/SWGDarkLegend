@@ -27,6 +27,9 @@ class Container extends TangibleObject {
 	public native void loadTemplateData(SharedObjectTemplate templateData);
 	public native void initializeTransientMembers();
 
+	@dirty
+	public native boolean isEquipped();
+
 	@local
 	public native void notifyLoadFromDatabase();
 	/**

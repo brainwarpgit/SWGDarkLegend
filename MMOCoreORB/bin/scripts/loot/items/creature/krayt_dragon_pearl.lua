@@ -3,7 +3,7 @@
 krayt_dragon_pearl = {
 	minimumLevel = 0,
 	maximumLevel = -1,
-	customObjectName = "",
+	customObjectName = "Krayt Dragon Force Pearl",
 	directObjectTemplate = "object/tangible/component/weapon/lightsaber/lightsaber_module_krayt_dragon_pearl.iff",
 	craftingValues = {
 		{"color",31,31,0},

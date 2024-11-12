@@ -286,6 +286,7 @@ lootModifierToItemDescriptionEnabled = true --default false Only shows on items 
 lootQualityToItemDescriptionEnabled = true --default false Only shows on items affected by modifiers
 lootSocketsOnWearablesEnabled = true --default false
 lootSocketsOnWearableContainersEnabled = false --default true
+lootColorCrystalColorInNameEnabled = true --default false
 
 --Mission
 missionBountyExpirationTime = 48 --default 48 in hours
