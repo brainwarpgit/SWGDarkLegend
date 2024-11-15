@@ -619,6 +619,31 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 		alm->insertAttribute("creature_run_speed",std::to_string(getRunSpeed()));
 	}
 	
+	if (ghost->isAdmin()) {
+		alm->insertAttribute("minimum_damage",std::to_string(getDamageMin()));
+		alm->insertAttribute("maximum_damage",std::to_string(getDamageMax()));
+		alm->insertAttribute("ferocity",std::to_string(getFerocity()));
+		alm->insertAttribute("chancehit",std::to_string(getChanceHit()));
+		alm->insertAttribute("maxham",std::to_string(getHamMaximum()));
+		alm->insertAttribute("baseham",std::to_string(getHamBase()));
+		/*alm->insertAttribute("getBaseCreatureScale",std::to_string(getBaseCreatureScale()));
+		alm->insertAttribute("getBaseCreatureXp",std::to_string(getBaseCreatureXp()));
+		alm->insertAttribute("getBaseCreatureMeatAmount",std::to_string(getBaseCreatureMeatAmount()));
+		alm->insertAttribute("getBaseCreatureHideAmount",std::to_string(getBaseCreatureHideAmount()));
+		alm->insertAttribute("getBaseCreatureBoneAmount",std::to_string(getBaseCreatureBoneAmount()));
+		alm->insertAttribute("getBaseCreatureMilk",std::to_string(getBaseCreatureMilk()));
+		alm->insertAttribute("getBaseCreatureLevel",std::to_string(getBaseCreatureLevel()));
+		alm->insertAttribute("getBaseCreatureChanceHit",std::to_string(getBaseCreatureChanceHit()));
+		alm->insertAttribute("getBaseCreatureFerocity",std::to_string(getBaseCreatureFerocity()));
+		alm->insertAttribute("getBaseCreatureDamageMax",std::to_string(getBaseCreatureDamageMax()));
+		alm->insertAttribute("getBaseCreatureDamageMin",std::to_string(getBaseCreatureDamageMin()));
+		alm->insertAttribute("getBaseCreatureHAM",std::to_string(getBaseCreatureHAM()));
+		alm->insertAttribute("getBaseCreatureHAMmax",std::to_string(getBaseCreatureHAMmax()));
+		alm->insertAttribute("getBaseCreatureResists",std::to_string(getBaseCreatureResists()));*/
+		alm->insertAttribute("getLevelPercentDifference",std::to_string(getLevelPercentDifference()));
+		alm->insertAttribute("getBaseMobLevel",std::to_string(getBaseMobLevel()));
+	}
+	
 	if (isPet())
 	{
 		ManagedReference<CreatureObject*> owner = getLinkedCreature().get();

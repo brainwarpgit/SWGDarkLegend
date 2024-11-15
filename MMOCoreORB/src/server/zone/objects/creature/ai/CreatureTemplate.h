@@ -87,7 +87,9 @@ protected:
 	bool tauntable;
 
 	int level;
-
+	float baseMobLevel;
+	float levelPercentDifference;
+	
 	float chanceHit;
 	int damageMin;
 	int damageMax;
@@ -264,6 +266,70 @@ public:
 		return cdpMultiplier;
 	}	
 	
+	inline float getBaseCreatureScale() const {
+		return baseCreatureScale;
+	}
+	
+	inline float getBaseCreatureXp() const {
+		return baseCreatureXp;
+	}
+	
+	inline float getBaseCreatureMeatAmount() const {
+		return baseCreatureMeatAmount;
+	}
+	
+	inline float getBaseCreatureHideAmount() const {
+		return baseCreatureHideAmount;
+	}
+	
+	inline float getBaseCreatureBoneAmount() const {
+		return baseCreatureBoneAmount;
+	}
+	
+	inline float getBaseCreatureMilk() const {
+		return baseCreatureMilk;
+	}
+	
+	inline float getBaseCreatureLevel() const {
+		return baseCreatureLevel;
+	}
+	
+	inline float getBaseCreatureChanceHit() const {
+		return baseCreatureChanceHit;
+	}
+	
+	inline float getBaseCreatureFerocity() const {
+		return baseCreatureFerocity;
+	}
+	
+	inline float getBaseCreatureDamageMax() const {
+		return baseCreatureDamageMax;
+	}
+	
+	inline float getBaseCreatureDamageMin() const {
+		return baseCreatureDamageMin;
+	}
+	
+	inline float getBaseCreatureHAM() const {
+		return baseCreatureHAM;
+	}
+	
+	inline float getBaseCreatureHAMmax() const {
+		return baseCreatureHAMmax;
+	}
+	
+	inline float getBaseCreatureResists() const {
+		return baseCreatureResists;
+	}
+	
+	inline float getLevelPercentDifference() const {
+		return levelPercentDifference;
+	}
+	
+	inline float getBaseMobLevel() const {
+		return baseMobLevel;
+	}
+
 	inline const String& getCustomName() const {
 		return customName;
 	}

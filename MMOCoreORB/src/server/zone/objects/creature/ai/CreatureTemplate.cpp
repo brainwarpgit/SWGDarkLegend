@@ -175,25 +175,23 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	if (!templateData->getStringField("milkType").isEmpty()) {
 		milkType = templateData->getStringField("milkType").trim();
 	}
-	
-	float levelPercentDifference = 0;
+	baseMobLevel = (float)level;
+	levelPercentDifference = 1.0f;
 	if (missionRandomAttack == 0) {
-		baseCreatureScale = globalVariables::creatureBaseScaleMultiplier;
-		baseCreatureXp = globalVariables::creatureBaseXPMultiplier;
-		baseCreatureMeatAmount = globalVariables::creatureBaseMeatAmountMultiplier;
-		baseCreatureHideAmount = globalVariables::creatureBaseHideAmountMultiplier;
-		baseCreatureBoneAmount = globalVariables::creatureBaseBoneAmountMultiplier;
-		baseCreatureMilk = globalVariables::creatureBaseMilkMultiplier;
-		baseCreatureLevel = globalVariables::creatureBaseLevelMultiplier;
-		baseCreatureChanceHit = globalVariables::creatureBaseChanceHitMultiplier;
-		baseCreatureFerocity = globalVariables::creatureBaseFerocityMultiplier;
-		baseCreatureDamageMax = globalVariables::creatureBaseDamageMaxMultiplier;
-		baseCreatureDamageMin = globalVariables::creatureBaseDamageMinMultiplier;
-		baseCreatureHAM = globalVariables::creatureBaseHAMMultiplier;
-		baseCreatureHAMmax = globalVariables::creatureBaseHAMMaxMultiplier;
-		baseCreatureResists = globalVariables::creatureBaseResistsMultiplier;
-		std::string templateName = getTemplateName();
-		float levelPercentBase = ((float)level * baseCreatureLevel) / (float)globalVariables::creatureMaxLevel * 100.0f;
+		scale *= globalVariables::creatureBaseScaleMultiplier;
+		baseXp *= globalVariables::creatureBaseXPMultiplier;
+		meatAmount *= globalVariables::creatureBaseMeatAmountMultiplier;
+		hideAmount *= globalVariables::creatureBaseHideAmountMultiplier;
+		boneAmount *= globalVariables::creatureBaseBoneAmountMultiplier;
+		milk *= globalVariables::creatureBaseMilkMultiplier;
+		level *= globalVariables::creatureBaseLevelMultiplier;
+		chanceHit *= globalVariables::creatureBaseChanceHitMultiplier;
+		ferocity *= globalVariables::creatureBaseFerocityMultiplier;
+		damageMax *= globalVariables::creatureBaseDamageMaxMultiplier;
+		damageMin *= globalVariables::creatureBaseDamageMinMultiplier;
+		baseHAM *= globalVariables::creatureBaseHAMMultiplier;
+		baseHAMmax *= globalVariables::creatureBaseHAMMaxMultiplier;
+		baseMobLevel = (float)level;
 		if (creatureDifficulty >=1 && creatureDifficulty <= 3) {
 			for(int i = 2; i <= creatureDifficulty; ++i) {
 				baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
@@ -230,14 +228,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 			}
 		}
 		if (creatureDifficulty >= 4) {
-			baseCreatureLevel *= cdpMultiplier;
-			baseCreatureChanceHit *= cdpMultiplier;
-			baseCreatureFerocity *= cdpMultiplier;
-			baseCreatureDamageMax *= cdpMultiplier;
-			baseCreatureDamageMin *= cdpMultiplier;
-			baseCreatureHAM *= cdpMultiplier;
-			baseCreatureHAMmax *= cdpMultiplier;
-			baseCreatureResists *= cdpMultiplier;
+			baseCreatureXp += globalVariables::creatureModBaseXPModifier * cdpMultiplier;
+			baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier * cdpMultiplier;
+			baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier * cdpMultiplier;
+			baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier * cdpMultiplier;
+			baseCreatureMilk += globalVariables::creatureModBaseMilkModifier * cdpMultiplier;
+			baseCreatureLevel += globalVariables::creatureModBaseLevelModifier * cdpMultiplier;
+			baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier * cdpMultiplier;
+			baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier * cdpMultiplier;
+			baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier * cdpMultiplier;
+			baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier * cdpMultiplier;
+			baseCreatureHAM += globalVariables::creatureModBaseHAMModifier * cdpMultiplier;
+			baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier * cdpMultiplier;
+			baseCreatureResists += globalVariables::creatureModBaseResistsModifier * cdpMultiplier;
 		}
 
 		scale *= baseCreatureScale;
@@ -260,18 +263,13 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		if (creatureDifficulty == 5 && System::random(1000) > 975) armor += 2;
 		if (creatureDifficulty == 6 && System::random(1000) > 975) armor += 3;
 		if (armor > 3) armor = 3;
+		
+		levelPercentDifference = (level - baseMobLevel) / baseMobLevel;
+		if (creatureDifficulty <= 1) levelPercentDifference = 1.0f;
 
-		float levelPercentModified = (float)level / (float)globalVariables::creatureMaxLevel * 100.0f;
-		levelPercentDifference = (levelPercentModified - levelPercentBase) * 1.25f;
-		if (creatureDifficulty <= 3) levelPercentDifference = 0.0f;
-
-	/*	if (creatureDifficulty >= 4) {
-			std::cout << "baseCreatureDamageMax" << baseCreatureDamageMax << "levelPercentBase: " << levelPercentBase << " levelPercentModified: " << levelPercentModified << " Level: " << level << " levelPercentDifference: " << levelPercentDifference << " Name: " << templateName << std::endl;
-		}*/
 		if (damageMin >= damageMax) damageMin = damageMax * 0.9;
 		if (baseHAMmax >= baseHAM) baseHAM = baseHAMmax * 0.9;
 		
-		level = std::max(1,std::min(globalVariables::creatureMaxLevel, level));
 		damageMin = std::max(1,damageMin);
 		damageMax = std::max(2,damageMax);
 		baseHAM = std::max(1,baseHAM);
@@ -281,142 +279,207 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	LuaObject res = templateData->getObjectField("resists");
 	if (res.getTableSize() == 9) {
 		kinetic = res.getFloatAt(1);
-		if (kinetic > 100) {
-			kinetic = ((((kinetic - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (kinetic > 100 + globalVariables::creatureKineticMaxResists) {
-				kinetic = 100 + globalVariables::creatureKineticMaxResists;
-			}
-		} else {
-			kinetic = (kinetic * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && kinetic < 0) {
+			kinetic = .09 * level;
 			if (kinetic > globalVariables::creatureKineticMaxResists) {
 				kinetic = globalVariables::creatureKineticMaxResists;
 			}
-		}
-		if (kinetic < 0) {
-			kinetic = -1;
+		} else {
+			if (kinetic > 100) {
+				kinetic = (((kinetic - 100) * baseCreatureResists) * levelPercentDifference) + 100;
+				if (kinetic > 100 + globalVariables::creatureKineticMaxResists) {
+					kinetic = 100 + globalVariables::creatureKineticMaxResists;
+				}
+			} else {
+				kinetic = (kinetic * baseCreatureResists) * levelPercentDifference;
+				if (kinetic > globalVariables::creatureKineticMaxResists) {
+					kinetic = globalVariables::creatureKineticMaxResists;
+				}
+			}
+			if (kinetic < 0) {
+				kinetic = -1;
+			}
 		}
 		energy = res.getFloatAt(2);
-		if (energy > 100) {
-			energy = ((((energy - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (energy > 100 + globalVariables::creatureEnergyMaxResists) {
-				energy = 100 + globalVariables::creatureEnergyMaxResists;
-			}
-		} else {
-			energy = (energy * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && energy < 0) {
+			energy = .09 * level;
 			if (energy > globalVariables::creatureEnergyMaxResists) {
 				energy = globalVariables::creatureEnergyMaxResists;
 			}
-		}
-		if (energy < 0) {
-			energy = -1;
+		} else {
+			if (energy > 100) {
+				energy = ((((energy - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (energy > 100 + globalVariables::creatureEnergyMaxResists) {
+					energy = 100 + globalVariables::creatureEnergyMaxResists;
+				}
+			} else {
+				energy = (energy * baseCreatureResists) * levelPercentDifference;
+				if (energy > globalVariables::creatureEnergyMaxResists) {
+					energy = globalVariables::creatureEnergyMaxResists;
+				}
+			}
+			if (energy < 0) {
+				energy = -1;
+			}
 		}
 		blast = res.getFloatAt(3);
-		if (blast > 100) {
-			blast = ((((blast - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (blast > 100 + globalVariables::creatureBlastMaxResists) {
-				blast = 100 + globalVariables::creatureBlastMaxResists;
-			}
-		} else {
-			blast = (blast * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && blast < 0) {
+			blast = .09 * level;
 			if (blast > globalVariables::creatureBlastMaxResists) {
 				blast = globalVariables::creatureBlastMaxResists;
 			}
-		}
-		if (blast < 0) {
-			blast = -1;
+		} else {
+			if (blast > 100) {
+				blast = ((((blast - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (blast > 100 + globalVariables::creatureBlastMaxResists) {
+					blast = 100 + globalVariables::creatureBlastMaxResists;
+				}
+			} else {
+				blast = (blast * baseCreatureResists) * levelPercentDifference;
+				if (blast > globalVariables::creatureBlastMaxResists) {
+					blast = globalVariables::creatureBlastMaxResists;
+				}
+			}
+			if (blast < 0) {
+				blast = -1;
+			}
 		}
 		heat = res.getFloatAt(4);
-		if (heat > 100) {
-			heat = ((((heat - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (heat > 100 + globalVariables::creatureHeatMaxResists) {
-				heat = 100 + globalVariables::creatureHeatMaxResists;
-			}
-		} else {
-			heat = (heat * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && heat < 0) {
+			heat = .09 * level;
 			if (heat > globalVariables::creatureHeatMaxResists) {
 				heat = globalVariables::creatureHeatMaxResists;
 			}
-		}
-		if (heat < 0) {
-			heat = -1;
+		} else {
+			if (heat > 100) {
+				heat = ((((heat - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (heat > 100 + globalVariables::creatureHeatMaxResists) {
+					heat = 100 + globalVariables::creatureHeatMaxResists;
+				}
+			} else {
+				heat = (heat * baseCreatureResists) * levelPercentDifference;
+				if (heat > globalVariables::creatureHeatMaxResists) {
+					heat = globalVariables::creatureHeatMaxResists;
+				}
+			}
+			if (heat < 0) {
+				heat = -1;
+			}
 		}
 		cold = res.getFloatAt(5);
-		if (cold > 100) {
-			cold = ((((cold - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (cold > 100 + globalVariables::creatureColdMaxResists) {
-				cold = 100 + globalVariables::creatureColdMaxResists;
-			}
-		} else {
-			cold = (cold * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && cold < 0) {
+			cold = .09 * level;
 			if (cold > globalVariables::creatureColdMaxResists) {
 				cold = globalVariables::creatureColdMaxResists;
 			}
-		}
-		if (cold < 0) {
-			cold = -1;
+		} else {
+			if (cold > 100) {
+				cold = ((((cold - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (cold > 100 + globalVariables::creatureColdMaxResists) {
+					cold = 100 + globalVariables::creatureColdMaxResists;
+				}
+			} else {
+				cold = (cold * baseCreatureResists) * levelPercentDifference;
+				if (cold > globalVariables::creatureColdMaxResists) {
+					cold = globalVariables::creatureColdMaxResists;
+				}
+			}
+			if (cold < 0) {
+				cold = -1;
+			}
 		}
 		electricity = res.getFloatAt(6);
-		if (electricity > 100) {
-			electricity = ((((electricity - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (electricity > 100 + globalVariables::creatureElectricityMaxResists) {
-				electricity = 100 + globalVariables::creatureElectricityMaxResists;
+		if (creatureDifficulty >= 4 && electricity < 0) {
+			electricity = .09 * level;
+			if (electricity > globalVariables::creatureAcidMaxResists) {
+				electricity = globalVariables::creatureAcidMaxResists;
 			}
 		} else {
-			electricity = (electricity * baseCreatureResists) + levelPercentDifference;
-			if (electricity > globalVariables::creatureElectricityMaxResists) {
-				electricity = globalVariables::creatureElectricityMaxResists;
+			if (electricity > 100) {
+				electricity = ((((electricity - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (electricity > 100 + globalVariables::creatureElectricityMaxResists) {
+					electricity = 100 + globalVariables::creatureElectricityMaxResists;
+				}
+			} else {
+				electricity = (electricity * baseCreatureResists) * levelPercentDifference;
+				if (electricity > globalVariables::creatureElectricityMaxResists) {
+					electricity = globalVariables::creatureElectricityMaxResists;
+				}
 			}
-		}
-		if (electricity < 0) {
-			electricity = -1;
+			if (electricity < 0) {
+				electricity = -1;
+			}
 		}
 		acid = res.getFloatAt(7);
-		if (acid > 100) {
-			acid = ((((acid - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (acid > 100 + globalVariables::creatureAcidMaxResists) {
-				acid = 100 + globalVariables::creatureAcidMaxResists;
-			}
-		} else {
-			acid = (acid * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && acid < 0) {
+			acid = .09 * level;
 			if (acid > globalVariables::creatureAcidMaxResists) {
 				acid = globalVariables::creatureAcidMaxResists;
 			}
-		}
-		if (acid < 0) {
-			acid = -1;
+		} else {
+			if (acid > 100) {
+				acid = ((((acid - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (acid > 100 + globalVariables::creatureAcidMaxResists) {
+					acid = 100 + globalVariables::creatureAcidMaxResists;
+				}
+			} else {
+				acid = (acid * baseCreatureResists) * levelPercentDifference;
+				if (acid > globalVariables::creatureAcidMaxResists) {
+					acid = globalVariables::creatureAcidMaxResists;
+				}
+			}
+			if (acid < 0) {
+				acid = -1;
+			}
 		}
 		stun = res.getFloatAt(8);
-		if (stun > 100) {
-			stun = ((((stun - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (stun > 100 + globalVariables::creatureStunMaxResists) {
-				stun = 100 + globalVariables::creatureStunMaxResists;
-			}
-		} else {
-			stun = (stun * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && stun < 0) {
+			stun = .09 * level;
 			if (stun > globalVariables::creatureStunMaxResists) {
 				stun = globalVariables::creatureStunMaxResists;
 			}
-		}
-		if (stun < 0) {
-			stun = -1;
+		} else {
+			if (stun > 100) {
+				stun = ((((stun - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (stun > 100 + globalVariables::creatureStunMaxResists) {
+					stun = 100 + globalVariables::creatureStunMaxResists;
+				}
+			} else {
+				stun = (stun * baseCreatureResists) * levelPercentDifference;
+				if (stun > globalVariables::creatureStunMaxResists) {
+					stun = globalVariables::creatureStunMaxResists;
+				}
+			}
+			if (stun < 0) {
+				stun = -1;
+			}
 		}
 		lightSaber = res.getFloatAt(9);
-		if (lightSaber > 100) {
-			lightSaber = ((((lightSaber - 100) * baseCreatureResists) + levelPercentDifference) + 100);
-			if (lightSaber > 100 + globalVariables::creatureLightsaberMaxResists) {
-				lightSaber = 100 + globalVariables::creatureLightsaberMaxResists;
-			}
-		} else {
-			lightSaber = (lightSaber * baseCreatureResists) + levelPercentDifference;
+		if (creatureDifficulty >= 4 && lightSaber < 0) {
+			lightSaber = .09 * level;
 			if (lightSaber > globalVariables::creatureLightsaberMaxResists) {
 				lightSaber = globalVariables::creatureLightsaberMaxResists;
 			}
-		}
-		if (lightSaber < 0) {
-			lightSaber = -1;
+		} else {
+			if (lightSaber > 100) {
+				lightSaber = ((((lightSaber - 100) * baseCreatureResists) * levelPercentDifference) + 100);
+				if (lightSaber > 100 + globalVariables::creatureLightsaberMaxResists) {
+					lightSaber = 100 + globalVariables::creatureLightsaberMaxResists;
+				}
+			} else {
+				lightSaber = (lightSaber * baseCreatureResists) * levelPercentDifference;
+				if (lightSaber > globalVariables::creatureLightsaberMaxResists) {
+					lightSaber = globalVariables::creatureLightsaberMaxResists;
+				}
+			}
+			if (lightSaber < 0) {
+				lightSaber = -1;
+			}
 		}	
 	}
 	res.pop();
+
+	level = std::max(1,std::min(globalVariables::creatureMaxLevel, level));
 
 	LuaObject temps = templateData->getObjectField("templates");
 	if (temps.isValidTable()) {

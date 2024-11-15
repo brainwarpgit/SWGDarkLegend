@@ -354,6 +354,118 @@ class AiAgent extends CreatureObject {
 	        return npcTemplate.get().getCDPMultiplier();    
 	}
 	
+	public float getBaseCreatureScale() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureScale();    
+	}
+	
+	public float getBaseCreatureXp() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureXp();    
+	}
+	
+	public float getBaseCreatureMeatAmount() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureMeatAmount();    
+	}
+	
+	public float getBaseCreatureHideAmount() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureHideAmount();    
+	}
+	
+	public float getBaseCreatureBoneAmount() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureBoneAmount();    
+	}
+	
+	public float getBaseCreatureMilk() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureMilk();    
+	}
+	
+	public float getBaseCreatureLevel() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureLevel();    
+	}
+	
+	public float getBaseCreatureChanceHit() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureChanceHit();    
+	}
+	
+	public float getBaseCreatureFerocity() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureFerocity();    
+	}
+	
+	public float getBaseCreatureDamageMax() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureDamageMax();    
+	}
+	
+	public float getBaseCreatureDamageMin() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureDamageMin();    
+	}
+	
+	public float getBaseCreatureHAM() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureHAM();    
+	}
+	
+	public float getBaseCreatureHAMmax() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureHAMmax();    
+	}
+	
+	public float getBaseCreatureResists() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseCreatureResists();    
+	}
+	
+	public float getLevelPercentDifference() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getLevelPercentDifference();    
+	}
+	
+	public float getBaseMobLevel() {
+	        if (npcTemplate.get() == null)
+	            return 1;
+        
+	        return npcTemplate.get().getBaseMobLevel();    
+	}
+
 	public int getNewLevel() {
 		return newLevel;
 	}
