@@ -228,11 +228,6 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 			}
 		}
 		if (creatureDifficulty >= 4) {
-			baseCreatureXp += globalVariables::creatureModBaseXPModifier * cdpMultiplier;
-			baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier * cdpMultiplier;
-			baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier * cdpMultiplier;
-			baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier * cdpMultiplier;
-			baseCreatureMilk += globalVariables::creatureModBaseMilkModifier * cdpMultiplier;
 			baseCreatureLevel += globalVariables::creatureModBaseLevelModifier * cdpMultiplier;
 			baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier * cdpMultiplier;
 			baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier * cdpMultiplier;
