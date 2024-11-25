@@ -1957,10 +1957,15 @@ bool ShipObjectImplementation::isShipLaunched() {
 int ShipObjectImplementation::getReceiverFlags() const {
 	int type = CloseObjectsVector::SHIPTYPE;
 
-	if (ownerID > 0)
+	if (ownerID > 0) {
 		type = type | CloseObjectsVector::PLAYERSHIPTYPE;
+	}
 
 	return type | TangibleObjectImplementation::getReceiverFlags();
+}
+
+float ShipObjectImplementation::getOutOfRangeDistance() const {
+	return ZoneServer::SPACECLOSEOBJECTRANGE;
 }
 
 bool ShipObjectImplementation::isComponentInstalled(uint32 slot) {
