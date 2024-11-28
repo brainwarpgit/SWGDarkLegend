@@ -101,7 +101,6 @@
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/objects/creature/events/BurstRunNotifyAvailableEvent.h"
-#include "server/zone/objects/creature/events/BurstRunFinishedEvent.h"
 #include "server/zone/objects/creature/ai/DroidObject.h"
 #include "server/zone/objects/tangible/components/droid/DroidPlaybackModuleDataComponent.h"
 #include "server/zone/objects/player/badges/Badge.h"
@@ -118,7 +117,6 @@
 #include "server/zone/packets/object/transform/Transform.h"
 
 #include "server/zone/managers/statistics/StatisticsManager.h"
-#include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl, bool trackOnlineUsers) : Logger("PlayerManager") {
 	playerLoggerFilename = "log/player.log";
@@ -1782,10 +1780,10 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 	ManagedReference<SceneObject*> preDesignatedFacility = server->getObject(preDesignatedFacilityOid);
 
 	if (preDesignatedFacility == nullptr || preDesignatedFacility != cloner) {
-		player->addWounds(CreatureAttribute::HEALTH, globalVariables::playerWoundsonDeath, true, false);
-		player->addWounds(CreatureAttribute::ACTION, globalVariables::playerWoundsonDeath, true, false);
-		player->addWounds(CreatureAttribute::MIND, globalVariables::playerWoundsonDeath, true, false);
-		player->addShockWounds(globalVariables::playerWoundsonDeath, true);
+		player->addWounds(CreatureAttribute::HEALTH, 100, true, false);
+		player->addWounds(CreatureAttribute::ACTION, 100, true, false);
+		player->addWounds(CreatureAttribute::MIND, 100, true, false);
+		player->addShockWounds(100, true);
 	}
 
 	if (ConfigManager::instance()->useCovertOvertSystem()) {
@@ -1852,12 +1850,12 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 
 
 	// Jedi experience loss.
-	if (ghost->getJediState() >= 2 && !globalVariables::playerJediXPLossEnabled) {
+	if (ghost->getJediState() >= 2) {
 		int jediXpCap = ghost->getXpCap("jedi_general");
-		int xpLoss = (int)(jediXpCap * -0.004);
+		int xpLoss = (int)(jediXpCap * -0.05);
 		int curExp = ghost->getExperience("jedi_general");
 
-		int negXpCap = globalVariables::playerJediNegativeXPCap; // Cap on negative jedi experience
+		int negXpCap = -10000000; // Cap on negative jedi experience
 
 		if ((curExp + xpLoss) < negXpCap)
 			xpLoss = negXpCap - curExp;
@@ -1944,17 +1942,14 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 			}
 		}
 
-		if (ai != nullptr) {
+		if (ai != nullptr)
 			baseXp = ai->getBaseXp();
-			if (ai->getMissionRandomAttack() > 0) baseXp *= ai->getNewLevel();
-		}
+
 	} else {
 		ManagedReference<AiAgent*> ai = cast<AiAgent*>(destructedObject);
 
-		if (ai != nullptr) {
+		if (ai != nullptr)
 			baseXp = ai->getBaseXp();
-			if (ai->getMissionRandomAttack() > 0) baseXp *= ai->getNewLevel();
-		}
 	}
 
 	Vector<uint64> playerList;
@@ -2062,31 +2057,23 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 			}
 
 			// TODO: Find a more correct CH xp formula
-			float xpAmount = 0;
-			if (globalVariables::playerCHXPModEnabled == false) {
-				float levelRatio = (float)destructedObject->getLevel() / (float)attacker->getLevel();
+			float levelRatio = (float)destructedObject->getLevel() / (float)attacker->getLevel();
 
-				xpAmount = levelRatio * 500.f;
+			float xpAmount = levelRatio * 500.f;
 
-				if (levelRatio <= 0.5) {
-					xpAmount = 1;
-				} else {
-					xpAmount = Math::min(xpAmount, (float)attacker->getLevel() * 50.f);
-					xpAmount /= totalPets;
-				}
+			if (levelRatio <= 0.5) {
+				xpAmount = 1;
 			} else {
-				xpAmount = baseXp;
+				xpAmount = Math::min(xpAmount, (float)attacker->getLevel() * 50.f);
+				xpAmount /= totalPets;
+
+				if (winningFaction != Factions::FACTIONNEUTRAL && winningFaction == attacker->getFaction())
+					xpAmount *= gcwBonus;
 			}
 
-			if (winningFaction != Factions::FACTIONNEUTRAL && winningFaction == attacker->getFaction())
-				xpAmount *= gcwBonus;
-			
 			trx.addState("combatTotalPets", totalPets);
 
 			awardExperience(owner, "creaturehandler", xpAmount);
-			if (globalVariables::playerCHCombatXPEnabled == true) {
-				awardExperience(owner, "combat_general", xpAmount);
-			}
 		} else if (attacker->isPlayerCreature()) {
 			if (!(attacker->getZone() == zone && destructedObject->isInRangeZoneless(attacker, 80))) {
 				continue;
@@ -2127,15 +2114,11 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 				float xpAmount = baseXp;
 				int playerLevel = calculatePlayerLevel(attackerCreo, xpType);
 
-				if (globalVariables::playerAwardXPWeaponSplitEnabled == false) {
-					xpAmount *= (float) damage / totalDamage;
-				}
+				xpAmount *= (float) damage / totalDamage;
 
 				//Cap xp based on level
-				if (globalVariables::playerXPBasedOnLevelEnabled == true){
-					xpAmount = Math::min(xpAmount, playerLevel * 300.f);
-				}
-				
+				xpAmount = Math::min(xpAmount, playerLevel * 300.f);
+
 				//Apply group bonus if in group
 				if (group != nullptr)
 					xpAmount *= groupExpMultiplier;
@@ -2144,10 +2127,10 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 					xpAmount *= gcwBonus;
 
 				// Jedi experience doesn't count towards combat experience, and is earned at 20% the rate of normal experience
-				if (globalVariables::playerJediAwardedCombatXPEnabled == true && xpType == "jedi_general")
-					combatXp += xpAmount * globalVariables::playerJediXPMultiplier;
-				else
+				if (xpType != "jedi_general")
 					combatXp += xpAmount;
+				else
+					xpAmount *= 0.2f;
 
 				if (xpType == "dotDMG") { // Prevents XP generated from DoTs from applying to the equiped weapon, but still counts towards combat XP
 					continue;
@@ -2155,14 +2138,9 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 
 				//Award individual expType
 				awardExperience(attackerCreo, xpType, xpAmount);
-				if (attackerCreo->hasSkill("force_title_jedi_rank_03") && xpType == "jedi_general" && globalVariables::playerJediPvEForceRankXPEnabled == true) {
-					xpAmount *= globalVariables::playerJediForceRankXPMultiplier * globalVariables::playerJediXPMultiplier;
-					if (xpAmount < 1) xpAmount = 1;
-					awardExperience(attackerCreo, "force_rank_xp", xpAmount);
-				}	
 			}
 
-			awardExperience(attackerCreo, "combat_general", combatXp, true, 1);
+			awardExperience(attackerCreo, "combat_general", combatXp, true, 0.1f);
 
 
 			//Check if the group leader is a squad leader
@@ -2600,45 +2578,6 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 	if (player->hasBuff(BuffCRC::FOOD_XP_INCREASE) && !player->containsActiveSession(SessionFacadeType::CRAFTING))
 		buffMultiplier += player->getSkillModFromBuffs("xp_increase") / 100.f;
 
-	if (xpType == "bio_engineer_dna_harvesting") amount *= globalVariables::playerDNASamplingXPMultiplier;
-	if (xpType == "bountyhunter") amount *= globalVariables::playerBountyHunterXPMultiplier;
-	if (xpType == "camp") amount *= globalVariables::playerWildernessSurvivalXPMultiplier;
-	if (xpType == "combat_general")	amount *= globalVariables::playerCombatXPMultiplier;
-	if (xpType == "combat_meleespecialize_onehand") amount *= globalVariables::playerOnehandedWeaponsXPMultiplier;
-	if (xpType == "combat_meleespecialize_polearm") amount *= globalVariables::playerPolearmWeaponsXPMultiplier;
-	if (xpType == "combat_meleespecialize_twohand") amount *= globalVariables::playerTwohandedWeaponsXPMultiplier;
-	if (xpType == "combat_meleespecialize_unarmed") amount *= globalVariables::playerUnarmedCombatXPMultiplier;
-	if (xpType == "combat_rangedspecialize_carbine") amount *= globalVariables::playerCarbineWeaponsXPMultiplier;
-	if (xpType == "combat_rangedspecialize_heavy") amount *= globalVariables::playerHeavyWeaponsXPMultiplier;
-	if (xpType == "combat_rangedspecialize_pistol") amount *= globalVariables::playerPistolWeaponsXPMultiplier;
-	if (xpType == "combat_rangedspecialize_rifle") amount *= globalVariables::playerRifleWeaponsXPMultiplier;
-	if (xpType == "crafting_bio_engineer_creature") amount *= globalVariables::playerBioEngineerCraftingXPMultiplier;
-	if (xpType == "crafting_clothing_armor") amount *= globalVariables::playerArmorCraftingXPMultiplier;
-	if (xpType == "crafting_clothing_general") amount *= globalVariables::playerTailoringXPMultiplier;
-	if (xpType == "crafting_droid_general") amount *= globalVariables::playerDroidCraftingXPMultiplier;
-	if (xpType == "crafting_food_general") amount *= globalVariables::playerFoodCraftingXPMultiplier;
-	if (xpType == "crafting_general") amount *= globalVariables::playerGeneralCraftingXPMultiplier;
-	if (xpType == "crafting_medicine_general") amount *= globalVariables::playerMedicineCraftingXPMultiplier;
-	if (xpType == "crafting_spice") amount *= globalVariables::playerSpiceCraftingXPMultiplier;
-	if (xpType == "crafting_structure_general") amount *= globalVariables::playerStructureCraftingXPMultiplier;
-	if (xpType == "crafting_weapons_general") amount *= globalVariables::playerWeaponCraftingXPMultiplier;
-	if (xpType == "creaturehandler") amount *= globalVariables::playerCreatureHandlingXPMultiplier;
-	if (xpType == "dance") amount *= globalVariables::playerDancingXPMultiplier;
-	if (xpType == "entertainer_healing") amount *= globalVariables::playerEntertainerHealingXPMultiplier;
-	if (xpType == "imagedesigner") amount *= globalVariables::playerImageDesignerXPMultiplier;
-	if (xpType == "jedi_general") amount *= globalVariables::playerJediXPMultiplier;
-	if (xpType == "medical") amount *= globalVariables::playerMedicalXPMultiplier;
-	if (xpType == "merchant") amount *= globalVariables::playerMerchantXPMultiplier;
-	if (xpType == "music") amount *= globalVariables::playerMusicianXPMultiplier;
-	if (xpType == "political") amount *= globalVariables::playerPoliticalXPMultiplier;
-	if (xpType == "resource_harvesting_inorganic") amount *= globalVariables::playerSurveyingXPMultiplier;
-	if (xpType == "scout") amount *= globalVariables::playerScoutingXPMultiplier;
-	if (xpType == "shipwright") amount *= globalVariables::playerShipwrightXPMultiplier;
-	if (xpType == "slicing") amount *= globalVariables::playerSlicingXPMultiplier;
-	if (xpType == "space_combat_general") amount *= globalVariables::playerStarshipCombatXPMultiplier;
-	if (xpType == "squadleader") amount *= globalVariables::playerSquadLeadershipXPMultiplier;
-	if (xpType == "trapping") amount *= globalVariables::playerTrappingXPMultiplier;
-
 	int xp = 0;
 
 	trx.addState("applyModifiers", applyModifiers);
@@ -2685,12 +2624,6 @@ void PlayerManagerImplementation::sendLoginMessage(CreatureObject* creature) {
 
 	ChatSystemMessage* csm = new ChatSystemMessage(UnicodeString(motd), ChatSystemMessage::DISPLAY_CHATONLY);
 	creature->sendMessage(csm);
-		
-	if (globalVariables::playerPlayersOnlineAtLoginEnabled) {
-		ChatSystemMessage* strOnline = new ChatSystemMessage(UnicodeString("There are currently " + std::to_string(creature->getZoneServer()->getConnectionCount()) + " player(s) online."), ChatSystemMessage::DISPLAY_CHATONLY);
-		creature->sendMessage(strOnline);
-	}
-		
 }
 
 void PlayerManagerImplementation::resendLoginMessageToAll() {
@@ -3319,7 +3252,7 @@ int PlayerManagerImplementation::healEnhance(CreatureObject* enhancer, CreatureO
 	uint32 buffdiff = buffvalue;
 
 	//If a stronger buff already exists, then we don't buff the patient.
-	if (patient->hasBuff(buffcrc) && globalVariables::playerOverwriteBuffEnabled == false) {
+	if (patient->hasBuff(buffcrc)) {
 		Buff* buff = patient->getBuff(buffcrc);
 
 		if (buff != nullptr) {
@@ -4011,77 +3944,144 @@ void PlayerManagerImplementation::updateSwimmingState(CreatureObject* player, fl
 	player->clearState(CreatureState::SWIMMING, true);
 }
 
-int PlayerManagerImplementation::checkSpeedHackFirstTest(CreatureObject* player, float parsedSpeed, ValidatedPosition& teleportPosition, float errorMultiplier) {
-	return 0;
+bool PlayerManagerImplementation::checkPlayerSpeedTest(CreatureObject* player, SceneObject* parent, float parsedSpeed, ValidatedPosition& teleportPosition, const Vector3& newWorldPosition, float errorMultiplier) {
 	float allowedSpeedMod = player->getSpeedMultiplierMod();
 	float allowedSpeedBase = player->getRunSpeed();
 
-	ManagedReference<SceneObject*> parent = player->getParent().get();
 	SpeedMultiplierModChanges* changeBuffer = player->getSpeedMultiplierModChanges();
 
 	Vector3 teleportPoint = teleportPosition.getPosition();
 	uint64 teleportParentID = teleportPosition.getParent();
 
-	if (parent != nullptr && parent->isVehicleObject()) {
-		VehicleObject* vehicle = cast<VehicleObject*>( parent.get());
+	if (parent != nullptr) {
+		if (parent->isVehicleObject()) {
+			VehicleObject* vehicle = cast<VehicleObject*>(parent);
 
-		allowedSpeedMod = vehicle->getSpeedMultiplierMod();
-		allowedSpeedBase = vehicle->getRunSpeed();
-	} else if (parent != nullptr && parent->isMount()) {
-		Creature* mount = cast<Creature*>( parent.get());
+			allowedSpeedMod = vehicle->getSpeedMultiplierMod();
+			allowedSpeedBase = vehicle->getRunSpeed();
+		} else if (parent->isMount()) {
+			Creature* mount = cast<Creature*>(parent);
 
-		allowedSpeedMod = mount->getSpeedMultiplierMod();
+			allowedSpeedMod = mount->getSpeedMultiplierMod();
 
-		PetManager* petManager = server->getPetManager();
+			PetManager* petManager = server->getPetManager();
 
-		if (petManager != nullptr) {
-			allowedSpeedBase = petManager->getMountedRunSpeed(mount);
+			if (petManager != nullptr) {
+				allowedSpeedBase = petManager->getMountedRunSpeed(mount);
+			}
 		}
-
 	}
 
 	float maxAllowedSpeed = allowedSpeedMod * allowedSpeedBase;
 
-	if (parsedSpeed > maxAllowedSpeed * errorMultiplier) {
-		//float delta = abs(parsedSpeed - maxAllowedSpeed);
+	player->info() << "checkPlayerSpeedTest -- parsedSpeed: " << parsedSpeed << " Teleport position: " << teleportPoint.toString();
+
+	/*
+	// Z Coordinate Check
+	float oldValidZ = teleportPoint.getZ();
+	float newPosZ = newWorldPosition.getZ();
+
+	if (newPosZ > oldValidZ) {
+		float heightDist = fabs(newPosZ - oldValidZ);
+		float slopeMod = player->getSlopeModPercent();
+
+		if (slopeMod > 0.f) {
+			parsedSpeed += (parsedSpeed * (slopeMod / 100.f));
+		}
+
+		parsedSpeed += (heightDist * 0.75f); // Account for players moving quickly up and down steep slopes
+
+		if (heightDist > parsedSpeed) {
+			StringBuffer msg;
+			msg << "checkSpeedHackTests -- FAILED --  heightDist: " << heightDist << " speed: " << parsedSpeed << " Slope Mod Percentage: " << slopeMod;
+			player->info(msg.toString(), true);
+
+			return false;
+		}
+	}
+	*/
+
+	if (parsedSpeed > (maxAllowedSpeed * errorMultiplier)) {
+		// Outdoors get proper Z to try to prevent getting players stuck in terrain
+		if (teleportParentID == 0) {
+			auto zone = player->getZone();
+
+			if (zone == nullptr) {
+				return false;
+			}
+
+			// Proper Z for players being bounced back and stuck in terrain
+			teleportPoint.setZ(zone->getHeight(teleportPoint.getX(), teleportPoint.getY()));
+		}
+
+		if (parsedSpeed > 40.f) {
+			player->setRootedState(7 * 24 * 60 * 60);
+			player->setState(CreatureState::FROZEN, true);
+			player->setSpeedMultiplierBase(0.f, true);
+
+			player->sendSystemMessage("You have been frozen by the system. Please go to SWGEmu Support.");
+
+			player->error() << "Possible Speed Hack Attempt. Player has been frozen. - Player: " << player->getDisplayedName() << " ID: " << player->getObjectID() << " Speed Variable: " << parsedSpeed << " Last Validated World Position: " << teleportPoint.toString() << " Last Valid Parent: " << teleportPosition.getParent() << " New World Position: " << newWorldPosition.toString();
+
+			Reference<CreatureObject*> playerRef = player;
+
+			Core::getTaskManager()->scheduleTask([playerRef, teleportPoint, teleportParentID] () {
+				if (playerRef == nullptr) {
+					return;
+				}
+
+				auto zone = playerRef->getZone();
+
+				if (zone == nullptr) {
+					return;
+				}
+
+				Locker lock(playerRef);
+
+				playerRef->info() << "switchZone for player -- Position: " << teleportPoint.toString() << " ID: " << teleportParentID;
+
+				playerRef->switchZone(zone->getZoneName(), teleportPoint.getX(), teleportPoint.getZ(), teleportPoint.getY(), teleportParentID);
+			}, "SpeedHackTransportLambda", 5000);
+
+			return false;
+		}
 
 		if (changeBuffer->size() == 0) { // no speed changes
 			auto msg = player->info();
-			msg << "checkSpeedHackFirstTest -- FAILED -- changeBuffer - Max Allowed Speed: " << maxAllowedSpeed * errorMultiplier;
-			msg << " Parsed Speed: " << parsedSpeed << endl;
+			msg << "checkPlayerSpeedTest -- FAILED -- changeBuffer - Max Allowed Speed: " << maxAllowedSpeed * errorMultiplier;
+			msg << " Parsed Speed: " << parsedSpeed;
 			msg.flush();
 
 			player->teleport(teleportPoint.getX(), teleportPoint.getZ(), teleportPoint.getY(), teleportParentID);
 
-			return 1;
+			return false;
 		}
 
 		SpeedModChange* firstChange = &changeBuffer->get(changeBuffer->size() - 1);
 		const Time* timeStamp = &firstChange->getTimeStamp();
 
-		if (timeStamp->miliDifference() > 2000) { // we already should have lowered the speed, 2 seconds lag
+		// we already should have lowered the speed, 2 seconds lag
+		if (timeStamp->miliDifference() > 2000) {
 			auto msg = player->info();
-			msg << endl << "checkSpeedHackFirstTest -- FAILED -- Due to timeStamp: " << timeStamp->miliDifference() << " Max Allowed Speed: " << maxAllowedSpeed * errorMultiplier;
+			msg << endl << "checkPlayerSpeedTest -- FAILED -- Due to timeStamp diff: " << timeStamp->miliDifference() << " with Max Allowed Speed: " << maxAllowedSpeed * errorMultiplier;
 			msg << " Parsed Speed: " << parsedSpeed << endl;
-
 			msg.flush();
 
 			player->teleport(teleportPoint.getX(), teleportPoint.getZ(), teleportPoint.getY(), teleportParentID);
 
-			return 1;
+			return false;
 		}
 
 		for (int i = 0; i < changeBuffer->size() - 1; ++i) {
 			SpeedModChange* change = &changeBuffer->get(i);
-			//Time timeStamp = change->getTimeStamp();
 
 			float oldSpeedMod = change->getNewSpeed();
 			float allowed = allowedSpeedBase * oldSpeedMod * errorMultiplier;
 
 			if (allowed >= parsedSpeed) {
-				player->info() << "checkSpeedHackFirstTest -- PASSED";
+				player->info(true) << "checkPlayerSpeedTest -- PASSED";
 
-				return 0; // no hack detected
+				return true; // no hack detected
 			}
 
 			if (allowed > maxAllowedSpeed)
@@ -4089,118 +4089,116 @@ int PlayerManagerImplementation::checkSpeedHackFirstTest(CreatureObject* player,
 		}
 
 		auto msg = player->info();
-		msg << "checkSpeedHackFirstTest -- FAILED -- Max Allowed Speed: " << maxAllowedSpeed;
-		msg << " Parsed Speed: " << parsedSpeed;
-		msg << " changeBufferSize: " << changeBuffer->size();
-
+		msg << "checkPlayerSpeedTest -- FAILED -- Max Allowed Speed: " << maxAllowedSpeed << " Parsed Speed: " << parsedSpeed << " changeBufferSize: " << changeBuffer->size();
 		msg.flush();
 
 		player->teleport(teleportPoint.getX(), teleportPoint.getZ(), teleportPoint.getY(), teleportParentID);
 
-		return 1;
+		return false;
 	}
 
-	player->info() << "checkSpeedHackFirstTest -- PASSED";
+	player->info() << "checkPlayerSpeedTest -- PASSED";
 
-	return 0;
+	return true;
 }
 
-int PlayerManagerImplementation::checkSpeedHackSecondTest(CreatureObject* player, float newX, float newZ, float newY, uint32 newStamp, SceneObject* newParent, bool spaceZone) {
-	auto ghost = player->getPlayerObject();
+bool PlayerManagerImplementation::checkSpeedHackTests(CreatureObject* player, PlayerObject* ghost, const Vector3& newPosition, uint32 newStamp, SceneObject* newParent) {
+	if (player == nullptr || ghost == nullptr) {
+		player->info()  << "checkSpeedHackTests -- FAILED -- null player or ghost";
+		return false;
+	}
+
+	// Not running tests again privileged characters
+	if (ghost->isPrivileged()) {
+		return true;
+	}
 
 	// newStamp - stamp;
 	uint32 deltaTime = ghost->getServerMovementTimeDelta();
 
 	if (deltaTime < 1000) {
-		player->debug() << "checkSpeedHackSecondTest -- PASSED -- deltaTime hasnt passed yet";
-		return 0;
+		player->info()  << "checkSpeedHackTests -- PASSED -- deltaTime hasnt passed yet";
+		return true;
 	}
 
 	uint32 stamp = ghost->getClientLastMovementStamp();
 
 	if (stamp > newStamp) {
-		player->debug() << "checkSpeedHackSecondTest -- FAILED -- older client movement stamp received";
-		return 1;
+		player->info()  << "checkSpeedHackTests -- FAILED -- older client movement stamp received";
+		return false;
 	}
 
-	Vector3 newWorldPosition(newX, newY, newZ);
+	ManagedReference<SceneObject*> parent = player->getParent().get();
 
-	player->debug() << "checkSpeedHackSecondTest ---- Checking - new Position X = " << newWorldPosition.getX() << " Z = " << newWorldPosition.getZ() << " Y = " << newWorldPosition.getY();
+	Vector3 newWorldPosition(newPosition);
+	ValidatedPosition* lastValidatedPosition = ghost->getLastValidatedPosition();
+	Vector3 lastValidatedWorldPosition = lastValidatedPosition->getWorldPosition(server);
+
+	player->info() << "checkSpeedHackTests ---- Checking - new Position X = " << newWorldPosition.getX() << " Z = " << newWorldPosition.getZ() << " Y = " << newWorldPosition.getY();
 
 	if (newParent != nullptr) {
 		ManagedReference<SceneObject*> root = newParent->getRootParent();
 
 		if (!root->isBuildingObject() && !root->isShipObject()) {
-			return 1;
+			return false;
 		}
+
+		float newX = newPosition.getX();
+		float newY = newPosition.getY();
 
 		float length = Math::sqrt(newX * newX + newY * newY);
 		float angle = root->getDirection()->getRadians() + atan2(newX, newY);
 
 		newWorldPosition.setX(root->getPositionX() + (sin(angle) * length));
 		newWorldPosition.setY(root->getPositionY() + (cos(angle) * length));
-		newWorldPosition.setZ(root->getPositionZ() + newZ);
+		newWorldPosition.setZ(root->getPositionZ() + newPosition.getZ());
 
-		player->debug() << "checkSpeedHackSecondTest -- Parent Transform newWorldPosition X = " << newWorldPosition.getX() << " Z = " << newWorldPosition.getZ() << " Y = " << newWorldPosition.getY() << " Distance Length = " << length;
+		player->info()  << "checkSpeedHackTests -- Parent Transform newWorldPosition X = " << newWorldPosition.getX() << " Z = " << newWorldPosition.getZ() << " Y = " << newWorldPosition.getY() << " Distance Length = " << length;
 	}
 
-	ValidatedPosition* lastValidatedPosition = ghost->getLastValidatedPosition();
-
-	Vector3 lastValidatedWorldPosition = lastValidatedPosition->getWorldPosition(server);
-
-	//ignoring Z untill we have all heightmaps
-	float oldValidZ = lastValidatedWorldPosition.getZ();
-	float oldNewPosZ = newWorldPosition.getZ();
-
-	if (!spaceZone) {
-		lastValidatedWorldPosition.setZ(0);
-		newWorldPosition.setZ(0);
-	}
+	// Hills cause issues
+	lastValidatedWorldPosition.setZ(0);
+	newWorldPosition.setZ(0);
 
 	float dist = newWorldPosition.distanceTo(lastValidatedWorldPosition);
 
-	if (dist < 1) {
-		player->debug() << "checkSpeedHackSecondTest -- PASSED -- distance too small to check";
-		return 0;
+	if (dist < 1.f) {
+		player->info()  << "checkSpeedHackTests -- PASSED -- distance too small to check";
+		return true;
 	}
 
 	float speed = dist / (float) deltaTime * 1000.f;
 
-	/*if (oldNewPosZ > oldValidZ) {
-		float heightDist = oldNewPosZ - oldValidZ;
+	StringBuffer msg;
+	msg <<  "Next Position Dist Sq: " << dist << " Player Position: " << lastValidatedWorldPosition.toString() << " Speed: " << speed;
+	player->info() << msg.toString();
 
-		//if (heightDist > speed) {
-			StringBuffer msg;
-			msg << " heightDist:" << heightDist << " speed:" << speed << " terrain neg:" << player->getSlopeModPercent();
-			player->info(msg.toString(), true);
-		//}
-	}*/
-
-	//lastValidatedPosition->set(newWorldPosition.getX(), oldNewPosZ, newWorldPosition.getY());
-
-	int ret = checkSpeedHackFirstTest(player, speed, *lastValidatedPosition, 1.5f);
-
-	if (ret == 0) {
-		lastValidatedPosition->setPosition(newX, newZ, newY);
-
-		if (newParent != nullptr) {
-			lastValidatedPosition->setParent(newParent->getObjectID());
-		} else {
-			lastValidatedPosition->setParent(0);
-		}
-
-		ghost->updateServerLastMovementStamp();
-
-		if (ghost->isOnLoadScreen()) {
-			ghost->setOnLoadScreen(false);
-		}
-
-		ghost->incrementSessionMovement(dist);
+	// Run speed tests
+	if (!checkPlayerSpeedTest(player, parent, speed, *lastValidatedPosition, newWorldPosition, 1.03f)) {
+		return false;
 	}
 
-	player->debug() << "checkSpeedHackSecondTest -- PASSED -- Distance: " << dist << " Speed: " << speed << " Returning Value: " << ret;
+	player->info() << "Setting New Validated Position to - X: " << newWorldPosition.getX() << " Z: " << newWorldPosition.getZ() << " Y: " << newWorldPosition.getY();
 
-	return ret;
+	lastValidatedPosition->setPosition(newPosition.getX(), newPosition.getZ(), newPosition.getY());
+
+	if (newParent != nullptr) {
+		lastValidatedPosition->setParent(newParent->getObjectID());
+	} else {
+		lastValidatedPosition->setParent(0);
+	}
+
+	ghost->updateServerLastMovementStamp();
+
+	if (ghost->isOnLoadScreen()) {
+		ghost->setOnLoadScreen(false);
+	}
+
+	ghost->incrementSessionMovement(dist);
+
+	player->info() << "checkSpeedHackTests -- PASSED -- Distance: " << dist << " Speed: " << speed;
+
+	return true;
 }
 
 void PlayerManagerImplementation::lootAll(CreatureObject* player, CreatureObject* ai) {
@@ -4302,18 +4300,10 @@ void PlayerManagerImplementation::addInsurableItemsRecursive(SceneObject* obj, S
 		if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 			continue;
 
-		if (globalVariables::playerInsureWeaponsEnabled == false) {		
-			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
-				items->put(item);
-			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
-				items->put(item);
-			}
-		} else {
-			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject())) {
-				items->put(item);
-			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject()) && !onlyInsurable) {
-				items->put(item);
-			}
+		if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
+			items->put(item);
+		} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
+			items->put(item);
 		}
 
 		if (object->isContainerObject())
@@ -4344,18 +4334,10 @@ SortedVector<ManagedReference<SceneObject*> > PlayerManagerImplementation::getIn
 			if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 				continue;
 
-			if (globalVariables::playerInsureWeaponsEnabled == false) {		
-				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
-					insurableItems.put(item);
-				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
-					insurableItems.put(item);
-				}
-			} else {
-				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject())) {
-					insurableItems.put(item);
-				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject()) && !onlyInsurable) {
-					insurableItems.put(item);
-				}
+			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
+				insurableItems.put(item);
+			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
+				insurableItems.put(item);
 			}
 		}
 
@@ -6346,7 +6328,6 @@ bool PlayerManagerImplementation::shouldDeleteCharacter(uint64 characterID, int 
 }
 
 bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamModifier, float cooldownModifier) {
-	PlayerObject* ghost = player->getPlayerObject();
 	if (player == nullptr)
 		return false;
 
@@ -6356,21 +6337,7 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	}
 
 	if (player->hasBuff(STRING_HASHCODE("gallop")) || player->hasBuff(STRING_HASHCODE("burstrun")) || player->hasBuff(STRING_HASHCODE("retreat"))) {
-		if (globalVariables::playerBurstRunToggleEnabled) {
-			player->removeBuff(STRING_HASHCODE("burstrun"));
-			player->removePendingTask("burst_run_finished");
-		} else {
-			player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
-		}
-		if (globalVariables::petSpeedSameAsPlayerEnabled) {
-			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
-				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
-				if (pet != nullptr) {
-					pet->setRunSpeed(pet->getRunSpeed() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-				}
-			}
-		}	
+		player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
 		return false;
 	}
 
@@ -6394,20 +6361,15 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		return false;
 	}
 
-	if (!player->checkCooldownRecovery("burstrun") && !globalVariables::playerBurstRunToggleEnabled && !ghost->isAdmin()) {
+	if (!player->checkCooldownRecovery("burstrun")) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); //You are too tired to Burst Run.
 		return false;
 	}
 
 	uint32 crc = STRING_HASHCODE("burstrun");
-	float hamCost = 0;
-	if (globalVariables::playerBurstRunToggleEnabled) {
-		hamCost = globalVariables::playerBurstRunHamCostPercent / 100;
-	} else {
-		hamCost = globalVariables::playerBurstRunHamCost;
-	}
-	float duration = globalVariables::playerBurstRunDuration;
-	float cooldown = globalVariables::playerBurstRunCoolDownTimer;
+	float hamCost = 100.0f;
+	float duration = 30;
+	float cooldown = 300;
 
 	float burstRunMod = (float) player->getSkillMod("burst_run");
 	hamModifier += (burstRunMod / 100.f);
@@ -6418,26 +6380,15 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	float hamReduction = 1.f - hamModifier;
 
-	float healthCost = 0;
-	float actionCost = 0;
-	float mindCost = 0;
-	
-	if (globalVariables::playerBurstRunToggleEnabled) {
-		healthCost = player->getMaxHAM(CreatureAttribute::HEALTH) * (globalVariables::playerGallopDamagePercent / 100);
-		actionCost = player->getMaxHAM(CreatureAttribute::ACTION) * (globalVariables::playerGallopDamagePercent / 100);
-		mindCost = player->getMaxHAM(CreatureAttribute::MIND) * (globalVariables::playerGallopDamagePercent / 100);
-			
-	} else {
-		healthCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
-		actionCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::QUICKNESS, hamCost) * hamReduction);
-		mindCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::FOCUS, hamCost) * hamReduction);
-	}
+	int healthCost = (int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
+	int actionCost = (int) (player->calculateCostAdjustment(CreatureAttribute::QUICKNESS, hamCost) * hamReduction);
+	int mindCost = (int) (player->calculateCostAdjustment(CreatureAttribute::FOCUS, hamCost) * hamReduction);
 
 	if (player->getHAM(CreatureAttribute::HEALTH) <= healthCost || player->getHAM(CreatureAttribute::ACTION) <= actionCost || player->getHAM(CreatureAttribute::MIND) <= mindCost) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); // You are too tired to Burst Run.
 		return false;
 	}
-	
+
 	player->inflictDamage(player, CreatureAttribute::HEALTH, healthCost, true);
 	player->inflictDamage(player, CreatureAttribute::ACTION, actionCost, true);
 	player->inflictDamage(player, CreatureAttribute::MIND, mindCost, true);
@@ -6458,8 +6409,8 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	Locker locker(buff);
 
-	buff->setSpeedMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-	buff->setAccelerationMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+	buff->setSpeedMultiplierMod(1.822f);
+	buff->setAccelerationMultiplierMod(1.822f);
 
 	if (cooldownModifier == 0.f)
 		buff->setStartMessage(startStringId);
@@ -6476,25 +6427,11 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	player->addBuff(buff);
 
-	if (globalVariables::petSpeedSameAsPlayerEnabled) {
-		for (int i = 0; i < ghost->getActivePetsSize(); i++) {
-			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
-			if (pet != nullptr) {
-				pet->setRunSpeed(pet->getRunSpeed() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-				pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-			}
-		}
-	}
-	
 	player->updateCooldownTimer("burstrun", (newCooldown + duration) * 1000);
 
-	Reference<BurstRunFinishedEvent*> finishTask = new BurstRunFinishedEvent(player);
-	player->addPendingTask("burst_run_finished", finishTask, (duration * 1000));
+	Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
+	player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
 
-	if (!globalVariables::playerBurstRunToggleEnabled) {
-		Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
-		player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
-	}
 	return true;
 }
 
@@ -6534,62 +6471,6 @@ void PlayerManagerImplementation::enhanceCharacter(CreatureObject* player) {
 
 	if (message && player->isPlayerCreature())
 		player->sendSystemMessage("An unknown force strengthens you for battles yet to come.");
-}
-
-void PlayerManagerImplementation::enhanceSelfDance(CreatureObject* player) {
-	if (player == nullptr)
-		return;
-
-	bool message = true;
-
-	float skillmod = (player->getSkillMod("healing_dance_mind") * .005 );
-
-	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
-	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
-	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
-
-	int selfDuration = (120.0f + (10.0f / 60.0f));
-	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
-		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
-	}
-	
-	message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
-	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
-		message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
-		message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
-	}
-
-	if (message && player->isPlayerCreature())
-		player->sendSystemMessage("You receive Mind buffs.");
-
-}
-
-void PlayerManagerImplementation::enhanceSelfMusic(CreatureObject* player) {
-	if (player == nullptr)
-        	return;
-
-	bool message = true;
-
-	float skillmod = (player->getSkillMod("healing_music_mind") * .005);
-
-	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
-	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
-	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
-
-	int selfDuration = (120.0f + (10.0f / 60.0f));
-	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
-		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
-	}
-	
-	message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
-	message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
-	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
-		message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
-	}
-
-	if (message && player->isPlayerCreature())
-		player->sendSystemMessage("You receive Mind buffs.");
-
 }
 
 void PlayerManagerImplementation::sendAdminJediList(CreatureObject* player) {
