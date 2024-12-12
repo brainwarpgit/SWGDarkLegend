@@ -47,6 +47,8 @@
 #include "ZoneLoadManagersTask.h"
 #include "ShutdownTask.h"
 
+#include "server/zone/managers/watcher/variableWatcher.h"
+
 ZoneServerImplementation::ZoneServerImplementation(ConfigManager* config) :
 		ManagedServiceImplementation(), Logger("ZoneServer") {
 
@@ -135,6 +137,9 @@ void ZoneServerImplementation::initialize() {
 	zones = new VectorMap<String, ManagedReference<GroundZone*> >();
 	spaceZones = new VectorMap<String, ManagedReference<SpaceZone*> >();
 
+	VariableWatcher* variableWatcher = new VariableWatcher();
+	variableWatcher->startVariableWatchers();
+	
 	objectManager = ObjectManager::instance();
 	objectManager->setZoneProcessor(processor);
 	objectManager->updateObjectVersion();
