@@ -16,12 +16,12 @@ LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, floa
 
 	setLevel(lootTemplate, lootLevel);
 	
-	if (globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true) {
-		modifier = lootModifier;
-	} else {
-		modifier = 0.f;
+	//if (globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true) {
+	//	modifier = lootModifier;
+	//} else {
+	//	modifier = 0.f;
 		setModifier(lootTemplate, lootModifier);
-	}
+	//}
 	
 	recalculateValues(true, lootTemplate, prototype);
 
@@ -90,10 +90,33 @@ void LootValues::setModifier(const LootItemTemplate* lootTemplate, float lootMod
 }
 
 void LootValues::recalculateValues(bool initial, const LootItemTemplate* lootTemplate, TangibleObject* prototype) {
-	setStaticValues();
-	setRandomValues();
-	setDamageValues();
-	setLootCraftingValues(lootTemplate, prototype);
+	if (!globalVariables::lootUseLootModifiersForDamageModifiersEnabled) {
+		setStaticValues();
+		setRandomValues(lootTemplate);
+		setDamageValues();
+		//setLootCraftingValues(lootTemplate, prototype);
+	} else {
+		setValues();
+	}
+}
+
+void LootValues::setValues() {
+	float levelMod = (float)(Math::clamp(100, level, 450) / (float)100);
+	for (int i = 0; i < getTotalExperimentalAttributes(); ++i) {
+		const String& attribute = getAttribute(i);
+		float minMod = getMinValue(attribute);
+		float maxMod = getMaxValue(attribute);
+		if (minMod == maxMod) {
+			setCurrentValue(attribute,minMod);
+		} else if (minMod > maxMod) {
+			setCurrentValue(attribute,System::random(minMod - maxMod) + maxMod);
+		} else if (maxMod > minMod) {
+			setCurrentValue(attribute,System::random(maxMod - minMod) + minMod);
+		}
+		if (attribute == "mindamage" || attribute == "maxdamage" || attribute == "power" || attribute == "potency" || attribute == "duration" || attribute == "armor_health_encumbrance" || attribute == "armor_action_encumbrance" || attribute == "armor_mind_encumbrance" || attribute == "armor_effectiveness" || attribute == "usecount" || attribute == "armor_integrity" || attribute == "quantity" || attribute == "charges") {
+			setCurrentValue(attribute,getCurrentValue(attribute) * levelMod * modifier);
+		}
+	}
 }
 
 void LootValues::setStaticValues() {
@@ -104,7 +127,7 @@ void LootValues::setStaticValues() {
 	}
 }
 
-void LootValues::setRandomValues() {
+void LootValues::setRandomValues(const LootItemTemplate* lootTemplate) {
 	Vector<String> attributeIndex;
 
 	for (int i = 0; i < getTotalExperimentalAttributes(); ++i) {
@@ -189,7 +212,7 @@ void LootValues::setDamageValues() {
 		return;
 	}
 
-	if (objectType & SceneObjectType::WEAPON && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == false) {
+	/*if (objectType & SceneObjectType::WEAPON && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == false) {
 		float maxPercent = getCurrentPercentage("maxdamage");
 		float minPercent = getCurrentPercentage("mindamage");
 
@@ -206,7 +229,8 @@ void LootValues::setDamageValues() {
 			setCurrentPercentage("mindamage", percent, percentMax);
 			setModifierValue("mindamage", percentMax);
 		}
-	} else if (objectType & SceneObjectType::WEAPON) {
+	} else */
+	if (objectType & SceneObjectType::WEAPON) {
 		float maxValue = getCurrentValue("maxdamage");
 		float minValue = getCurrentValue("mindamage");
 
@@ -222,6 +246,23 @@ void LootValues::setDamageValues() {
 
 			setCurrentValue("mindamage", maxValue);
 			setCurrentPercentage("mindamage", maxPercent, maxPercentMax);
+		}
+	} else if (objectType & SceneObjectType::SHIPATTACHMENT) {
+		float maxPercent = getCurrentPercentage("ship_component_weapon_damage_maximum");
+		float minPercent = getCurrentPercentage("ship_component_weapon_damage_minimum");
+
+		if (maxPercent > 0.f || minPercent > 0.f) {
+			float maxPercentMax = getMaxPercentage("ship_component_weapon_damage_maximum");
+			float minPercentMax = getMaxPercentage("ship_component_weapon_damage_minimum");
+
+			float percent = Math::clamp(0.f, (minPercent + maxPercent) * 0.5f, 1.f);
+			float percentMax = Math::max((minPercentMax + maxPercentMax) * 0.5f, 1.f);
+
+			setCurrentPercentage("ship_component_weapon_damage_maximum", percent, percentMax);
+			setModifierValue("ship_component_weapon_damage_maximum", percentMax);
+
+			setCurrentPercentage("ship_component_weapon_damage_minimum", percent, percentMax);
+			setModifierValue("ship_component_weapon_damage_minimum", percentMax);
 		}
 	} else if (objectType & SceneObjectType::COMPONENT) {
 		float maxValue = getCurrentValue("maxdamage");
@@ -268,7 +309,7 @@ void LootValues::setLootCraftingValues(const LootItemTemplate* lootTemplate, Tan
 				if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
 				setCurrentValue(attribute, resistAdjust);
 			}
-			if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled  == true && (attribute == "mindamage" || attribute == "maxdamage")) {
+			if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true && (attribute == "mindamage" || attribute == "maxdamage")) {
 				if (globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
 					setCurrentValue(attribute, getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier);
 				}

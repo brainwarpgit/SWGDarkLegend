@@ -389,7 +389,7 @@ float LootManagerImplementation::setRandomLootValues(TransactionLog& trx, Tangib
 
 	auto lootValues = LootValues(itemTemplate, level, modifier, creatureDifficulty, luckSkill, prototype);
 	prototype->updateCraftingValues(&lootValues, true);
-	//prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
+	prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
 	return modifier;
 
 #ifdef LOOTVALUES_DEBUG
@@ -479,13 +479,13 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	chance += (creatureDifficulty * 25) + (creatureDifficulty * luckSkill);
 	float excMod = baseModifier;
 
-	if (System::random(legendaryChance) <= chance) {
+	/*if (System::random(legendaryChance) <= chance) {
 		excMod = legendaryModifier;
 	} else if (System::random(exceptionalChance) <= chance) {
 		excMod = exceptionalModifier;
 	} else if (System::random(yellowChance) <= chance && globalVariables::lootYellowModifierNameEnabled == true) {
 		excMod = yellowModifier;
-	}
+	}*/
 
 #ifdef DEBUG_LOOT_MAN
 	info(true) << "Exceptional Modifier (excMod) = " << excMod << "  chance = " << chance;
@@ -514,7 +514,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
 	// Add static DoT's to weapons and check for chance to add random DoTs
 	if (prototype->isWeaponObject()) {
-		addStaticDots(prototype, templateObject, level);
+		addStaticDots(prototype, templateObject, level, excMod, creatureDifficulty, luckSkill);
 		addRandomDots(prototype, templateObject, level, excMod, creatureDifficulty, luckSkill);
 	}
 
@@ -892,7 +892,7 @@ bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, Sc
 
 	int lootRolls = creatureDifficulty;
 
-	for (int x = 0; x < lootRolls; ++x) {
+	for (int x = 0; x < 20; ++x) {
 		for (int i = 0; i < lootCollection->count(); ++i) {
 			const LootGroupCollectionEntry* collectionEntry = lootCollection->get(i);
 			int lootChance = collectionEntry->getLootChance() * globalVariables::lootChanceMultiplier;
@@ -1063,7 +1063,7 @@ bool LootManagerImplementation::createLootSet(TransactionLog& trx, SceneObject* 
 	return true;
 }
 
-void LootManagerImplementation::addStaticDots(TangibleObject* object, const LootItemTemplate* templateObject, int level) {
+void LootManagerImplementation::addStaticDots(TangibleObject* object, const LootItemTemplate* templateObject, int level, float excMod, int creatureDifficulty, int luckSkill) {
 	if (object == nullptr) {
 		return;
 	}
@@ -1080,6 +1080,7 @@ void LootManagerImplementation::addStaticDots(TangibleObject* object, const Loot
 		return;
 	}
 
+	float modifier = Math::max(getRandomModifier(templateObject, level, excMod, creatureDifficulty, luckSkill), baseModifier);
 	int levelRank = LootValues::getLevelRankValue(level, 0.f, 0.15f) * levelChance;
 	int staticDots = 0;
 
@@ -1123,11 +1124,11 @@ void LootManagerImplementation::addStaticDots(TangibleObject* object, const Loot
 				attribute = (int)(attribute / 3.f) * 3;
 			}
 		} else if (property == "strength") {
-			strength = LootValues::getDistributedValue(min, max, level);
+			strength = LootValues::getDistributedValue(min, max, level) * modifier;
 		} else if (property == "duration") {
 			duration = LootValues::getDistributedValue(min, max, level);
 		} else if (property == "potency") {
-			potency = LootValues::getDistributedValue(min, max, level);
+			potency = LootValues::getDistributedValue(min, max, level) * modifier;
 		} else if (property == "uses") {
 			uses = LootValues::getDistributedValue(min, max, level);
 		}
@@ -1227,9 +1228,9 @@ void LootManagerImplementation::addRandomDots(TangibleObject* object, const Loot
 		}
 
 		int strength = LootValues::getDistributedValue(randomDotStrength.get(0), randomDotStrength.get(1), level) * modifier * strMod;
-		int duration = LootValues::getDistributedValue(randomDotDuration.get(0), randomDotDuration.get(1), level) * modifier * durMod;
+		int duration = LootValues::getDistributedValue(randomDotDuration.get(0), randomDotDuration.get(1), level) * durMod;
 		int potency = LootValues::getDistributedValue(randomDotPotency.get(0), randomDotPotency.get(1), level) * modifier;
-		int uses = LootValues::getDistributedValue(randomDotUses.get(0), randomDotUses.get(1), level) * modifier;
+		int uses = LootValues::getDistributedValue(randomDotUses.get(0), randomDotUses.get(1), level);
 
 		if (strength <= 0 || duration <= 0 || potency <= 0 || uses <= 0) {
 			continue;
@@ -1280,24 +1281,29 @@ float LootManagerImplementation::getRandomModifier(const LootItemTemplate* itemT
 		modMin = 0.f;
 	}
 
-	float scalingFactor = (float)level / globalVariables::creatureMaxLevel;
-	float adjustedStatsCD = (float)(scalingFactor * creatureDifficulty);
-	float minStatCD = adjustedStatsCD - adjustedStatsCD * 0.075f;
-	float maxStatCD = adjustedStatsCD + adjustedStatsCD * 0.125f;
-	float modCD = System::random(maxStatCD - minStatCD) + minStatCD;
+	//float scalingFactor = (float)level / globalVariables::creatureMaxLevel;
+	//float adjustedStatsCD = (float)(scalingFactor * creatureDifficulty);
+	//float minStatCD = creatureDifficulty - (creatureDifficulty * 0.075f);
+	//float maxStatCD = creatureDifficulty + (creatureDifficulty * 0.125f);
+	int modCDRoll = System::random(creatureDifficulty);
+	int modCD = Math::max(1,modCDRoll);
 	
-	float adjustedStatsMax = (float)(scalingFactor * modMax);
-	float adjustedStatsMin = (float)(scalingFactor * modMin);
-	float adjustedLuckSkill = System::random(luckSkill) / 10;
-	float maxStatMin = (adjustedStatsMax + adjustedLuckSkill) - (adjustedStatsMax + adjustedLuckSkill) * 0.075f;
-	float maxStatMax = (adjustedStatsMax + adjustedLuckSkill) + (adjustedStatsMax + adjustedLuckSkill) * 0.125f;
-	modMax = System::random(maxStatMax - maxStatMin) + maxStatMin;
-	float minStatMin = (adjustedStatsMin + adjustedLuckSkill) - (adjustedStatsMin + adjustedLuckSkill) * 0.075f;
-	float minStatMax = (adjustedStatsMin + adjustedLuckSkill) + (adjustedStatsMin + adjustedLuckSkill) * 0.125f;
-	modMin = System::random(minStatMax - minStatMin) + minStatMin;
-	
-	modMax = (modMax + (level / 100)) + modCD + baseModifier;
-	modMin = (modMin + (level / 100)) + modCD + baseModifier;
+	//float adjustedStatsMax = (float)(scalingFactor * modMax);
+	//float adjustedStatsMin = (float)(scalingFactor * modMin);
+	//float maxStatMin = (adjustedStatsMax + adjustedLuckSkill) - (adjustedStatsMax + adjustedLuckSkill) * 0.075f;
+	//float maxStatMax = (adjustedStatsMax + adjustedLuckSkill) + (adjustedStatsMax + adjustedLuckSkill) * 0.125f;
+	//float minStatLuck = (luckSkill - (luckSkill * 0.075f)) / 10;
+	//float maxStatLuck = (luckSkill + (luckSkill * 0.125f)) / 10;
+	float modLuck = System::random(luckSkill / 10);
 		
-	return modMax == modMin ? modMin : LootValues::getDistributedValue(modMin, modMax, level) + baseModifier;
+	//modMax = System::random(maxStatMax - maxStatMin) + maxStatMin;
+	//float minStatMin = (adjustedStatsMin + adjustedLuckSkill) - (adjustedStatsMin + adjustedLuckSkill) * 0.075f;
+	//float minStatMax = (adjustedStatsMin + adjustedLuckSkill) + (adjustedStatsMin + adjustedLuckSkill) * 0.125f;
+	//modMin = System::random(minStatMax - minStatMin) + minStatMin;
+	
+	modMax += modLuck + modCD + baseModifier;
+	modMin += modLuck + modCD + baseModifier;
+	//Logger::console.info("modLuck " + std::to_string(modLuck) + " modCD " + std::to_string(modCD) + " baseModifier " + std::to_string(baseModifier) + " modMax " + std::to_string(modMax) + " modMin " + std::to_string(modMin),true);
+	//return modMax == modMin ? modMin : LootValues::getDistributedValue(modMin, modMax, level) + baseModifier;
+	return System::random(modMax - modMin) + modMin;
 }

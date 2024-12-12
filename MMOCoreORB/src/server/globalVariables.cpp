@@ -575,6 +575,7 @@ namespace globalVariables {
 		}
 		try {
 			//Armor
+			Logger::console.info("OMGTHISSHITWORKS", true);
 			if (lua->getGlobalFloat("armorPSGDecayRateMultiplier") > 0) armorPSGDecayRateMultiplier = lua->getGlobalFloat("armorPSGDecayRateMultiplier");
 			if (lua->getGlobalFloat("armorDecayRateMultiplier") > 0) armorDecayRateMultiplier = lua->getGlobalFloat("armorDecayRateMultiplier");
 			
@@ -839,8 +840,8 @@ namespace globalVariables {
 			if (lua->getGlobalInt("lootDropAttachmentModCount") > 0) lootDropAttachmentModCount = lua->getGlobalInt("lootDropAttachmentModCount");
 			if (lua->getGlobalBoolean("lootAttachmentNameEnabled") == true || lua->getGlobalBoolean("lootAttachmentNameEnabled") == false) lootAttachmentNameEnabled = lua->getGlobalBoolean("lootAttachmentNameEnabled");
 			if (lua->getGlobalBoolean("lootCreditLuckModifier") == true || lua->getGlobalBoolean("lootCreditLuckModifier") == false) lootCreditLuckModifier = lua->getGlobalBoolean("lootCreditLuckModifier");
-			if (lua->getGlobalInt("lootMaxLevel") > 0 && lua->getGlobalInt("lootMaxLevel") <= 450 && lua->getGlobalInt("lootMaxLevel") > lua->getGlobalInt("lootMinLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
-			if (lua->getGlobalInt("lootMinLevel") > 0 && lua->getGlobalInt("lootMinLevel") < lua->getGlobalInt("lootMaxLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
+			if (lua->getGlobalInt("lootMaxLevel") > 0 && lua->getGlobalInt("lootMaxLevel") <= lua->getGlobalInt("creatureMaxLevel")) lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
+			if (lua->getGlobalInt("lootMinLevel") > 0 && lua->getGlobalInt("lootMinLevel") < lua->getGlobalInt("lootMaxLevel")) lootMinLevel = lua->getGlobalInt("lootMinLevel");
 			if (lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == true || lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == false) lootShowForceCostDecimalEnabled = lua->getGlobalBoolean("lootShowForceCostDecimalEnabled");
 			if (lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == true || lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == false) lootRareColorCrystalsEnabled = lua->getGlobalBoolean("lootRareColorCrystalsEnabled");
 			if (lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == true || lua->getGlobalBoolean("lootGroupCreditsSplitEnabled") == false) lootGroupCreditsSplitEnabled = lua->getGlobalBoolean("lootGroupCreditsSplitEnabled");

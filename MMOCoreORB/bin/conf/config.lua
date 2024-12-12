@@ -57,7 +57,7 @@ Core3 = {
 	------Main Database Config------
 	DBHost = "127.0.0.1",
 	DBPort = 3306,
-	DBName = "swgemu",
+	DBName = "SWGDarkLegend",
 	DBUser = "swgemu",
 	DBPass = "123456",
 --	DBInstances = 2,

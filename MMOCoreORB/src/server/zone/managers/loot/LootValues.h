@@ -20,13 +20,13 @@ public:
 	constexpr static float LEVELMIN = 0;
 	constexpr static float DISTNORMAL = 2.82333f;
 
-	/*enum BonusType : int {
+	enum BonusType : int {
 		LEGENDARY = 9,
 		EXCEPTIONAL = 8,
 		ENHANCED = 2,
 		EXPERIMENTAL = 1,
 		STATIC = 0,
-	};*/
+	};
 
 protected:
 	AttributesMap staticValues;
@@ -72,10 +72,12 @@ public:
 private:
 	inline void setStaticValues();
 
-	inline void setRandomValues();
+	inline void setRandomValues(const LootItemTemplate* lootTemplate);
 
 	inline void setDamageValues();
 	
+	inline void setValues();
+
 	inline void setLootCraftingValues(const LootItemTemplate* lootTemplate, TangibleObject* prototype);
 
 	inline void setStaticValue(const String& attribute);

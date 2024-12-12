@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <string>
+#include "engine/log/Logger.h"
 
 namespace globalVariables {
 

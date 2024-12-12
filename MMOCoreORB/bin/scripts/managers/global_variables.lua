@@ -153,7 +153,7 @@ craftingNewExperimentEnabled= true --default false   Skill based Experimentation
 craftingNewRepairEnabled = true --default false Skill based Repair
 craftingRepairBrokenEnabled = true -- default false
 craftingRepairMaxMod = 0.8 --default 0.8   You must choose between > 0 and <= 1 only when craftingRepairBrokenEnabled = true
-craftingCraftedItemsBetterThanLootEnabled = true --default false
+craftingCraftedItemsBetterThanLootEnabled = false --default false
 craftingCraftedItemsBetterThanLootModifier = .75 --default 1
 craftingKineticMaxResists = 80 --default 100
 craftingEnergyMaxResists = 80 --default 100
@@ -269,7 +269,7 @@ lootAttachmentModCount = 3 --default 2
 lootDropAttachmentModCount = 3 --default 2
 lootCreditLuckModifier = true --default false
 lootMaxLevel = 450 --default 300
-lootMinLevel = 1 --default 1
+lootMinLevel = 100 --default 1
 lootShowForceCostDecimalEnabled = true --default false
 lootRareColorCrystalsEnabled = true --default false
 lootGroupCreditsSplitEnabled = false --default true

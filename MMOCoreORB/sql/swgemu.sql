@@ -15,18 +15,18 @@
 
 
 --
--- Create schema swgemu
+-- Create schema SWGDarkLegend
 --
 
-CREATE DATABASE IF NOT EXISTS swgemu;
-USE swgemu;
+CREATE DATABASE IF NOT EXISTS SWGDarkLegend;
+USE SWGDarkLegend;
 
 --
--- Definition of table `swgemu`.`account_bans`
+-- Definition of table `SWGDarkLegend`.`account_bans`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`account_bans`;
-CREATE TABLE  `swgemu`.`account_bans` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`account_bans`;
+CREATE TABLE  `SWGDarkLegend`.`account_bans` (
   `ban_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_id` int(10) unsigned NOT NULL,
   `issuer_id` int(10) unsigned NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE  `swgemu`.`account_bans` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`account_bans`
+-- Dumping data for table `SWGDarkLegend`.`account_bans`
 --
 
 /*!40000 ALTER TABLE `account_bans` DISABLE KEYS */;
@@ -46,11 +46,11 @@ UNLOCK TABLES;
 /*!40000 ALTER TABLE `account_bans` ENABLE KEYS */;
 
 --
--- Definition of table `swgemu`.`character_bans`
+-- Definition of table `SWGDarkLegend`.`character_bans`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`character_bans`;
-CREATE TABLE  `swgemu`.`character_bans` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`character_bans`;
+CREATE TABLE  `SWGDarkLegend`.`character_bans` (
   `ban_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_id` int(10) unsigned NOT NULL,
   `issuer_id` int(10) unsigned NOT NULL,
@@ -63,11 +63,11 @@ CREATE TABLE  `swgemu`.`character_bans` (
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
 --
--- Definition of table `swgemu`.`galaxy_bans`
+-- Definition of table `SWGDarkLegend`.`galaxy_bans`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`galaxy_bans`;
-CREATE TABLE  `swgemu`.`galaxy_bans` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`galaxy_bans`;
+CREATE TABLE  `SWGDarkLegend`.`galaxy_bans` (
   `ban_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_id` int(10) unsigned NOT NULL,
   `issuer_id` int(10) unsigned NOT NULL,
@@ -80,11 +80,11 @@ CREATE TABLE  `swgemu`.`galaxy_bans` (
 
 
 --
--- Definition of table `swgemu`.`account_log`
+-- Definition of table `SWGDarkLegend`.`account_log`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`account_log`;
-CREATE TABLE  `swgemu`.`account_log` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`account_log`;
+CREATE TABLE  `SWGDarkLegend`.`account_log` (
   `acclog_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_id` int(10) unsigned NOT NULL,
   `timestamp` datetime NOT NULL,
@@ -93,7 +93,7 @@ CREATE TABLE  `swgemu`.`account_log` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`account_log`
+-- Dumping data for table `SWGDarkLegend`.`account_log`
 --
 
 /*!40000 ALTER TABLE `account_log` DISABLE KEYS */;
@@ -103,11 +103,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`accounts`
+-- Definition of table `SWGDarkLegend`.`accounts`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`accounts`;
-CREATE TABLE  `swgemu`.`accounts` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`accounts`;
+CREATE TABLE  `SWGDarkLegend`.`accounts` (
   `account_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE  `swgemu`.`accounts` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
 
 --
--- Dumping data for table `swgemu`.`accounts`
+-- Dumping data for table `SWGDarkLegend`.`accounts`
 --
 
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
@@ -130,11 +130,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`badge_areas`
+-- Definition of table `SWGDarkLegend`.`badge_areas`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`badge_areas`;
-CREATE TABLE  `swgemu`.`badge_areas` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`badge_areas`;
+CREATE TABLE  `SWGDarkLegend`.`badge_areas` (
   `uid` tinyint(1) unsigned NOT NULL AUTO_INCREMENT,
   `planet_id` tinyint(1) unsigned NOT NULL,
   `x` float NOT NULL,
@@ -146,12 +146,12 @@ CREATE TABLE  `swgemu`.`badge_areas` (
 ) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`badge_areas`
+-- Dumping data for table `SWGDarkLegend`.`badge_areas`
 --
 
 /*!40000 ALTER TABLE `badge_areas` DISABLE KEYS */;
 LOCK TABLES `badge_areas` WRITE;
-INSERT INTO `swgemu`.`badge_areas` VALUES  (1,0,5291,1494,1,79),
+INSERT INTO `SWGDarkLegend`.`badge_areas` VALUES  (1,0,5291,1494,1,79),
  (2,0,-5418,-6248,24,80),
  (3,0,6767,-5617,314,81),
  (4,0,1084,4176,18,20),
@@ -201,11 +201,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`characters`
+-- Definition of table `SWGDarkLegend`.`characters`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`characters`;
-CREATE TABLE  `swgemu`.`characters` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`characters`;
+CREATE TABLE  `SWGDarkLegend`.`characters` (
   `character_oid` bigint(20) NOT NULL,
   `account_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `galaxy_id` int(5) unsigned NOT NULL DEFAULT '0',
@@ -220,7 +220,7 @@ CREATE TABLE  `swgemu`.`characters` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`characters`
+-- Dumping data for table `SWGDarkLegend`.`characters`
 --
 
 /*!40000 ALTER TABLE `characters` DISABLE KEYS */;
@@ -230,11 +230,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`characters_dirty`
+-- Definition of table `SWGDarkLegend`.`characters_dirty`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`characters_dirty`;
-CREATE TABLE  `swgemu`.`characters_dirty` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`characters_dirty`;
+CREATE TABLE  `SWGDarkLegend`.`characters_dirty` (
   `character_oid` bigint(20) NOT NULL,
   `account_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `galaxy_id` int(5) unsigned NOT NULL DEFAULT '0',
@@ -248,7 +248,7 @@ CREATE TABLE  `swgemu`.`characters_dirty` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`characters_dirty`
+-- Dumping data for table `SWGDarkLegend`.`characters_dirty`
 --
 
 /*!40000 ALTER TABLE `characters_dirty` DISABLE KEYS */;
@@ -258,11 +258,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`deleted_characters`
+-- Definition of table `SWGDarkLegend`.`deleted_characters`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`deleted_characters`;
-CREATE TABLE  `swgemu`.`deleted_characters` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`deleted_characters`;
+CREATE TABLE  `SWGDarkLegend`.`deleted_characters` (
   `character_oid` bigint(20) NOT NULL,
   `account_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `galaxy_id` int(5) unsigned NOT NULL DEFAULT '0',
@@ -277,7 +277,7 @@ CREATE TABLE  `swgemu`.`deleted_characters` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`deleted_characters`
+-- Dumping data for table `SWGDarkLegend`.`deleted_characters`
 --
 
 /*!40000 ALTER TABLE `deleted_characters` DISABLE KEYS */;
@@ -287,11 +287,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`galaxy`
+-- Definition of table `SWGDarkLegend`.`galaxy`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`galaxy`;
-CREATE TABLE  `swgemu`.`galaxy` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`galaxy`;
+CREATE TABLE  `SWGDarkLegend`.`galaxy` (
   `galaxy_id` int(5) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '',
   `address` varchar(100) NOT NULL DEFAULT '',
@@ -302,22 +302,22 @@ CREATE TABLE  `swgemu`.`galaxy` (
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`galaxy`
+-- Dumping data for table `SWGDarkLegend`.`galaxy`
 --
 
 /*!40000 ALTER TABLE `galaxy` DISABLE KEYS */;
 LOCK TABLES `galaxy` WRITE;
-INSERT INTO `swgemu`.`galaxy` VALUES  (2,'MtGServer Development','127.0.0.1',44463,44462,0);
+INSERT INTO `SWGDarkLegend`.`galaxy` VALUES  (2,'MtGServer Development','127.0.0.1',44463,44462,0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `galaxy` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_file_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_file_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_file_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_file_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_file_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_file_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   `title` varchar(250) NOT NULL DEFAULT '',
@@ -335,7 +335,7 @@ CREATE TABLE  `swgemu`.`mantis_bug_file_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_file_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_file_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_file_table` DISABLE KEYS */;
@@ -345,11 +345,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_history_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_history_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_history_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_history_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_history_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_history_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -364,7 +364,7 @@ CREATE TABLE  `swgemu`.`mantis_bug_history_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_history_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_history_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_history_table` DISABLE KEYS */;
@@ -374,18 +374,18 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_monitor_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_monitor_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_monitor_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_monitor_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_monitor_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_monitor_table` (
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`user_id`,`bug_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_monitor_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_monitor_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_monitor_table` DISABLE KEYS */;
@@ -395,11 +395,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_relationship_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_relationship_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_relationship_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_relationship_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_relationship_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_relationship_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `source_bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   `destination_bug_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -410,7 +410,7 @@ CREATE TABLE  `swgemu`.`mantis_bug_relationship_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_relationship_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_relationship_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_relationship_table` DISABLE KEYS */;
@@ -420,11 +420,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `reporter_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -461,7 +461,7 @@ CREATE TABLE  `swgemu`.`mantis_bug_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_table` DISABLE KEYS */;
@@ -471,11 +471,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_tag_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_tag_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_tag_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_tag_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_tag_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_tag_table` (
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   `tag_id` int(10) unsigned NOT NULL DEFAULT '0',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -484,7 +484,7 @@ CREATE TABLE  `swgemu`.`mantis_bug_tag_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_tag_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_tag_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_tag_table` DISABLE KEYS */;
@@ -494,11 +494,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bug_text_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bug_text_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bug_text_table`;
-CREATE TABLE  `swgemu`.`mantis_bug_text_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bug_text_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bug_text_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `description` longtext NOT NULL,
   `steps_to_reproduce` longtext NOT NULL,
@@ -507,7 +507,7 @@ CREATE TABLE  `swgemu`.`mantis_bug_text_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bug_text_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bug_text_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bug_text_table` DISABLE KEYS */;
@@ -517,11 +517,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bugnote_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bugnote_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bugnote_table`;
-CREATE TABLE  `swgemu`.`mantis_bugnote_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bugnote_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bugnote_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `bug_id` int(10) unsigned NOT NULL DEFAULT '0',
   `reporter_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -538,7 +538,7 @@ CREATE TABLE  `swgemu`.`mantis_bugnote_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bugnote_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bugnote_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bugnote_table` DISABLE KEYS */;
@@ -548,18 +548,18 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_bugnote_text_table`
+-- Definition of table `SWGDarkLegend`.`mantis_bugnote_text_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_bugnote_text_table`;
-CREATE TABLE  `swgemu`.`mantis_bugnote_text_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_bugnote_text_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_bugnote_text_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `note` longtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_bugnote_text_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_bugnote_text_table`
 --
 
 /*!40000 ALTER TABLE `mantis_bugnote_text_table` DISABLE KEYS */;
@@ -569,11 +569,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_config_table`
+-- Definition of table `SWGDarkLegend`.`mantis_config_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_config_table`;
-CREATE TABLE  `swgemu`.`mantis_config_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_config_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_config_table` (
   `config_id` varchar(64) NOT NULL,
   `project_id` int(11) NOT NULL DEFAULT '0',
   `user_id` int(11) NOT NULL DEFAULT '0',
@@ -585,22 +585,22 @@ CREATE TABLE  `swgemu`.`mantis_config_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_config_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_config_table`
 --
 
 /*!40000 ALTER TABLE `mantis_config_table` DISABLE KEYS */;
 LOCK TABLES `mantis_config_table` WRITE;
-INSERT INTO `swgemu`.`mantis_config_table` VALUES  ('database_version',0,0,90,1,'63');
+INSERT INTO `SWGDarkLegend`.`mantis_config_table` VALUES  ('database_version',0,0,90,1,'63');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mantis_config_table` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mantis_custom_field_project_table`
+-- Definition of table `SWGDarkLegend`.`mantis_custom_field_project_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_custom_field_project_table`;
-CREATE TABLE  `swgemu`.`mantis_custom_field_project_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_custom_field_project_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_custom_field_project_table` (
   `field_id` int(11) NOT NULL DEFAULT '0',
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `sequence` smallint(6) NOT NULL DEFAULT '0',
@@ -608,7 +608,7 @@ CREATE TABLE  `swgemu`.`mantis_custom_field_project_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_custom_field_project_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_custom_field_project_table`
 --
 
 /*!40000 ALTER TABLE `mantis_custom_field_project_table` DISABLE KEYS */;
@@ -618,11 +618,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_custom_field_string_table`
+-- Definition of table `SWGDarkLegend`.`mantis_custom_field_string_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_custom_field_string_table`;
-CREATE TABLE  `swgemu`.`mantis_custom_field_string_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_custom_field_string_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_custom_field_string_table` (
   `field_id` int(11) NOT NULL DEFAULT '0',
   `bug_id` int(11) NOT NULL DEFAULT '0',
   `value` varchar(255) NOT NULL DEFAULT '',
@@ -631,7 +631,7 @@ CREATE TABLE  `swgemu`.`mantis_custom_field_string_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_custom_field_string_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_custom_field_string_table`
 --
 
 /*!40000 ALTER TABLE `mantis_custom_field_string_table` DISABLE KEYS */;
@@ -641,11 +641,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_custom_field_table`
+-- Definition of table `SWGDarkLegend`.`mantis_custom_field_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_custom_field_table`;
-CREATE TABLE  `swgemu`.`mantis_custom_field_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_custom_field_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_custom_field_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
   `type` smallint(6) NOT NULL DEFAULT '0',
@@ -670,7 +670,7 @@ CREATE TABLE  `swgemu`.`mantis_custom_field_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_custom_field_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_custom_field_table`
 --
 
 /*!40000 ALTER TABLE `mantis_custom_field_table` DISABLE KEYS */;
@@ -680,11 +680,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_email_table`
+-- Definition of table `SWGDarkLegend`.`mantis_email_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_email_table`;
-CREATE TABLE  `swgemu`.`mantis_email_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_email_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_email_table` (
   `email_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `email` varchar(64) NOT NULL DEFAULT '',
   `subject` varchar(250) NOT NULL DEFAULT '',
@@ -696,7 +696,7 @@ CREATE TABLE  `swgemu`.`mantis_email_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_email_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_email_table`
 --
 
 /*!40000 ALTER TABLE `mantis_email_table` DISABLE KEYS */;
@@ -706,11 +706,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_filters_table`
+-- Definition of table `SWGDarkLegend`.`mantis_filters_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_filters_table`;
-CREATE TABLE  `swgemu`.`mantis_filters_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_filters_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_filters_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `project_id` int(11) NOT NULL DEFAULT '0',
@@ -721,7 +721,7 @@ CREATE TABLE  `swgemu`.`mantis_filters_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_filters_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_filters_table`
 --
 
 /*!40000 ALTER TABLE `mantis_filters_table` DISABLE KEYS */;
@@ -731,11 +731,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_news_table`
+-- Definition of table `SWGDarkLegend`.`mantis_news_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_news_table`;
-CREATE TABLE  `swgemu`.`mantis_news_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_news_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_news_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `poster_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -749,7 +749,7 @@ CREATE TABLE  `swgemu`.`mantis_news_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_news_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_news_table`
 --
 
 /*!40000 ALTER TABLE `mantis_news_table` DISABLE KEYS */;
@@ -759,11 +759,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_project_category_table`
+-- Definition of table `SWGDarkLegend`.`mantis_project_category_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_project_category_table`;
-CREATE TABLE  `swgemu`.`mantis_project_category_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_project_category_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_project_category_table` (
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `category` varchar(64) NOT NULL DEFAULT '',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -771,23 +771,23 @@ CREATE TABLE  `swgemu`.`mantis_project_category_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_project_category_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_project_category_table`
 --
 
 /*!40000 ALTER TABLE `mantis_project_category_table` DISABLE KEYS */;
 LOCK TABLES `mantis_project_category_table` WRITE;
-INSERT INTO `swgemu`.`mantis_project_category_table` VALUES  (1,'Account/Billing',0),
+INSERT INTO `SWGDarkLegend`.`mantis_project_category_table` VALUES  (1,'Account/Billing',0),
  (1,'Sample Category 2',0);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mantis_project_category_table` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mantis_project_file_table`
+-- Definition of table `SWGDarkLegend`.`mantis_project_file_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_project_file_table`;
-CREATE TABLE  `swgemu`.`mantis_project_file_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_project_file_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_project_file_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `title` varchar(250) NOT NULL DEFAULT '',
@@ -803,7 +803,7 @@ CREATE TABLE  `swgemu`.`mantis_project_file_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_project_file_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_project_file_table`
 --
 
 /*!40000 ALTER TABLE `mantis_project_file_table` DISABLE KEYS */;
@@ -813,17 +813,17 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_project_hierarchy_table`
+-- Definition of table `SWGDarkLegend`.`mantis_project_hierarchy_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_project_hierarchy_table`;
-CREATE TABLE  `swgemu`.`mantis_project_hierarchy_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_project_hierarchy_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_project_hierarchy_table` (
   `child_id` int(10) unsigned NOT NULL,
   `parent_id` int(10) unsigned NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_project_hierarchy_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_project_hierarchy_table`
 --
 
 /*!40000 ALTER TABLE `mantis_project_hierarchy_table` DISABLE KEYS */;
@@ -833,11 +833,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_project_table`
+-- Definition of table `SWGDarkLegend`.`mantis_project_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_project_table`;
-CREATE TABLE  `swgemu`.`mantis_project_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_project_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_project_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(128) NOT NULL DEFAULT '',
   `status` smallint(6) NOT NULL DEFAULT '10',
@@ -853,22 +853,22 @@ CREATE TABLE  `swgemu`.`mantis_project_table` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_project_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_project_table`
 --
 
 /*!40000 ALTER TABLE `mantis_project_table` DISABLE KEYS */;
 LOCK TABLES `mantis_project_table` WRITE;
-INSERT INTO `swgemu`.`mantis_project_table` VALUES  (1,'SWGEmu',10,1,10,10,'','The Swgemu project');
+INSERT INTO `SWGDarkLegend`.`mantis_project_table` VALUES  (1,'SWGDarkLegend',10,1,10,10,'','The SWGDarkLegend project');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mantis_project_table` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mantis_project_user_list_table`
+-- Definition of table `SWGDarkLegend`.`mantis_project_user_list_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_project_user_list_table`;
-CREATE TABLE  `swgemu`.`mantis_project_user_list_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_project_user_list_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_project_user_list_table` (
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `access_level` smallint(6) NOT NULL DEFAULT '10',
@@ -877,7 +877,7 @@ CREATE TABLE  `swgemu`.`mantis_project_user_list_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_project_user_list_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_project_user_list_table`
 --
 
 /*!40000 ALTER TABLE `mantis_project_user_list_table` DISABLE KEYS */;
@@ -887,11 +887,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_project_version_table`
+-- Definition of table `SWGDarkLegend`.`mantis_project_version_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_project_version_table`;
-CREATE TABLE  `swgemu`.`mantis_project_version_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_project_version_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_project_version_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
   `version` varchar(64) NOT NULL DEFAULT '',
@@ -903,7 +903,7 @@ CREATE TABLE  `swgemu`.`mantis_project_version_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_project_version_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_project_version_table`
 --
 
 /*!40000 ALTER TABLE `mantis_project_version_table` DISABLE KEYS */;
@@ -913,11 +913,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_sponsorship_table`
+-- Definition of table `SWGDarkLegend`.`mantis_sponsorship_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_sponsorship_table`;
-CREATE TABLE  `swgemu`.`mantis_sponsorship_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_sponsorship_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_sponsorship_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `bug_id` int(11) NOT NULL DEFAULT '0',
   `user_id` int(11) NOT NULL DEFAULT '0',
@@ -933,7 +933,7 @@ CREATE TABLE  `swgemu`.`mantis_sponsorship_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_sponsorship_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_sponsorship_table`
 --
 
 /*!40000 ALTER TABLE `mantis_sponsorship_table` DISABLE KEYS */;
@@ -943,11 +943,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_tag_table`
+-- Definition of table `SWGDarkLegend`.`mantis_tag_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_tag_table`;
-CREATE TABLE  `swgemu`.`mantis_tag_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_tag_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_tag_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(100) NOT NULL DEFAULT '',
@@ -958,7 +958,7 @@ CREATE TABLE  `swgemu`.`mantis_tag_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_tag_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_tag_table`
 --
 
 /*!40000 ALTER TABLE `mantis_tag_table` DISABLE KEYS */;
@@ -968,11 +968,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_tokens_table`
+-- Definition of table `SWGDarkLegend`.`mantis_tokens_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_tokens_table`;
-CREATE TABLE  `swgemu`.`mantis_tokens_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_tokens_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_tokens_table` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` int(11) NOT NULL,
   `type` int(11) NOT NULL,
@@ -984,12 +984,12 @@ CREATE TABLE  `swgemu`.`mantis_tokens_table` (
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_tokens_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_tokens_table`
 --
 
 /*!40000 ALTER TABLE `mantis_tokens_table` DISABLE KEYS */;
 LOCK TABLES `mantis_tokens_table` WRITE;
-INSERT INTO `swgemu`.`mantis_tokens_table` VALUES  (3,1,1,'2010-11-22 23:53:11','2010-11-23 00:53:11','a:40:{s:8:\"_version\";s:2:\"v8\";s:10:\"_view_type\";s:6:\"simple\";s:13:\"show_category\";a:1:{i:0;s:1:\"0\";}s:13:\"show_severity\";a:1:{i:0;i:0;}s:11:\"show_status\";a:1:{i:0;i:0;}s:8:\"per_page\";i:50;s:17:\"highlight_changed\";i:6;s:11:\"reporter_id\";a:1:{i:0;i:0;}s:10:\"handler_id\";a:1:{i:0;i:0;}s:10:\"project_id\";a:1:{i:0;i:-3;}s:4:\"sort\";s:12:\"last_updated\";s:3:\"dir\";s:4:\"DESC\";s:11:\"start_month\";i:11;s:9:\"start_day\";i:1;s:10:\"start_year\";i:2010;s:9:\"end_month\";i:11;s:7:\"end_day\";i:22;s:8:\"end_year\";i:2010;s:6:\"search\";s:0:\"\";s:11:\"hide_status\";a:1:{i:0;i:-2;}s:16:\"and_not_assigned\";b:0;s:15:\"show_resolution\";a:1:{i:0;i:0;}s:10:\"show_build\";a:1:{i:0;s:1:\"0\";}s:12:\"show_version\";a:1:{i:0;s:1:\"0\";}s:17:\"do_filter_by_date\";b:0;s:16:\"fixed_in_version\";a:1:{i:0;s:1:\"0\";}s:14:\"target_version\";a:1:{i:0;s:1:\"0\";}s:13:\"show_priority\";a:1:{i:0;i:0;}s:12:\"user_monitor\";a:1:{i:0;i:0;}s:10:\"view_state\";i:0;s:13:\"custom_fields\";a:0:{}s:13:\"sticky_issues\";s:3:\"off\";s:17:\"relationship_type\";i:-1;s:16:\"relationship_bug\";i:0;s:12:\"show_profile\";a:1:{i:0;i:0;}s:8:\"platform\";a:1:{i:0;i:0;}s:2:\"os\";a:1:{i:0;i:0;}s:8:\"os_build\";a:1:{i:0;i:0;}s:10:\"tag_string\";s:0:\"\";s:10:\"tag_select\";i:0;}'),
+INSERT INTO `SWGDarkLegend`.`mantis_tokens_table` VALUES  (3,1,1,'2010-11-22 23:53:11','2010-11-23 00:53:11','a:40:{s:8:\"_version\";s:2:\"v8\";s:10:\"_view_type\";s:6:\"simple\";s:13:\"show_category\";a:1:{i:0;s:1:\"0\";}s:13:\"show_severity\";a:1:{i:0;i:0;}s:11:\"show_status\";a:1:{i:0;i:0;}s:8:\"per_page\";i:50;s:17:\"highlight_changed\";i:6;s:11:\"reporter_id\";a:1:{i:0;i:0;}s:10:\"handler_id\";a:1:{i:0;i:0;}s:10:\"project_id\";a:1:{i:0;i:-3;}s:4:\"sort\";s:12:\"last_updated\";s:3:\"dir\";s:4:\"DESC\";s:11:\"start_month\";i:11;s:9:\"start_day\";i:1;s:10:\"start_year\";i:2010;s:9:\"end_month\";i:11;s:7:\"end_day\";i:22;s:8:\"end_year\";i:2010;s:6:\"search\";s:0:\"\";s:11:\"hide_status\";a:1:{i:0;i:-2;}s:16:\"and_not_assigned\";b:0;s:15:\"show_resolution\";a:1:{i:0;i:0;}s:10:\"show_build\";a:1:{i:0;s:1:\"0\";}s:12:\"show_version\";a:1:{i:0;s:1:\"0\";}s:17:\"do_filter_by_date\";b:0;s:16:\"fixed_in_version\";a:1:{i:0;s:1:\"0\";}s:14:\"target_version\";a:1:{i:0;s:1:\"0\";}s:13:\"show_priority\";a:1:{i:0;i:0;}s:12:\"user_monitor\";a:1:{i:0;i:0;}s:10:\"view_state\";i:0;s:13:\"custom_fields\";a:0:{}s:13:\"sticky_issues\";s:3:\"off\";s:17:\"relationship_type\";i:-1;s:16:\"relationship_bug\";i:0;s:12:\"show_profile\";a:1:{i:0;i:0;}s:8:\"platform\";a:1:{i:0;i:0;}s:2:\"os\";a:1:{i:0;i:0;}s:8:\"os_build\";a:1:{i:0;i:0;}s:10:\"tag_string\";s:0:\"\";s:10:\"tag_select\";i:0;}'),
  (4,1,3,'2010-11-22 23:53:16','2010-11-24 00:09:26','1'),
  (5,1,4,'2010-11-23 00:12:47','2010-11-23 00:18:35','1');
 UNLOCK TABLES;
@@ -997,11 +997,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_user_pref_table`
+-- Definition of table `SWGDarkLegend`.`mantis_user_pref_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_user_pref_table`;
-CREATE TABLE  `swgemu`.`mantis_user_pref_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_user_pref_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_user_pref_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `project_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1037,29 +1037,29 @@ CREATE TABLE  `swgemu`.`mantis_user_pref_table` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_user_pref_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_user_pref_table`
 --
 
 /*!40000 ALTER TABLE `mantis_user_pref_table` DISABLE KEYS */;
 LOCK TABLES `mantis_user_pref_table` WRITE;
-INSERT INTO `swgemu`.`mantis_user_pref_table` VALUES  (1,1,0,0,1,0,0,0,30,2,'ASC',1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,'english');
+INSERT INTO `SWGDarkLegend`.`mantis_user_pref_table` VALUES  (1,1,0,0,1,0,0,0,30,2,'ASC',1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,'english');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mantis_user_pref_table` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mantis_user_print_pref_table`
+-- Definition of table `SWGDarkLegend`.`mantis_user_print_pref_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_user_print_pref_table`;
-CREATE TABLE  `swgemu`.`mantis_user_print_pref_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_user_print_pref_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_user_print_pref_table` (
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `print_pref` varchar(64) NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_user_print_pref_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_user_print_pref_table`
 --
 
 /*!40000 ALTER TABLE `mantis_user_print_pref_table` DISABLE KEYS */;
@@ -1069,11 +1069,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_user_profile_table`
+-- Definition of table `SWGDarkLegend`.`mantis_user_profile_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_user_profile_table`;
-CREATE TABLE  `swgemu`.`mantis_user_profile_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_user_profile_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_user_profile_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `platform` varchar(32) NOT NULL DEFAULT '',
@@ -1084,7 +1084,7 @@ CREATE TABLE  `swgemu`.`mantis_user_profile_table` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_user_profile_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_user_profile_table`
 --
 
 /*!40000 ALTER TABLE `mantis_user_profile_table` DISABLE KEYS */;
@@ -1094,11 +1094,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mantis_user_table`
+-- Definition of table `SWGDarkLegend`.`mantis_user_table`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mantis_user_table`;
-CREATE TABLE  `swgemu`.`mantis_user_table` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mantis_user_table`;
+CREATE TABLE  `SWGDarkLegend`.`mantis_user_table` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(32) NOT NULL DEFAULT '',
   `realname` varchar(64) NOT NULL DEFAULT '',
@@ -1121,22 +1121,22 @@ CREATE TABLE  `swgemu`.`mantis_user_table` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mantis_user_table`
+-- Dumping data for table `SWGDarkLegend`.`mantis_user_table`
 --
 
 /*!40000 ALTER TABLE `mantis_user_table` DISABLE KEYS */;
 LOCK TABLES `mantis_user_table` WRITE;
-INSERT INTO `swgemu`.`mantis_user_table` VALUES  (1,'administrator','','root@localhost','7c6afe50f993ce148d2bdbca6b831d47','2010-10-18 00:27:23','2010-11-23 00:13:35',1,0,90,6,0,0,'6b1a815f8bfa1fdc934f284a5c10f712d57dd1a96afb0f3ff9300ae5aefe4829');
+INSERT INTO `SWGDarkLegend`.`mantis_user_table` VALUES  (1,'administrator','','root@localhost','7c6afe50f993ce148d2bdbca6b831d47','2010-10-18 00:27:23','2010-11-23 00:13:35',1,0,90,6,0,0,'6b1a815f8bfa1fdc934f284a5c10f712d57dd1a96afb0f3ff9300ae5aefe4829');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mantis_user_table` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mission_manager_hunt_types`
+-- Definition of table `SWGDarkLegend`.`mission_manager_hunt_types`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mission_manager_hunt_types`;
-CREATE TABLE  `swgemu`.`mission_manager_hunt_types` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mission_manager_hunt_types`;
+CREATE TABLE  `SWGDarkLegend`.`mission_manager_hunt_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `zoneid` int(11) NOT NULL,
   `file1` varchar(100) NOT NULL,
@@ -1146,22 +1146,22 @@ CREATE TABLE  `swgemu`.`mission_manager_hunt_types` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `swgemu`.`mission_manager_hunt_types`
+-- Dumping data for table `SWGDarkLegend`.`mission_manager_hunt_types`
 --
 
 /*!40000 ALTER TABLE `mission_manager_hunt_types` DISABLE KEYS */;
 LOCK TABLES `mission_manager_hunt_types` WRITE;
-INSERT INTO `swgemu`.`mission_manager_hunt_types` VALUES  (1,5,'object/mobile/capper_spineflap.iff','object/mobile/capper_spineflap_hue.iff',1);
+INSERT INTO `SWGDarkLegend`.`mission_manager_hunt_types` VALUES  (1,5,'object/mobile/capper_spineflap.iff','object/mobile/capper_spineflap_hue.iff',1);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mission_manager_hunt_types` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mission_manager_informants`
+-- Definition of table `SWGDarkLegend`.`mission_manager_informants`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mission_manager_informants`;
-CREATE TABLE  `swgemu`.`mission_manager_informants` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mission_manager_informants`;
+CREATE TABLE  `SWGDarkLegend`.`mission_manager_informants` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT,
   `planet` smallint(6) NOT NULL DEFAULT '0',
   `cell` bigint(20) NOT NULL DEFAULT '0',
@@ -1175,12 +1175,12 @@ CREATE TABLE  `swgemu`.`mission_manager_informants` (
 ) ENGINE=MyISAM AUTO_INCREMENT=168 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mission_manager_informants`
+-- Dumping data for table `SWGDarkLegend`.`mission_manager_informants`
 --
 
 /*!40000 ALTER TABLE `mission_manager_informants` DISABLE KEYS */;
 LOCK TABLES `mission_manager_informants` WRITE;
-INSERT INTO `swgemu`.`mission_manager_informants` VALUES  (1,0,0,-5559,-6220,23.4,0.723214,0.690624,2),
+INSERT INTO `SWGDarkLegend`.`mission_manager_informants` VALUES  (1,0,0,-5559,-6220,23.4,0.723214,0.690624,2),
  (2,0,0,6871,-5752,315,0.933756,-0.357911,2),
  (3,8,1154123,0.2,8.6,1,0,1,2),
  (4,8,1134569,-31.6,18.1,0,0,1,2),
@@ -1352,11 +1352,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`mission_manager_npcs`
+-- Definition of table `SWGDarkLegend`.`mission_manager_npcs`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mission_manager_npcs`;
-CREATE TABLE  `swgemu`.`mission_manager_npcs` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mission_manager_npcs`;
+CREATE TABLE  `SWGDarkLegend`.`mission_manager_npcs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `zoneid` int(11) DEFAULT NULL,
   `parentid` bigint(20) DEFAULT '0',
@@ -1376,23 +1376,23 @@ CREATE TABLE  `swgemu`.`mission_manager_npcs` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mission_manager_npcs`
+-- Dumping data for table `SWGDarkLegend`.`mission_manager_npcs`
 --
 
 /*!40000 ALTER TABLE `mission_manager_npcs` DISABLE KEYS */;
 LOCK TABLES `mission_manager_npcs` WRITE;
-INSERT INTO `swgemu`.`mission_manager_npcs` VALUES  (1,5,0,'object/mobile/dressed_commoner_fat_human_male_01.iff',0,0,0,1,-4854,6,4131,15,'neutral',264),
+INSERT INTO `SWGDarkLegend`.`mission_manager_npcs` VALUES  (1,5,0,'object/mobile/dressed_commoner_fat_human_male_01.iff',0,0,0,1,-4854,6,4131,15,'neutral',264),
  (2,5,0,'object/mobile/dressed_commoner_fat_human_male_01.iff',0,0,0,1,-4858,6,4131,15,'neutral',264);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mission_manager_npcs` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mission_manager_recon_locs`
+-- Definition of table `SWGDarkLegend`.`mission_manager_recon_locs`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mission_manager_recon_locs`;
-CREATE TABLE  `swgemu`.`mission_manager_recon_locs` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mission_manager_recon_locs`;
+CREATE TABLE  `SWGDarkLegend`.`mission_manager_recon_locs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `zoneid` tinyint(4) NOT NULL,
   `template_file` varchar(200) NOT NULL,
@@ -1410,44 +1410,44 @@ CREATE TABLE  `swgemu`.`mission_manager_recon_locs` (
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mission_manager_recon_locs`
+-- Dumping data for table `SWGDarkLegend`.`mission_manager_recon_locs`
 --
 
 /*!40000 ALTER TABLE `mission_manager_recon_locs` DISABLE KEYS */;
 LOCK TABLES `mission_manager_recon_locs` WRITE;
-INSERT INTO `swgemu`.`mission_manager_recon_locs` VALUES  (1,5,'object/tangible/lair/cu_pa/lair_cu_pa.iff',8203,0,-0.401868,0,0.915698,-4934,6,4114);
+INSERT INTO `SWGDarkLegend`.`mission_manager_recon_locs` VALUES  (1,5,'object/tangible/lair/cu_pa/lair_cu_pa.iff',8203,0,-0.401868,0,0.915698,-4934,6,4114);
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mission_manager_recon_locs` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mission_manager_spawn_bounty`
+-- Definition of table `SWGDarkLegend`.`mission_manager_spawn_bounty`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mission_manager_spawn_bounty`;
-CREATE TABLE  `swgemu`.`mission_manager_spawn_bounty` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mission_manager_spawn_bounty`;
+CREATE TABLE  `SWGDarkLegend`.`mission_manager_spawn_bounty` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `file` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `swgemu`.`mission_manager_spawn_bounty`
+-- Dumping data for table `SWGDarkLegend`.`mission_manager_spawn_bounty`
 --
 
 /*!40000 ALTER TABLE `mission_manager_spawn_bounty` DISABLE KEYS */;
 LOCK TABLES `mission_manager_spawn_bounty` WRITE;
-INSERT INTO `swgemu`.`mission_manager_spawn_bounty` VALUES  (1,'object/mobile/dressed_criminal_thug_human_male_01.iff');
+INSERT INTO `SWGDarkLegend`.`mission_manager_spawn_bounty` VALUES  (1,'object/mobile/dressed_criminal_thug_human_male_01.iff');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mission_manager_spawn_bounty` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`mission_manager_spawn_lairs`
+-- Definition of table `SWGDarkLegend`.`mission_manager_spawn_lairs`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`mission_manager_spawn_lairs`;
-CREATE TABLE  `swgemu`.`mission_manager_spawn_lairs` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`mission_manager_spawn_lairs`;
+CREATE TABLE  `SWGDarkLegend`.`mission_manager_spawn_lairs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `template` varchar(250) DEFAULT NULL,
   `planets` varchar(45) DEFAULT '-1',
@@ -1456,22 +1456,22 @@ CREATE TABLE  `swgemu`.`mission_manager_spawn_lairs` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`mission_manager_spawn_lairs`
+-- Dumping data for table `SWGDarkLegend`.`mission_manager_spawn_lairs`
 --
 
 /*!40000 ALTER TABLE `mission_manager_spawn_lairs` DISABLE KEYS */;
 LOCK TABLES `mission_manager_spawn_lairs` WRITE;
-INSERT INTO `swgemu`.`mission_manager_spawn_lairs` VALUES  (2,'object/tangible/lair/cu_pa/lair_cu_pa.iff','-1','5-10');
+INSERT INTO `SWGDarkLegend`.`mission_manager_spawn_lairs` VALUES  (2,'object/tangible/lair/cu_pa/lair_cu_pa.iff','-1','5-10');
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `mission_manager_spawn_lairs` ENABLE KEYS */;
 
 
 --
--- Definition of table `swgemu`.`no_build_zones`
+-- Definition of table `SWGDarkLegend`.`no_build_zones`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`no_build_zones`;
-CREATE TABLE  `swgemu`.`no_build_zones` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`no_build_zones`;
+CREATE TABLE  `SWGDarkLegend`.`no_build_zones` (
   `nbz_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `planet_id` int(11) NOT NULL DEFAULT '0',
   `zone_name` char(255) DEFAULT 'region_name',
@@ -1484,12 +1484,12 @@ CREATE TABLE  `swgemu`.`no_build_zones` (
 ) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `swgemu`.`no_build_zones`
+-- Dumping data for table `SWGDarkLegend`.`no_build_zones`
 --
 
 /*!40000 ALTER TABLE `no_build_zones` DISABLE KEYS */;
 LOCK TABLES `no_build_zones` WRITE;
-INSERT INTO `swgemu`.`no_build_zones` VALUES  (1,0,'coronet','corellia_region_names','city',-178,-4504,1181),
+INSERT INTO `SWGDarkLegend`.`no_build_zones` VALUES  (1,0,'coronet','corellia_region_names','city',-178,-4504,1181),
  (2,0,'tyrena','corellia_region_names','city',-5140,-2450,900),
  (3,0,'bela_vista','corellia_region_names','city',6766,-5692,970),
  (4,0,'kor_vella','corellia_region_names','city',-3420,3146,1220),
@@ -1673,11 +1673,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`performance`
+-- Definition of table `SWGDarkLegend`.`performance`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`performance`;
-CREATE TABLE  `swgemu`.`performance` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`performance`;
+CREATE TABLE  `SWGDarkLegend`.`performance` (
   `performanceName` varchar(11) DEFAULT NULL,
   `instrumentAudioId` int(10) unsigned DEFAULT NULL,
   `requiredSong` varchar(21) DEFAULT NULL,
@@ -1711,12 +1711,12 @@ CREATE TABLE  `swgemu`.`performance` (
 ) ENGINE=MyISAM AUTO_INCREMENT=155 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`performance`
+-- Dumping data for table `SWGDarkLegend`.`performance`
 --
 
 /*!40000 ALTER TABLE `performance` DISABLE KEYS */;
 LOCK TABLES `performance` WRITE;
-INSERT INTO `swgemu`.`performance` VALUES  ('starwars1',2,'startMusic+starwars1','slitherhorn','',0,28,5,866729052,0,2,4,2,'healing_music_ability',5,'player_music/sound/song04_shorn_main.snd','player_music/sound/song04_shorn_flourish01.snd','player_music/sound/song04_shorn_flourish02.snd','player_music/sound/song04_shorn_flourish03.snd','player_music/sound/song04_shorn_flourish04.snd','player_music/sound/song04_shorn_flourish05.snd','player_music/sound/song04_shorn_flourish06.snd','player_music/sound/song04_shorn_flourish07.snd','player_music/sound/song04_shorn_flourish08.snd','player_music/sound/song04_shorn_intro.snd','player_music/sound/song04_shorn_outro.snd',1),
+INSERT INTO `SWGDarkLegend`.`performance` VALUES  ('starwars1',2,'startMusic+starwars1','slitherhorn','',0,28,5,866729052,0,2,4,2,'healing_music_ability',5,'player_music/sound/song04_shorn_main.snd','player_music/sound/song04_shorn_flourish01.snd','player_music/sound/song04_shorn_flourish02.snd','player_music/sound/song04_shorn_flourish03.snd','player_music/sound/song04_shorn_flourish04.snd','player_music/sound/song04_shorn_flourish05.snd','player_music/sound/song04_shorn_flourish06.snd','player_music/sound/song04_shorn_flourish07.snd','player_music/sound/song04_shorn_flourish08.snd','player_music/sound/song04_shorn_intro.snd','player_music/sound/song04_shorn_outro.snd',1),
  ('starwars1',6,'startMusic+starwars1','fizz','',0,32,5,866729052,0,3,6,3,'healing_music_ability',5,'player_music/sound/song04_khorn_main.snd','player_music/sound/song04_khorn_flourish01.snd','player_music/sound/song04_khorn_flourish02.snd','player_music/sound/song04_khorn_flourish03.snd','player_music/sound/song04_khorn_flourish04.snd','player_music/sound/song04_khorn_flourish05.snd','player_music/sound/song04_khorn_flourish06.snd','player_music/sound/song04_khorn_flourish07.snd','player_music/sound/song04_khorn_flourish08.snd','player_music/sound/song04_khorn_intro.snd','player_music/sound/song04_khorn_outro.snd',2),
  ('starwars1',3,'startMusic+starwars1','fanfar','',0,36,5,866729052,0,6,6,3,'healing_music_ability',10,'player_music/sound/song04_shorn_main.snd','player_music/sound/song04_shorn_flourish01.snd','player_music/sound/song04_shorn_flourish02.snd','player_music/sound/song04_shorn_flourish03.snd','player_music/sound/song04_shorn_flourish04.snd','player_music/sound/song04_shorn_flourish05.snd','player_music/sound/song04_shorn_flourish06.snd','player_music/sound/song04_shorn_flourish07.snd','player_music/sound/song04_shorn_flourish08.snd','player_music/sound/song04_shorn_intro.snd','player_music/sound/song04_shorn_outro.snd',3),
  ('starwars1',5,'startMusic+starwars1','kloohorn','',0,36,5,866729052,0,7,8,4,'healing_music_ability',10,'player_music/sound/song04_khorn_main.snd','player_music/sound/song04_khorn_flourish01.snd','player_music/sound/song04_khorn_flourish02.snd','player_music/sound/song04_khorn_flourish03.snd','player_music/sound/song04_khorn_flourish04.snd','player_music/sound/song04_khorn_flourish05.snd','player_music/sound/song04_khorn_flourish06.snd','player_music/sound/song04_khorn_flourish07.snd','player_music/sound/song04_khorn_flourish08.snd','player_music/sound/song04_khorn_intro.snd','player_music/sound/song04_khorn_outro.snd',4),
@@ -1820,7 +1820,7 @@ INSERT INTO `swgemu`.`performance` VALUES  ('starwars1',2,'startMusic+starwars1'
  ('western',6,'startMusic+western','fizz','',0,36,6.43,866729052,0,7,8,4,'healing_music_ability',40,'player_music/sound/song16_khorn_main.snd','player_music/sound/song16_khorn_flourish01.snd','player_music/sound/song16_khorn_flourish02.snd','player_music/sound/song16_khorn_flourish03.snd','player_music/sound/song16_khorn_flourish04.snd','player_music/sound/song16_khorn_flourish05.snd','player_music/sound/song16_khorn_flourish06.snd','player_music/sound/song16_khorn_flourish07.snd','player_music/sound/song16_khorn_flourish08.snd','player_music/sound/song16_khorn_intro.snd','player_music/sound/song16_khorn_outro.snd',102),
  ('western',3,'startMusic+western','fanfar','',0,36,6.43,866729052,0,7,8,4,'healing_music_ability',45,'player_music/sound/song16_shorn_main.snd','player_music/sound/song16_shorn_flourish01.snd','player_music/sound/song16_shorn_flourish02.snd','player_music/sound/song16_shorn_flourish03.snd','player_music/sound/song16_shorn_flourish04.snd','player_music/sound/song16_shorn_flourish05.snd','player_music/sound/song16_shorn_flourish06.snd','player_music/sound/song16_shorn_flourish07.snd','player_music/sound/song16_shorn_flourish08.snd','player_music/sound/song16_shorn_intro.snd','player_music/sound/song16_shorn_outro.snd',103),
  ('western',5,'startMusic+western','kloohorn','',0,36,6.43,866729052,0,7,8,4,'healing_music_ability',45,'player_music/sound/song16_khorn_main.snd','player_music/sound/song16_khorn_flourish01.snd','player_music/sound/song16_khorn_flourish02.snd','player_music/sound/song16_khorn_flourish03.snd','player_music/sound/song16_khorn_flourish04.snd','player_music/sound/song16_khorn_flourish05.snd','player_music/sound/song16_khorn_flourish06.snd','player_music/sound/song16_khorn_flourish07.snd','player_music/sound/song16_khorn_flourish08.snd','player_music/sound/song16_khorn_intro.snd','player_music/sound/song16_khorn_outro.snd',104);
-INSERT INTO `swgemu`.`performance` VALUES  ('western',10,'startMusic+western','mandoviol','',0,40,6.43,866729052,0,9,8,4,'healing_music_ability',50,'player_music/sound/song16_mand_main.snd','player_music/sound/song16_mand_flourish01.snd','player_music/sound/song16_mand_flourish02.snd','player_music/sound/song16_mand_flourish03.snd','player_music/sound/song16_mand_flourish04.snd','player_music/sound/song16_mand_flourish05.snd','player_music/sound/song16_mand_flourish06.snd','player_music/sound/song16_mand_flourish07.snd','player_music/sound/song16_mand_flourish08.snd','player_music/sound/song16_mand_intro.snd','player_music/sound/song16_mand_outro.snd',105),
+INSERT INTO `SWGDarkLegend`.`performance` VALUES  ('western',10,'startMusic+western','mandoviol','',0,40,6.43,866729052,0,9,8,4,'healing_music_ability',50,'player_music/sound/song16_mand_main.snd','player_music/sound/song16_mand_flourish01.snd','player_music/sound/song16_mand_flourish02.snd','player_music/sound/song16_mand_flourish03.snd','player_music/sound/song16_mand_flourish04.snd','player_music/sound/song16_mand_flourish05.snd','player_music/sound/song16_mand_flourish06.snd','player_music/sound/song16_mand_flourish07.snd','player_music/sound/song16_mand_flourish08.snd','player_music/sound/song16_mand_intro.snd','player_music/sound/song16_mand_outro.snd',105),
  ('western',1,'startMusic+western','traz','',0,40,6.43,866729052,0,9,10,5,'healing_music_ability',50,'player_music/sound/song16_shorn_main.snd','player_music/sound/song16_shorn_flourish01.snd','player_music/sound/song16_shorn_flourish02.snd','player_music/sound/song16_shorn_flourish03.snd','player_music/sound/song16_shorn_flourish04.snd','player_music/sound/song16_shorn_flourish05.snd','player_music/sound/song16_shorn_flourish06.snd','player_music/sound/song16_shorn_flourish07.snd','player_music/sound/song16_shorn_flourish08.snd','player_music/sound/song16_shorn_intro.snd','player_music/sound/song16_shorn_outro.snd',106),
  ('western',7,'startMusic+western','bandfill','',0,44,6.43,866729052,0,13,10,5,'healing_music_ability',50,'player_music/sound/song16_drum_main.snd','player_music/sound/song16_drum_flourish01.snd','player_music/sound/song16_drum_flourish02.snd','player_music/sound/song16_drum_flourish03.snd','player_music/sound/song16_drum_flourish04.snd','player_music/sound/song16_drum_flourish05.snd','player_music/sound/song16_drum_flourish06.snd','player_music/sound/song16_drum_flourish07.snd','player_music/sound/song16_drum_flourish08.snd','player_music/sound/song16_drum_intro.snd','player_music/sound/song16_drum_outro.snd',107),
  ('western',4,'startMusic+western','flutedroopy','',0,44,6.43,866729052,0,15,12,6,'healing_music_ability',45,'player_music/sound/song16_khorn_main.snd','player_music/sound/song16_khorn_flourish01.snd','player_music/sound/song16_khorn_flourish02.snd','player_music/sound/song16_khorn_flourish03.snd','player_music/sound/song16_khorn_flourish04.snd','player_music/sound/song16_khorn_flourish05.snd','player_music/sound/song16_khorn_flourish06.snd','player_music/sound/song16_khorn_flourish07.snd','player_music/sound/song16_khorn_flourish08.snd','player_music/sound/song16_khorn_intro.snd','player_music/sound/song16_khorn_outro.snd',108),
@@ -1875,11 +1875,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`performance_perform_effect`
+-- Definition of table `SWGDarkLegend`.`performance_perform_effect`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`performance_perform_effect`;
-CREATE TABLE  `swgemu`.`performance_perform_effect` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`performance_perform_effect`;
+CREATE TABLE  `SWGDarkLegend`.`performance_perform_effect` (
   `effectName` varchar(14) DEFAULT NULL,
   `performanceType` varchar(11) DEFAULT NULL,
   `requiredSkillModValue` int(10) unsigned DEFAULT NULL,
@@ -1890,12 +1890,12 @@ CREATE TABLE  `swgemu`.`performance_perform_effect` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`performance_perform_effect`
+-- Dumping data for table `SWGDarkLegend`.`performance_perform_effect`
 --
 
 /*!40000 ALTER TABLE `performance_perform_effect` DISABLE KEYS */;
 LOCK TABLES `performance_perform_effect` WRITE;
-INSERT INTO `swgemu`.`performance_perform_effect` VALUES  ('Dazzle1','music,dance',10,1,'self',5,30),
+INSERT INTO `SWGDarkLegend`.`performance_perform_effect` VALUES  ('Dazzle1','music,dance',10,1,'self',5,30),
  ('Dazzle2','music,dance',30,1,'self',5,60),
  ('Dazzle3','music,dance',75,1,'self',5,90),
  ('Distract1','dance',20,1,'self',2,30),
@@ -1921,11 +1921,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`performance_performance`
+-- Definition of table `SWGDarkLegend`.`performance_performance`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`performance_performance`;
-CREATE TABLE  `swgemu`.`performance_performance` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`performance_performance`;
+CREATE TABLE  `SWGDarkLegend`.`performance_performance` (
   `performanceName` varchar(11) DEFAULT NULL,
   `instrumentAudioId` int(10) unsigned DEFAULT NULL,
   `requiredSong` varchar(21) DEFAULT NULL,
@@ -1955,12 +1955,12 @@ CREATE TABLE  `swgemu`.`performance_performance` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`performance_performance`
+-- Dumping data for table `SWGDarkLegend`.`performance_performance`
 --
 
 /*!40000 ALTER TABLE `performance_performance` DISABLE KEYS */;
 LOCK TABLES `performance_performance` WRITE;
-INSERT INTO `swgemu`.`performance_performance` VALUES  ('starwars1',2,'startMusic+starwars1','slitherhorn',' ',0,28,5,866729052,0,2,4,2,'healing_music_ability',5,'player_music/sound/song04_shorn_main.snd','player_music/sound/song04_shorn_flourish01.snd','player_music/sound/song04_shorn_flourish02.snd','player_music/sound/song04_shorn_flourish03.snd','player_music/sound/song04_shorn_flourish04.snd','player_music/sound/song04_shorn_flourish05.snd','player_music/sound/song04_shorn_flourish06.snd','player_music/sound/song04_shorn_flourish07.snd','player_music/sound/song04_shorn_flourish08.snd','player_music/sound/song04_shorn_intro.snd','player_music/sound/song04_shorn_outro.snd'),
+INSERT INTO `SWGDarkLegend`.`performance_performance` VALUES  ('starwars1',2,'startMusic+starwars1','slitherhorn',' ',0,28,5,866729052,0,2,4,2,'healing_music_ability',5,'player_music/sound/song04_shorn_main.snd','player_music/sound/song04_shorn_flourish01.snd','player_music/sound/song04_shorn_flourish02.snd','player_music/sound/song04_shorn_flourish03.snd','player_music/sound/song04_shorn_flourish04.snd','player_music/sound/song04_shorn_flourish05.snd','player_music/sound/song04_shorn_flourish06.snd','player_music/sound/song04_shorn_flourish07.snd','player_music/sound/song04_shorn_flourish08.snd','player_music/sound/song04_shorn_intro.snd','player_music/sound/song04_shorn_outro.snd'),
  ('starwars1',6,'startMusic+starwars1','fizz',' ',0,32,5,866729052,0,3,6,3,'healing_music_ability',5,'player_music/sound/song04_khorn_main.snd','player_music/sound/song04_khorn_flourish01.snd','player_music/sound/song04_khorn_flourish02.snd','player_music/sound/song04_khorn_flourish03.snd','player_music/sound/song04_khorn_flourish04.snd','player_music/sound/song04_khorn_flourish05.snd','player_music/sound/song04_khorn_flourish06.snd','player_music/sound/song04_khorn_flourish07.snd','player_music/sound/song04_khorn_flourish08.snd','player_music/sound/song04_khorn_intro.snd','player_music/sound/song04_khorn_outro.snd'),
  ('starwars1',3,'startMusic+starwars1','fanfar',' ',0,36,5,866729052,0,6,6,3,'healing_music_ability',10,'player_music/sound/song04_shorn_main.snd','player_music/sound/song04_shorn_flourish01.snd','player_music/sound/song04_shorn_flourish02.snd','player_music/sound/song04_shorn_flourish03.snd','player_music/sound/song04_shorn_flourish04.snd','player_music/sound/song04_shorn_flourish05.snd','player_music/sound/song04_shorn_flourish06.snd','player_music/sound/song04_shorn_flourish07.snd','player_music/sound/song04_shorn_flourish08.snd','player_music/sound/song04_shorn_intro.snd','player_music/sound/song04_shorn_outro.snd'),
  ('starwars1',5,'startMusic+starwars1','kloohorn',' ',0,36,5,866729052,0,7,8,4,'healing_music_ability',10,'player_music/sound/song04_khorn_main.snd','player_music/sound/song04_khorn_flourish01.snd','player_music/sound/song04_khorn_flourish02.snd','player_music/sound/song04_khorn_flourish03.snd','player_music/sound/song04_khorn_flourish04.snd','player_music/sound/song04_khorn_flourish05.snd','player_music/sound/song04_khorn_flourish06.snd','player_music/sound/song04_khorn_flourish07.snd','player_music/sound/song04_khorn_flourish08.snd','player_music/sound/song04_khorn_intro.snd','player_music/sound/song04_khorn_outro.snd'),
@@ -2064,7 +2064,7 @@ INSERT INTO `swgemu`.`performance_performance` VALUES  ('starwars1',2,'startMusi
  ('western',6,'startMusic+western','fizz',' ',0,36,6.43,866729052,0,7,8,4,'healing_music_ability',40,'player_music/sound/song16_khorn_main.snd','player_music/sound/song16_khorn_flourish01.snd','player_music/sound/song16_khorn_flourish02.snd','player_music/sound/song16_khorn_flourish03.snd','player_music/sound/song16_khorn_flourish04.snd','player_music/sound/song16_khorn_flourish05.snd','player_music/sound/song16_khorn_flourish06.snd','player_music/sound/song16_khorn_flourish07.snd','player_music/sound/song16_khorn_flourish08.snd','player_music/sound/song16_khorn_intro.snd','player_music/sound/song16_khorn_outro.snd'),
  ('western',3,'startMusic+western','fanfar',' ',0,36,6.43,866729052,0,7,8,4,'healing_music_ability',45,'player_music/sound/song16_shorn_main.snd','player_music/sound/song16_shorn_flourish01.snd','player_music/sound/song16_shorn_flourish02.snd','player_music/sound/song16_shorn_flourish03.snd','player_music/sound/song16_shorn_flourish04.snd','player_music/sound/song16_shorn_flourish05.snd','player_music/sound/song16_shorn_flourish06.snd','player_music/sound/song16_shorn_flourish07.snd','player_music/sound/song16_shorn_flourish08.snd','player_music/sound/song16_shorn_intro.snd','player_music/sound/song16_shorn_outro.snd'),
  ('western',5,'startMusic+western','kloohorn',' ',0,36,6.43,866729052,0,7,8,4,'healing_music_ability',45,'player_music/sound/song16_khorn_main.snd','player_music/sound/song16_khorn_flourish01.snd','player_music/sound/song16_khorn_flourish02.snd','player_music/sound/song16_khorn_flourish03.snd','player_music/sound/song16_khorn_flourish04.snd','player_music/sound/song16_khorn_flourish05.snd','player_music/sound/song16_khorn_flourish06.snd','player_music/sound/song16_khorn_flourish07.snd','player_music/sound/song16_khorn_flourish08.snd','player_music/sound/song16_khorn_intro.snd','player_music/sound/song16_khorn_outro.snd');
-INSERT INTO `swgemu`.`performance_performance` VALUES  ('western',10,'startMusic+western','mandoviol',' ',0,40,6.43,866729052,0,9,8,4,'healing_music_ability',50,'player_music/sound/song16_mand_main.snd','player_music/sound/song16_mand_flourish01.snd','player_music/sound/song16_mand_flourish02.snd','player_music/sound/song16_mand_flourish03.snd','player_music/sound/song16_mand_flourish04.snd','player_music/sound/song16_mand_flourish05.snd','player_music/sound/song16_mand_flourish06.snd','player_music/sound/song16_mand_flourish07.snd','player_music/sound/song16_mand_flourish08.snd','player_music/sound/song16_mand_intro.snd','player_music/sound/song16_mand_outro.snd'),
+INSERT INTO `SWGDarkLegend`.`performance_performance` VALUES  ('western',10,'startMusic+western','mandoviol',' ',0,40,6.43,866729052,0,9,8,4,'healing_music_ability',50,'player_music/sound/song16_mand_main.snd','player_music/sound/song16_mand_flourish01.snd','player_music/sound/song16_mand_flourish02.snd','player_music/sound/song16_mand_flourish03.snd','player_music/sound/song16_mand_flourish04.snd','player_music/sound/song16_mand_flourish05.snd','player_music/sound/song16_mand_flourish06.snd','player_music/sound/song16_mand_flourish07.snd','player_music/sound/song16_mand_flourish08.snd','player_music/sound/song16_mand_intro.snd','player_music/sound/song16_mand_outro.snd'),
  ('western',1,'startMusic+western','traz',' ',0,40,6.43,866729052,0,9,10,5,'healing_music_ability',50,'player_music/sound/song16_shorn_main.snd','player_music/sound/song16_shorn_flourish01.snd','player_music/sound/song16_shorn_flourish02.snd','player_music/sound/song16_shorn_flourish03.snd','player_music/sound/song16_shorn_flourish04.snd','player_music/sound/song16_shorn_flourish05.snd','player_music/sound/song16_shorn_flourish06.snd','player_music/sound/song16_shorn_flourish07.snd','player_music/sound/song16_shorn_flourish08.snd','player_music/sound/song16_shorn_intro.snd','player_music/sound/song16_shorn_outro.snd'),
  ('western',7,'startMusic+western','bandfill',' ',0,44,6.43,866729052,0,13,10,5,'healing_music_ability',50,'player_music/sound/song16_drum_main.snd','player_music/sound/song16_drum_flourish01.snd','player_music/sound/song16_drum_flourish02.snd','player_music/sound/song16_drum_flourish03.snd','player_music/sound/song16_drum_flourish04.snd','player_music/sound/song16_drum_flourish05.snd','player_music/sound/song16_drum_flourish06.snd','player_music/sound/song16_drum_flourish07.snd','player_music/sound/song16_drum_flourish08.snd','player_music/sound/song16_drum_intro.snd','player_music/sound/song16_drum_outro.snd'),
  ('western',4,'startMusic+western','flutedroopy',' ',0,44,6.43,866729052,0,15,12,6,'healing_music_ability',45,'player_music/sound/song16_khorn_main.snd','player_music/sound/song16_khorn_flourish01.snd','player_music/sound/song16_khorn_flourish02.snd','player_music/sound/song16_khorn_flourish03.snd','player_music/sound/song16_khorn_flourish04.snd','player_music/sound/song16_khorn_flourish05.snd','player_music/sound/song16_khorn_flourish06.snd','player_music/sound/song16_khorn_flourish07.snd','player_music/sound/song16_khorn_flourish08.snd','player_music/sound/song16_khorn_intro.snd','player_music/sound/song16_khorn_outro.snd'),
@@ -2095,11 +2095,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`sessions`
+-- Definition of table `SWGDarkLegend`.`sessions`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`sessions`;
-CREATE TABLE  `swgemu`.`sessions` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`sessions`;
+CREATE TABLE  `SWGDarkLegend`.`sessions` (
   `account_id` int(10) unsigned NOT NULL DEFAULT '0',
   `session_id` varchar(64) NOT NULL,
   `ip` varchar(15) NOT NULL,
@@ -2108,7 +2108,7 @@ CREATE TABLE  `swgemu`.`sessions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`sessions`
+-- Dumping data for table `SWGDarkLegend`.`sessions`
 --
 
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
@@ -2118,11 +2118,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`skills`
+-- Definition of table `SWGDarkLegend`.`skills`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`skills`;
-CREATE TABLE  `swgemu`.`skills` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`skills`;
+CREATE TABLE  `SWGDarkLegend`.`skills` (
   `skill_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `skill_name` varchar(52) DEFAULT NULL,
   `skill_parent` varchar(52) DEFAULT NULL,
@@ -2156,12 +2156,12 @@ CREATE TABLE  `swgemu`.`skills` (
 ) ENGINE=MyISAM AUTO_INCREMENT=1069 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`skills`
+-- Dumping data for table `SWGDarkLegend`.`skills`
 --
 
 /*!40000 ALTER TABLE `skills` DISABLE KEYS */;
 LOCK TABLES `skills` WRITE;
-INSERT INTO `swgemu`.`skills` VALUES  (1,'combat_melee_basic',' ','fourByFour',0,0,0,0,0,0,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ',' ',' ',' ',' ',1,0),
+INSERT INTO `SWGDarkLegend`.`skills` VALUES  (1,'combat_melee_basic',' ','fourByFour',0,0,0,0,0,0,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ',' ',' ',' ',' ',1,0),
  (2,'combat_ranged_weapons_basic',' ','fourByFour',0,0,0,0,0,0,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ',' ',' ',' ',' ',1,0),
  (3,'demo_combat',' ','fourByFour',0,0,0,0,0,0,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ',' ',' ',' ',' ',1,0),
  (4,'common_knowledge',' ','fourByFour',0,0,0,0,0,0,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ',' ',' ',' ',' ',1,0),
@@ -2368,7 +2368,7 @@ INSERT INTO `swgemu`.`skills` VALUES  (1,'combat_melee_basic',' ','fourByFour',0
  (205,'combat_1hsword_novice','combat_1hsword','fourByFour',0,1,0,0,5000,6,0,'combat_brawler_1handmelee_04',' ','combat_meleespecialize_onehand',125000,350000,' ',0,' ',' ','none',' ','private_1hand_novice,melee1hHit2,cert_baton_stun','onehandmelee_accuracy=20,onehandmelee_speed=10,melee_defense=15,ranged_defense=15,dodge=15,private_onehandmelee_combat_difficulty=100,onehandmelee_toughness=4,center_of_being_duration_onehandmelee=5,onehandmelee_center_of_being_efficacy=15',' ',' ',1,0),
  (206,'combat_1hsword_master','combat_1hsword','fourByFour',0,1,0,0,10000,1,0,'combat_1hsword_accuracy_04,combat_1hsword_speed_04,combat_1hsword_ability_04,combat_1hsword_support_04',' ',' ',0,0,' ',0,' ',' ','none',' ','private_1hand_master,melee1hHit3,melee_damage_mitigation_3','onehandmelee_accuracy=20,onehandmelee_speed=10,alert=10,melee_defense=5,combat_equillibrium=10,dodge=15,private_onehandmelee_combat_difficulty=100,center_of_being_duration_onehandmelee=5,onehandmelee_center_of_being_efficacy=15',' ',' ',1,0),
  (207,'combat_1hsword_accuracy_01','combat_1hsword','fourByFour',0,0,0,0,6000,5,0,'combat_1hsword_novice',' ','combat_meleespecialize_onehand',175000,500000,' ',0,' ',' ','none',' ','private_1hand_accuracy_1,melee1hScatterHit1','melee_defense=12,ranged_defense=12,private_onehandmelee_combat_difficulty=125',' ',' ',1,0);
-INSERT INTO `swgemu`.`skills` VALUES  (208,'combat_1hsword_accuracy_02','combat_1hsword_accuracy_01','fourByFour',0,0,0,0,7000,4,0,'combat_1hsword_accuracy_01',' ','combat_meleespecialize_onehand',250000,700000,' ',0,' ',' ','none',' ','private_1hand_accuracy_2','ranged_defense=15,melee_defense=15,private_onehandmelee_combat_difficulty=100',' ',' ',1,0),
+INSERT INTO `SWGDarkLegend`.`skills` VALUES  (208,'combat_1hsword_accuracy_02','combat_1hsword_accuracy_01','fourByFour',0,0,0,0,7000,4,0,'combat_1hsword_accuracy_01',' ','combat_meleespecialize_onehand',250000,700000,' ',0,' ',' ','none',' ','private_1hand_accuracy_2','ranged_defense=15,melee_defense=15,private_onehandmelee_combat_difficulty=100',' ',' ',1,0),
  (209,'combat_1hsword_accuracy_03','combat_1hsword_accuracy_02','fourByFour',0,0,0,0,8000,3,0,'combat_1hsword_accuracy_02',' ','combat_meleespecialize_onehand',350000,900000,' ',0,' ',' ','none',' ','private_1hand_accuracy_3,melee1hDizzyHit2','melee_defense=12,ranged_defense=12,private_onehandmelee_combat_difficulty=100,onehandmelee_toughness=4',' ',' ',1,0),
  (210,'combat_1hsword_accuracy_04','combat_1hsword_accuracy_03','fourByFour',0,1,0,0,9000,2,0,'combat_1hsword_accuracy_03',' ','combat_meleespecialize_onehand',450000,900000,' ',0,' ',' ','none',' ','private_1hand_accuracy_4,melee1hScatterHit2','ranged_defense=15,melee_defense=15,private_onehandmelee_combat_difficulty=125,onehandmelee_toughness=4',' ',' ',1,0),
  (211,'combat_1hsword_speed_01','combat_1hsword','fourByFour',0,0,0,0,6000,5,0,'combat_1hsword_novice',' ','combat_meleespecialize_onehand',175000,500000,' ',0,' ',' ','none',' ','private_1hand_speed_1,melee1hHealthHit1','onehandmelee_speed=5,private_onehandmelee_combat_difficulty=125,center_of_being_duration_onehandmelee=2,onehandmelee_center_of_being_efficacy=5',' ',' ',1,0),
@@ -2604,7 +2604,7 @@ INSERT INTO `swgemu`.`skills` VALUES  (208,'combat_1hsword_accuracy_02','combat_
  (441,'crafting_tailor_field_03','crafting_tailor_field_02','fourByFour',0,0,0,0,8000,3,0,'crafting_tailor_field_02',' ','crafting_clothing_general',57600,100000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFieldGroupC',' ',1,0),
  (442,'crafting_tailor_field_04','crafting_tailor_field_03','fourByFour',0,1,0,0,9000,2,0,'crafting_tailor_field_03',' ','crafting_clothing_general',70400,120000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFieldGroupD',' ',1,0),
  (443,'crafting_tailor_formal_01','crafting_tailor','fourByFour',0,0,0,0,6000,5,0,'crafting_tailor_novice',' ','crafting_clothing_general',32000,56000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFormalGroupA',' ',1,0);
-INSERT INTO `swgemu`.`skills` VALUES  (444,'crafting_tailor_formal_02','crafting_tailor_formal_01','fourByFour',0,0,0,0,7000,4,0,'crafting_tailor_formal_01',' ','crafting_clothing_general',44800,72000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFormalGroupB',' ',1,0),
+INSERT INTO `SWGDarkLegend`.`skills` VALUES  (444,'crafting_tailor_formal_02','crafting_tailor_formal_01','fourByFour',0,0,0,0,7000,4,0,'crafting_tailor_formal_01',' ','crafting_clothing_general',44800,72000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFormalGroupB',' ',1,0),
  (445,'crafting_tailor_formal_03','crafting_tailor_formal_02','fourByFour',0,0,0,0,8000,3,0,'crafting_tailor_formal_02',' ','crafting_clothing_general',57600,100000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFormalGroupC',' ',1,0),
  (446,'crafting_tailor_formal_04','crafting_tailor_formal_03','fourByFour',0,1,0,0,9000,2,0,'crafting_tailor_formal_03',' ','crafting_clothing_general',70400,120000,' ',0,' ',' ','none',' ',' ',' ','craftClothingFormalGroupD',' ',1,0),
  (447,'crafting_tailor_production_01','crafting_tailor','fourByFour',0,0,0,0,6000,5,0,'crafting_tailor_novice',' ','crafting_clothing_general',32000,56000,' ',0,' ',' ','none',' ',' ','clothing_assembly=10,clothing_experimentation=15,clothing_customization=20',' ',' ',1,0),
@@ -2850,7 +2850,7 @@ INSERT INTO `swgemu`.`skills` VALUES  (444,'crafting_tailor_formal_02','crafting
  (687,'jedi_padawan','jedi','fourByFour',1,0,1,1,0,0,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ',' ',' ',' ',' ',0,0),
  (688,'jedi_padawan_novice','jedi_padawan','fourByFour',1,1,0,1,0,250,0,' ',' ',' ',0,0,' ',0,' ',' ','none',' ','saberSlash1,healBattleFatigueSelf1,cert_onehandlightsaber,sample,survey','jedi_force_power_max=200,jedi_force_power_regen=1,jedi_saber_assembly=25,onehandlightsaber_accuracy=30,onehandlightsaber_speed=30,saber_block=5,onehandlightsaber_toughness=5,surveying=50,private_jedi_difficulty=1000','craftJediTool,craftSaberOneHand1',' ',0,0),
  (689,'jedi_padawan_master','jedi_padawan','fourByFour',1,1,0,1,0,0,0,'jedi_padawan_saber_04,jedi_padawan_healing_04,jedi_padawan_force_power_04,jedi_padawan_force_manipulation_04',' ','jedi_general',1500000,4000000,' ',0,' ',' ','none',' ','saberSlash2,saber1hComboHit2,saber1hHeadHit2,healBattleFatigueSelf2,saber1hFlurry','jedi_force_power_max=200,jedi_force_power_regen=1,onehandlightsaber_accuracy=20,onehandlightsaber_speed=10,forcethrow_accuracy=30,saber_block=6,onehandlightsaber_toughness=10,private_jedi_difficulty=500,forceknockdown_accuracy=20',' ',' ',0,0);
-INSERT INTO `swgemu`.`skills` VALUES  (690,'jedi_padawan_saber_01','jedi_padawan','fourByFour',1,0,0,1,0,0,0,'jedi_padawan_novice',' ','combat_meleespecialize_onehandlightsaber',2500,20000,' ',0,' ',' ','none',' ','saber1hHit1','onehandlightsaber_accuracy=20,onehandlightsaber_speed=10,onehandlightsaber_toughness=2,private_jedi_difficulty=100','craftSaberOneHand2',' ',0,0),
+INSERT INTO `SWGDarkLegend`.`skills` VALUES  (690,'jedi_padawan_saber_01','jedi_padawan','fourByFour',1,0,0,1,0,0,0,'jedi_padawan_novice',' ','combat_meleespecialize_onehandlightsaber',2500,20000,' ',0,' ',' ','none',' ','saber1hHit1','onehandlightsaber_accuracy=20,onehandlightsaber_speed=10,onehandlightsaber_toughness=2,private_jedi_difficulty=100','craftSaberOneHand2',' ',0,0),
  (691,'jedi_padawan_saber_02','jedi_padawan_saber_01','fourByFour',1,0,0,1,0,0,0,'jedi_padawan_saber_01',' ','combat_meleespecialize_onehandlightsaber',15000,30000,' ',0,' ',' ','none',' ','saber1hComboHit1','onehandlightsaber_accuracy=20,onehandlightsaber_speed=10,onehandlightsaber_toughness=2,private_jedi_difficulty=100','craftSaberOneHand3',' ',0,0),
  (692,'jedi_padawan_saber_03','jedi_padawan_saber_02','fourByFour',1,0,0,1,0,0,0,'jedi_padawan_saber_02',' ','combat_meleespecialize_onehandlightsaber',25000,80000,' ',0,' ',' ','none',' ','saber1hHeadHit1','onehandlightsaber_accuracy=20,onehandlightsaber_speed=10,saber_block=2,onehandlightsaber_toughness=2,private_jedi_difficulty=100','craftSaberOneHand4',' ',0,0),
  (693,'jedi_padawan_saber_04','jedi_padawan_saber_03','fourByFour',1,1,0,1,0,0,0,'jedi_padawan_saber_03',' ','combat_meleespecialize_onehandlightsaber',75000,200000,' ',0,' ',' ','none',' ','saber1hHit2','onehandlightsaber_accuracy=20,onehandlightsaber_speed=10,saber_block=2,onehandlightsaber_toughness=2,private_jedi_difficulty=100','craftSaberOneHand5',' ',0,0),
@@ -3047,7 +3047,7 @@ INSERT INTO `swgemu`.`skills` VALUES  (690,'jedi_padawan_saber_01','jedi_padawan
  (884,'force_discipline_powers_lightning_03','force_discipline_powers_lightning_02','fourByFour',0,0,0,0,0,4,0,'force_discipline_powers_lightning_02',' ','jedi_general',800000,2000000,' ',0,' ',' ','jedi',' ','forceLightningSingle2','private_force_lightning_single_power=2,forcelightning_accuracy=20,private_jedi_difficulty=100,jedi_force_power_max=150,jedi_force_power_regen=1',' ',' ',0,0),
  (885,'force_discipline_powers_lightning_04','force_discipline_powers_lightning_03','fourByFour',0,0,0,0,0,2,0,'force_discipline_powers_lightning_03',' ','jedi_general',1600000,4000000,' ',0,' ',' ','jedi',' ','forceLightningCone2','private_force_lightning_cone_power=2,forcelightning_accuracy=20,private_jedi_difficulty=125,jedi_force_power_max=175,jedi_force_power_regen=2',' ',' ',0,0),
  (886,'force_discipline_powers_mental_01','force_discipline_powers','fourByFour',0,0,0,0,0,8,0,'force_discipline_powers_novice',' ','jedi_general',200000,600000,' ',0,' ',' ','jedi',' ','mindBlast1','mindblast_accuracy=20,private_jedi_difficulty=125,jedi_force_power_max=100,jedi_force_power_regen=1',' ',' ',0,0);
-INSERT INTO `swgemu`.`skills` VALUES  (887,'force_discipline_powers_mental_02','force_discipline_powers_mental_01','fourByFour',0,0,0,0,0,6,0,'force_discipline_powers_mental_01',' ','jedi_general',400000,1000000,' ',0,' ',' ','jedi',' ','animalCalm','mindblast_accuracy=20,private_jedi_difficulty=100,jedi_force_power_max=100,jedi_force_power_regen=1',' ',' ',0,0),
+INSERT INTO `SWGDarkLegend`.`skills` VALUES  (887,'force_discipline_powers_mental_02','force_discipline_powers_mental_01','fourByFour',0,0,0,0,0,6,0,'force_discipline_powers_mental_01',' ','jedi_general',400000,1000000,' ',0,' ',' ','jedi',' ','animalCalm','mindblast_accuracy=20,private_jedi_difficulty=100,jedi_force_power_max=100,jedi_force_power_regen=1',' ',' ',0,0),
  (888,'force_discipline_powers_mental_03','force_discipline_powers_mental_02','fourByFour',0,0,0,0,0,4,0,'force_discipline_powers_mental_02',' ','jedi_general',800000,2000000,' ',0,' ',' ','jedi',' ','mindBlast2','mindblast_accuracy=20,private_jedi_difficulty=100,jedi_force_power_max=150,jedi_force_power_regen=1',' ',' ',0,0),
  (889,'force_discipline_powers_mental_04','force_discipline_powers_mental_03','fourByFour',0,0,0,0,0,2,0,'force_discipline_powers_mental_03',' ','jedi_general',1600000,4000000,' ',0,' ',' ','jedi',' ','animalAttack','mindblast_accuracy=20,private_jedi_difficulty=125,jedi_force_power_max=175,jedi_force_power_regen=2',' ',' ',0,0),
  (890,'force_discipline_powers_debuff_01','force_discipline_powers','fourByFour',0,0,0,0,0,8,0,'force_discipline_powers_novice',' ','jedi_general',200000,600000,' ',0,' ',' ','jedi',' ','forceWeaken1','forceweaken_accuracy=20,private_jedi_difficulty=125,jedi_force_power_max=100,jedi_force_power_regen=1',' ',' ',0,0),
@@ -3234,11 +3234,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`statictangibleobjects`
+-- Definition of table `SWGDarkLegend`.`statictangibleobjects`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`statictangibleobjects`;
-CREATE TABLE  `swgemu`.`statictangibleobjects` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`statictangibleobjects`;
+CREATE TABLE  `SWGDarkLegend`.`statictangibleobjects` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `zoneid` tinyint(4) NOT NULL,
   `parentid` bigint(20) NOT NULL,
@@ -3259,12 +3259,12 @@ CREATE TABLE  `swgemu`.`statictangibleobjects` (
 ) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`statictangibleobjects`
+-- Dumping data for table `SWGDarkLegend`.`statictangibleobjects`
 --
 
 /*!40000 ALTER TABLE `statictangibleobjects` DISABLE KEYS */;
 LOCK TABLES `statictangibleobjects` WRITE;
-INSERT INTO `swgemu`.`statictangibleobjects` VALUES  (1,5,0,'Jeff Freeman Memorial Fountain','object/tangible/furniture/city/fountain_heroic.iff',8203,'fountain_heroic',0,-0.401868,0,0.915698,-4879.48,6,4139.49),
+INSERT INTO `SWGDarkLegend`.`statictangibleobjects` VALUES  (1,5,0,'Jeff Freeman Memorial Fountain','object/tangible/furniture/city/fountain_heroic.iff',8203,'fountain_heroic',0,-0.401868,0,0.915698,-4879.48,6,4139.49),
  (2,8,0,'','object/tangible/terminal/terminal_character_builder.iff',16400,'terminal_character_builder',0,0.768226,0,-0.640178,3533.04,5,-4796),
  (3,8,0,'','object/tangible/terminal/terminal_character_builder.iff',16400,'terminal_character_builder',0,-0.486657,0,0.873593,-1271.07,12,-3590.22),
  (4,5,0,'','object/tangible/terminal/terminal_character_builder.iff',16400,'terminal_character_builder',0,0.309582,0,0.950873,-4876.99,6,4142.12),
@@ -3300,11 +3300,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`trainers`
+-- Definition of table `SWGDarkLegend`.`trainers`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`trainers`;
-CREATE TABLE  `swgemu`.`trainers` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`trainers`;
+CREATE TABLE  `SWGDarkLegend`.`trainers` (
   `Location` varchar(64) DEFAULT NULL,
   `Trainer Name` varchar(64) DEFAULT NULL,
   `Trainer Type` varchar(64) DEFAULT NULL,
@@ -3329,12 +3329,12 @@ CREATE TABLE  `swgemu`.`trainers` (
 ) ENGINE=MyISAM AUTO_INCREMENT=523 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`trainers`
+-- Dumping data for table `SWGDarkLegend`.`trainers`
 --
 
 /*!40000 ALTER TABLE `trainers` DISABLE KEYS */;
 LOCK TABLES `trainers` WRITE;
-INSERT INTO `swgemu`.`trainers` VALUES  ('Coronet ','a Merchant trainer','trainer_merchant','crafting_merchant','D717AE2E','0C0006B9','450D6134',0,0,-369,-4533,28,0,0,0,0.717733,0.696318,1,0),
+INSERT INTO `SWGDarkLegend`.`trainers` VALUES  ('Coronet ','a Merchant trainer','trainer_merchant','crafting_merchant','D717AE2E','0C0006B9','450D6134',0,0,-369,-4533,28,0,0,0,0.717733,0.696318,1,0),
  ('Doaba Guerfel','a Merchant trainer','trainer_merchant','crafting_merchant','D717AE2E','0C0006B9','450D6134',0,3075410,3105,5274,301,12,6,1.13306,1,0,2,0),
  ('Kor Vella','a Merchant trainer','trainer_merchant','crafting_merchant','D717AE2E','0C0006B9','450D6134',0,2955398,-3675,3064,87,12,6,1.13306,1,0,3,0),
  ('Tyrena','a Merchant trainer','trainer_merchant','crafting_merchant','D717AE2E','0C0006B9','450D6134',0,1935461,-5515,-2691,22,12,6,1.13306,1,0,4,0),
@@ -3742,7 +3742,7 @@ INSERT INTO `swgemu`.`trainers` VALUES  ('Coronet ','a Merchant trainer','traine
  ('Bela Vistal','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,2365947,6707,-5510.5,316,0,-14,1.13306,0,1,406,21),
  ('Bela Vistal','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,0,6755.99,-5655.01,314.994,0,0,0,0.712959,-0.701206,407,21),
  ('Coronet','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,1855517,-146,-4390,29,0,-14,1.13306,0,1,408,21);
-INSERT INTO `swgemu`.`trainers` VALUES  ('Coronet','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,0,-187,-4700,28,0,0,0,0.717733,0.696318,409,21),
+INSERT INTO `SWGDarkLegend`.`trainers` VALUES  ('Coronet','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,0,-187,-4700,28,0,0,0,0.717733,0.696318,409,21),
  ('Doaba Guerfel','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,3055771,3160,5043,291,0,-14,1.13306,0,1,410,21),
  ('Doaba Guerfel','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,0,3311,5530,308,0,0,0,0.664487,0.7473,411,21),
  ('Kor Vella','an Artisan trainer','trainer_artisan','crafting_artisan','00217BD7','DB36D340','923BB4CD',0,2955416,-3417.5,3170,79,0,-14,1.13306,0,1,412,21),
@@ -3861,11 +3861,11 @@ UNLOCK TABLES;
 
 
 --
--- Definition of table `swgemu`.`world_server_static_spawns`
+-- Definition of table `SWGDarkLegend`.`world_server_static_spawns`
 --
 
-DROP TABLE IF EXISTS `swgemu`.`world_server_static_spawns`;
-CREATE TABLE  `swgemu`.`world_server_static_spawns` (
+DROP TABLE IF EXISTS `SWGDarkLegend`.`world_server_static_spawns`;
+CREATE TABLE  `SWGDarkLegend`.`world_server_static_spawns` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `zoneid` int(11) DEFAULT NULL,
   `parentid` bigint(20) DEFAULT '0',
@@ -3887,12 +3887,12 @@ CREATE TABLE  `swgemu`.`world_server_static_spawns` (
 ) ENGINE=InnoDB AUTO_INCREMENT=9650 DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `swgemu`.`world_server_static_spawns`
+-- Dumping data for table `SWGDarkLegend`.`world_server_static_spawns`
 --
 
 /*!40000 ALTER TABLE `world_server_static_spawns` DISABLE KEYS */;
 LOCK TABLES `world_server_static_spawns` WRITE;
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (1,0,0,'object/mobile/dressed_cobral_thug_rodian_female_01.iff',0,0,0,0,-171.521,0,-4948.57,7,'neutral',128,1,100),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (1,0,0,'object/mobile/dressed_cobral_thug_rodian_female_01.iff',0,0,0,0,-171.521,0,-4948.57,7,'neutral',128,1,100),
  (2,0,0,'object/mobile/dressed_cobral_thug_rodian_female_01.iff',0,0,0,0,-173.347,0,-4966.3,7,'neutral',128,1,100),
  (3,0,0,'object/mobile/dressed_cobral_thug_rodian_female_01.iff',0,0,0,0,-173.216,0,-4939.24,7,'neutral',128,1,100),
  (4,0,0,'object/mobile/dressed_cobral_thug_rodian_female_01.iff',0,0,0,0,-195.966,0,-4908.43,7,'neutral',128,1,100),
@@ -4402,7 +4402,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (1,0,0,'object/mobile/
  (509,0,4395403,'object/mobile/dressed_commoner_tatooine_bith_female_01.iff',-1.34212e-10,1,4.17178e-06,3.21823e-05,3.96145,2.12878,76.4149,15,'conversation',264,0,60),
  (510,0,4395403,'object/mobile/dressed_noble_fat_human_male_02.iff',0,0.731354,0,-0.681998,19.26,2.12847,56.13,15,'calm',264,0,60),
  (511,0,4395403,'object/mobile/dressed_entertainer_trainer_twk_female_01.iff',0,0.0348995,0,0.999391,21.99,2.12804,64.05,15,'calm',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (512,0,4395402,'object/mobile/dressed_noble_fat_human_female_02.iff',0,0.93358,0,-0.358368,28.93,2.12878,58.19,15,'calm',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (512,0,4395402,'object/mobile/dressed_noble_fat_human_female_02.iff',0,0.93358,0,-0.358368,28.93,2.12878,58.19,15,'calm',264,0,60),
  (513,0,4395401,'object/mobile/dressed_noble_old_zabrak_female_01.iff',0.0457469,2.44968e-05,-1.12183e-06,0.998953,15.2654,2.47978,23.7759,15,'conversation',264,0,60),
  (514,0,4395401,'object/mobile/dressed_entertainer_trainer_twk_male_01.iff',-1.35884e-06,0.998953,0.0457468,2.96725e-05,15.2654,2.37968,24.8667,15,'conversation',264,0,60),
  (515,0,4395401,'object/mobile/dressed_mercenary_weak_hum_f.iff',-2.60096e-06,-7.75799e-05,-2.01783e-10,1,-0.629707,2.6,2.33132,15,'conversation',264,0,60),
@@ -4941,7 +4941,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (512,0,4395402,'object
  (1048,0,0,'object/mobile/r5.iff',0,0.879611,0,-0.475693,-5400.32,21,-2614.17,15,'calm',264,0,60),
  (1049,0,0,'object/mobile/stormtrooper.iff',0,0,0,0,-5399.6,0,-2608.8,25,'neutral',128,0,180),
  (1050,0,0,'object/mobile/dressed_corsec_officer_human_female_01.iff',0,0.0745951,0,0.997214,-5400.54,21,-2613.88,15,'neutral',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (1051,0,0,'object/mobile/stormtrooper.iff',0,0,0,0,-5396.8,0,-2614.9,25,'neutral',128,0,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (1051,0,0,'object/mobile/stormtrooper.iff',0,0,0,0,-5396.8,0,-2614.9,25,'neutral',128,0,180),
  (1052,0,0,'object/mobile/dressed_corsec_pilot_human_male_01.iff',0,0.804378,0,0.594117,-5470.84,21,-2565.16,15,'calm',264,0,60),
  (1053,0,0,'object/mobile/dressed_noble_fat_twilek_female_01.iff',0,0.708112,0,-0.7061,-5441.11,21.0895,-2624.13,15,'calm',264,0,60),
  (1054,0,0,'object/mobile/dressed_commoner_tatooine_nikto_male_03.iff',0,0.067684,0,0.997707,-5411.79,21,-2655.41,15,'calm',264,0,60),
@@ -5447,7 +5447,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (1051,0,0,'object/mobi
  (1554,0,8555477,'object/mobile/dressed_rebel_trooper_bith_m_01.iff',0,0,0,0,-3.47,1.01,-19.22,25,'neutral',128,0,300),
  (1555,0,8555477,'object/mobile/dressed_rebel_second_lieutenant_human_female_01.iff',0,0,0,0,-0.55,1.01,-19.07,19,'neutral',128,0,180),
  (1556,0,8555475,'object/mobile/dressed_rebel_first_lieutenant_bothan_male_01.iff',0,0,0,0,12.73,1.01,1.77,20,'neutral',128,0,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (1557,0,8555475,'object/mobile/dressed_rebel_scout_bothan_male_01.iff',0,0,0,0,13.18,1.01,-6.59,15,'neutral',128,0,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (1557,0,8555475,'object/mobile/dressed_rebel_scout_bothan_male_01.iff',0,0,0,0,13.18,1.01,-6.59,15,'neutral',128,0,180),
  (1558,0,8555475,'object/mobile/dressed_rebel_trooper_bith_m_01.iff',0,0,0,0,14.91,1.01,-6.68,25,'neutral',128,0,300),
  (1559,0,8555474,'object/mobile/dressed_rebel_corporal_bith_female_01.iff',0,0,0,0,-20.12,1.01,19.27,25,'neutral',128,0,300),
  (1560,0,8555474,'object/mobile/dressed_rebel_staff_corporal_bith_female_01.iff',0,0,0,0,-15.73,1.01,14.19,16,'neutral',128,0,300),
@@ -6009,7 +6009,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (1557,0,8555475,'objec
  (2116,2,8575580,'object/mobile/dressed_dathomir_nightsister_slave.iff',0,0,0,0,57.7,-68.6,-126.4,10,'neutral',128,35,180),
  (2117,2,8575580,'object/mobile/dressed_dathomir_nightsister_slave.iff',0,0,0,0,59,-69.4,-124.4,10,'neutral',128,35,180),
  (2118,2,8575580,'object/mobile/dressed_dathomir_nightsister_slave.iff',0,0,0,0,59.7,-68.6,-127.1,10,'neutral',128,35,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (2119,2,8575579,'object/mobile/dressed_dathomir_nightsister_stalker.iff',0,0,0,0,96.7,-66.4,-106,86,'neutral',128,35,300),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (2119,2,8575579,'object/mobile/dressed_dathomir_nightsister_stalker.iff',0,0,0,0,96.7,-66.4,-106,86,'neutral',128,35,300),
  (2120,2,8575579,'object/mobile/dressed_dathomir_nightsister_stalker.iff',0,0,0,0,92.9,-66.6,-105,86,'neutral',128,35,300),
  (2121,2,8575582,'object/mobile/dressed_dathomir_nightsister_sentinal.iff',0,0,0,0,114.4,-66.9,-86,95,'neutral',128,35,300),
  (2122,2,8575582,'object/mobile/dressed_dathomir_nightsister_sentinal.iff',0,0,0,0,110.8,-66.8,-85.8,95,'neutral',128,35,300),
@@ -6535,7 +6535,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (2119,2,8575579,'objec
  (2642,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,-3097.25,0,-928.032,50,'neutral',128,35,300),
  (2643,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,-6203.5,0,2084.52,50,'neutral',128,35,300),
  (2644,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,-3524.11,0,-1328.89,50,'neutral',128,35,300);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (2645,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,-3330.57,0,1168.95,50,'neutral',128,35,300),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (2645,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,-3330.57,0,1168.95,50,'neutral',128,35,300),
  (2646,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,-3612.09,0,-1206.49,50,'neutral',128,35,300),
  (2647,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,4904.75,0,-1817.51,50,'neutral',128,35,300),
  (2648,2,0,'object/mobile/dressed_dathomir_sing_mt_clan_initiate.iff',0,0,0,0,4801.11,0,-1619.84,50,'neutral',128,35,300),
@@ -7064,7 +7064,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (2645,2,0,'object/mobi
  (3171,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-4224.54,0,214.813,60,'neutral',128,35,300),
  (3172,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-3701.63,0,334.882,60,'neutral',128,35,300),
  (3173,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-4027.74,0,-189.37,60,'neutral',128,35,300);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (3174,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-4066.51,0,-204.409,60,'neutral',128,35,300),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (3174,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-4066.51,0,-204.409,60,'neutral',128,35,300),
  (3175,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-3484.2,0,-462.626,60,'neutral',128,35,300),
  (3176,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-4505.58,0,111.335,60,'neutral',128,35,300),
  (3177,2,0,'object/mobile/dressed_dathomir_nightsister_initiate.iff',0,0,0,0,-4180.35,0,467.315,60,'neutral',128,35,300),
@@ -7625,7 +7625,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (3174,2,0,'object/mobi
  (3732,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-2088.39,0,3124.71,65,'neutral',128,35,180),
  (3733,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-2083.9,0,3074.54,65,'neutral',128,35,180),
  (3734,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-2234.81,0,3231.97,65,'neutral',128,35,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (3735,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-1666.1,0,2838.87,65,'neutral',128,35,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (3735,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-1666.1,0,2838.87,65,'neutral',128,35,180),
  (3736,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-2153.67,0,3049.86,65,'neutral',128,35,180),
  (3737,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-2051.49,0,2810.82,65,'neutral',128,35,180),
  (3738,2,0,'object/mobile/bull_rancor.iff',0,0,0,0,-2288.5,0,2818.24,65,'neutral',128,35,180),
@@ -8194,7 +8194,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (3735,2,0,'object/mobi
  (4301,3,5996352,'object/mobile/dressed_death_watch_silver.iff',0,0,0,0,-2.18177,-60,-172.48,178,'neutral',128,35,300),
  (4302,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-22.3651,-60.0316,-187.469,230,'neutral',128,1,180),
  (4303,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-28.9105,-59.865,-176.715,230,'neutral',128,1,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (4304,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-37.6703,-59.2413,-186.656,230,'neutral',128,1,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (4304,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-37.6703,-59.2413,-186.656,230,'neutral',128,1,180),
  (4305,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-42.0866,-60.1997,-165.522,230,'neutral',128,1,180),
  (4306,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-62.2239,-60.1115,-175.351,230,'neutral',128,1,180),
  (4307,3,5996352,'object/mobile/dressed_mand_bunker_crazed_miner.iff',0,0,0,0,-69.6748,-59.7157,-183.362,230,'neutral',128,1,180),
@@ -8697,7 +8697,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (4304,3,5996352,'objec
  (4804,5,6335651,'object/mobile/dark_trooper.iff',0,0,0,0,28.5469,-20,119.119,35,'neutral',128,0,180),
  (4805,5,6335649,'object/mobile/dressed_imperial_lieutenant_m.iff',0,0,0,0,71.3139,-12,82.7743,60,'neutral',128,0,180),
  (4806,5,6335657,'object/mobile/dressed_imperial_colonel_m.iff',0,0,0,0,-9.49691,-20,101.325,1,'neutral',128,0,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (4807,5,6335651,'object/mobile/dark_trooper.iff',0,0,0,0,15.8486,-20,120.754,35,'neutral',128,0,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (4807,5,6335651,'object/mobile/dark_trooper.iff',0,0,0,0,15.8486,-20,120.754,35,'neutral',128,0,180),
  (4808,5,6335651,'object/mobile/dark_trooper.iff',0,0,0,0,11.7203,-20,122.346,35,'neutral',128,0,180),
  (4809,5,6335651,'object/mobile/dark_trooper.iff',0,0,0,0,15.1597,-20,123.489,35,'neutral',128,0,180),
  (4810,5,6335643,'object/mobile/dressed_imperial_officer_m_2.iff',0,0,0,0,5.64265,-12,62.1227,15,'neutral',128,0,180),
@@ -9202,7 +9202,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (4807,5,6335651,'objec
  (5309,5,0,'object/mobile/dressed_commoner_tatooine_trandoshan_female_03.iff',0,-0.0787604,0,0.996894,1318.37,13,2669.4,15,'calm',264,0,60),
  (5310,5,0,'object/mobile/dressed_commoner_tatooine_rodian_female_04.iff',0,0.340126,0,0.94038,1324.21,13,2835.32,15,'calm',264,0,60),
  (5311,5,0,'object/mobile/dressed_commoner_tatooine_trandoshan_female_03.iff',0,-0.240665,0,0.970608,1300.18,13,2836.44,15,'calm',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (5312,5,0,'object/mobile/dressed_commoner_naboo_human_male_07.iff',0,1,0,0,1325.38,13,2668.21,15,'conversation',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (5312,5,0,'object/mobile/dressed_commoner_naboo_human_male_07.iff',0,1,0,0,1325.38,13,2668.21,15,'conversation',264,0,60),
  (5313,5,0,'object/mobile/3po_protocol_droid.iff',0,0.474327,0,0.880349,1396,13,2686,15,'neutral',264,0,60),
  (5314,5,0,'object/mobile/dressed_commoner_fat_zabrak_male_01.iff',0,0.887151,0,-0.46148,1405.78,13,2835.92,15,'calm',264,0,60),
  (5315,5,0,'object/mobile/dressed_stormtrooper_m.iff',0,0.728175,0,0.685391,1426.01,13,2807.48,15,'npc_imperial',264,0,60),
@@ -9694,7 +9694,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (5312,5,0,'object/mobi
  (5801,5,0,'object/mobile/dressed_rebel_lieutenant_colonel_rodian_male_01.iff',0,-0.702499,0,0.711685,4632.88,3.75,-4922.79,15,'calm',264,0,60),
  (5802,5,1717475,'object/mobile/dressed_commoner_naboo_human_male_02.iff',-5.8769e-09,0.99814,-3.45777e-08,0.0609676,-24,1.6,-4,15,'calm',264,0,60),
  (5803,5,1717474,'object/mobile/dressed_commoner_old_zabrak_male_01.iff',1.08352e-07,2.03503e-05,-2.205e-12,1,-14.17,1.6,-16.339,15,'conversation',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (5804,5,1717474,'object/mobile/dressed_commoner_tatooine_trandoshan_male_01.iff',3.38169e-12,1,-1.08381e-07,3.12019e-05,-14.17,1.6,-15.239,15,'conversation',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (5804,5,1717474,'object/mobile/dressed_commoner_tatooine_trandoshan_male_01.iff',3.38169e-12,1,-1.08381e-07,3.12019e-05,-14.17,1.6,-15.239,15,'conversation',264,0,60),
  (5805,5,1717473,'object/mobile/dressed_commoner_naboo_human_male_02.iff',7.40698e-08,-0.14957,6.22569e-08,0.988751,-4.92524,1.6,-11.167,15,'calm',264,0,60),
  (5806,5,1717470,'object/mobile/dressed_commoner_tatooine_nikto_male_04.iff',5.97729e-08,-8.70294e-05,5.20106e-12,1,21.7837,1.28309,-6.39962,15,'conversation',264,0,60),
  (5807,5,1717470,'object/mobile/dressed_entertainer_trainer_twk_male_01.iff',6.51724e-12,1,-5.97775e-08,0.000109034,21.7833,1.28309,-5.40241,15,'conversation',264,0,60),
@@ -10198,7 +10198,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (5804,5,1717474,'objec
  (6305,5,4295394,'object/mobile/veermok.iff',0,0,0,0,22.8066,-27.6296,-8.61728,9,'neutral',128,35,180),
  (6306,5,4295395,'object/mobile/veermok.iff',0,0,0,0,43.8358,-47.1767,-10.5634,13,'neutral',128,35,180),
  (6307,5,4295395,'object/mobile/veermok.iff',0,0,0,0,43.142,-47.063,-9.21997,13,'neutral',128,35,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (6308,5,0,'object/mobile/veermok.iff',0,0,0,0,5718.63,0,-1540.31,9,'neutral',128,35,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (6308,5,0,'object/mobile/veermok.iff',0,0,0,0,5718.63,0,-1540.31,9,'neutral',128,35,180),
  (6309,5,4295395,'object/mobile/veermok.iff',0,0,0,0,54.2333,-68.2449,-37.7192,13,'neutral',128,35,180),
  (6310,5,4295395,'object/mobile/veermok.iff',0,0,0,0,46.5483,-48.1294,-62.6541,13,'neutral',128,35,180),
  (6311,5,4295397,'object/mobile/veermok.iff',0,0,0,0,74.728,-75.281,-60.3768,15,'neutral',128,35,180),
@@ -10708,7 +10708,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (6308,5,0,'object/mobi
  (6815,7,0,'object/mobile/dressed_hoodlum_zabrak_female_01.iff',0,0.904556,0,0.426354,202.575,6,-2860.48,15,'calm',264,0,60),
  (6816,7,0,'object/mobile/dressed_criminal_thug_human_female_01.iff',0,-0.38552,0,0.9227,163.779,6,-3016.95,15,'calm',264,0,60),
  (6817,7,0,'object/mobile/dressed_goon_twk_female_01.iff',0,0.0191444,0,0.999817,161.606,6,-3007.52,15,'calm',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (6818,7,0,'object/mobile/dressed_fed_dub_investigator_twk_female_01.iff',0,-0.695334,0,0.718687,376.803,6,-2923.73,15,'calm',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (6818,7,0,'object/mobile/dressed_fed_dub_investigator_twk_female_01.iff',0,-0.695334,0,0.718687,376.803,6,-2923.73,15,'calm',264,0,60),
  (6819,7,0,'object/mobile/dressed_fed_dub_patrolman_human_female_01.iff',0,0.720629,0,-0.69332,377.805,6,-2923.72,15,'calm',264,0,60),
  (6820,7,0,'object/mobile/dressed_commoner_naboo_human_female_02.iff',0,-0.573366,0,0.819299,127.295,6,-2995.11,15,'calm',264,0,60),
  (6821,7,0,'object/mobile/dressed_commoner_tatooine_trandoshan_female_03.iff',0,-0.594976,0,0.803743,353.709,6,-3051.79,15,'calm',264,0,60),
@@ -11191,7 +11191,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (6818,7,0,'object/mobi
  (7298,7,0,'object/mobile/minor_sludge_panther.iff',0,0,0,0,4200.91,0,990.732,16,'neutral',128,35,180),
  (7299,7,0,'object/mobile/minor_sludge_panther.iff',0,0,0,0,4290.11,0,995.686,16,'neutral',128,35,180),
  (7300,7,0,'object/mobile/minor_sludge_panther.iff',0,0,0,0,4297.61,0,996.008,16,'neutral',128,35,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (7301,7,0,'object/mobile/greater_sludge_panther.iff',0,0,0,0,4220.46,0,1025.17,25,'neutral',128,33,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (7301,7,0,'object/mobile/greater_sludge_panther.iff',0,0,0,0,4220.46,0,1025.17,25,'neutral',128,33,180),
  (7302,7,0,'object/mobile/minor_sludge_panther.iff',0,0,0,0,4287.81,0,1003.91,16,'neutral',128,35,180),
  (7303,7,0,'object/mobile/dressed_aakuan_guardian_trandoshan_female_01.iff',0,0,0,0,5942.39,0,4641.45,25,'neutral',128,35,300),
  (7304,7,0,'object/mobile/dressed_aakuan_guardian_trandoshan_female_01.iff',0,0,0,0,5932.09,0,4647.58,25,'neutral',128,35,300),
@@ -11746,7 +11746,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (7301,7,0,'object/mobi
  (7853,8,0,'object/mobile/worrt.iff',0,0,0,0,3139.6,0,-4540.75,6,'neutral',128,1,180),
  (7854,8,0,'object/mobile/worrt.iff',0,0,0,0,3146.4,0,-4548.37,6,'neutral',128,1,180),
  (7855,8,0,'object/mobile/worrt.iff',0,0,0,0,3130.51,0,-4527.22,6,'neutral',128,1,180);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (7856,8,0,'object/mobile/greater_desert_womp_rat.iff',0,0,0,0,3795.95,0,-4661.36,10,'neutral',128,1,180),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (7856,8,0,'object/mobile/greater_desert_womp_rat.iff',0,0,0,0,3795.95,0,-4661.36,10,'neutral',128,1,180),
  (7857,8,0,'object/mobile/greater_desert_womp_rat.iff',0,0,0,0,3791.88,0,-4663.61,10,'neutral',128,1,180),
  (7858,8,0,'object/mobile/greater_desert_womp_rat.iff',0,0,0,0,3664.3,0,-4610.14,10,'neutral',128,1,180),
  (7859,8,0,'object/mobile/greater_desert_womp_rat.iff',0,0,0,0,3683.69,0,-4604.92,10,'neutral',128,1,180),
@@ -12263,7 +12263,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (7856,8,0,'object/mobi
  (8370,8,0,'object/mobile/dressed_swamp_trooper_m.iff',0,0.994818,0,-0.101669,1564.88,11,3232.79,15,'npc_imperial',264,0,60),
  (8371,8,0,'object/mobile/dressed_stormtrooper_sand_trooper_m.iff',0,0.95882,0,0.284015,1663,7,3109.8,15,'neutral',264,0,60),
  (8372,8,0,'object/mobile/dressed_swamp_trooper_m.iff',0,0.994817,0,-0.10168,1565.23,11,3234.47,15,'npc_imperial',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (8373,8,0,'object/mobile/dressed_stormtrooper_sand_trooper_m.iff',0,0.994818,0,-0.101676,1564.91,11,3232.96,15,'npc_imperial',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (8373,8,0,'object/mobile/dressed_stormtrooper_sand_trooper_m.iff',0,0.994818,0,-0.101676,1564.91,11,3232.96,15,'npc_imperial',264,0,60),
  (8374,8,0,'object/mobile/dressed_imperial_officer_m.iff',0,-0.0260164,0,0.999662,1566.7,11,3230.16,15,'npc_imperial',264,0,60),
  (8375,8,0,'object/mobile/dressed_swamp_trooper_m.iff',0,0.366188,0,0.930541,1571.56,11,3247.83,15,'npc_imperial',264,0,60),
  (8376,8,0,'object/mobile/dressed_swamp_trooper_m.iff',0,0.999996,0,-0.00288538,1560.03,11,3235.14,15,'npc_imperial',264,0,60),
@@ -12815,7 +12815,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (8373,8,0,'object/mobi
  (8922,8,1261023,'object/mobile/dressed_commoner_naboo_moncal_male_01.iff',0,0.402978,0,0.915209,-24,1.6,-4,15,'calm',264,0,60),
  (8923,8,1261017,'object/mobile/dressed_artisan_trainer_01.iff',-3.79299e-07,4.61288e-05,1.74966e-11,1,7.41432,1.00001,-6.90893,15,'conversation',264,0,60),
  (8924,8,1261017,'object/mobile/dressed_eisley_officer_human_male_01.iff',1.19554e-11,1,-4.87697e-07,2.45139e-05,7.41432,1.00001,-5.80893,15,'conversation',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (8925,8,1261018,'object/mobile/dressed_artisan_trainer_01.iff',-1.08361e-07,-2.51833e-05,-2.7289e-12,1,20.2715,1.28309,-1.14578,15,'conversation',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (8925,8,1261018,'object/mobile/dressed_artisan_trainer_01.iff',-1.08361e-07,-2.51833e-05,-2.7289e-12,1,20.2715,1.28309,-1.14578,15,'conversation',264,0,60),
  (8926,8,1261018,'object/mobile/dressed_noble_fat_human_female_02.iff',-6.48271e-12,1,1.0838e-07,5.98144e-05,20.2715,1.28309,-0.0457823,15,'conversation',264,0,60),
  (8927,8,1261018,'object/mobile/dressed_criminal_thug_rodian_male_01.iff',-2.93281e-08,0.923861,7.07945e-08,0.382729,19.1715,1.28309,-0.0457823,15,'conversation',264,0,60),
  (8928,8,1261018,'object/mobile/dressed_hutt_medic2_twilek_male_01.iff',0,0.857263,0,-0.514878,20.2668,1.56616,15.1105,15,'calm',264,0,60),
@@ -13371,7 +13371,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (8925,8,1261018,'objec
  (9478,9,3035378,'object/mobile/dressed_noble_old_twk_female_02.iff',1.69227e-12,1,1.89635e-07,-8.92381e-06,-0.385261,0.625,-1.80517,15,'conversation',264,0,60),
  (9479,9,3035378,'object/mobile/dressed_commoner_tatooine_aqualish_female_06.iff',-4.39837e-08,0.923889,1.06194e-07,0.38266,-1.48526,0.625,-1.80517,15,'conversation',264,0,60),
  (9480,9,3035376,'object/mobile/space_rebel_tier3_aqzow.iff',0,0.247404,0,0.968912,1.81813,0.624999,1.50685,15,'neutral',264,0,60);
-INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (9481,9,0,'object/mobile/dressed_commoner_tatooine_bith_female_04.iff',0,0.995104,0,-0.0988351,-256.417,35,4892.18,15,'calm',264,0,60),
+INSERT INTO `SWGDarkLegend`.`world_server_static_spawns` VALUES  (9481,9,0,'object/mobile/dressed_commoner_tatooine_bith_female_04.iff',0,0.995104,0,-0.0988351,-256.417,35,4892.18,15,'calm',264,0,60),
  (9482,9,0,'object/mobile/dressed_commoner_tatooine_rodian_male_01.iff',0,-0.165445,0,0.986219,-258.202,35,4837.59,15,'calm',264,0,60),
  (9483,9,0,'object/mobile/dressed_commoner_naboo_human_male_04.iff',0,0.920434,0,-0.390899,-271.765,35,4901.25,15,'calm',264,0,60),
  (9484,9,0,'object/mobile/dressed_commoner_naboo_human_female_04.iff',0,0.863428,0,0.504472,-261.35,35,4848.72,15,'calm',264,0,60),
@@ -13543,7 +13543,7 @@ INSERT INTO `swgemu`.`world_server_static_spawns` VALUES  (9481,9,0,'object/mobi
 UNLOCK TABLES;
 /*!40000 ALTER TABLE `world_server_static_spawns` ENABLE KEYS */;
 
-CREATE TABLE  `swgemu`.`account_ips` (
+CREATE TABLE  `SWGDarkLegend`.`account_ips` (
   `idaccount_ips` int(11) NOT NULL AUTO_INCREMENT,
   `account_id` int(10) unsigned NOT NULL,
   `ip` varchar(45) NOT NULL,
@@ -13552,7 +13552,7 @@ CREATE TABLE  `swgemu`.`account_ips` (
   PRIMARY KEY (`idaccount_ips`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1099 DEFAULT CHARSET=latin1;
 
-ALTER TABLE `swgemu`.`deleted_characters` ADD COLUMN `db_deleted` BOOLEAN  NOT NULL DEFAULT 0 AFTER `creation_date`;
+ALTER TABLE `SWGDarkLegend`.`deleted_characters` ADD COLUMN `db_deleted` BOOLEAN  NOT NULL DEFAULT 0 AFTER `creation_date`;
 
 -- Newer versions require these to have defaults
 ALTER TABLE `characters` MODIFY COLUMN `creation_date` timestamp DEFAULT CURRENT_TIMESTAMP;

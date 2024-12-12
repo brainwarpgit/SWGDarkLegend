@@ -101,6 +101,7 @@
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/objects/creature/events/BurstRunNotifyAvailableEvent.h"
+#include "server/zone/objects/creature/events/BurstRunFinishedEvent.h"
 #include "server/zone/objects/creature/ai/DroidObject.h"
 #include "server/zone/objects/tangible/components/droid/DroidPlaybackModuleDataComponent.h"
 #include "server/zone/objects/player/badges/Badge.h"
@@ -117,6 +118,7 @@
 #include "server/zone/packets/object/transform/Transform.h"
 
 #include "server/zone/managers/statistics/StatisticsManager.h"
+#include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl, bool trackOnlineUsers) : Logger("PlayerManager") {
 	playerLoggerFilename = "log/player.log";
@@ -1780,10 +1782,10 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 	ManagedReference<SceneObject*> preDesignatedFacility = server->getObject(preDesignatedFacilityOid);
 
 	if (preDesignatedFacility == nullptr || preDesignatedFacility != cloner) {
-		player->addWounds(CreatureAttribute::HEALTH, 100, true, false);
-		player->addWounds(CreatureAttribute::ACTION, 100, true, false);
-		player->addWounds(CreatureAttribute::MIND, 100, true, false);
-		player->addShockWounds(100, true);
+		player->addWounds(CreatureAttribute::HEALTH, globalVariables::playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::ACTION, globalVariables::playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::MIND, globalVariables::playerWoundsonDeath, true, false);
+		player->addShockWounds(globalVariables::playerWoundsonDeath, true);
 	}
 
 	if (ConfigManager::instance()->useCovertOvertSystem()) {
@@ -1850,12 +1852,12 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 
 
 	// Jedi experience loss.
-	if (ghost->getJediState() >= 2) {
+	if (ghost->getJediState() >= 2 && !globalVariables::playerJediXPLossEnabled) {
 		int jediXpCap = ghost->getXpCap("jedi_general");
-		int xpLoss = (int)(jediXpCap * -0.05);
+		int xpLoss = (int)(jediXpCap * -0.004);
 		int curExp = ghost->getExperience("jedi_general");
 
-		int negXpCap = -10000000; // Cap on negative jedi experience
+		int negXpCap = globalVariables::playerJediNegativeXPCap; // Cap on negative jedi experience
 
 		if ((curExp + xpLoss) < negXpCap)
 			xpLoss = negXpCap - curExp;
@@ -1942,14 +1944,17 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 			}
 		}
 
-		if (ai != nullptr)
+		if (ai != nullptr) {
 			baseXp = ai->getBaseXp();
-
+			if (ai->getMissionRandomAttack() > 0) baseXp *= ai->getNewLevel();
+		}
 	} else {
 		ManagedReference<AiAgent*> ai = cast<AiAgent*>(destructedObject);
 
-		if (ai != nullptr)
+		if (ai != nullptr) {
 			baseXp = ai->getBaseXp();
+			if (ai->getMissionRandomAttack() > 0) baseXp *= ai->getNewLevel();
+		}
 	}
 
 	Vector<uint64> playerList;
@@ -2057,23 +2062,28 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 			}
 
 			// TODO: Find a more correct CH xp formula
-			float levelRatio = (float)destructedObject->getLevel() / (float)attacker->getLevel();
+			float xpAmount = 0;
+			if (globalVariables::playerCHXPModEnabled == false) {
+				float levelRatio = (float)destructedObject->getLevel() / (float)attacker->getLevel();
 
-			float xpAmount = levelRatio * 500.f;
+				xpAmount = levelRatio * 500.f;
 
-			if (levelRatio <= 0.5) {
-				xpAmount = 1;
+				if (levelRatio <= 0.5) {
+					xpAmount = 1;
+				} else {
+					xpAmount = Math::min(xpAmount, (float)attacker->getLevel() * 50.f);
+					xpAmount /= totalPets;
+				}
 			} else {
-				xpAmount = Math::min(xpAmount, (float)attacker->getLevel() * 50.f);
-				xpAmount /= totalPets;
-
-				if (winningFaction != Factions::FACTIONNEUTRAL && winningFaction == attacker->getFaction())
-					xpAmount *= gcwBonus;
+				xpAmount = baseXp;
 			}
 
 			trx.addState("combatTotalPets", totalPets);
 
 			awardExperience(owner, "creaturehandler", xpAmount);
+			if (globalVariables::playerCHCombatXPEnabled == true) {
+				awardExperience(owner, "combat_general", xpAmount);
+			}
 		} else if (attacker->isPlayerCreature()) {
 			if (!(attacker->getZone() == zone && destructedObject->isInRangeZoneless(attacker, 80))) {
 				continue;
@@ -2114,11 +2124,15 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 				float xpAmount = baseXp;
 				int playerLevel = calculatePlayerLevel(attackerCreo, xpType);
 
-				xpAmount *= (float) damage / totalDamage;
+				if (globalVariables::playerAwardXPWeaponSplitEnabled == false) {
+					xpAmount *= (float) damage / totalDamage;
+				}
 
 				//Cap xp based on level
-				xpAmount = Math::min(xpAmount, playerLevel * 300.f);
-
+				if (globalVariables::playerXPBasedOnLevelEnabled == true){
+					xpAmount = Math::min(xpAmount, playerLevel * 300.f);
+				}
+				
 				//Apply group bonus if in group
 				if (group != nullptr)
 					xpAmount *= groupExpMultiplier;
@@ -2127,10 +2141,10 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 					xpAmount *= gcwBonus;
 
 				// Jedi experience doesn't count towards combat experience, and is earned at 20% the rate of normal experience
-				if (xpType != "jedi_general")
-					combatXp += xpAmount;
+				if (globalVariables::playerJediAwardedCombatXPEnabled == true && xpType == "jedi_general")
+					combatXp += xpAmount * globalVariables::playerJediXPMultiplier;
 				else
-					xpAmount *= 0.2f;
+					combatXp += xpAmount;
 
 				if (xpType == "dotDMG") { // Prevents XP generated from DoTs from applying to the equiped weapon, but still counts towards combat XP
 					continue;
@@ -2138,9 +2152,14 @@ void PlayerManagerImplementation::disseminateExperience(TangibleObject* destruct
 
 				//Award individual expType
 				awardExperience(attackerCreo, xpType, xpAmount);
+				if (attackerCreo->hasSkill("force_title_jedi_rank_03") && xpType == "jedi_general" && globalVariables::playerJediPvEForceRankXPEnabled == true) {
+					xpAmount *= globalVariables::playerJediForceRankXPMultiplier * globalVariables::playerJediXPMultiplier;
+					if (xpAmount < 1) xpAmount = 1;
+					awardExperience(attackerCreo, "force_rank_xp", xpAmount);
+				}	
 			}
 
-			awardExperience(attackerCreo, "combat_general", combatXp, true, 0.1f);
+			awardExperience(attackerCreo, "combat_general", combatXp, true, 1);
 
 
 			//Check if the group leader is a squad leader
@@ -2578,6 +2597,45 @@ int PlayerManagerImplementation::awardExperience(CreatureObject* player, const S
 	if (player->hasBuff(BuffCRC::FOOD_XP_INCREASE) && !player->containsActiveSession(SessionFacadeType::CRAFTING))
 		buffMultiplier += player->getSkillModFromBuffs("xp_increase") / 100.f;
 
+	if (xpType == "bio_engineer_dna_harvesting") amount *= globalVariables::playerDNASamplingXPMultiplier;
+	if (xpType == "bountyhunter") amount *= globalVariables::playerBountyHunterXPMultiplier;
+	if (xpType == "camp") amount *= globalVariables::playerWildernessSurvivalXPMultiplier;
+	if (xpType == "combat_general")	amount *= globalVariables::playerCombatXPMultiplier;
+	if (xpType == "combat_meleespecialize_onehand") amount *= globalVariables::playerOnehandedWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_polearm") amount *= globalVariables::playerPolearmWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_twohand") amount *= globalVariables::playerTwohandedWeaponsXPMultiplier;
+	if (xpType == "combat_meleespecialize_unarmed") amount *= globalVariables::playerUnarmedCombatXPMultiplier;
+	if (xpType == "combat_rangedspecialize_carbine") amount *= globalVariables::playerCarbineWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_heavy") amount *= globalVariables::playerHeavyWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_pistol") amount *= globalVariables::playerPistolWeaponsXPMultiplier;
+	if (xpType == "combat_rangedspecialize_rifle") amount *= globalVariables::playerRifleWeaponsXPMultiplier;
+	if (xpType == "crafting_bio_engineer_creature") amount *= globalVariables::playerBioEngineerCraftingXPMultiplier;
+	if (xpType == "crafting_clothing_armor") amount *= globalVariables::playerArmorCraftingXPMultiplier;
+	if (xpType == "crafting_clothing_general") amount *= globalVariables::playerTailoringXPMultiplier;
+	if (xpType == "crafting_droid_general") amount *= globalVariables::playerDroidCraftingXPMultiplier;
+	if (xpType == "crafting_food_general") amount *= globalVariables::playerFoodCraftingXPMultiplier;
+	if (xpType == "crafting_general") amount *= globalVariables::playerGeneralCraftingXPMultiplier;
+	if (xpType == "crafting_medicine_general") amount *= globalVariables::playerMedicineCraftingXPMultiplier;
+	if (xpType == "crafting_spice") amount *= globalVariables::playerSpiceCraftingXPMultiplier;
+	if (xpType == "crafting_structure_general") amount *= globalVariables::playerStructureCraftingXPMultiplier;
+	if (xpType == "crafting_weapons_general") amount *= globalVariables::playerWeaponCraftingXPMultiplier;
+	if (xpType == "creaturehandler") amount *= globalVariables::playerCreatureHandlingXPMultiplier;
+	if (xpType == "dance") amount *= globalVariables::playerDancingXPMultiplier;
+	if (xpType == "entertainer_healing") amount *= globalVariables::playerEntertainerHealingXPMultiplier;
+	if (xpType == "imagedesigner") amount *= globalVariables::playerImageDesignerXPMultiplier;
+	if (xpType == "jedi_general") amount *= globalVariables::playerJediXPMultiplier;
+	if (xpType == "medical") amount *= globalVariables::playerMedicalXPMultiplier;
+	if (xpType == "merchant") amount *= globalVariables::playerMerchantXPMultiplier;
+	if (xpType == "music") amount *= globalVariables::playerMusicianXPMultiplier;
+	if (xpType == "political") amount *= globalVariables::playerPoliticalXPMultiplier;
+	if (xpType == "resource_harvesting_inorganic") amount *= globalVariables::playerSurveyingXPMultiplier;
+	if (xpType == "scout") amount *= globalVariables::playerScoutingXPMultiplier;
+	if (xpType == "shipwright") amount *= globalVariables::playerShipwrightXPMultiplier;
+	if (xpType == "slicing") amount *= globalVariables::playerSlicingXPMultiplier;
+	if (xpType == "space_combat_general") amount *= globalVariables::playerStarshipCombatXPMultiplier;
+	if (xpType == "squadleader") amount *= globalVariables::playerSquadLeadershipXPMultiplier;
+	if (xpType == "trapping") amount *= globalVariables::playerTrappingXPMultiplier;
+
 	int xp = 0;
 
 	trx.addState("applyModifiers", applyModifiers);
@@ -2624,6 +2682,12 @@ void PlayerManagerImplementation::sendLoginMessage(CreatureObject* creature) {
 
 	ChatSystemMessage* csm = new ChatSystemMessage(UnicodeString(motd), ChatSystemMessage::DISPLAY_CHATONLY);
 	creature->sendMessage(csm);
+		
+	if (globalVariables::playerPlayersOnlineAtLoginEnabled) {
+		ChatSystemMessage* strOnline = new ChatSystemMessage(UnicodeString("There are currently " + std::to_string(creature->getZoneServer()->getConnectionCount()) + " player(s) online."), ChatSystemMessage::DISPLAY_CHATONLY);
+		creature->sendMessage(strOnline);
+	}
+		
 }
 
 void PlayerManagerImplementation::resendLoginMessageToAll() {
@@ -3252,7 +3316,7 @@ int PlayerManagerImplementation::healEnhance(CreatureObject* enhancer, CreatureO
 	uint32 buffdiff = buffvalue;
 
 	//If a stronger buff already exists, then we don't buff the patient.
-	if (patient->hasBuff(buffcrc)) {
+	if (patient->hasBuff(buffcrc) && globalVariables::playerOverwriteBuffEnabled == false) {
 		Buff* buff = patient->getBuff(buffcrc);
 
 		if (buff != nullptr) {
@@ -3945,6 +4009,7 @@ void PlayerManagerImplementation::updateSwimmingState(CreatureObject* player, fl
 }
 
 bool PlayerManagerImplementation::checkPlayerSpeedTest(CreatureObject* player, SceneObject* parent, float parsedSpeed, ValidatedPosition& teleportPosition, const Vector3& newWorldPosition, float errorMultiplier) {
+	return 0;	
 	float allowedSpeedMod = player->getSpeedMultiplierMod();
 	float allowedSpeedBase = player->getRunSpeed();
 
@@ -4300,10 +4365,18 @@ void PlayerManagerImplementation::addInsurableItemsRecursive(SceneObject* obj, S
 		if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 			continue;
 
-		if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
-			items->put(item);
-		} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
-			items->put(item);
+		if (globalVariables::playerInsureWeaponsEnabled == false) {		
+			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
+				items->put(item);
+			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
+				items->put(item);
+			}
+		} else {
+			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject())) {
+				items->put(item);
+			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject()) && !onlyInsurable) {
+				items->put(item);
+			}
 		}
 
 		if (object->isContainerObject())
@@ -4334,10 +4407,18 @@ SortedVector<ManagedReference<SceneObject*> > PlayerManagerImplementation::getIn
 			if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 				continue;
 
-			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
-				insurableItems.put(item);
-			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
-				insurableItems.put(item);
+			if (globalVariables::playerInsureWeaponsEnabled == false) {		
+				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
+					insurableItems.put(item);
+				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
+					insurableItems.put(item);
+				}
+			} else {
+				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject())) {
+					insurableItems.put(item);
+				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject() || item->isWeaponObject()) && !onlyInsurable) {
+					insurableItems.put(item);
+				}
 			}
 		}
 
@@ -6328,6 +6409,7 @@ bool PlayerManagerImplementation::shouldDeleteCharacter(uint64 characterID, int 
 }
 
 bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamModifier, float cooldownModifier) {
+	PlayerObject* ghost = player->getPlayerObject();
 	if (player == nullptr)
 		return false;
 
@@ -6337,7 +6419,21 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	}
 
 	if (player->hasBuff(STRING_HASHCODE("gallop")) || player->hasBuff(STRING_HASHCODE("burstrun")) || player->hasBuff(STRING_HASHCODE("retreat"))) {
-		player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
+		if (globalVariables::playerBurstRunToggleEnabled) {
+			player->removeBuff(STRING_HASHCODE("burstrun"));
+			player->removePendingTask("burst_run_finished");
+		} else {
+			player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
+		}
+		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+				if (pet != nullptr) {
+					pet->setRunSpeed(pet->getRunSpeed() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+				}
+			}
+		}	
 		return false;
 	}
 
@@ -6361,15 +6457,20 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		return false;
 	}
 
-	if (!player->checkCooldownRecovery("burstrun")) {
+	if (!player->checkCooldownRecovery("burstrun") && !globalVariables::playerBurstRunToggleEnabled && !ghost->isAdmin()) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); //You are too tired to Burst Run.
 		return false;
 	}
 
 	uint32 crc = STRING_HASHCODE("burstrun");
-	float hamCost = 100.0f;
-	float duration = 30;
-	float cooldown = 300;
+	float hamCost = 0;
+	if (globalVariables::playerBurstRunToggleEnabled) {
+		hamCost = globalVariables::playerBurstRunHamCostPercent / 100;
+	} else {
+		hamCost = globalVariables::playerBurstRunHamCost;
+	}
+	float duration = globalVariables::playerBurstRunDuration;
+	float cooldown = globalVariables::playerBurstRunCoolDownTimer;
 
 	float burstRunMod = (float) player->getSkillMod("burst_run");
 	hamModifier += (burstRunMod / 100.f);
@@ -6380,9 +6481,20 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	float hamReduction = 1.f - hamModifier;
 
-	int healthCost = (int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
-	int actionCost = (int) (player->calculateCostAdjustment(CreatureAttribute::QUICKNESS, hamCost) * hamReduction);
-	int mindCost = (int) (player->calculateCostAdjustment(CreatureAttribute::FOCUS, hamCost) * hamReduction);
+	float healthCost = 0;
+	float actionCost = 0;
+	float mindCost = 0;
+	
+	if (globalVariables::playerBurstRunToggleEnabled) {
+		healthCost = player->getMaxHAM(CreatureAttribute::HEALTH) * (globalVariables::playerGallopDamagePercent / 100);
+		actionCost = player->getMaxHAM(CreatureAttribute::ACTION) * (globalVariables::playerGallopDamagePercent / 100);
+		mindCost = player->getMaxHAM(CreatureAttribute::MIND) * (globalVariables::playerGallopDamagePercent / 100);
+			
+	} else {
+		healthCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
+		actionCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::QUICKNESS, hamCost) * hamReduction);
+		mindCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::FOCUS, hamCost) * hamReduction);
+	}
 
 	if (player->getHAM(CreatureAttribute::HEALTH) <= healthCost || player->getHAM(CreatureAttribute::ACTION) <= actionCost || player->getHAM(CreatureAttribute::MIND) <= mindCost) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); // You are too tired to Burst Run.
@@ -6409,8 +6521,8 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	Locker locker(buff);
 
-	buff->setSpeedMultiplierMod(1.822f);
-	buff->setAccelerationMultiplierMod(1.822f);
+	buff->setSpeedMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+	buff->setAccelerationMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
 
 	if (cooldownModifier == 0.f)
 		buff->setStartMessage(startStringId);
@@ -6427,11 +6539,25 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	player->addBuff(buff);
 
+	if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		for (int i = 0; i < ghost->getActivePetsSize(); i++) {
+			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
+			if (pet != nullptr) {
+				pet->setRunSpeed(pet->getRunSpeed() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+				pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+			}
+		}
+	}
+	
 	player->updateCooldownTimer("burstrun", (newCooldown + duration) * 1000);
 
-	Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
-	player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
+	Reference<BurstRunFinishedEvent*> finishTask = new BurstRunFinishedEvent(player);
+	player->addPendingTask("burst_run_finished", finishTask, (duration * 1000));
 
+	if (!globalVariables::playerBurstRunToggleEnabled) {
+		Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
+		player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
+	}
 	return true;
 }
 
@@ -6471,6 +6597,62 @@ void PlayerManagerImplementation::enhanceCharacter(CreatureObject* player) {
 
 	if (message && player->isPlayerCreature())
 		player->sendSystemMessage("An unknown force strengthens you for battles yet to come.");
+}
+
+void PlayerManagerImplementation::enhanceSelfDance(CreatureObject* player) {
+	if (player == nullptr)
+		return;
+
+	bool message = true;
+
+	float skillmod = (player->getSkillMod("healing_dance_mind") * .005 );
+
+	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
+	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
+	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
+
+	int selfDuration = (120.0f + (10.0f / 60.0f));
+	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	}
+	
+	message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
+	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+		message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
+		message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
+	}
+
+	if (message && player->isPlayerCreature())
+		player->sendSystemMessage("You receive Mind buffs.");
+
+}
+
+void PlayerManagerImplementation::enhanceSelfMusic(CreatureObject* player) {
+	if (player == nullptr)
+        	return;
+
+	bool message = true;
+
+	float skillmod = (player->getSkillMod("healing_music_mind") * .005);
+
+	int selfStrength = (player->getBaseHAM(CreatureAttribute::MIND) * skillmod);
+	int selfStrengthFocus = (player->getBaseHAM(CreatureAttribute::FOCUS) * skillmod);
+	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
+
+	int selfDuration = (120.0f + (10.0f / 60.0f));
+	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	}
+	
+	message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
+	message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
+	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+		message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
+	}
+
+	if (message && player->isPlayerCreature())
+		player->sendSystemMessage("You receive Mind buffs.");
+
 }
 
 void PlayerManagerImplementation::sendAdminJediList(CreatureObject* player) {

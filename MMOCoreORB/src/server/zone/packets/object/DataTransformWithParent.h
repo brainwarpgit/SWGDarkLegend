@@ -354,7 +354,7 @@ public:
 					}
 				}
 			} else {
-				const float covDist = newRootParent->getOutOfRangeDistance();
+				const float covDist = globalVariables::serverDrawDistance;
 				const float sqrCovDist = covDist * covDist;
 
 				// Use the object out of range distance

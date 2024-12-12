@@ -189,7 +189,7 @@ class LootManager extends ManagedService implements Logger {
 	private native void addRandomDots(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 
 	@local
-	private native void addStaticDots(TangibleObject object, final LootItemTemplate templateObject, int level);
+	private native void addStaticDots(TangibleObject object, final LootItemTemplate templateObject, int level, float excMod, int creatureDifficulty, int luckSkill);
 
 	@local
 	private native void addConditionDamage(TangibleObject loot);
