@@ -11,6 +11,7 @@
 #include "templates/tangible/SharedWeaponObjectTemplate.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
+#include "server/zone/managers/variables/equipableVariables.h"
 #include "server/globalVariables.h"
 
 void ArmorObjectImplementation::initializeTransientMembers() {
@@ -298,15 +299,15 @@ float ArmorObjectImplementation::getTypeValue(int type, float value) const {
 		newValue = value;
 	else if (isSpecial(type)) {
 		newValue = specialProtection + value;
-		if (newValue > globalVariables::playerMaxArmorUnSliced) {
-			newValue = globalVariables::playerMaxArmorUnSliced;
+		if (newValue > equipableVars.equipableArmorMaxArmorUnSliced) {
+			newValue = equipableVars.equipableArmorMaxArmorUnSliced;
 		}
 	} else {
 		newValue = baseProtection + value;
 		newValue *= effectivenessSlice;
 		if (sliced && effectivenessSlice > 1) {
-			if(newValue > globalVariables::playerMaxArmorSliced)
-				newValue = globalVariables::playerMaxArmorSliced;
+			if(newValue > equipableVars.equipableArmorMaxArmorSliced)
+				newValue = equipableVars.equipableArmorMaxArmorSliced;
 		} else {
 			if (type & SharedWeaponObjectTemplate::KINETIC) {
 				if (newValue > craftingVars.craftingKineticMaxResists) newValue = craftingVars.craftingKineticMaxResists;
@@ -335,8 +336,8 @@ float ArmorObjectImplementation::getTypeValue(int type, float value) const {
 			if (type & SharedWeaponObjectTemplate::LIGHTSABER) {
 				if (newValue > craftingVars.craftingLightsaberMaxResists) newValue = craftingVars.craftingLightsaberMaxResists;
 			}
-			if(newValue > globalVariables::playerMaxArmorUnSliced)
-				newValue = globalVariables::playerMaxArmorUnSliced;
+			if(newValue > equipableVars.equipableArmorMaxArmorUnSliced)
+				newValue = equipableVars.equipableArmorMaxArmorUnSliced;
 		}
 	}
 	return newValue;

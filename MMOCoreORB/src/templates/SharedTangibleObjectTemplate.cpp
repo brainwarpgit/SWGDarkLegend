@@ -9,7 +9,8 @@
 #include "templates/manager/TemplateManager.h"
 #include "templates/params/PaletteColorCustomizationVariables.h"
 #include "templates/params/RangedIntCustomizationVariables.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/equipableVariables.h"
 
 SharedTangibleObjectTemplate::SharedTangibleObjectTemplate() {
 	numberExperimentalProperties = new Vector<short>();
@@ -126,7 +127,7 @@ void SharedTangibleObjectTemplate::parseVariableData(const String& varName, LuaO
 		insurable = Lua::getBooleanParameter(state);
 	} else if (varName == "jediRobe") {
 		jediRobe = Lua::getBooleanParameter(state);
-	} else if (varName == "faction" && globalVariables::wearablesFactionEnabled == true) {
+	} else if (varName == "faction" && equipableVars.equipableWearablesFactionEnabled) {
 		String factionString = Lua::getStringParameter(state);
 		faction = factionString.toLowerCase().hashCode();
 		//info("FACTION: " + factionString + " " + std::to_string(faction) + " " + std::to_string(faction), true);	
@@ -141,15 +142,15 @@ void SharedTangibleObjectTemplate::parseVariableData(const String& varName, LuaO
 
 		Lua* lua2 = new Lua();
 		lua2->init();			
-		lua2->runFile("scripts/managers/global_variables.lua");
-		LuaObject luaObjectWearables = lua2->getGlobalObject("wearablesAllPlayerRaces");
+		lua2->runFile("scripts/managers/variables/equipable_variables.lua");
+		LuaObject luaObjectWearables = lua2->getGlobalObject("equipableWearablesAllPlayerRaces");
 		
 		// Inherited lists need to be tossed if a new list is about to be created
 		if (playerRaces->size() != 0) {
 			playerRaces->removeAll();
 		}
 
-		if (globalVariables::wearablesAllPlayerRacesEnabled == true && luaObjectWearables.isValidTable()) {
+		if (equipableVars.equipableWearablesAllPlayerRacesEnabled && luaObjectWearables.isValidTable()) {
 			if (races.getTableSize() != 0) {
 				//info("WEARABLES: Beginning Table Size = " + std::to_string(races.getTableSize()),true);
 				for (int i = 1; i <= luaObjectWearables.getTableSize(); ++i) {

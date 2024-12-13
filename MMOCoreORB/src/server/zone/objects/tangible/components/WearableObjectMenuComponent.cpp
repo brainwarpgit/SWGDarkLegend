@@ -20,6 +20,8 @@
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/player/sui/callbacks/AttachmentSplitterSuiCallback.h"
 #include "server/zone/objects/player/sui/callbacks/WearableAttachmentSplitterSuiCallback.h"
+
+#include "server/zone/managers/variables/equipableVariables.h"
 #include "server/globalVariables.h"
 
 void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
@@ -38,7 +40,7 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	WearableObject* wearable = cast<WearableObject*>( sceneObject);
 		
 	if (wearable != nullptr) {
-		if ((sceneObject->isArmorObject() || sceneObject->isWearableObject()) && !wearable->isEquipped() && !player->isInCombat() && globalVariables::playerChangeWearableColorsEnabled == true) {
+		if ((sceneObject->isArmorObject() || sceneObject->isWearableObject()) && !wearable->isEquipped() && !player->isInCombat() && equipableVars.equipableWearablesChangeWearableColorsEnabled) {
 			String appearanceFilename = sceneObject->getObjectTemplate()->getAppearanceFilename();
 			VectorMap<String, Reference<CustomizationVariable*> > variables;
 			AssetCustomizationManagerTemplate::instance()->getCustomizationVariables(appearanceFilename.hashCode(), variables, false);

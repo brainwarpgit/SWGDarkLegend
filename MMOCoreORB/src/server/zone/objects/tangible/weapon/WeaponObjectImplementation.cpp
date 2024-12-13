@@ -22,6 +22,7 @@
 #include "server/chat/ChatManager.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
+#include "server/zone/managers/variables/equipableVariables.h"
 #include "server/globalVariables.h"
 
 void WeaponObjectImplementation::initializeTransientMembers() {
@@ -769,10 +770,10 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 	}
 
 	int roll = System::random(100);
-	int chance = globalVariables::weaponDecayRateChance;
+	int chance = equipableVars.equipableWeaponDecayRateChance;
 
 	if (hasPowerup())
-		chance += globalVariables::weaponDecayRateWithPowerUpChance;
+		chance += equipableVars.equipableWeaponDecayRateWithPowerUpChance;
 
 	if (roll < chance) {
 		Locker locker(_this.getReferenceUnsafeStaticCast());
@@ -788,11 +789,11 @@ void WeaponObjectImplementation::decay(CreatureObject* user) {
 				ManagedReference<LightsaberCrystalComponent*> crystal = saberInv->getContainerObject(i).castTo<LightsaberCrystalComponent*>();
 
 				if (crystal != nullptr) {
-					crystal->inflictDamage(crystal, 0, globalVariables::weaponCrystalDamagePerTick, true, true);
+					crystal->inflictDamage(crystal, 0, equipableVars.equipableWeaponCrystalDamagePerTick, true, true);
 				}
 			}
 		} else {
-			inflictDamage(_this.getReferenceUnsafeStaticCast(), 0, globalVariables::weaponDamagePerTicket, true, true);
+			inflictDamage(_this.getReferenceUnsafeStaticCast(), 0, equipableVars.equipableWeaponDamagePerTicket, true, true);
 
 			if (((float)conditionDamage - 1 / (float)maxCondition < 0.75) && ((float)conditionDamage / (float)maxCondition > 0.75))
 				user->sendSystemMessage("@combat_effects:weapon_quarter");

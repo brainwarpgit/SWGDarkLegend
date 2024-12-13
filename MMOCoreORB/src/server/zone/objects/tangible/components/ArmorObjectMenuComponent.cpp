@@ -15,7 +15,8 @@
 #include "server/zone/objects/player/sui/callbacks/ColorArmorSuiCallback.h"
 #include "server/zone/ZoneServer.h"
 #include "templates/customization/AssetCustomizationManagerTemplate.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/equipableVariables.h"
 
 void ArmorObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	if (!sceneObject->isWearableObject())
@@ -37,7 +38,7 @@ void ArmorObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, 
 			return;
 	}
 
-	if (globalVariables::playerChangeWearableColorsEnabled == false) {
+	if (equipableVars.equipableWearablesChangeWearableColorsEnabled == false) {
 		String text = "Color Change";
 		menuResponse->addRadialMenuItem(81, 3, text);
 	}

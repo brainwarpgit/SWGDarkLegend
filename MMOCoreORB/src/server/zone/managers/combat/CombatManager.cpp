@@ -33,6 +33,7 @@
 #include "server/zone/objects/installation/TurretObject.h"
 
 #include "server/zone/managers/variables/combatVariables.h"
+#include "server/zone/managers/variables/equipableVariables.h"
 #include "server/globalVariables.h"
 
 #define COMBAT_SPAM_RANGE 85 // Range at which players will see Combat Log Info
@@ -2694,7 +2695,7 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 
 		Locker plocker(psg);
 
-		psg->inflictDamage(psg, 0, damage * globalVariables::armorPSGDecayRateMultiplier, true, true);
+		psg->inflictDamage(psg, 0, damage * equipableVars.equipableArmorPSGDecayRateMultiplier, true, true);
 	}
 
 	// Standard Armor
@@ -2722,7 +2723,7 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 		// inflict condition damage
 		Locker alocker(armor);
 
-		armor->inflictDamage(armor, 0, damage * globalVariables::armorDecayRateMultiplier, true, true);
+		armor->inflictDamage(armor, 0, damage * equipableVars.equipableArmorDecayRateMultiplier, true, true);
 	}
 
 	return damage;

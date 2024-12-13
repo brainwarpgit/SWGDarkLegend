@@ -16,7 +16,8 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/objects/player/sui/callbacks/wipeinventorySuiCallback.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/equipableVariables.h"
 
 void ContainerImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -61,7 +62,7 @@ void ContainerImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuRes
 	if (isSliceable() && isContainerLocked() && player->hasSkill("combat_smuggler_novice"))
 		menuResponse->addRadialMenuItem(69, 3, "@slicing/slicing:slice"); // Slice
 
-	if (getGameObjectType() == SceneObjectType::WEARABLECONTAINER && isEquipped() && !player->isInCombat() && globalVariables::playerBackpackWipeEnabled == true) {
+	if (getGameObjectType() == SceneObjectType::WEARABLECONTAINER && isEquipped() && !player->isInCombat() && equipableVars.equipableWearablesBackpackWipeEnabled == true) {
 		menuResponse->addRadialMenuItem(82, 3, "WIPE ALL NON-EQUIPPED ITEMS"); // wipe
 	}
 }

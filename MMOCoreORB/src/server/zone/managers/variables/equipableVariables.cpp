@@ -63,7 +63,21 @@ bool EquipableVariables::loadConfigData() {
 	}
 
 	try {
-
+		//Armor
+		if (lua->getGlobalFloat("equipableArmorPSGDecayRateMultiplier") > 0) equipableVars.equipableArmorPSGDecayRateMultiplier = lua->getGlobalFloat("equipableArmorPSGDecayRateMultiplier");
+		if (lua->getGlobalFloat("equipableArmorDecayRateMultiplier") > 0) equipableVars.equipableArmorDecayRateMultiplier = lua->getGlobalFloat("equipableArmorDecayRateMultiplier");
+		if (lua->getGlobalFloat("equipableArmorMaxArmorUnSliced") >= 0) equipableVars.equipableArmorMaxArmorUnSliced = lua->getGlobalFloat("equipableArmorMaxArmorUnSliced");
+		if (lua->getGlobalFloat("equipableArmorMaxArmorSliced") >= 0) equipableVars.equipableArmorMaxArmorSliced = lua->getGlobalFloat("equipableArmorMaxArmorSliced");
+		//Weapon
+		if (lua->getGlobalInt("equipableWeaponDecayRateChance") > 0) equipableVars.equipableWeaponDecayRateChance = lua->getGlobalInt("equipableWeaponDecayRateChance");
+		if (lua->getGlobalInt("equipableWeaponDecayRateWithPowerUpChance") > 0) equipableVars.equipableWeaponDecayRateWithPowerUpChance = lua->getGlobalInt("equipableWeaponDecayRateWithPowerUpChance");
+		if (lua->getGlobalFloat("equipableWeaponCrystalDamagePerTick") > 0) equipableVars.equipableWeaponCrystalDamagePerTick = lua->getGlobalFloat("equipableWeaponCrystalDamagePerTick");
+		if (lua->getGlobalFloat("equipableWeaponDamagePerTicket") > 0) equipableVars.equipableWeaponDamagePerTicket = lua->getGlobalFloat("equipableWeaponDamagePerTicket");
+		//Wearables
+		if (lua->getGlobalBoolean("equipableWearablesFactionEnabled") == true || lua->getGlobalBoolean("equipableWearablesFactionEnabled") == false) equipableVars.equipableWearablesFactionEnabled = lua->getGlobalBoolean("equipableWearablesFactionEnabled");
+		if (lua->getGlobalBoolean("equipableWearablesAllPlayerRacesEnabled") == true || lua->getGlobalBoolean("equipableWearablesAllPlayerRacesEnabled") == false) equipableVars.equipableWearablesAllPlayerRacesEnabled = lua->getGlobalBoolean("equipableWearablesAllPlayerRacesEnabled");
+		if (lua->getGlobalBoolean("equipableWearablesBackpackWipeEnabled") == true || lua->getGlobalBoolean("equipableWearablesBackpackWipeEnabled") == false) equipableVars.equipableWearablesBackpackWipeEnabled = lua->getGlobalBoolean("equipableWearablesBackpackWipeEnabled");
+		if (lua->getGlobalBoolean("equipableWearablesChangeWearableColorsEnabled") == true || lua->getGlobalBoolean("equipableWearablesChangeWearableColorsEnabled") == false) equipableVars.equipableWearablesChangeWearableColorsEnabled = lua->getGlobalBoolean("equipableWearablesChangeWearableColorsEnabled");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;
