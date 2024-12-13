@@ -12,7 +12,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 void AttachmentImplementation::initializeMembers() {
 	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
@@ -78,20 +79,20 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 		modCount = System::random(1) + 2;
 	}
 
-	if (modCount > globalVariables::lootAttachmentModCount) modCount = globalVariables::lootAttachmentModCount;
+	if (modCount > lootVars.lootAttachmentModCount) modCount = lootVars.lootAttachmentModCount;
 	if (modCount < 0) modCount = 0;
 	
 	for (int i = 0; i < modCount; ++i) {
 		int mod = 0;
-		if (level >= globalVariables::lootAttachmentMaxLevel) {
-			mod = globalVariables::lootAttachmentMax;
+		if (level >= lootVars.lootAttachmentMaxLevel) {
+			mod = lootVars.lootAttachmentMax;
 		} else {
-			float scalingFactor = float(level / globalVariables::lootAttachmentMaxLevel);
-			int adjustedStats = (int)(scalingFactor * globalVariables::lootAttachmentMax);
+			float scalingFactor = float(level / lootVars.lootAttachmentMaxLevel);
+			int adjustedStats = (int)(scalingFactor * lootVars.lootAttachmentMax);
 			int minStat = adjustedStats - round(adjustedStats * 0.075f);
 			int maxStat = adjustedStats + round(adjustedStats * 0.125f);
 			mod = System::random(maxStat - minStat) + minStat;
-			if (mod > globalVariables::lootAttachmentMax) mod = globalVariables::lootAttachmentMax;
+			if (mod > lootVars.lootAttachmentMax) mod = lootVars.lootAttachmentMax;
 		}
 		String modName = lootManager->getRandomLootableMod(gameObjectType);
 

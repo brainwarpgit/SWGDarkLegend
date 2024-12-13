@@ -18,6 +18,9 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/ZoneServer.h"
 
+#include "server/zone/managers/variables/lootVariables.h"
+#include "server/globalVariables.h"
+
 void LightsaberCrystalComponentImplementation::initializeTransientMembers() {
 	ComponentImplementation::initializeTransientMembers();
 
@@ -79,7 +82,7 @@ void LightsaberCrystalComponentImplementation::generateCrystalStats(float modifi
 
 	setMaxCondition(getRandomizedStat(minStat, maxStat, itemLevel));
 
-	if (globalVariables::lootModifiersAffectLightsaberCrystalsEnabled == false) {
+	if (lootVars.lootModifiersAffectLightsaberCrystalsEnabled == false) {
 		modifier = 1.0;
 	}
 	
@@ -310,7 +313,7 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 				alm->insertAttribute("wpn_attack_cost_health", sacHealth);
 				alm->insertAttribute("wpn_attack_cost_action", sacAction);
 				alm->insertAttribute("wpn_attack_cost_mind", sacMind);
-				if (globalVariables::lootShowForceCostDecimalEnabled == false) {
+				if (lootVars.lootShowForceCostDecimalEnabled == false) {
 					alm->insertAttribute("forcecost", (int)getForceCost());
 				} else {
 					alm->insertAttribute("forcecost", (float)getForceCost());
@@ -325,8 +328,8 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 					lootQualityString = "Legendary";
 				} else if (lootQuality == 3) {
 					lootQualityString = "Exceptional";
-				} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
-					lootQualityString = globalVariables::lootYellowModifierName;
+				} else if (lootQuality == 2 && lootVars.lootYellowModifierNameEnabled == true) {
+					lootQualityString = lootVars.lootYellowModifierName;
 				}
 				alm->insertAttribute("LootQuality", lootQualityString);
 
@@ -341,17 +344,17 @@ void LightsaberCrystalComponentImplementation::fillAttributeList(AttributeListMe
 				StringBuffer str;
 				str << "@jedi_spam:crystal_quality_" << getQuality();
 				alm->insertAttribute("crystal_quality", str);
-				if (globalVariables::lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", itemLevel);
-				if (globalVariables::lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+				if (lootVars.lootLevelToItemDescriptionEnabled == true) alm->insertAttribute("challenge_level", itemLevel);
+				if (lootVars.lootModifierToItemDescriptionEnabled == true) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
 				String lootQualityString = "Base";
 				if (lootQuality == 4 ) {
 					lootQualityString = "Legendary";
 				} else if (lootQuality == 3) {
 					lootQualityString = "Exceptional";
-				} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
-					lootQualityString = globalVariables::lootYellowModifierName;
+				} else if (lootQuality == 2 && lootVars.lootYellowModifierNameEnabled == true) {
+					lootQualityString = lootVars.lootYellowModifierName;
 				}
-				if (globalVariables::lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
+				if (lootVars.lootQualityToItemDescriptionEnabled == true) alm->insertAttribute("LootQuality", lootQualityString);
 			}
 		}
 	}
@@ -488,7 +491,7 @@ void LightsaberCrystalComponentImplementation::updateCraftingValues(CraftingValu
 	int color = values->getCurrentValue("color");
 
 	if (colorMax != 31) {
-		if (globalVariables::lootRareColorCrystalsEnabled == false) {
+		if (lootVars.lootRareColorCrystalsEnabled == false) {
 			int finalColor = Math::min(color, 11);
 			setColor(finalColor);
 			updateCrystal(finalColor);

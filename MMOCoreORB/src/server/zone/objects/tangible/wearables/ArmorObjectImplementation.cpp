@@ -12,7 +12,7 @@
 
 #include "server/zone/managers/variables/craftingVariables.h"
 #include "server/zone/managers/variables/equipableVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/lootVariables.h"
 
 void ArmorObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -275,17 +275,17 @@ void ArmorObjectImplementation::fillAttributeList(AttributeListMessage* alm, Cre
 	if (sliced)
 		alm->insertAttribute("arm_attr", "@obj_attr_n:hacked");
 
-	if (globalVariables::lootLevelToItemDescriptionEnabled == true and level != -999999) alm->insertAttribute("challenge_level", level);
-	if (globalVariables::lootModifierToItemDescriptionEnabled == true and modifier != -999999) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
+	if (lootVars.lootLevelToItemDescriptionEnabled == true and level != -999999) alm->insertAttribute("challenge_level", level);
+	if (lootVars.lootModifierToItemDescriptionEnabled == true and modifier != -999999) alm->insertAttribute("Modifier", Math::getPrecision(modifier, 4));
 	String lootQualityString = "Base";
 	if (lootQuality == 4 ) {
 		lootQualityString = "Legendary";
 	} else if (lootQuality == 3) {
 		lootQualityString = "Exceptional";
-	} else if (lootQuality == 2 && globalVariables::lootYellowModifierNameEnabled == true) {
-		lootQualityString = globalVariables::lootYellowModifierName;
+	} else if (lootQuality == 2 && lootVars.lootYellowModifierNameEnabled == true) {
+		lootQualityString = lootVars.lootYellowModifierName;
 	}
-	if (globalVariables::lootQualityToItemDescriptionEnabled == true and lootQualityString != "Base") alm->insertAttribute("LootQuality", lootQualityString);
+	if (lootVars.lootQualityToItemDescriptionEnabled == true and lootQualityString != "Base") alm->insertAttribute("LootQuality", lootQualityString);
 
 }
 

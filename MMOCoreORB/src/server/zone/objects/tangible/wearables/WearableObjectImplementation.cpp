@@ -19,6 +19,7 @@
 #include "server/zone/objects/tangible/tool/CraftingStation.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
+#include "server/zone/managers/variables/lootVariables.h"
 #include "server/globalVariables.h"
 
 void WearableObjectImplementation::initializeTransientMembers() {
@@ -178,9 +179,9 @@ void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attac
 			if (wearableSkillMods.contains(modName)) {
 				existingValue = wearableSkillMods.get(modName);
 			}
-			if ((existingValue + modValue) <= globalVariables::lootAttachmentMax || (existingValue + modValue) >= globalVariables::lootAttachmentMax) {
+			if ((existingValue + modValue) <= lootVars.lootAttachmentMax || (existingValue + modValue) >= lootVars.lootAttachmentMax) {
 				modValue = existingValue + modValue;
-				if (modValue > globalVariables::lootAttachmentMax) modValue = globalVariables::lootAttachmentMax;
+				if (modValue > lootVars.lootAttachmentMax) modValue = lootVars.lootAttachmentMax;
 				wearableSkillMods.put(modName, modValue);
 			}
 			if (modValue == existingValue) {

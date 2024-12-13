@@ -14,7 +14,8 @@
 #include "templates/SharedTangibleObjectTemplate.h"
 #include "server/zone/objects/scene/SceneObjectType.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 class LootItemTemplate: public LuaTemplate, public Logger {
 protected:
@@ -101,7 +102,7 @@ public:
 				const String& attribute = attributes->get(i);
 				const String& group = groups->get(i);
 
-				if (attribute == "sockets" && !globalVariables::lootSocketsOnWearablesEnabled) {
+				if (attribute == "sockets" && !lootVars.lootSocketsOnWearablesEnabled) {
 					continue;
 				}
 

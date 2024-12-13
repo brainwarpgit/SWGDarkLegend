@@ -4,7 +4,7 @@
 #include "templates/LootItemTemplate.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/lootVariables.h"
 
 LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
 	setLoggingName("LootValues: " + lootTemplate->getTemplateName());
@@ -18,7 +18,7 @@ LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, floa
 
 	setLevel(lootTemplate, lootLevel);
 	
-	//if (globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true) {
+	//if (lootVars.lootUseLootModifiersForDamageModifiersEnabled == true) {
 	//	modifier = lootModifier;
 	//} else {
 	//	modifier = 0.f;
@@ -38,11 +38,11 @@ LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, floa
 	
 	if (useCountOnly == 0) {
 		int lootQuality = 1;
-		if (modifier >= globalVariables::lootLegendaryDamageModifier) {
+		if (modifier >= lootVars.lootLegendaryDamageModifier) {
 			lootQuality = 4;
-		} else if (modifier >= globalVariables::lootExceptionalDamageModifier) {
+		} else if (modifier >= lootVars.lootExceptionalDamageModifier) {
 			lootQuality = 3;
-		} else if (modifier >= globalVariables::lootYellowDamageModifier) {
+		} else if (modifier >= lootVars.lootYellowDamageModifier) {
 			lootQuality = 2;
 		}
 
@@ -63,12 +63,12 @@ void LootValues::setLevel(const LootItemTemplate* lootTemplate, int lootLevel) {
 		return;
 	}
 
-	if (levelMax > globalVariables::lootMaxLevel || levelMax == -1) {
-		levelMax = globalVariables::lootMaxLevel;
+	if (levelMax > lootVars.lootMaxLevel || levelMax == -1) {
+		levelMax = lootVars.lootMaxLevel;
 	}
 
-	if (levelMin < globalVariables::lootMinLevel) {
-		levelMin = globalVariables::lootMinLevel;
+	if (levelMin < lootVars.lootMinLevel) {
+		levelMin = lootVars.lootMinLevel;
 	}
 
 	float levelRank = getLevelRankValue(lootLevel);
@@ -85,14 +85,14 @@ void LootValues::setModifier(const LootItemTemplate* lootTemplate, float lootMod
 	}
 
 	if (levelMin >= 1 && lootModifier == STATIC) {
-		lootModifier = globalVariables::lootBaseDamageModifier;
+		lootModifier = lootVars.lootBaseDamageModifier;
 	}
 
 	setModifier(lootModifier);
 }
 
 void LootValues::recalculateValues(bool initial, const LootItemTemplate* lootTemplate, TangibleObject* prototype) {
-	if (!globalVariables::lootUseLootModifiersForDamageModifiersEnabled) {
+	if (!lootVars.lootUseLootModifiersForDamageModifiersEnabled) {
 		setStaticValues();
 		setRandomValues(lootTemplate);
 		setDamageValues();
@@ -178,7 +178,7 @@ void LootValues::setRandomValues(const LootItemTemplate* lootTemplate) {
 
 	dynamicValues = attributeIndex.size();
 
-	if (modifier <= globalVariables::lootYellowDamageModifier) {
+	if (modifier <= lootVars.lootYellowDamageModifier) {
 		dynamicValues = getDistributedValue(1, attributeIndex.size(), level, DISTMIN, DISTMAX) * modifier;
 		dynamicValues = Math::min(dynamicValues, attributeIndex.size());
 	}
@@ -214,7 +214,7 @@ void LootValues::setDamageValues() {
 		return;
 	}
 
-	/*if (objectType & SceneObjectType::WEAPON && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == false) {
+	/*if (objectType & SceneObjectType::WEAPON && lootVars.lootUseLootModifiersForDamageModifiersEnabled == false) {
 		float maxPercent = getCurrentPercentage("maxdamage");
 		float minPercent = getCurrentPercentage("mindamage");
 
@@ -308,10 +308,10 @@ void LootValues::setLootCraftingValues(const LootItemTemplate* lootTemplate, Tan
 		if (prototype != nullptr) {
 			if (prototype->isArmorObject() && attribute == "armor_effectiveness" && craftingVars.craftingCraftedItemsBetterThanLootEnabled == true) {
 				float resistAdjust = getCurrentValue(attribute) * craftingVars.craftingCraftedItemsBetterThanLootModifier;
-				if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
+				if (resistAdjust > lootVars.lootArmorMaxResists) resistAdjust = lootVars.lootArmorMaxResists;
 				setCurrentValue(attribute, resistAdjust);
 			}
-			if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true && (attribute == "mindamage" || attribute == "maxdamage")) {
+			if (prototype->isWeaponObject() && lootVars.lootUseLootModifiersForDamageModifiersEnabled == true && (attribute == "mindamage" || attribute == "maxdamage")) {
 				if (craftingVars.craftingCraftedItemsBetterThanLootEnabled == true) {
 					setCurrentValue(attribute, getCurrentValue(attribute) * craftingVars.craftingCraftedItemsBetterThanLootModifier);
 				}
@@ -587,7 +587,7 @@ int LootValues::getDistributedValue(int min, int max, int level, float distMin, 
 }
 
 float LootValues::getLevelRankValue(int level, float distMin, float distMax) {
-	float rank = Math::clamp(0.f, (level - globalVariables::lootMinLevel) / (float)(globalVariables::lootMaxLevel - globalVariables::lootMinLevel), 1.f);
+	float rank = Math::clamp(0.f, (level - lootVars.lootMinLevel) / (float)(lootVars.lootMaxLevel - lootVars.lootMinLevel), 1.f);
 
 	return Math::linearInterpolate(distMin, distMax, rank);
 }

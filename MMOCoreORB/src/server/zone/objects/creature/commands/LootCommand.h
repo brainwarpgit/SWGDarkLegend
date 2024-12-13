@@ -9,7 +9,8 @@
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/managers/group/GroupLootTask.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 class LootCommand : public QueueCommand {
 
@@ -53,8 +54,8 @@ public:
 		if (!agent->isDead() || creature->isDead())
 			return GENERALERROR;
 
-		//if (!creature->isInRange(creature, globalVariables::lootDistance)) {
-		if (!checkDistance(agent, creature, globalVariables::lootDistance)) {
+		//if (!creature->isInRange(creature, lootVars.lootDistance)) {
+		if (!checkDistance(agent, creature, lootVars.lootDistance)) {
 			creature->sendSystemMessage("@error_message:target_out_of_range"); //"Your target is out of range for this action."
 			return GENERALERROR;
 		}
@@ -87,13 +88,13 @@ public:
 		// Allow player to loot the corpse if they own it.
 		if (looterIsOwner) {
 			if (lootAll) {
-				if (globalVariables::lootAreaEnabled == true) {
+				if (lootVars.lootAreaEnabled == true) {
 					playerManager->lootAll(creature, agent);
 					Zone* zone = creature->getZone();
 					SortedVector<TreeEntry*> closeObjects;
 					CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) creature->getCloseObjects();
 					if (closeObjectsVector == nullptr) {
-						zone->getInRangeObjects(creature->getWorldPositionX(), creature->getWorldPositionZ(), creature->getWorldPositionY(), globalVariables::lootDistance, &closeObjects, true);
+						zone->getInRangeObjects(creature->getWorldPositionX(), creature->getWorldPositionZ(), creature->getWorldPositionY(), lootVars.lootDistance, &closeObjects, true);
 					} else {
 						closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
 					}
@@ -106,8 +107,8 @@ public:
 						CreatureObject* c = obj->asCreatureObject();
 						if (c == nullptr || c->isPlayerCreature() || !c->isDead())
 							continue;
-						//if (!creature->isInRange(c, globalVariables::lootDistance))//distance
-						if (!checkDistance(agent, c, globalVariables::lootDistance))
+						//if (!creature->isInRange(c, lootVars.lootDistance))//distance
+						if (!checkDistance(agent, c, lootVars.lootDistance))
 							continue;
 						playerManager->lootAll(creature, c);
 					}

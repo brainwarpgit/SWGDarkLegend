@@ -17,6 +17,9 @@
 #include "server/zone/objects/creature/ai/AiAgent.h"
 #include "server/zone/objects/tangible/components/EventPerkDataComponent.h"
 
+#include "server/zone/managers/variables/lootVariables.h"
+#include "server/globalVariables.h"
+
 class GiveItemCommand : public QueueCommand {
 public:
 	GiveItemCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
@@ -127,7 +130,7 @@ public:
 					creature->sendSystemMessage("ERROR: You can not apply an attachment with multiple skill mods.  Split your attachment first.");
 					return GENERALERROR;
 				}
-				if (attachmentExists == true && attachmentValue >= globalVariables::lootAttachmentMax) {
+				if (attachmentExists == true && attachmentValue >= lootVars.lootAttachmentMax) {
 					creature->sendSystemMessage("ERROR: Skill mod already maxed.");
 					return GENERALERROR;
 				}

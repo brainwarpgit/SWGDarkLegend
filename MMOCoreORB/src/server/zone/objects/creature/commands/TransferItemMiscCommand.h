@@ -15,7 +15,8 @@
 #include "server/zone/managers/collision/CollisionManager.h"
 #include "server/zone/objects/scene/TransferErrorCode.h"
 #include "QueueCommand.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 class TransferItemMiscCommand : public QueueCommand {
 public:
@@ -193,7 +194,7 @@ public:
 		if (zoneObject != nullptr) {
 			ManagedReference<SceneObject*> rootParent = objectToTransfer->getRootParent();
 
-			float maxDistance = globalVariables::lootDistance;
+			float maxDistance = lootVars.lootDistance;
 
 			if (rootParent != nullptr && !rootParent->isBuildingObject() && !rootParent->isPobShip() && parent != nullptr && !parent->isBuildingObject() && !parent->isPobShip()) {
 				float rootDist = rootParent->getDistanceTo(creature);

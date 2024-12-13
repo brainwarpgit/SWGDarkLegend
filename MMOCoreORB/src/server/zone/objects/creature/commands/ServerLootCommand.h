@@ -20,6 +20,8 @@
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
 
+#include "server/zone/managers/variables/lootVariables.h"
+
 class ServerLootCommand {
 	const static int GENERALERROR = 0;
 	const static int SUCCESS = 1;
@@ -121,7 +123,7 @@ public:
 		prototype->setCraftersName(craftersName);
 		prototype->setCraftersID(craftersOID);
 
-		if (modifier >= globalVariables::lootBaseDamageModifier) {
+		if (modifier >= lootVars.lootBaseDamageModifier) {
 			auto lootValues = LootValues(itemTemplate, 0, 0, 1, 1, prototype);
 			lootValues.setLevel(level);
 			lootValues.setModifier(modifier);
@@ -200,7 +202,7 @@ public:
 		prototype->setCraftersName(craftersName);
 		prototype->setCraftersID(craftersOID);
 
-		if (modifier >= globalVariables::lootBaseDamageModifier) {
+		if (modifier >= lootVars.lootBaseDamageModifier) {
 			auto lootValues = LootValues(itemTemplate, 0, 0, 1, 1, prototype);
 			lootValues.setLevel(level);
 			lootValues.setModifier(modifier);

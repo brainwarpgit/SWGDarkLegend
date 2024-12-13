@@ -12,7 +12,8 @@
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
 #include "server/zone/objects/structure/StructureObject.h"
 #include "server/zone/objects/area/CampSiteActiveArea.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 SkillModManager::SkillModManager()
 		: Logger("SkillModManager") {
@@ -54,7 +55,7 @@ void SkillModManager::init() {
 			int max = 0;
 			if (type == 4097) {
 				min = entry.getIntAt(2);
-				max = globalVariables::lootAttachmentMax;
+				max = lootVars.lootAttachmentMax;
 			} else {
 				min = entry.getIntAt(2);
 				max = entry.getIntAt(3);

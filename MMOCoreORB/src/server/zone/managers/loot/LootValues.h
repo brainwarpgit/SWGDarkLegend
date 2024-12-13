@@ -5,7 +5,8 @@
 #include "server/zone/objects/tangible/TangibleObject.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
 #include "templates/LootItemTemplate.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 #ifndef LOOTVALUES_DEBUG
 //#define LOOTVALUES_DEBUG
@@ -56,11 +57,11 @@ public:
 	}
 
 	void setModifier(float lootModifier) {
-		modifier = Math::clamp((float)(STATIC), lootModifier, (float)(globalVariables::lootLegendaryDamageModifier + globalVariables::lootBaseDamageModifier));
+		modifier = Math::clamp((float)(STATIC), lootModifier, (float)(lootVars.lootLegendaryDamageModifier + lootVars.lootBaseDamageModifier));
 	}
 
 	void setLevel(int lootLevel) {
-		level = Math::clamp((int)(globalVariables::lootMinLevel), lootLevel, (int)(globalVariables::lootMaxLevel));
+		level = Math::clamp((int)(lootVars.lootMinLevel), lootLevel, (int)(lootVars.lootMaxLevel));
 	}
 
 	void setModifier(const LootItemTemplate* lootTemplate, float lootModifier);
@@ -126,11 +127,11 @@ public:
 
 		prototype->setCustomObjectName(itemTemplate->getCustomObjectName(), false);
 
-		if (modifier > globalVariables::lootExceptionalDamageModifier + 1) {
+		if (modifier > lootVars.lootExceptionalDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Legendary)", false);
-		} else if (modifier > globalVariables::lootYellowDamageModifier + 1) {
+		} else if (modifier > lootVars.lootYellowDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Exceptional)", false);
-		} else if (modifier > globalVariables::lootBaseDamageModifier + 1) {
+		} else if (modifier > lootVars.lootBaseDamageModifier + 1) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Enhanced)", false);
 		} else if (modifier > STATIC) {
 			prototype->setCustomObjectName(prototype->getDisplayedName() + " (Experimental)", false);

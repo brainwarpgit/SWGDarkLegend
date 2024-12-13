@@ -19,7 +19,7 @@
 #include "server/zone/objects/tangible/tool/CraftingStation.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/lootVariables.h"
 
 void WearableContainerObjectImplementation::initializeTransientMembers() {
 	ContainerImplementation::initializeTransientMembers();
@@ -49,7 +49,7 @@ void WearableContainerObjectImplementation::updateCraftingValues(CraftingValues*
 }
 
 void WearableContainerObjectImplementation::generateSockets(CraftingValues* craftingValues) {
-	if (!globalVariables::lootSocketsOnWearableContainersEnabled) {
+	if (!lootVars.lootSocketsOnWearableContainersEnabled) {
 		return;
 	} else {
 		if (socketsGenerated) {

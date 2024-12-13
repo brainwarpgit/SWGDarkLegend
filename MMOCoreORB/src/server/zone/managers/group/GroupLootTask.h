@@ -13,7 +13,8 @@
 #include "server/zone/managers/group/GroupManager.h"
 #include "server/zone/objects/player/sessions/LootLotterySession.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/lootVariables.h"
 
 class GroupLootTask : public Task {
 	ManagedReference<GroupObject*> group;
@@ -129,7 +130,7 @@ public:
 		//Post: Corpse is locked.
 
 		int lootCredits = corpse->getCashCredits();
-		if (globalVariables::lootGroupCreditsSplitEnabled == false) {
+		if (lootVars.lootGroupCreditsSplitEnabled == false) {
 			return;
 		}
 		if (lootCredits < 1)
