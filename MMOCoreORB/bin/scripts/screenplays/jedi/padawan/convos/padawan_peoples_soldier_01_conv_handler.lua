@@ -1,4 +1,4 @@
-dofile("scripts/managers/global_variables.lua")
+dofile("scripts/managers/variables/mission_variables.lua")
 
 padawan_peoples_soldier_01_conv_handler = conv_handler:new {}
 

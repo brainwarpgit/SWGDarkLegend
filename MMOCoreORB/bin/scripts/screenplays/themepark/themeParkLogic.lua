@@ -1,6 +1,6 @@
 require("screenplays.screenplay")
 local ObjectManager = require("managers.object.object_manager")
-dofile("scripts/managers/global_variables.lua")
+dofile("scripts/managers/variables/mission_variables.lua")
 
 SIT = 1
 STAND = 0

@@ -63,7 +63,21 @@ bool MissionVariables::loadConfigData() {
 	}
 
 	try {
-
+		//Mission 
+		if (lua->getGlobalInt("missionBountyExpirationTime") > 0) missionVars.missionBountyExpirationTime = lua->getGlobalInt("missionBountyExpirationTime");
+		if (lua->getGlobalInt("missionExpirationTime") > 0) missionVars.missionExpirationTime = lua->getGlobalInt("missionExpirationTime");
+		if (lua->getGlobalInt("missionMaxCount") > 0) missionVars.missionMaxCount = lua->getGlobalInt("missionMaxCount");
+		if (lua->getGlobalInt("missionListCount") > 0) missionVars.missionListCount = lua->getGlobalInt("missionListCount");
+		if (lua->getGlobalBoolean("missionNameAndLevelEnabled") == true || lua->getGlobalBoolean("missionNameAndLevelEnabled") == false) missionVars.missionNameAndLevelEnabled = lua->getGlobalBoolean("missionNameAndLevelEnabled");
+		if (lua->getGlobalBoolean("missionDirectionSelectionEnabled") == true || lua->getGlobalBoolean("missionDirectionSelectionEnabled") == false) missionVars.missionDirectionSelectionEnabled = lua->getGlobalBoolean("missionDirectionSelectionEnabled");
+		if (lua->getGlobalBoolean("missionLevelSelectionEnabled") == true || lua->getGlobalBoolean("missionLevelSelectionEnabled") == false) missionVars.missionLevelSelectionEnabled = lua->getGlobalBoolean("missionLevelSelectionEnabled");
+		if (lua->getGlobalInt("missionRewardMultiplier") > 0) missionVars.missionRewardMultiplier = lua->getGlobalInt("missionRewardMultiplier");
+		if (lua->getGlobalBoolean("missionRandomAttacksEnabled") == true || lua->getGlobalBoolean("missionRandomAttacksEnabled") == false) missionVars.missionRandomAttacksEnabled = lua->getGlobalBoolean("missionRandomAttacksEnabled");
+		if (lua->getGlobalBoolean("missionSurveyMissionRewardsResourcesEnabled") == true || lua->getGlobalBoolean("missionSurveyMissionRewardsResourcesEnabled") == false) missionVars.missionSurveyMissionRewardsResourcesEnabled = lua->getGlobalBoolean("missionSurveyMissionRewardsResourcesEnabled");
+		if (lua->getGlobalFloat("missionSurveyMissionRewardsResourcesMultiplier") > 0) missionVars.missionSurveyMissionRewardsResourcesMultiplier = lua->getGlobalFloat("missionSurveyMissionRewardsResourcesMultiplier");
+		if (lua->getGlobalBoolean("missionSurveyMissionLimitToLessThanNinetyEnabled") == true || lua->getGlobalBoolean("missionSurveyMissionLimitToLessThanNinetyEnabled") == false) missionVars.missionSurveyMissionLimitToLessThanNinetyEnabled = lua->getGlobalBoolean("missionSurveyMissionLimitToLessThanNinetyEnabled");
+		if (lua->getGlobalBoolean("missionSurveyMissionEnableMoreResourcesEnabled") == true || lua->getGlobalBoolean("missionSurveyMissionEnableMoreResourcesEnabled") == false) missionVars.missionSurveyMissionEnableMoreResourcesEnabled = lua->getGlobalBoolean("missionSurveyMissionEnableMoreResourcesEnabled");
+		if (lua->getGlobalFloat("missionSurveyMissionCompletionDistance") >= 0) missionVars.missionSurveyMissionCompletionDistance = lua->getGlobalFloat("missionSurveyMissionCompletionDistance");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;

@@ -45,7 +45,12 @@ void VariableWatcher::startVariableWatchers() {
 		creatureVariables->startCreatureVariables();
 	}
 
-	HarvestVariables* harvestVariables = new HarvestVariables();
+	EquipableVariables* equipableVariables = new EquipableVariables();
+	if (equipableVariables != nullptr) {
+		info(true) << "Starting EquipableVariables Watcher.";
+		equipableVariables->startEquipableVariables();
+	}	HarvestVariables* harvestVariables = new HarvestVariables();
+
 	if (harvestVariables != nullptr) {
 		info(true) << "Starting HarvestVariables Watcher.";
 		harvestVariables->startHarvestVariables();
@@ -97,11 +102,5 @@ void VariableWatcher::startVariableWatchers() {
 	if (structureVariables != nullptr) {
 		info(true) << "Starting StructureVariables Watcher.";
 		structureVariables->startStructureVariables();
-	}
-
-	EquipableVariables* equipableVariables = new EquipableVariables();
-	if (equipableVariables != nullptr) {
-		info(true) << "Starting EquipableVariables Watcher.";
-		equipableVariables->startEquipableVariables();
 	}
 }

@@ -12,7 +12,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/resource/ResourceSpawn.h"
 #include "server/zone/managers/resource/ResourceManager.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/missionVariables.h"
 
 void SurveyMissionObjectiveImplementation::activate() {
 	MissionObjectiveImplementation::activate();
@@ -49,11 +50,11 @@ void SurveyMissionObjectiveImplementation::abort() {
 void SurveyMissionObjectiveImplementation::complete(ManagedObject* spawn, int64 sampledDensity) {
 	MissionObjectiveImplementation::complete();
 	
-	if (globalVariables::missionSurveyMissionRewardsResourcesEnabled) {
+	if (missionVars.missionSurveyMissionRewardsResourcesEnabled) {
 		ManagedReference<MissionObject* > mission = this->mission.get();
 		ManagedReference<CreatureObject*> owner = getPlayerOwner();
 		
-		int quantity = (mission->getRewardCredits() * float(sampledDensity / 100.0f)) * globalVariables::missionSurveyMissionRewardsResourcesMultiplier;
+		int quantity = (mission->getRewardCredits() * float(sampledDensity / 100.0f)) * missionVars.missionSurveyMissionRewardsResourcesMultiplier;
 		
 		ResourceSpawn* sampledSpawn = cast<ResourceSpawn*>( spawn);
 		
@@ -82,13 +83,13 @@ int SurveyMissionObjectiveImplementation::notifyObserverEvent(MissionObserver* o
 		}
 
 		int sampledDensity = (int)arg2;
-		if (!globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
+		if (!missionVars.missionSurveyMissionEnableMoreResourcesEnabled) {
 			if (sampledSpawn->getSurveyMissionSpawnFamilyName() == spawnFamily && (sampledDensity >= efficiency)) {
 				Vector3 startPosition;
 				startPosition.setX(mission->getStartPositionX());
 				startPosition.setY(mission->getStartPositionY());
 				float distance = startPosition.distanceTo(player->getWorldPosition());
-				if (distance > globalVariables::missionSurveyMissionCompletionDistance) {
+				if (distance > missionVars.missionSurveyMissionCompletionDistance) {
 					complete(arg1, sampledDensity);
 
 					return 1;
@@ -117,7 +118,7 @@ int SurveyMissionObjectiveImplementation::notifyObserverEvent(MissionObserver* o
 				startPosition.setX(mission->getStartPositionX());
 				startPosition.setY(mission->getStartPositionY());
 				float distance = startPosition.distanceTo(player->getWorldPosition());
-				if (distance > globalVariables::missionSurveyMissionCompletionDistance) {
+				if (distance > missionVars.missionSurveyMissionCompletionDistance) {
 					complete(arg1, sampledDensity); // Send the spawn and survey density so we can grant some resources as a reward
 
 					return 1;

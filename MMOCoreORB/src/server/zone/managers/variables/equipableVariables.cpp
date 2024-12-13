@@ -29,7 +29,7 @@ void EquipableVariables::startEquipableVariables() {
 }
 
 bool EquipableVariables::loadConfigData() {
-	const std::string luaFilePath = "scripts/managers/variables/weapon_variables.lua";
+	const std::string luaFilePath = "scripts/managers/variables/equipable_variables.lua";
 
 	bool initialLoad = false;
 	

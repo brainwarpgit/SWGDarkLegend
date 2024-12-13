@@ -36,7 +36,8 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/managers/visibility/VisibilityManager.h"
 #include "server/zone/objects/building/BuildingObject.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/missionVariables.h"
 
 void MissionManagerImplementation::loadLuaSettings() {
 	try {
@@ -267,7 +268,7 @@ void MissionManagerImplementation::handleMissionAccept(MissionTerminal* missionT
 	}
 
 	//Limit to two missions (only one of them can be a bounty mission)
-	if (missionCount >= globalVariables::missionMaxCount || (hasBountyMission && mission->getTypeCRC() == MissionTypes::BOUNTY)) {
+	if (missionCount >= missionVars.missionMaxCount || (hasBountyMission && mission->getTypeCRC() == MissionTypes::BOUNTY)) {
 		StringIdChatParameter stringId("mission/mission_generic", "too_many_missions");
 		player->sendSystemMessage(stringId);
 		return;
@@ -570,18 +571,18 @@ void MissionManagerImplementation::randomizeGeneralTerminalMissions(CreatureObje
 		//Clear mission type before calling mission generators.
 		mission->setTypeCRC(0);
 
-		if (i < globalVariables::missionListCount) {
+		if (i < missionVars.missionListCount) {
 			randomizeGenericDestroyMission(player, mission, Factions::FACTIONNEUTRAL);
-		} else if (i < (globalVariables::missionListCount * 2)) {
+		} else if (i < (missionVars.missionListCount * 2)) {
 			randomizeGenericDeliverMission(player, mission, Factions::FACTIONNEUTRAL);
 		}
 
 		if (slicer) {
-			mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * 1.5);
+			mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * 1.5);
 		}
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
-		mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -599,18 +600,18 @@ void MissionManagerImplementation::randomizeArtisanTerminalMissions(CreatureObje
 		//Clear mission type before calling mission generators.
 		mission->setTypeCRC(0);
 
-		if (i < globalVariables::missionListCount) {
+		if (i < missionVars.missionListCount) {
 			randomizeGenericSurveyMission(player, mission, Factions::FACTIONNEUTRAL);
-		} else if (i < (globalVariables::missionListCount * 2)) {
+		} else if (i < (missionVars.missionListCount * 2)) {
 			randomizeGenericCraftingMission(player, mission, Factions::FACTIONNEUTRAL);
 		}
 
 		if (slicer) {
-			mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * 1.5);
+			mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * 1.5);
 		}
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
-		mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -628,18 +629,18 @@ void MissionManagerImplementation::randomizeEntertainerTerminalMissions(Creature
 		//Clear mission type before calling mission generators.
 		mission->setTypeCRC(0);
 
-		if (i < globalVariables::missionListCount) {
+		if (i < missionVars.missionListCount) {
 			randomizeGenericEntertainerMission(player, mission, Factions::FACTIONNEUTRAL, MissionTypes::DANCER);
-		} else if (i < (globalVariables::missionListCount * 2)) {
+		} else if (i < (missionVars.missionListCount * 2)) {
 			randomizeGenericEntertainerMission(player, mission, Factions::FACTIONNEUTRAL, MissionTypes::MUSICIAN);
 		}
 
 		if (slicer) {
-			mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * 1.5);
+			mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * 1.5);
 		}
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
-		mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -657,18 +658,18 @@ void MissionManagerImplementation::randomizeScoutTerminalMissions(CreatureObject
 		//Clear mission type before calling mission generators.
 		mission->setTypeCRC(0);
 
-		if (i < globalVariables::missionListCount) {
+		if (i < missionVars.missionListCount) {
 			randomizeGenericReconMission(player, mission, Factions::FACTIONNEUTRAL);
-		} else if (i < (globalVariables::missionListCount * 2)) {
+		} else if (i < (missionVars.missionListCount * 2)) {
 			randomizeGenericHuntingMission(player, mission, Factions::FACTIONNEUTRAL);
 		}
 
 		if (slicer) {
-			mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * 1.5);
+			mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * 1.5);
 		}
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
-		mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -688,12 +689,12 @@ void MissionManagerImplementation::randomizeBountyTerminalMissions(CreatureObjec
 		//Clear mission type before calling mission generators.
 		mission->setTypeCRC(0);
 
-		if (i < globalVariables::missionListCount) {
+		if (i < missionVars.missionListCount) {
 			randomizeGenericBountyMission(player, mission, Factions::FACTIONNEUTRAL, &potentialTargets);
 		}
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
-		mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -716,32 +717,32 @@ void MissionManagerImplementation::randomizeFactionTerminalMissions(CreatureObje
 		//Clear mission type before calling mission generators.
 		mission->setTypeCRC(0);
 
-		if (i < globalVariables::missionListCount) {
+		if (i < missionVars.missionListCount) {
 			randomizeGenericDestroyMission(player, mission, faction);
-		} else if (i < (globalVariables::missionListCount * 2)) {
+		} else if (i < (missionVars.missionListCount * 2)) {
 			randomizeGenericDeliverMission(player, mission, faction);
 		} else {
-			if (enableFactionalCraftingMissions && numberOfCraftingMissions < globalVariables::missionListCount) {
+			if (enableFactionalCraftingMissions && numberOfCraftingMissions < missionVars.missionListCount) {
 				randomizeGenericCraftingMission(player, mission, faction);
 				numberOfCraftingMissions++;
-			} else if (enableFactionalReconMissions && numberOfReconMissions < globalVariables::missionListCount) {
+			} else if (enableFactionalReconMissions && numberOfReconMissions < missionVars.missionListCount) {
 				randomizeGenericReconMission(player, mission, faction);
 				numberOfReconMissions++;
-			} else if (enableFactionalEntertainerMissions && numberOfDancerMissions < globalVariables::missionListCount) {
+			} else if (enableFactionalEntertainerMissions && numberOfDancerMissions < missionVars.missionListCount) {
 				randomizeGenericEntertainerMission(player, mission, faction, MissionTypes::DANCER);
 				numberOfDancerMissions++;
-			} else if (enableFactionalEntertainerMissions && numberOfMusicianMissions < globalVariables::missionListCount) {
+			} else if (enableFactionalEntertainerMissions && numberOfMusicianMissions < missionVars.missionListCount) {
 				randomizeGenericEntertainerMission(player, mission, faction, MissionTypes::MUSICIAN);
 				numberOfMusicianMissions++;
 			}
 		}
 
 		if (slicer) {
-			mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * 1.5);
+			mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * 1.5);
 		}
 
 		float cityBonus = 1.f + player->getSkillMod("private_spec_missions") / 100.f;
-		mission->setRewardCredits(mission->getRewardCredits() * globalVariables::missionRewardMultiplier * cityBonus);
+		mission->setRewardCredits(mission->getRewardCredits() * missionVars.missionRewardMultiplier * cityBonus);
 
 		mission->setRefreshCounter(counter, true);
 	}
@@ -779,7 +780,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	PlayerObject* targetGhost = player->getPlayerObject();
 	int diffDisplay = 0;
 	float dirChoice;	
-	if (globalVariables::missionLevelSelectionEnabled == true) {	
+	if (missionVars.missionLevelSelectionEnabled == true) {	
 		diffDisplay = difficultyLevel + 7;
 		String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");
 		int levelChoice = Integer::valueOf(level);
@@ -811,7 +812,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 			diffDisplay += playerLevel;
 		}
 	}
-	if (globalVariables::missionDirectionSelectionEnabled == true) {
+	if (missionVars.missionDirectionSelectionEnabled == true) {
 		String dir = targetGhost->getScreenPlayData("mission_direction_choice", "directionChoice");
 		dirChoice = Float::valueOf(dir);
 	}
@@ -840,7 +841,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	while (!foundPosition && maximumNumberOfTries-- > 0) {
 		foundPosition = true;
 
-		if (globalVariables::missionDirectionSelectionEnabled == true) {		
+		if (missionVars.missionDirectionSelectionEnabled == true) {		
 			float direction = (float)System::random(360);
 			// Player direction choice -/+ 8 degrees deviation from center to spread out the lairs a bit. Any higher will change the direction diplayed on the client.
 			if (dirChoice > 0){
@@ -935,7 +936,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 		messageDifficulty = "_hard";
 	
 	String mobileName = "mysterious";
-	if (globalVariables::missionNameAndLevelEnabled == true) {
+	if (missionVars.missionNameAndLevelEnabled == true) {
 		String groupSuffix;
 	 	if (lairTemplateObject->getMobType() == LairTemplate::NPC) {
 			missionType = "_npc";
@@ -993,7 +994,7 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 
 	int toolType = 0;
 	
-	if (globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
+	if (missionVars.missionSurveyMissionEnableMoreResourcesEnabled) {
 		toolType = System::random(14) + 1; // Using SOLAR1, CHEMICAL2, FLORA3, GAS4, MINERAL6, WATER7, WIND8
 		
 		if (toolType == 5 || toolType > 12) // Geothermal isn't supported and let's make mineral the most popular
@@ -1022,7 +1023,7 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	if (surveySkill > 70) {
 		maxLevel += 10;
 	}
-	if (!globalVariables::missionSurveyMissionLimitToLessThanNinetyEnabled) {
+	if (!missionVars.missionSurveyMissionLimitToLessThanNinetyEnabled) {
 		if (surveySkill > 90) {
 			maxLevel += 10;
 		}
@@ -1045,7 +1046,7 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	Vector<ManagedReference<ResourceSpawn*> > resources;
 
 	
-	if (!globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
+	if (!missionVars.missionSurveyMissionEnableMoreResourcesEnabled) {
 
 		toolType = SurveyTool::MINERAL;
 		
@@ -1068,7 +1069,7 @@ void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject*
 	if (texts == 0)
 		texts = 1;
 
-	if (!globalVariables::missionSurveyMissionEnableMoreResourcesEnabled) {
+	if (!missionVars.missionSurveyMissionEnableMoreResourcesEnabled) {
 		mission->setMissionTargetName(spawn->getSurveyMissionSpawnFamilyName());
 	} else {
 		String familyName = spawn->getSurveyMissionSpawnFamilyName();
@@ -1793,7 +1794,7 @@ void MissionManagerImplementation::generateRandomFactionalDestroyMissionDescript
 
 	int randomNumber = System::random(randomMax) + 1;
 	
-	if (globalVariables::missionNameAndLevelEnabled == true) {
+	if (missionVars.missionNameAndLevelEnabled == true) {
 		mission->setMissionTitle("CL" + String::valueOf(diffDisplay), " Destroy the " + mobileName.replaceAll("_", " ") + " camp");
 	} else {
 		mission->setMissionTitle("mission/mission_destroy_" + difficultyString, "m" + String::valueOf(randomNumber) + "t");
@@ -1932,7 +1933,7 @@ LairSpawn* MissionManagerImplementation::getRandomLairSpawn(CreatureObject* play
 	int counter = availableLairList->size();
 	int playerLevel = server->getPlayerManager()->calculatePlayerLevel(player);
 
-	if (globalVariables::missionLevelSelectionEnabled == true) {
+	if (missionVars.missionLevelSelectionEnabled == true) {
 		PlayerObject* targetGhost = player->getPlayerObject();
 
 		String level = targetGhost->getScreenPlayData("mission_level_choice", "levelChoice");

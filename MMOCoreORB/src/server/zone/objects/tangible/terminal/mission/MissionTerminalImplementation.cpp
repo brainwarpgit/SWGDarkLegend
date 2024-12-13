@@ -14,7 +14,8 @@
 #include "server/zone/objects/player/sessions/SlicingSession.h"
 #include "server/zone/managers/director/DirectorManager.h"
 #include "server/zone/objects/player/PlayerObject.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/missionVariables.h"
 
 void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	TerminalImplementation::fillObjectMenuResponse(menuResponse, player);
@@ -32,7 +33,7 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 		menuResponse->addRadialMenuItemToRadialID(73, 76, 3, "@city/city:south"); // South
 		menuResponse->addRadialMenuItemToRadialID(73, 77, 3, "@city/city:west"); // West
 	}
-	if (terminalType == "general" && globalVariables::missionRandomAttacksEnabled == true) {
+	if (terminalType == "general" && missionVars.missionRandomAttacksEnabled == true) {
 		menuResponse->addRadialMenuItem(114, 3, "Choose Random Attacks");
 		if (pGhost == nullptr) {
 			return;
@@ -40,10 +41,10 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 		if (pGhost->isAdmin()) menuResponse->addRadialMenuItem(115, 3, "Admin Random Attacks");
 	}
 	if (terminalType == "general" || terminalType == "imperial" || terminalType == "rebel") {
-		if (globalVariables::missionLevelSelectionEnabled == true) {
+		if (missionVars.missionLevelSelectionEnabled == true) {
 			menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
 		}
-		if (globalVariables::missionDirectionSelectionEnabled == true) {
+		if (missionVars.missionDirectionSelectionEnabled == true) {
 			menuResponse->addRadialMenuItem(113, 3, "Choose Mission Direction");
 		}
 	}
