@@ -31,6 +31,8 @@
 #include "server/zone/managers/frs/FrsManager.h"
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/objects/installation/TurretObject.h"
+
+#include "server/zone/managers/variables/combatVariables.h"
 #include "server/globalVariables.h"
 
 #define COMBAT_SPAM_RANGE 85 // Range at which players will see Combat Log Info
@@ -1141,45 +1143,45 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 	//PvE Weapon Type Multipliers
 	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && !data.isForceAttack()) {
 		if (weapon->isMeleeWeapon() && !weapon->isJediWeapon())
-			damage *= globalVariables::combatDamageMeleeWeaponMultiplier;
+			damage *= combatVars.combatDamageMeleeWeaponMultiplier;
 		if (weapon->isUnarmedWeapon() && !weapon->isJediWeapon())
-			damage *= globalVariables::combatDamageUnarmedWeaponMultiplier;
+			damage *= combatVars.combatDamageUnarmedWeaponMultiplier;
 		if (weapon->isOneHandMeleeWeapon() && !weapon->isJediWeapon())
-			damage *= globalVariables::combatDamageOneHandWeaponMultiplier;
+			damage *= combatVars.combatDamageOneHandWeaponMultiplier;
 		if (weapon->isTwoHandMeleeWeapon() && !weapon->isJediWeapon())
-			damage *= globalVariables::combatDamageTwoHandWeaponMultiplier;
+			damage *= combatVars.combatDamageTwoHandWeaponMultiplier;
 		if (weapon->isPolearmWeaponObject() && !weapon->isJediWeapon())
-			damage *= globalVariables::combatDamagePolearmWeaponMultiplier;
+			damage *= combatVars.combatDamagePolearmWeaponMultiplier;
 		if (weapon->isRangedWeapon() && !weapon->isJediWeapon())
-			damage *= globalVariables::combatDamageRangedWeaponMultiplier;
+			damage *= combatVars.combatDamageRangedWeaponMultiplier;
 		if (weapon->isPistolWeapon())
-			damage *= globalVariables::combatDamagePistolWeaponMultiplier;
+			damage *= combatVars.combatDamagePistolWeaponMultiplier;
 		if (weapon->isCarbineWeapon())
-			damage *= globalVariables::combatDamageCarbineWeaponMultiplier;
+			damage *= combatVars.combatDamageCarbineWeaponMultiplier;
 		if (weapon->isRifleWeapon())
-			damage *= globalVariables::combatDamageRifleWeaponMultiplier;
+			damage *= combatVars.combatDamageRifleWeaponMultiplier;
 		if (weapon->isThrownWeapon())
-			damage *= globalVariables::combatDamageThrownWeaponMultiplier;
+			damage *= combatVars.combatDamageThrownWeaponMultiplier;
 		if (weapon->isHeavyWeapon())
-			damage *= globalVariables::combatDamageHeavyWeaponMultiplier;
+			damage *= combatVars.combatDamageHeavyWeaponMultiplier;
 		if (weapon->isSpecialHeavyWeapon())
-			damage *= globalVariables::combatDamageSpecialHeavyWeaponMultiplier;
+			damage *= combatVars.combatDamageSpecialHeavyWeaponMultiplier;
 		if (weapon->isMineWeapon())
-			damage *= globalVariables::combatDamageMineWeaponMultiplier;
+			damage *= combatVars.combatDamageMineWeaponMultiplier;
 		if (weapon->isJediWeapon())
-			damage *= globalVariables::combatDamageJediWeaponMultiplier;
+			damage *= combatVars.combatDamageJediWeaponMultiplier;
 		if (weapon->isJediOneHandedWeapon())
-			damage *= globalVariables::combatDamageJediOneHandWeaponMultiplier;
+			damage *= combatVars.combatDamageJediOneHandWeaponMultiplier;
 		if (weapon->isJediTwoHandedWeapon())
-			damage *= globalVariables::combatDamageJediTwoHandWeaponMultiplier;
+			damage *= combatVars.combatDamageJediTwoHandWeaponMultiplier;
 		if (weapon->isJediPolearmWeapon())
-			damage *= globalVariables::combatDamageJediPolearmWeaponMultiplier;
+			damage *= combatVars.combatDamageJediPolearmWeaponMultiplier;
 		
 	}
 	
 	//PvE Force Type Multipliers
 	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && data.isForceAttack()) {
-		damage *= globalVariables::combatDamageJediForcePowerMultiplier;
+		damage *= combatVars.combatDamageJediForcePowerMultiplier;
 	}
 	
 	//PvE Posture Multipliers
@@ -1191,10 +1193,10 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 	}
 	
 	//PvE Damage Multiplier
-	damage *= globalVariables::combatDamageAllMultiplier;
+	damage *= combatVars.combatDamageAllMultiplier;
 	
-	//if (!data.isForceAttack() && weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
-	//	damage *= 1.25;
+	if (!data.isForceAttack() && weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
+		damage *= 1.25;
 
 	if (defender->isKnockedDown()) {
 		damage *= 1.5f;
@@ -1478,7 +1480,7 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 	float criticalMultiplier = 1;
 	int roll = 0;
 	int rollMod = 0;
-	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && globalVariables::combatCriticalDamageEnabled) {
+	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && combatVars.combatCriticalDamageEnabled) {
 		String weaponType;
 		if (weapon->isMeleeWeapon()) {
 			weaponType = "melee";
@@ -1490,8 +1492,8 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 			rollMod = player->getSkillMod(weaponType + "_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
 		}
 		roll = System::random(1000 + rollMod);
-		if (roll > 925) criticalMultiplier = globalVariables::combatCriticalMultiplier;
-		if (roll > 1050) criticalMultiplier = globalVariables::combatLegendaryCriticalMultiplier;
+		if (roll > 925) criticalMultiplier = combatVars.combatCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = combatVars.combatLegendaryCriticalMultiplier;
 	}
 
 	uint32 crc = STRING_HASHCODE("pet_damage_divisor");
@@ -1514,11 +1516,11 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 
 	damage *= criticalMultiplier;
 
-	if (criticalMultiplier == globalVariables::combatCriticalMultiplier) {
+	if (criticalMultiplier == combatVars.combatCriticalMultiplier) {
 		defender->showFlyText("combat_effects", "critical_attack", 0, 0xFF, 0);
 		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","critical_attack",0); //1 = red, 0 = white, didn't check any others.
 	}
-	if (criticalMultiplier == globalVariables::combatLegendaryCriticalMultiplier) {
+	if (criticalMultiplier == combatVars.combatLegendaryCriticalMultiplier) {
 		defender->showFlyText("combat_effects", "legendary_attack", 0, 0xFF, 0);
 		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","legendary_attack",0);
 	}
@@ -1729,7 +1731,7 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 	float criticalMultiplier = 1;
 	int roll = 0;
 	int rollMod = 0;
-	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && globalVariables::combatCriticalDamageEnabled) {
+	if (attacker->isPlayerCreature() && !defender->isPlayerCreature() && combatVars.combatCriticalDamageEnabled) {
 		String weaponType;
 		if (weapon->isMeleeWeapon()) {
 			weaponType = "melee";
@@ -1738,8 +1740,8 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 		}
 		rollMod = attacker->getSkillMod(weaponType + "_crit_chance") + ((attacker->getSkillMod("luck") + attacker->getSkillMod("force_luck")) / 5);
 		roll = System::random(1000 + rollMod);
-		if (roll > 925) criticalMultiplier = globalVariables::combatCriticalMultiplier;
-		if (roll > 1050) criticalMultiplier = globalVariables::combatLegendaryCriticalMultiplier;
+		if (roll > 925) criticalMultiplier = combatVars.combatCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = combatVars.combatLegendaryCriticalMultiplier;
 	}
 
 	uint32 crc = STRING_HASHCODE("pet_damage_divisor");
@@ -1759,11 +1761,11 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 
 	damage *= criticalMultiplier;
 
-	if (criticalMultiplier == globalVariables::combatCriticalMultiplier) {
+	if (criticalMultiplier == combatVars.combatCriticalMultiplier) {
 		defender->showFlyText("combat_effects", "critical_attack", 0, 0xFF, 0);
 		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","critical_attack",0);
 	}
-	if (criticalMultiplier == globalVariables::combatLegendaryCriticalMultiplier) {
+	if (criticalMultiplier == combatVars.combatLegendaryCriticalMultiplier) {
 		defender->showFlyText("combat_effects", "legendary_attack", 0, 0xFF, 0);
 		broadcastCombatSpam(defender,attacker,nullptr,damage,"cbt_spam","legendary_attack",0);
 	}
