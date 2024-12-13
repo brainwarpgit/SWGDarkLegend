@@ -7,6 +7,8 @@
 #include "server/zone/objects/creature/ai/AiAgent.h"
 #include "server/zone/objects/intangible/tasks/StorePetTask.h"
 
+#include "server/zone/managers/variables/petVariables.h"
+
 class PetTransferCommand : public QueueCommand {
 public:
 	PetTransferCommand(const String& name, ZoneProcessServer* server) : QueueCommand(name, server) {
@@ -127,7 +129,7 @@ public:
 		controlDevice->setLastCommandTarget(nullptr);
 		controlDevice->setLastCommand(PetManager::FOLLOW);
 
-		if (globalVariables::petAllMountsUsedByAnyone == true) {
+		if (petVars.petAllMountsUsedByAnyone == true) {
 			Reference<StorePetTask*> task = new StorePetTask(targetPlayer, pet);
 
 			if (task == nullptr)

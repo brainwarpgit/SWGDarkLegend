@@ -18,6 +18,18 @@ public:
 	PetVariables();
 	~PetVariables();
 	void startPetVariables();
+	//Pet
+	float petCallTime{15};
+	float petGrowthCycleTime{720};
+	int petGrowthStagesToGrown{10};
+	bool petStoreInCombatEnabled{false};
+	float petOutOfCombatHAMRegenMultiplier{1};
+	bool petAllMountsUsedByAnyone{false};
+	bool petCallInCombatEnabled{false};
+	float petDamageMultiplier{1};
+	bool petSpeedSameAsPlayerEnabled{false};
+	bool petGallopToggleEnabled{false};
+	float petGallopDamagePercent{0};
 };
 
 extern PetVariables petVars;

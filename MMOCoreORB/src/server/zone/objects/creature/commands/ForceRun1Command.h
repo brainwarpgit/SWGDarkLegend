@@ -6,6 +6,8 @@
 #define FORCERUN1COMMAND_H_
 
 #include "JediQueueCommand.h"
+
+#include "server/zone/managers/variables/petVariables.h"
 #include "server/globalVariables.h"
 
 class ForceRun1Command : public JediQueueCommand {
@@ -36,7 +38,7 @@ public:
 			} else {
 				creature->sendSystemMessage("You feel the Force leave your body, and you return to normal movement speed."); // Toggle Force Run off.
 				creature->removeBuff(BuffCRC::JEDI_FORCE_RUN_1);
-				if (globalVariables::petSpeedSameAsPlayerEnabled) {
+				if (petVars.petSpeedSameAsPlayerEnabled) {
 					PlayerObject* ghost = creature->getPlayerObject();
 					for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 						ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
@@ -59,7 +61,7 @@ public:
 			creature->removeBuff(STRING_HASHCODE("gallop"));
 		}
 
-		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		if (petVars.petSpeedSameAsPlayerEnabled) {
 			PlayerObject* ghost = creature->getPlayerObject();
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);

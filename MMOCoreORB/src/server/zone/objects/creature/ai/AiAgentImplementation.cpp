@@ -89,7 +89,7 @@
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
 
 #include "server/zone/managers/variables/creatureVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/petVariables.h"
 
 // #define DEBUG
 // #define DEBUG_AI_WEAPONS
@@ -2589,7 +2589,7 @@ void AiAgentImplementation::activateHAMRegeneration(int latency) {
 	float modifier = (float)latency;
 	
 	if (isPet() && !isInCombat())
-		modifier *= globalVariables::petOutOfCombatHAMRegenMultiplier;
+		modifier *= petVars.petOutOfCombatHAMRegenMultiplier;
 
 	uint32 healthTick = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::HEALTH) / 300000.f * modifier));
 	uint32 actionTick = (uint32) Math::max(1.f, (float) ceil(getMaxHAM(CreatureAttribute::ACTION) / 300000.f * modifier));
@@ -4385,7 +4385,7 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* creature) {
 		if (isMindTricked())
 			return false;
 			
-		if ((getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && (getOptionsBitmask() & OptionBitmask::INVULNERABLE) && globalVariables::petAllMountsUsedByAnyone == true) {
+		if ((getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && (getOptionsBitmask() & OptionBitmask::INVULNERABLE) && petVars.petAllMountsUsedByAnyone == true) {
 			return false;
 		}
 
@@ -4478,7 +4478,7 @@ bool AiAgentImplementation::isAttackableBy(CreatureObject* creature) {
 		if (thisFaction == 0 && creatureFaction > 0)
 			return false;
 
-		if (isPet() && (getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && (getOptionsBitmask() & OptionBitmask::INVULNERABLE) && globalVariables::petAllMountsUsedByAnyone == true) {
+		if (isPet() && (getCreatureBitmask() & ObjectFlag::NOAIAGGRO) && isMount() && (getOptionsBitmask() & OptionBitmask::INVULNERABLE) && petVars.petAllMountsUsedByAnyone == true) {
 			return false;
 		}
 		

@@ -8,6 +8,8 @@
 
 #include "server/zone/objects/creature/buffs/PrivateSkillMultiplierBuff.h"
 #include "JediQueueCommand.h"
+
+#include "server/zone/managers/variables/petVariables.h"
 #include "server/globalVariables.h"
 
 class ForceRun3Command : public JediQueueCommand {
@@ -36,7 +38,7 @@ public:
 			} else {
 				creature->sendSystemMessage("You feel the Force leave your body, and you return to normal movement speed."); // Toggle Force Run off.
 				creature->removeBuff(BuffCRC::JEDI_FORCE_RUN_3);
-				if (globalVariables::petSpeedSameAsPlayerEnabled) {
+				if (petVars.petSpeedSameAsPlayerEnabled) {
 					PlayerObject* ghost = creature->getPlayerObject();
 					for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 						ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
@@ -77,7 +79,7 @@ public:
 			creature->removeBuff(STRING_HASHCODE("retreat"));
 		}
 		
-		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		if (petVars.petSpeedSameAsPlayerEnabled) {
 			PlayerObject* ghost = creature->getPlayerObject();
 			ManagedReference<Buff*> petBuff = new Buff(creature, crc, duration, BuffType::SKILL);
 			Locker petLocker(petBuff);

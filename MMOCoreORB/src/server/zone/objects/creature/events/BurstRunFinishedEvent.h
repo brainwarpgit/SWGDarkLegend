@@ -6,6 +6,8 @@
 #define BURSTRUNFINISHEDEVENT_H_
 
 #include "server/zone/objects/creature/CreatureObject.h"
+
+#include "server/zone/managers/variables/petVariables.h"
 #include "server/globalVariables.h"
 
 class BurstRunFinishedEvent : public Task {
@@ -26,7 +28,7 @@ public:
 		Locker locker(creature);
 
 		creature->removePendingTask("burst_run_finished");
-		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		if (petVars.petSpeedSameAsPlayerEnabled) {
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr) {

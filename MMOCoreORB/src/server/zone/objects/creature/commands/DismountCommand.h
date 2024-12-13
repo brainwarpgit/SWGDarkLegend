@@ -9,6 +9,8 @@
 #include "server/zone/objects/intangible/ControlDevice.h"
 #include "templates/creature/SharedCreatureObjectTemplate.h"
 #include "server/zone/packets/object/DataTransform.h"
+
+#include "server/zone/managers/variables/petVariables.h"
 #include "server/globalVariables.h"
 
 class DismountCommand : public QueueCommand {
@@ -111,7 +113,7 @@ public:
 		// these are already removed off the player - Just remove it off the mount
 		creature->removeMountedCombatSlow(false);
 
-		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		if (petVars.petSpeedSameAsPlayerEnabled) {
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr) {

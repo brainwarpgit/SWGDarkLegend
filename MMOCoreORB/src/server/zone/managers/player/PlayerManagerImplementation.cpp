@@ -118,6 +118,8 @@
 #include "server/zone/packets/object/transform/Transform.h"
 
 #include "server/zone/managers/statistics/StatisticsManager.h"
+
+#include "server/zone/managers/variables/petVariables.h"
 #include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl, bool trackOnlineUsers) : Logger("PlayerManager") {
@@ -6415,7 +6417,7 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		} else {
 			player->sendSystemMessage("@combat_effects:burst_run_no"); // You cannot burst run right now.
 		}
-		if (globalVariables::petSpeedSameAsPlayerEnabled) {
+		if (petVars.petSpeedSameAsPlayerEnabled) {
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr) {
@@ -6476,9 +6478,9 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	float mindCost = 0;
 	
 	if (globalVariables::playerBurstRunToggleEnabled) {
-		healthCost = player->getMaxHAM(CreatureAttribute::HEALTH) * (globalVariables::playerGallopDamagePercent / 100);
-		actionCost = player->getMaxHAM(CreatureAttribute::ACTION) * (globalVariables::playerGallopDamagePercent / 100);
-		mindCost = player->getMaxHAM(CreatureAttribute::MIND) * (globalVariables::playerGallopDamagePercent / 100);
+		healthCost = player->getMaxHAM(CreatureAttribute::HEALTH) * (petVars.petGallopDamagePercent / 100);
+		actionCost = player->getMaxHAM(CreatureAttribute::ACTION) * (petVars.petGallopDamagePercent / 100);
+		mindCost = player->getMaxHAM(CreatureAttribute::MIND) * (petVars.petGallopDamagePercent / 100);
 			
 	} else {
 		healthCost = hamCost / 3;//(int) (player->calculateCostAdjustment(CreatureAttribute::STRENGTH, hamCost) * hamReduction);
@@ -6529,7 +6531,7 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	player->addBuff(buff);
 
-	if (globalVariables::petSpeedSameAsPlayerEnabled) {
+	if (petVars.petSpeedSameAsPlayerEnabled) {
 		for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 			if (pet != nullptr) {

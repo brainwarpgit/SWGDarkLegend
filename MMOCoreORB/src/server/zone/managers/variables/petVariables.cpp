@@ -63,7 +63,18 @@ bool PetVariables::loadConfigData() {
 	}
 
 	try {
-
+		//Pet 
+		if (lua->getGlobalInt("petCallTime") >= 0) petVars.petCallTime = lua->getGlobalInt("petCallTime");
+		if (lua->getGlobalInt("petGrowthCycleTime") > 0) petVars.petGrowthCycleTime = lua->getGlobalInt("petGrowthCycleTime");
+		if (lua->getGlobalInt("petGrowthStagesToGrown") > 0) petVars.petGrowthStagesToGrown = lua->getGlobalInt("petGrowthStagesToGrown");
+		if (lua->getGlobalBoolean("petStoreInCombatEnabled") == true || lua->getGlobalBoolean("petStoreInCombatEnabled") == false) petVars.petStoreInCombatEnabled = lua->getGlobalBoolean("petStoreInCombatEnabled");
+		if (lua->getGlobalFloat("petOutOfCombatHAMRegenMultiplier") > 0) petVars.petOutOfCombatHAMRegenMultiplier = lua->getGlobalFloat("petOutOfCombatHAMRegenMultiplier");
+		if (lua->getGlobalBoolean("petAllMountsUsedByAnyone") == true || lua->getGlobalBoolean("petAllMountsUsedByAnyone") == false) petVars.petAllMountsUsedByAnyone = lua->getGlobalBoolean("petAllMountsUsedByAnyone");
+		if (lua->getGlobalBoolean("petCallInCombatEnabled") == true || lua->getGlobalBoolean("petCallInCombatEnabled") == false) petVars.petCallInCombatEnabled = lua->getGlobalBoolean("petCallInCombatEnabled");
+		if (lua->getGlobalFloat("petDamageMultiplier") > 0) petVars.petDamageMultiplier = lua->getGlobalFloat("petDamageMultiplier");
+		if (lua->getGlobalBoolean("petSpeedSameAspetEnabled") == true || lua->getGlobalBoolean("petSpeedSameAspetEnabled") == false) petVars.petSpeedSameAsPlayerEnabled = lua->getGlobalBoolean("petSpeedSameAspetEnabled");
+		if (lua->getGlobalBoolean("petGallopToggleEnabled") == true || lua->getGlobalBoolean("petGallopToggleEnabled") == false) petVars.petGallopToggleEnabled = lua->getGlobalBoolean("petGallopToggleEnabled");
+		if (lua->getGlobalFloat("petGallopDamagePercent") >= 0 && lua->getGlobalFloat("petGallopDamagePercent") <= 100) petVars.petGallopDamagePercent = lua->getGlobalFloat("petGallopDamagePercent");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;
