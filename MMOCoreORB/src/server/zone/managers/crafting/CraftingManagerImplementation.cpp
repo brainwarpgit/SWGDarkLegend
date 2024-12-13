@@ -7,7 +7,8 @@
 #include "server/zone/managers/crafting/labratories/ResourceLabratory.h"
 #include "server/zone/managers/crafting/labratories/GeneticLabratory.h"
 #include "server/zone/managers/crafting/labratories/DroidLabratory.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 
 void CraftingManagerImplementation::initialize() {
 	schematicMap = SchematicMap::instance();
@@ -66,7 +67,7 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 	float cityBonus = player->getSkillMod("private_spec_experimentation");
 
 	int experimentationSkill = player->getSkillMod(draftSchematic->getExperimentationSkill());
-	if (globalVariables::craftingNewAssemblyEnabled) {	
+	if (craftingVars.craftingNewAssemblyEnabled) {	
 		experimentationSkill += player->getSkillMod("force_experimentation") + cityBonus;
 	} else {
 		experimentationSkill += player->getSkillMod("force_experimentation");
@@ -76,7 +77,7 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 	float experimentingPoints = ((float)experimentationSkill) / 10.0f;
 
 	int failMitigate = 0;
-	if (globalVariables::craftingNewAssemblyEnabled) {	
+	if (craftingVars.craftingNewAssemblyEnabled) {	
 		failMitigate = (experimentationSkill - 100) / 7;
 	} else {
 		failMitigate = (player->getSkillMod(draftSchematic->getAssemblySkill()) - 100 + cityBonus) / 7;
@@ -104,7 +105,7 @@ int CraftingManagerImplementation::calculateExperimentationSuccess(CreatureObjec
 
 	/// Range 0-100
 	int luckRoll = 0;
-	if (globalVariables::craftingNewAssemblyEnabled) {	
+	if (craftingVars.craftingNewAssemblyEnabled) {	
 		luckRoll = System::random(100) + (System::random(experimentationSkill) / 4);
 	} else {
 		luckRoll = System::random(100) + cityBonus;

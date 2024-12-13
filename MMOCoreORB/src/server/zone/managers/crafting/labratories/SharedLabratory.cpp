@@ -7,7 +7,8 @@
 #include "server/zone/objects/tangible/misc/CustomIngredient.h"
 #include "server/zone/objects/manufactureschematic/ingredientslots/ComponentSlot.h"
 #include "server/zone/objects/manufactureschematic/ingredientslots/ResourceSlot.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 
 SharedLabratory::SharedLabratory() : Logger("SharedLabratory"){
 }
@@ -59,9 +60,9 @@ float SharedLabratory::calculateExperimentationValueModifier(int experimentation
 }
 float SharedLabratory::calculateAssemblyValueModifier(int assemblyResult) {
 	if (assemblyResult == CraftingManager::AMAZINGSUCCESS)
-		return 1.05f + globalVariables::craftingAssemblyModifier;
+		return 1.05f + craftingVars.craftingAssemblyModifier;
 
-	float result = (1.1f - (assemblyResult * .1f)) + globalVariables::craftingAssemblyModifier;
+	float result = (1.1f - (assemblyResult * .1f)) + craftingVars.craftingAssemblyModifier;
 
 	return result;
 }
@@ -147,7 +148,7 @@ int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchema
 	float cityBonus = player->getSkillMod("private_spec_assembly");
 
 	int assemblySkill = player->getSkillMod(draftSchematic->getAssemblySkill());
-	if (globalVariables::craftingNewAssemblyEnabled) {	
+	if (craftingVars.craftingNewAssemblyEnabled) {	
 		assemblySkill += player->getSkillMod("force_assembly") + cityBonus;
 	} else {
 		assemblySkill += player->getSkillMod("force_assembly");
@@ -156,7 +157,7 @@ int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchema
 	
 	float assemblyPoints = ((float)assemblySkill) / 10.0f;
 	int failMitigate = 0;	
-	if (globalVariables::craftingNewAssemblyEnabled) {	
+	if (craftingVars.craftingNewAssemblyEnabled) {	
 		failMitigate = (assemblySkill - 100) / 7;
 	} else {
 		failMitigate = (player->getSkillMod(draftSchematic->getAssemblySkill()) - 100 + cityBonus) / 7;
@@ -183,7 +184,7 @@ int SharedLabratory::calculateAssemblySuccess(CreatureObject* player,DraftSchema
 	}
 
 	int luckRoll = 0;
-	if (globalVariables::craftingNewAssemblyEnabled) {	
+	if (craftingVars.craftingNewAssemblyEnabled) {	
 		luckRoll = System::random(100) + (System::random(assemblySkill) / 4);
 	} else {
 		luckRoll = System::random(100) + cityBonus;

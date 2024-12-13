@@ -9,6 +9,8 @@
 #include "templates/tangible/ArmorObjectTemplate.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
 #include "templates/tangible/SharedWeaponObjectTemplate.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 #include "server/globalVariables.h"
 
 void ArmorObjectImplementation::initializeTransientMembers() {
@@ -307,31 +309,31 @@ float ArmorObjectImplementation::getTypeValue(int type, float value) const {
 				newValue = globalVariables::playerMaxArmorSliced;
 		} else {
 			if (type & SharedWeaponObjectTemplate::KINETIC) {
-				if (newValue > globalVariables::craftingKineticMaxResists) newValue = globalVariables::craftingKineticMaxResists;
+				if (newValue > craftingVars.craftingKineticMaxResists) newValue = craftingVars.craftingKineticMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::ENERGY) {
-				if (newValue > globalVariables::craftingEnergyMaxResists) newValue = globalVariables::craftingEnergyMaxResists;
+				if (newValue > craftingVars.craftingEnergyMaxResists) newValue = craftingVars.craftingEnergyMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::BLAST) {
-				if (newValue > globalVariables::craftingBlastMaxResists) newValue = globalVariables::craftingBlastMaxResists;
+				if (newValue > craftingVars.craftingBlastMaxResists) newValue = craftingVars.craftingBlastMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::HEAT) {
-				if (newValue > globalVariables::craftingHeatMaxResists) newValue = globalVariables::craftingHeatMaxResists;
+				if (newValue > craftingVars.craftingHeatMaxResists) newValue = craftingVars.craftingHeatMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::COLD) {
-				if (newValue > globalVariables::craftingColdMaxResists) newValue = globalVariables::craftingColdMaxResists;
+				if (newValue > craftingVars.craftingColdMaxResists) newValue = craftingVars.craftingColdMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::ELECTRICITY) {
-				if (newValue > globalVariables::craftingElectricityMaxResists) newValue = globalVariables::craftingElectricityMaxResists;
+				if (newValue > craftingVars.craftingElectricityMaxResists) newValue = craftingVars.craftingElectricityMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::ACID) {
-				if (newValue > globalVariables::craftingAcidMaxResists) newValue = globalVariables::craftingAcidMaxResists;
+				if (newValue > craftingVars.craftingAcidMaxResists) newValue = craftingVars.craftingAcidMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::STUN) {
-				if (newValue > globalVariables::craftingStunMaxResists) newValue = globalVariables::craftingStunMaxResists;
+				if (newValue > craftingVars.craftingStunMaxResists) newValue = craftingVars.craftingStunMaxResists;
 			}
 			if (type & SharedWeaponObjectTemplate::LIGHTSABER) {
-				if (newValue > globalVariables::craftingLightsaberMaxResists) newValue = globalVariables::craftingLightsaberMaxResists;
+				if (newValue > craftingVars.craftingLightsaberMaxResists) newValue = craftingVars.craftingLightsaberMaxResists;
 			}
 			if(newValue > globalVariables::playerMaxArmorUnSliced)
 				newValue = globalVariables::playerMaxArmorUnSliced;

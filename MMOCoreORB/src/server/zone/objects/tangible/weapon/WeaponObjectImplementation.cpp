@@ -20,6 +20,8 @@
 #include "server/zone/ZoneProcessServer.h"
 #include "server/zone/managers/player/PlayerMap.h"
 #include "server/chat/ChatManager.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 #include "server/globalVariables.h"
 
 void WeaponObjectImplementation::initializeTransientMembers() {
@@ -731,16 +733,16 @@ void WeaponObjectImplementation::decreasePowerupUses(CreatureObject* player) {
 String WeaponObjectImplementation::repairAttempt(int repairChance) {
 	String message = "";
 
-	if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled) {
-		message += "This item was broken. Reduced Max Condition by " + std::to_string(globalVariables::craftingRepairMaxMod * 100) + "%! ";
-		setMaxCondition(getMaxCondition() * globalVariables::craftingRepairMaxMod, true);
+	if ((getMaxCondition() - getConditionDamage()) <= 0 && craftingVars.craftingRepairBrokenEnabled) {
+		message += "This item was broken. Reduced Max Condition by " + std::to_string(craftingVars.craftingRepairMaxMod * 100) + "%! ";
+		setMaxCondition(getMaxCondition() * craftingVars.craftingRepairMaxMod, true);
 	}
 
 	message += "@error_message:";
 
 	if(repairChance < 25) {
 		message += "sys_repair_failed";
-		if (!globalVariables::craftingRepairBrokenEnabled) {
+		if (!craftingVars.craftingRepairBrokenEnabled) {
 			setMaxCondition(1, true);
 		}
 		setConditionDamage(0, true);

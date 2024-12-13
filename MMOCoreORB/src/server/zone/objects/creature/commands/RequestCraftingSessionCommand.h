@@ -11,7 +11,8 @@
 #include "server/zone/objects/player/sessions/crafting/CraftingSession.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/objects/player/sessions/TradeSession.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 
 class RequestCraftingSessionCommand : public QueueCommand {
 public:
@@ -55,7 +56,7 @@ public:
 		}
 
 		if (creature->isEntertaining()) {
-			if (!globalVariables::craftingWhileEntertainingEnabled) {
+			if (!craftingVars.craftingWhileEntertainingEnabled) {
 				if (!checkInvalidLocomotions(creature)) {
 					if (craftingTool != nullptr && creature->isPlayerCreature()) {
 						String message = "@ui_craft:err_start";

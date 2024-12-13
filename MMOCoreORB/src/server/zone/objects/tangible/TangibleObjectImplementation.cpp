@@ -37,7 +37,8 @@
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/tangible/wearables/WearableContainerObject.h"
 #include "server/zone/objects/tangible/tool/CraftingStation.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 
 void TangibleObjectImplementation::initializeTransientMembers() {
 	SceneObjectImplementation::initializeTransientMembers();
@@ -1191,7 +1192,7 @@ Reference<FactoryCrate*> TangibleObjectImplementation::createFactoryCrate(int ma
 
 	Locker locker(crate);
 
-	crate->setMaxCapacity(globalVariables::craftingFactoryCrateMaxSize);
+	crate->setMaxCapacity(craftingVars.craftingFactoryCrateMaxSize);
 
 
 	if (insertSelf) {
@@ -1313,7 +1314,7 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 	}
 
 	//Condition is unrepairable
-	if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled == false) {
+	if ((getMaxCondition() - getConditionDamage()) <= 0 && craftingVars.craftingRepairBrokenEnabled == false) {
 		StringIdChatParameter cantrepair("error_message", "sys_repair_unrepairable");
 		cantrepair.setTT(getDisplayedName());
 		player->sendSystemMessage(cantrepair); //%TT's condition is beyond repair even for your skills.
@@ -1369,7 +1370,7 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 	int roll = 0;	
 
 	int repairChance = 0;
-	if (!globalVariables::craftingNewRepairEnabled) {
+	if (!craftingVars.craftingNewRepairEnabled) {
 		roll = System::random(100);
 		repairChance = roll;
 
@@ -1405,7 +1406,7 @@ void TangibleObjectImplementation::repair(CreatureObject* player, RepairTool * r
 	ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
 	ManagedReference<CraftingStation*> station = nullptr;
 		
-	if (!globalVariables::craftingNewRepairEnabled) {	
+	if (!craftingVars.craftingNewRepairEnabled) {	
 		/// Increase if near station
 		if (playerMan->getNearbyCraftingStation(player, repairTemplate->getStationType()) != nullptr) {
 			repairChance += 15;

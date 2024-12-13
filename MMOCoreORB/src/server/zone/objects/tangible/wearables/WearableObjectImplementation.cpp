@@ -17,6 +17,8 @@
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/zone/objects/tangible/tool/CraftingTool.h"
 #include "server/zone/objects/tangible/tool/CraftingStation.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 #include "server/globalVariables.h"
 
 void WearableObjectImplementation::initializeTransientMembers() {
@@ -74,7 +76,7 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 				ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
 				ManagedReference<CraftingStation*> station = nullptr;
 				ManagedReference<CraftingTool*> craftingTool = nullptr;
-				if (globalVariables::craftingNewGenerateSocketsEnabled) {
+				if (craftingVars.craftingNewGenerateSocketsEnabled) {
 					if (playerMan != nullptr) {
 						station = playerMan->getNearbyCraftingStation(player, CraftingTool::CLOTHING);
 						if (station != nullptr) {
@@ -98,14 +100,14 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 
 				skill += player->getSkillMod(assemblySkill);
 
-				if (globalVariables::craftingMinSocketMod > skill)
+				if (craftingVars.craftingMinSocketMod > skill)
 					return;
 
 				luck = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 			}
 		}
 	}
-	skill -= globalVariables::craftingMinSocketMod;
+	skill -= craftingVars.craftingMinSocketMod;
 	if (skill < 0) skill = 0;
 	int bonusMod = 65 - skill;
 
@@ -117,16 +119,16 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 
 	int skillAdjust = skill + System::random(luck) + bonusMod;
 	int maxMod = 0;
-	if (globalVariables::craftingNewGenerateSocketsEnabled) {
+	if (craftingVars.craftingNewGenerateSocketsEnabled) {
 		maxMod = 65 + System::random(skill + luck);
 	} else {
 		maxMod = 65 + System::random(skill);
 	}
 	float randomSkill = System::random(skillAdjust) * 10;
 	float roll = randomSkill / (400.f + maxMod);
-	float generatedCount = roll * globalVariables::craftingMaxSockets;
-	if (generatedCount > globalVariables::craftingMaxSockets) {
-		generatedCount = globalVariables::craftingMaxSockets;
+	float generatedCount = roll * craftingVars.craftingMaxSockets;
+	if (generatedCount > craftingVars.craftingMaxSockets) {
+		generatedCount = craftingVars.craftingMaxSockets;
 	} else if (generatedCount > 3 && generatedCount <= 3.75f) {
 		generatedCount = floor(generatedCount);
 	}
@@ -143,7 +145,7 @@ void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attac
 		return;
 	}
 
-	if (getRemainingSockets() < 1 && wearableSkillMods.size() > (globalVariables::craftingMaxSockets + 1)) {
+	if (getRemainingSockets() < 1 && wearableSkillMods.size() > (craftingVars.craftingMaxSockets + 1)) {
 		return;
 	}
 
@@ -275,9 +277,9 @@ bool WearableObjectImplementation::isEquipped() {
 String WearableObjectImplementation::repairAttempt(int repairChance) {
 	String message = "";
 
-	if ((getMaxCondition() - getConditionDamage()) <= 0 && globalVariables::craftingRepairBrokenEnabled) {
-		message += "This item was broken. Reduced Max Condition by " + std::to_string(globalVariables::craftingRepairMaxMod * 100) + "%! ";
-		setMaxCondition(getMaxCondition() * globalVariables::craftingRepairMaxMod, true);
+	if ((getMaxCondition() - getConditionDamage()) <= 0 && craftingVars.craftingRepairBrokenEnabled) {
+		message += "This item was broken. Reduced Max Condition by " + std::to_string(craftingVars.craftingRepairMaxMod * 100) + "%! ";
+		setMaxCondition(getMaxCondition() * craftingVars.craftingRepairMaxMod, true);
 	}
 
 	message += "@error_message:";

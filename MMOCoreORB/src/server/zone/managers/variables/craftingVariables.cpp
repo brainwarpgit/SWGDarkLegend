@@ -63,7 +63,33 @@ bool CraftingVariables::loadConfigData() {
 	}
 
 	try {
-
+		//Crafting 
+		if (lua->getGlobalInt("craftingFactoryCrateMaxSize") > 0) craftingVars.craftingFactoryCrateMaxSize = lua->getGlobalInt("craftingFactoryCrateMaxSize");
+		if (lua->getGlobalFloat("craftingFactoryRunTimeMultiplier") >= 0) craftingVars.craftingFactoryRunTimeMultiplier = lua->getGlobalFloat("craftingFactoryRunTimeMultiplier");
+		if (lua->getGlobalFloat("craftingToolCraftTimeMultiplier") >= 0) craftingVars.craftingToolCraftTimeMultiplier = lua->getGlobalFloat("craftingToolCraftTimeMultiplier");
+		if (lua->getGlobalInt("craftingMaxSockets") >= 0) craftingVars.craftingMaxSockets = lua->getGlobalInt("craftingMaxSockets");
+		if (lua->getGlobalInt("craftingMinSocketMod") >= 0) craftingVars.craftingMinSocketMod = lua->getGlobalInt("craftingMinSocketMod");
+		if (lua->getGlobalInt("craftingMaxSocketMod") > 0) craftingVars.craftingMaxSocketMod = lua->getGlobalInt("craftingMaxSocketMod");
+		if (lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled") == true || lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled") == false) craftingVars.craftingNewGenerateSocketsEnabled = lua->getGlobalBoolean("craftingNewGenerateSocketsEnabled");
+		if (lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == true || lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled") == false) craftingVars.craftingWearableContainerSocketsEnabled = lua->getGlobalBoolean("craftingWearableContainerSocketsEnabled");
+		if (lua->getGlobalBoolean("craftingNewAssemblyEnabled") == true || lua->getGlobalBoolean("craftingNewAssemblyEnabled") == false) craftingVars.craftingNewAssemblyEnabled = lua->getGlobalBoolean("craftingNewAssemblyEnabled");
+		if (lua->getGlobalBoolean("craftingNewExperimentEnabled") == true || lua->getGlobalBoolean("craftingNewExperimentEnabled") == false) craftingVars.craftingNewExperimentEnabled = lua->getGlobalBoolean("craftingNewExperimentEnabled");
+		if (lua->getGlobalBoolean("craftingNewRepairEnabled") == true || lua->getGlobalBoolean("craftingNewRepairEnabled") == false) craftingVars.craftingNewRepairEnabled = lua->getGlobalBoolean("craftingNewRepairEnabled");
+		if (lua->getGlobalBoolean("craftingRepairBrokenEnabled") == true || lua->getGlobalBoolean("craftingRepairBrokenEnabled") == false) craftingVars.craftingRepairBrokenEnabled = lua->getGlobalBoolean("craftingRepairBrokenEnabled");
+		if (lua->getGlobalFloat("craftingRepairMaxMod") > 0 && lua->getGlobalFloat("craftingRepairMaxMod") < 1) craftingVars.craftingRepairMaxMod = lua->getGlobalFloat("craftingRepairMaxMod");
+		if (lua->getGlobalBoolean("craftingCraftedItemsBetterThanLootEnabled") == true || lua->getGlobalBoolean("craftingCraftedItemsBetterThanLootEnabled") == false) craftingVars.craftingCraftedItemsBetterThanLootEnabled = lua->getGlobalBoolean("craftingCraftedItemsBetterThanLootEnabled");
+		if (lua->getGlobalFloat("craftingCraftedItemsBetterThanLootModifier") > 0 && lua->getGlobalFloat("craftingCraftedItemsBetterThanLootModifier") <= 1) craftingVars.craftingCraftedItemsBetterThanLootModifier = lua->getGlobalFloat("craftingCraftedItemsBetterThanLootModifier");
+		if (lua->getGlobalFloat("craftingKineticMaxResists") >= 0 && lua->getGlobalFloat("craftingKineticMaxResists") <= 100) craftingVars.craftingKineticMaxResists = lua->getGlobalFloat("craftingKineticMaxResists");
+		if (lua->getGlobalFloat("craftingEnergyMaxResists") >= 0 && lua->getGlobalFloat("craftingEnergyMaxResists") <= 100) craftingVars.craftingEnergyMaxResists = lua->getGlobalFloat("craftingEnergyMaxResists");
+		if (lua->getGlobalFloat("craftingBlastMaxResists") >= 0 && lua->getGlobalFloat("craftingBlastMaxResists") <= 100) craftingVars.craftingBlastMaxResists = lua->getGlobalFloat("craftingBlastMaxResists");
+		if (lua->getGlobalFloat("craftingHeatMaxResists") >= 0 && lua->getGlobalFloat("craftingHeatMaxResists") <= 100) craftingVars.craftingHeatMaxResists = lua->getGlobalFloat("craftingHeatMaxResists");
+		if (lua->getGlobalFloat("craftingColdMaxResists") >= 0 && lua->getGlobalFloat("craftingColdMaxResists") <= 100) craftingVars.craftingColdMaxResists = lua->getGlobalFloat("craftingColdMaxResists");
+		if (lua->getGlobalFloat("craftingElectricityMaxResists") >= 0 && lua->getGlobalFloat("craftingElectricityMaxResists") <= 100) craftingVars.craftingElectricityMaxResists = lua->getGlobalFloat("craftingElectricityMaxResists");
+		if (lua->getGlobalFloat("craftingAcidMaxResists") >= 0 && lua->getGlobalFloat("craftingAcidMaxResists") <= 100) craftingVars.craftingAcidMaxResists = lua->getGlobalFloat("craftingAcidMaxResists");
+		if (lua->getGlobalFloat("craftingStunMaxResists") >= 0 && lua->getGlobalFloat("craftingStunMaxResists") <= 100) craftingVars.craftingStunMaxResists = lua->getGlobalFloat("craftingStunMaxResists");
+		if (lua->getGlobalFloat("craftingLightsaberMaxResists") >= 0 && lua->getGlobalFloat("craftingLightsaberMaxResists") <= 100) craftingVars.craftingLightsaberMaxResists = lua->getGlobalFloat("craftingLightsaberMaxResists");
+		if (lua->getGlobalFloat("craftingAssemblyModifier") >= 0) craftingVars.craftingAssemblyModifier = lua->getGlobalFloat("craftingAssemblyModifier");
+		if (lua->getGlobalBoolean("craftingWhileEntertainingEnabled") == true || lua->getGlobalBoolean("craftingWhileEntertainingEnabled") == false) craftingVars.craftingWhileEntertainingEnabled = lua->getGlobalBoolean("craftingWhileEntertainingEnabled");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;

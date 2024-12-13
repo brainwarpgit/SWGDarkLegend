@@ -28,6 +28,8 @@
 
 #include "server/zone/Zone.h"
 #include "server/zone/objects/scene/SceneObjectType.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 #include "server/globalVariables.h"
 
 int SlicingSessionImplementation::initializeSession() {
@@ -845,15 +847,15 @@ void SlicingSessionImplementation::handleArmorSlice() {
 		case 5:
 			min += 10;
 			max += 5;
-			sockets += globalVariables::craftingMaxSockets * .25;
+			sockets += craftingVars.craftingMaxSockets * .25;
 		case 4:
 			min += 10;
 			max += 5;
-			sockets += globalVariables::craftingMaxSockets * .5;
+			sockets += craftingVars.craftingMaxSockets * .5;
 		case 3:
 			min += 10;
 			max += 25;
-			sockets += globalVariables::craftingMaxSockets * .75;
+			sockets += craftingVars.craftingMaxSockets * .75;
 			break;
 		case 2:
 
@@ -905,8 +907,8 @@ void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent, int soc
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 
 	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
-		if (armor->getMaxSockets() + sockets > globalVariables::craftingMaxSockets) {
-			sockets = globalVariables::craftingMaxSockets;
+		if (armor->getMaxSockets() + sockets > craftingVars.craftingMaxSockets) {
+			sockets = craftingVars.craftingMaxSockets;
 		}
 	}
 	Locker locker(armor);
@@ -934,8 +936,8 @@ void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent, int s
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 
 	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
-		if (armor->getMaxSockets() + sockets > globalVariables::craftingMaxSockets) {
-			sockets = globalVariables::craftingMaxSockets;
+		if (armor->getMaxSockets() + sockets > craftingVars.craftingMaxSockets) {
+			sockets = craftingVars.craftingMaxSockets;
 		}
 	}
 	Locker locker(armor);
@@ -967,8 +969,8 @@ void SlicingSessionImplementation::handleSliceArmorAp(int sockets) {
 
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
-		if (armor->getMaxSockets() + sockets > globalVariables::craftingMaxSockets) {
-			sockets = globalVariables::craftingMaxSockets;
+		if (armor->getMaxSockets() + sockets > craftingVars.craftingMaxSockets) {
+			sockets = craftingVars.craftingMaxSockets;
 		}
 	}
 	int armorrating = armor->getRating();

@@ -2,6 +2,8 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootAttributeType.h"
 #include "templates/LootItemTemplate.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 #include "server/globalVariables.h"
 
 LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
@@ -304,14 +306,14 @@ void LootValues::setLootCraftingValues(const LootItemTemplate* lootTemplate, Tan
 			continue;
 		}
 		if (prototype != nullptr) {
-			if (prototype->isArmorObject() && attribute == "armor_effectiveness" && globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
-				float resistAdjust = getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier;
+			if (prototype->isArmorObject() && attribute == "armor_effectiveness" && craftingVars.craftingCraftedItemsBetterThanLootEnabled == true) {
+				float resistAdjust = getCurrentValue(attribute) * craftingVars.craftingCraftedItemsBetterThanLootModifier;
 				if (resistAdjust > globalVariables::lootArmorMaxResists) resistAdjust = globalVariables::lootArmorMaxResists;
 				setCurrentValue(attribute, resistAdjust);
 			}
 			if (prototype->isWeaponObject() && globalVariables::lootUseLootModifiersForDamageModifiersEnabled == true && (attribute == "mindamage" || attribute == "maxdamage")) {
-				if (globalVariables::craftingCraftedItemsBetterThanLootEnabled == true) {
-					setCurrentValue(attribute, getCurrentValue(attribute) * globalVariables::craftingCraftedItemsBetterThanLootModifier);
+				if (craftingVars.craftingCraftedItemsBetterThanLootEnabled == true) {
+					setCurrentValue(attribute, getCurrentValue(attribute) * craftingVars.craftingCraftedItemsBetterThanLootModifier);
 				}
 			}
 		}

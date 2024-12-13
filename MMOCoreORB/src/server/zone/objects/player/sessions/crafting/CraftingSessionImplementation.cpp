@@ -29,6 +29,8 @@
 #include "templates/customization/AssetCustomizationManagerTemplate.h"
 #include "templates/params/RangedIntCustomizationVariable.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+
+#include "server/zone/managers/variables/craftingVariables.h"
 #include "server/globalVariables.h"
 
 // #define DEBUG_EXPERIMENTATION
@@ -753,7 +755,7 @@ void CraftingSessionImplementation::initialAssembly(int clientCounter) {
 	experimentationPointsUsed = 0;
 
 	float stationEffectiveness = 0.0f;
-	if (craftingStation != nullptr && globalVariables::craftingNewAssemblyEnabled) {
+	if (craftingStation != nullptr && craftingVars.craftingNewAssemblyEnabled) {
 		stationEffectiveness = craftingStation->getEffectiveness();
 	}
 	// Calculate exp failure for red bars
@@ -1089,7 +1091,7 @@ void CraftingSessionImplementation::experiment(int rowsAttempted, const String& 
 		experimentationPointsUsed += pointsAttempted;
 		float toolEffectiveness = craftingTool->getEffectiveness();
 		float stationEffectiveness = 0.0f;
-		if (craftingStation != nullptr && globalVariables::craftingNewAssemblyEnabled) {
+		if (craftingStation != nullptr && craftingVars.craftingNewAssemblyEnabled) {
 			stationEffectiveness = craftingStation->getEffectiveness();
 		}
 
@@ -1393,11 +1395,11 @@ void CraftingSessionImplementation::createPrototype(int clientCounter, bool crea
 		int xp = manufactureSchematic->getDraftSchematic()->getXpAmount();
 
 		if (createItem) {
-			startCreationTasks(manufactureSchematic->getComplexity() * globalVariables::craftingToolCraftTimeMultiplier, false);
+			startCreationTasks(manufactureSchematic->getComplexity() * craftingVars.craftingToolCraftTimeMultiplier, false);
 
 		} else {
 			// This is for practicing
-			startCreationTasks(manufactureSchematic->getComplexity() * globalVariables::craftingToolCraftTimeMultiplier, true);
+			startCreationTasks(manufactureSchematic->getComplexity() * craftingVars.craftingToolCraftTimeMultiplier, true);
 			xp = round(xp * globalVariables::craftingPracticeXPMultiplier);
 		}
 
