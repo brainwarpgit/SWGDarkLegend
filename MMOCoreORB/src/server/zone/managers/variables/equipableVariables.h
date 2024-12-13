@@ -1,10 +1,10 @@
-#ifndef VEHICLEVARIABLES_H_
-#define VEHICLEVARIABLES_H_
+#ifndef EQUIPABLEVARIABLES_H_
+#define EQUIPABLEVARIABLES_H_
 
 #include "engine/log/Logger.h"
 #include <ctime>
 
-class VehicleVariables : public Logger {
+class EquipableVariables : public Logger {
 
 private:
 	bool loadConfigData();
@@ -15,11 +15,11 @@ private:
 	time_t lastModifiedTime{0};
 
 public:
-	VehicleVariables();
-	~VehicleVariables();
-	void startVehicleVariables();
+	EquipableVariables();
+	~EquipableVariables();
+	void startEquipableVariables();
 };
 
-extern VehicleVariables vehicleVars;
+extern EquipableVariables equipableVars;
 
-#endif /*VEHICLEVARIABLES_H_*/
+#endif /*EQUIPABLEVARIABLES_H_*/

@@ -1,0 +1,22 @@
+--Mission
+missionBountyExpirationTime = 48 --default 48 in hours
+missionExpirationTime = 48 --default 48 in hours
+missionMaxCount = 5 --default 2
+missionListCount = 25 --default 6
+missionNameAndLevelEnabled = true --default false destroy terminals?
+missionDirectionSelectionEnabled = true --default false all mission terminals?
+missionLevelSelectionEnabled = true --default false destroy / faction terminals
+missionRewardMultiplier = 2 --default 1
+missionEscortMissionDistance = 64 --default 64
+missionEscortMissionDistanceEnabled = false --default true
+missionThemeParkFactionMultiplier = 10 --default 1
+missionThemeParkCreditMultiplier = 10 --default 1
+missionJediPadawanTrialsGrantXPEnabled = true --default false
+missionJediPadawanTrailsXP = 1250 --default 0   1250 to get enough for one novice box after trials.
+missionEnableJediKnightDestroyMissionsEnabled = true --default false
+missionRandomAttacksEnabled = true --default false
+missionSurveyMissionRewardsResourcesEnabled = true --default false
+missionSurveyMissionRewardsResourcesMultiplier = .5 --default 1 based on mission creditreward
+missionSurveyMissionLimitToLessThanNinetyEnabled = true --default false
+missionSurveyMissionEnableMoreResourcesEnabled = true --default false
+missionSurveyMissionCompletionDistance = 0 --default 1024

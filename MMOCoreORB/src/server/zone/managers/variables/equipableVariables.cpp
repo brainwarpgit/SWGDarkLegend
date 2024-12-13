@@ -1,17 +1,17 @@
 #include "server/zone/managers/watcher/variableWatcher.h"
-#include "server/zone/managers/variables/auctionVariables.h"
+#include "server/zone/managers/variables/equipableVariables.h"
 #include "engine/lua/Lua.h"
 #include <sys/stat.h>
 #include <thread>
 #include <string>
 
-AuctionVariables auctionVars;
+EquipableVariables equipableVars;
 
-AuctionVariables::AuctionVariables() : Logger("AuctionVariables") {}
+EquipableVariables::EquipableVariables() : Logger("EquipableVariables") {}
 
-AuctionVariables::~AuctionVariables() {}
+EquipableVariables::~EquipableVariables() {}
 
-void AuctionVariables::startAuctionVariables() {
+void EquipableVariables::startEquipableVariables() {
 
 	if (!loadConfigData()) {
 		info(true) << "loadConfigData() FAILED";
@@ -28,8 +28,8 @@ void AuctionVariables::startAuctionVariables() {
 
 }
 
-bool AuctionVariables::loadConfigData() {
-	const std::string luaFilePath = "scripts/managers/variables/auction_variables.lua";
+bool EquipableVariables::loadConfigData() {
+	const std::string luaFilePath = "scripts/managers/variables/weapon_variables.lua";
 
 	bool initialLoad = false;
 	
@@ -81,11 +81,11 @@ bool AuctionVariables::loadConfigData() {
 	return true;
 }
 
-bool AuctionVariables::fileExists(const std::string& filePath) {
+bool EquipableVariables::fileExists(const std::string& filePath) {
 	return (access(filePath.c_str(), F_OK) != -1);
 }
 
-time_t AuctionVariables::getFileModifiedTime(const std::string& filePath) {
+time_t EquipableVariables::getFileModifiedTime(const std::string& filePath) {
 	struct stat fileInfo;
 	if (stat(filePath.c_str(), &fileInfo) != 0) {
 		info(true) << "Error getting file status for: " << filePath;
@@ -94,7 +94,7 @@ time_t AuctionVariables::getFileModifiedTime(const std::string& filePath) {
 	return fileInfo.st_mtime;
 }
 
-void AuctionVariables::startWatching(const std::function<void()>& loadConfigFunction) {
+void EquipableVariables::startWatching(const std::function<void()>& loadConfigFunction) {
 	while (!varWatch.stopWatch) {
 		std::this_thread::sleep_for(std::chrono::seconds(varWatch.threadReloadTime));
 		loadConfigData();
