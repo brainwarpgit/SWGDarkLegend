@@ -9,6 +9,7 @@
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/creature/events/SpawnCreatureTask.h"
 #include "engine/engine.h"
+
 #include "server/globalVariables.h"
 
 class TameCreatureTask : public Task {

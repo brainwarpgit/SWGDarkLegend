@@ -38,6 +38,8 @@
 #include "server/zone/objects/building/PoiBuilding.h"
 #include "server/zone/objects/intangible/TheaterObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 #include "server/globalVariables.h"
 
 Mutex CreatureManagerImplementation::loadMutex;
@@ -304,7 +306,7 @@ String CreatureManagerImplementation::getTemplateToSpawn(uint32 templateCRC) {
 }
 
 bool CreatureManagerImplementation::checkSpawnAsBaby(float tamingChance, int babiesSpawned, int chance) {
-	if (globalVariables::creatureAllCreatureCanSpawnBabyEnabled && tamingChance <= 0) tamingChance = globalVariables::creatureAllCreatureCanSpawnBabyChance;
+	if (creatureVars.creatureAllCreatureCanSpawnBabyEnabled && tamingChance <= 0) tamingChance = creatureVars.creatureAllCreatureCanSpawnBabyChance;
 	if (tamingChance > 0) {
 		if (babiesSpawned == 0) {
 			if (System::random(chance) < (tamingChance * 100.0f)) {
@@ -321,7 +323,7 @@ bool CreatureManagerImplementation::checkSpawnAsBaby(float tamingChance, int bab
 CreatureObject* CreatureManagerImplementation::spawnCreatureAsBaby(uint32 templateCRC, float x, float z, float y, uint64 parentID) {
 	CreatureTemplate* creoTempl = creatureTemplateManager->getTemplate(templateCRC);
 
-	if (globalVariables::creatureAllCreatureCanSpawnBabyEnabled) {
+	if (creatureVars.creatureAllCreatureCanSpawnBabyEnabled) {
 		if (creoTempl == nullptr || creoTempl->getMobType() == 3)
 			return nullptr;
 	} else {

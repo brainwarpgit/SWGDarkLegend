@@ -56,7 +56,8 @@
 #include "templates/building/SharedBuildingObjectTemplate.h"
 #include "server/zone/managers/creature/CreatureManager.h"
 #include "server/zone/managers/gcw/observers/SquadObserver.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 
 void GCWManagerImplementation::initialize() {
 	loadLuaConfig();
@@ -882,8 +883,8 @@ uint64 GCWManagerImplementation::spawnSecurityPatrol(BuildingObject* building, S
 
 		int creatureRoll = System::random(1000);
 		int creatureDifficulty = 1;
-		if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
-		if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+		if (creatureRoll > creatureVars.creatureSpawnElitePercentage) creatureDifficulty = 2;
+		if (creatureRoll > creatureVars.creatureSpawnHeroicPercentage) creatureDifficulty = 3;
 		if (creatureDifficulty == 2) spawn += "_2";
 		if (creatureDifficulty == 3) spawn += "_3";
 		AiAgent* agent = cast<AiAgent*>(creatureManager->spawnCreature(spawn.hashCode(), 0, x, z, y, 0, false, direction));

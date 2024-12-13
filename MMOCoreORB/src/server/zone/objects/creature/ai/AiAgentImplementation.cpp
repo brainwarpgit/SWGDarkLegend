@@ -87,6 +87,8 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 #include "server/globalVariables.h"
 
 // #define DEBUG
@@ -615,7 +617,7 @@ void AiAgentImplementation::fillAttributeList(AttributeListMessage* alm, Creatur
 		alm->insertAttribute("cat_armor_vulnerability.armor_eff_restraint", "-");
 
 	ManagedReference<PlayerObject*> ghost = player->getPlayerObject();
-	if ((player->hasSkill("outdoors_ranger_master") || ghost->isAdmin()) && globalVariables::creatureShowRunSpeedEnabled) {
+	if ((player->hasSkill("outdoors_ranger_master") || ghost->isAdmin()) && creatureVars.creatureShowRunSpeedEnabled) {
 		alm->insertAttribute("creature_run_speed",std::to_string(getRunSpeed()));
 	}
 	
@@ -1422,15 +1424,15 @@ void AiAgentImplementation::setLevel(int lvl, bool randomHam) {
 	float baseCreatureHAM = 1;
 	float baseCreatureHAMmax = 1;
 	if (missionRandomAttack > 0) {
-		baseCreatureDamageMax = globalVariables::creatureBaseDamageMaxMultiplier;
-		baseCreatureDamageMin = globalVariables::creatureBaseDamageMinMultiplier;
-		baseCreatureHAM = globalVariables::creatureBaseHAMMultiplier;
-		baseCreatureHAMmax = globalVariables::creatureBaseHAMMaxMultiplier;
+		baseCreatureDamageMax = creatureVars.creatureBaseDamageMaxMultiplier;
+		baseCreatureDamageMin = creatureVars.creatureBaseDamageMinMultiplier;
+		baseCreatureHAM = creatureVars.creatureBaseHAMMultiplier;
+		baseCreatureHAMmax = creatureVars.creatureBaseHAMMaxMultiplier;
 		for(int i = 2; i <= creatureDifficulty; ++i) {
-			baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
-			baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
-			baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
-			baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
+			baseCreatureDamageMax += creatureVars.creatureModBaseDamageMaxModifier;
+			baseCreatureDamageMin += creatureVars.creatureModBaseDamageMinModifier;
+			baseCreatureHAM += creatureVars.creatureModBaseHAMModifier;
+			baseCreatureHAMmax += creatureVars.creatureModBaseHAMMaxModifier;
 		}	
 	}
 

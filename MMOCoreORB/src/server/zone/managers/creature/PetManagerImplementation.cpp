@@ -17,6 +17,8 @@
 #include "server/chat/ChatManager.h"
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/objects/creature/commands/QueueCommand.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 #include "server/globalVariables.h"
 
 void PetManagerImplementation::loadLuaConfig() {

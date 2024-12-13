@@ -24,7 +24,8 @@
 #include "server/zone/objects/mission/bountyhunter/BountyHunterDroid.h"
 #include "server/zone/objects/mission/bountyhunter/events/BountyHunterTargetTask.h"
 #include "server/zone/managers/visibility/VisibilityManager.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 
 void BountyMissionObjectiveImplementation::setNpcTemplateToSpawn(SharedObjectTemplate* sp) {
 	npcTemplateToSpawn = sp;
@@ -168,8 +169,8 @@ void BountyMissionObjectiveImplementation::spawnTarget(const String& zoneName) {
 		try {
 			String missionTarget = mission->getTargetOptionalTemplate();
 			int creatureRoll = System::random(1000);
-			if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
-			if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+			if (creatureRoll > creatureVars.creatureSpawnElitePercentage) creatureDifficulty = 2;
+			if (creatureRoll > creatureVars.creatureSpawnHeroicPercentage) creatureDifficulty = 3;
 			if (creatureDifficulty == 2) missionTarget += "_2";
 			if (creatureDifficulty == 3) missionTarget += "_3";
 			CreatureTemplate* creoTempl = CreatureTemplateManager::instance()->getTemplate(missionTarget.hashCode());

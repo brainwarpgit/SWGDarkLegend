@@ -9,7 +9,8 @@
 #include "server/zone/objects/creature/ai/Creature.h"
 #include "server/zone/objects/tangible/LairObject.h"
 #include "server/zone/managers/creature/SpawnLairMobileTask.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 
 // #define DEBUG_MISSION_LAIRS
 
@@ -236,13 +237,13 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 	ManagedReference<CreatureObject*> creature = nullptr;
 
 	if (lairTemplate->getSpawnLimit() > 5) {
-		if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, globalVariables::creatureBabySpawnChanceDestroyMissionLair)) {
+		if (spawnNumber > 0 && creatureManager->checkSpawnAsBaby(tamingChance, babiesSpawned, creatureVars.creatureBabySpawnChanceDestroyMissionLair)) {
 			String templateName = creatureTemplate->getTemplateName();
-			if (globalVariables::creatureAllCreatureCanSpawnBabyEnabled) {
+			if (creatureVars.creatureAllCreatureCanSpawnBabyEnabled) {
 				int creatureRoll = System::random(1000);
 				int creatureDifficulty = 1;
-				if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
-				if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+				if (creatureRoll > creatureVars.creatureSpawnElitePercentage) creatureDifficulty = 2;
+				if (creatureRoll > creatureVars.creatureSpawnHeroicPercentage) creatureDifficulty = 3;
 				if (creatureDifficulty == 2) templateName += "_2";
 				if (creatureDifficulty == 3) templateName += "_3";
 			}
@@ -259,8 +260,8 @@ void DestroyMissionLairObserverImplementation::spawnLairMobile(LairObject* lair,
 		String templateName = creatureTemplate->getTemplateName();
 		int creatureRoll = System::random(1000);
 		int creatureDifficulty = 1;
-		if (creatureRoll > globalVariables::creatureSpawnElitePercentage) creatureDifficulty = 2;
-		if (creatureRoll > globalVariables::creatureSpawnHeroicPercentage) creatureDifficulty = 3;
+		if (creatureRoll > creatureVars.creatureSpawnElitePercentage) creatureDifficulty = 2;
+		if (creatureRoll > creatureVars.creatureSpawnHeroicPercentage) creatureDifficulty = 3;
 		if (creatureDifficulty == 2 && !templateName.contains("_lair")) templateName += "_2";
 		if (creatureDifficulty == 3 && !templateName.contains("_lair")) templateName += "_3";
 		if (templateName.contains("_lair")) templateName += "_3";

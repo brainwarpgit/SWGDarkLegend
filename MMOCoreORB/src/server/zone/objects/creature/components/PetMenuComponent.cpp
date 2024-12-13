@@ -9,6 +9,8 @@
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
 
+#include "server/globalVariables.h"
+
 void PetMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	if (!sceneObject->isPet())
 		return;

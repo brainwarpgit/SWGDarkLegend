@@ -7,7 +7,8 @@
 
 #include "CreatureTemplate.h"
 #include "server/zone/managers/creature/CreatureTemplateManager.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/creatureVariables.h"
 #include <iostream>
 #include <string>
 
@@ -157,7 +158,7 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	healerType = templateData->getStringField("healerType").trim();
 	lightsaberColor = templateData->getIntField("lightsaberColor");
 	missionRandomAttack = templateData->getIntField("missionRandomAttack");
-	if (globalVariables::creatureRandomDifficultyEnabled == false) {
+	if (creatureVars.creatureRandomDifficultyEnabled == false) {
 		creatureDifficulty = 1;
 	} else {
 		creatureDifficulty = creatureDiff;
@@ -178,64 +179,64 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	baseMobLevel = (float)level;
 	levelPercentDifference = 1.0f;
 	if (missionRandomAttack == 0) {
-		scale *= globalVariables::creatureBaseScaleMultiplier;
-		baseXp *= globalVariables::creatureBaseXPMultiplier;
-		meatAmount *= globalVariables::creatureBaseMeatAmountMultiplier;
-		hideAmount *= globalVariables::creatureBaseHideAmountMultiplier;
-		boneAmount *= globalVariables::creatureBaseBoneAmountMultiplier;
-		milk *= globalVariables::creatureBaseMilkMultiplier;
-		level *= globalVariables::creatureBaseLevelMultiplier;
-		chanceHit *= globalVariables::creatureBaseChanceHitMultiplier;
-		ferocity *= globalVariables::creatureBaseFerocityMultiplier;
-		damageMax *= globalVariables::creatureBaseDamageMaxMultiplier;
-		damageMin *= globalVariables::creatureBaseDamageMinMultiplier;
-		baseHAM *= globalVariables::creatureBaseHAMMultiplier;
-		baseHAMmax *= globalVariables::creatureBaseHAMMaxMultiplier;
+		scale *= creatureVars.creatureBaseScaleMultiplier;
+		baseXp *= creatureVars.creatureBaseXPMultiplier;
+		meatAmount *= creatureVars.creatureBaseMeatAmountMultiplier;
+		hideAmount *= creatureVars.creatureBaseHideAmountMultiplier;
+		boneAmount *= creatureVars.creatureBaseBoneAmountMultiplier;
+		milk *= creatureVars.creatureBaseMilkMultiplier;
+		level *= creatureVars.creatureBaseLevelMultiplier;
+		chanceHit *= creatureVars.creatureBaseChanceHitMultiplier;
+		ferocity *= creatureVars.creatureBaseFerocityMultiplier;
+		damageMax *= creatureVars.creatureBaseDamageMaxMultiplier;
+		damageMin *= creatureVars.creatureBaseDamageMinMultiplier;
+		baseHAM *= creatureVars.creatureBaseHAMMultiplier;
+		baseHAMmax *= creatureVars.creatureBaseHAMMaxMultiplier;
 		baseMobLevel = (float)level;
 		if (creatureDifficulty >=1 && creatureDifficulty <= 3) {
 			for(int i = 2; i <= creatureDifficulty; ++i) {
-				baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
-				baseCreatureXp += globalVariables::creatureModBaseXPModifier;
-				baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier;
-				baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier;
-				baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier;
-				baseCreatureMilk += globalVariables::creatureModBaseMilkModifier;
-				baseCreatureLevel += globalVariables::creatureModBaseLevelModifier;
-				baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier;
-				baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier;
-				baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
-				baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
-				baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
-				baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
-				baseCreatureResists += globalVariables::creatureModBaseResistsModifier;
+				baseCreatureScale += creatureVars.creatureModBaseScaleModifier;
+				baseCreatureXp += creatureVars.creatureModBaseXPModifier;
+				baseCreatureMeatAmount += creatureVars.creatureModBaseMeatAmountModifier;
+				baseCreatureHideAmount += creatureVars.creatureModBaseHideAmountModifier;
+				baseCreatureBoneAmount += creatureVars.creatureModBaseBoneAmountModifier;
+				baseCreatureMilk += creatureVars.creatureModBaseMilkModifier;
+				baseCreatureLevel += creatureVars.creatureModBaseLevelModifier;
+				baseCreatureChanceHit += creatureVars.creatureModBaseChanceHitModifier;
+				baseCreatureFerocity += creatureVars.creatureModBaseFerocityModifier;
+				baseCreatureDamageMax += creatureVars.creatureModBaseDamageMaxModifier;
+				baseCreatureDamageMin += creatureVars.creatureModBaseDamageMinModifier;
+				baseCreatureHAM += creatureVars.creatureModBaseHAMModifier;
+				baseCreatureHAMmax += creatureVars.creatureModBaseHAMMaxModifier;
+				baseCreatureResists += creatureVars.creatureModBaseResistsModifier;
 			}
 		} else if (creatureDifficulty >= 4) {
 			for(int i = 5; i <= creatureDifficulty; ++i) {
-				baseCreatureScale += globalVariables::creatureModBaseScaleModifier;
-				baseCreatureXp += globalVariables::creatureModBaseXPModifier;
-				baseCreatureMeatAmount += globalVariables::creatureModBaseMeatAmountModifier;
-				baseCreatureHideAmount += globalVariables::creatureModBaseHideAmountModifier;
-				baseCreatureBoneAmount += globalVariables::creatureModBaseBoneAmountModifier;
-				baseCreatureMilk += globalVariables::creatureModBaseMilkModifier;
-				baseCreatureLevel += globalVariables::creatureModBaseLevelModifier;
-				baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier;
-				baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier;
-				baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier;
-				baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier;
-				baseCreatureHAM += globalVariables::creatureModBaseHAMModifier;
-				baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier;
-				baseCreatureResists += globalVariables::creatureModBaseResistsModifier;
+				baseCreatureScale += creatureVars.creatureModBaseScaleModifier;
+				baseCreatureXp += creatureVars.creatureModBaseXPModifier;
+				baseCreatureMeatAmount += creatureVars.creatureModBaseMeatAmountModifier;
+				baseCreatureHideAmount += creatureVars.creatureModBaseHideAmountModifier;
+				baseCreatureBoneAmount += creatureVars.creatureModBaseBoneAmountModifier;
+				baseCreatureMilk += creatureVars.creatureModBaseMilkModifier;
+				baseCreatureLevel += creatureVars.creatureModBaseLevelModifier;
+				baseCreatureChanceHit += creatureVars.creatureModBaseChanceHitModifier;
+				baseCreatureFerocity += creatureVars.creatureModBaseFerocityModifier;
+				baseCreatureDamageMax += creatureVars.creatureModBaseDamageMaxModifier;
+				baseCreatureDamageMin += creatureVars.creatureModBaseDamageMinModifier;
+				baseCreatureHAM += creatureVars.creatureModBaseHAMModifier;
+				baseCreatureHAMmax += creatureVars.creatureModBaseHAMMaxModifier;
+				baseCreatureResists += creatureVars.creatureModBaseResistsModifier;
 			}
 		}
 		if (creatureDifficulty >= 4) {
-			baseCreatureLevel += globalVariables::creatureModBaseLevelModifier * cdpMultiplier;
-			baseCreatureChanceHit += globalVariables::creatureModBaseChanceHitModifier * cdpMultiplier;
-			baseCreatureFerocity += globalVariables::creatureModBaseFerocityModifier * cdpMultiplier;
-			baseCreatureDamageMax += globalVariables::creatureModBaseDamageMaxModifier * cdpMultiplier;
-			baseCreatureDamageMin += globalVariables::creatureModBaseDamageMinModifier * cdpMultiplier;
-			baseCreatureHAM += globalVariables::creatureModBaseHAMModifier * cdpMultiplier;
-			baseCreatureHAMmax += globalVariables::creatureModBaseHAMMaxModifier * cdpMultiplier;
-			baseCreatureResists += globalVariables::creatureModBaseResistsModifier * cdpMultiplier;
+			baseCreatureLevel += creatureVars.creatureModBaseLevelModifier * cdpMultiplier;
+			baseCreatureChanceHit += creatureVars.creatureModBaseChanceHitModifier * cdpMultiplier;
+			baseCreatureFerocity += creatureVars.creatureModBaseFerocityModifier * cdpMultiplier;
+			baseCreatureDamageMax += creatureVars.creatureModBaseDamageMaxModifier * cdpMultiplier;
+			baseCreatureDamageMin += creatureVars.creatureModBaseDamageMinModifier * cdpMultiplier;
+			baseCreatureHAM += creatureVars.creatureModBaseHAMModifier * cdpMultiplier;
+			baseCreatureHAMmax += creatureVars.creatureModBaseHAMMaxModifier * cdpMultiplier;
+			baseCreatureResists += creatureVars.creatureModBaseResistsModifier * cdpMultiplier;
 		}
 
 		scale *= baseCreatureScale;
@@ -276,19 +277,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		kinetic = res.getFloatAt(1);
 		if (creatureDifficulty >= 4 && kinetic < 0) {
 			kinetic = .09 * level;
-			if (kinetic > globalVariables::creatureKineticMaxResists) {
-				kinetic = globalVariables::creatureKineticMaxResists;
+			if (kinetic > creatureVars.creatureKineticMaxResists) {
+				kinetic = creatureVars.creatureKineticMaxResists;
 			}
 		} else {
 			if (kinetic > 100) {
 				kinetic = (((kinetic - 100) * baseCreatureResists) * levelPercentDifference) + 100;
-				if (kinetic > 100 + globalVariables::creatureKineticMaxResists) {
-					kinetic = 100 + globalVariables::creatureKineticMaxResists;
+				if (kinetic > 100 + creatureVars.creatureKineticMaxResists) {
+					kinetic = 100 + creatureVars.creatureKineticMaxResists;
 				}
 			} else {
 				kinetic = (kinetic * baseCreatureResists) * levelPercentDifference;
-				if (kinetic > globalVariables::creatureKineticMaxResists) {
-					kinetic = globalVariables::creatureKineticMaxResists;
+				if (kinetic > creatureVars.creatureKineticMaxResists) {
+					kinetic = creatureVars.creatureKineticMaxResists;
 				}
 			}
 			if (kinetic < 0) {
@@ -298,19 +299,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		energy = res.getFloatAt(2);
 		if (creatureDifficulty >= 4 && energy < 0) {
 			energy = .09 * level;
-			if (energy > globalVariables::creatureEnergyMaxResists) {
-				energy = globalVariables::creatureEnergyMaxResists;
+			if (energy > creatureVars.creatureEnergyMaxResists) {
+				energy = creatureVars.creatureEnergyMaxResists;
 			}
 		} else {
 			if (energy > 100) {
 				energy = ((((energy - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (energy > 100 + globalVariables::creatureEnergyMaxResists) {
-					energy = 100 + globalVariables::creatureEnergyMaxResists;
+				if (energy > 100 + creatureVars.creatureEnergyMaxResists) {
+					energy = 100 + creatureVars.creatureEnergyMaxResists;
 				}
 			} else {
 				energy = (energy * baseCreatureResists) * levelPercentDifference;
-				if (energy > globalVariables::creatureEnergyMaxResists) {
-					energy = globalVariables::creatureEnergyMaxResists;
+				if (energy > creatureVars.creatureEnergyMaxResists) {
+					energy = creatureVars.creatureEnergyMaxResists;
 				}
 			}
 			if (energy < 0) {
@@ -320,19 +321,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		blast = res.getFloatAt(3);
 		if (creatureDifficulty >= 4 && blast < 0) {
 			blast = .09 * level;
-			if (blast > globalVariables::creatureBlastMaxResists) {
-				blast = globalVariables::creatureBlastMaxResists;
+			if (blast > creatureVars.creatureBlastMaxResists) {
+				blast = creatureVars.creatureBlastMaxResists;
 			}
 		} else {
 			if (blast > 100) {
 				blast = ((((blast - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (blast > 100 + globalVariables::creatureBlastMaxResists) {
-					blast = 100 + globalVariables::creatureBlastMaxResists;
+				if (blast > 100 + creatureVars.creatureBlastMaxResists) {
+					blast = 100 + creatureVars.creatureBlastMaxResists;
 				}
 			} else {
 				blast = (blast * baseCreatureResists) * levelPercentDifference;
-				if (blast > globalVariables::creatureBlastMaxResists) {
-					blast = globalVariables::creatureBlastMaxResists;
+				if (blast > creatureVars.creatureBlastMaxResists) {
+					blast = creatureVars.creatureBlastMaxResists;
 				}
 			}
 			if (blast < 0) {
@@ -342,19 +343,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		heat = res.getFloatAt(4);
 		if (creatureDifficulty >= 4 && heat < 0) {
 			heat = .09 * level;
-			if (heat > globalVariables::creatureHeatMaxResists) {
-				heat = globalVariables::creatureHeatMaxResists;
+			if (heat > creatureVars.creatureHeatMaxResists) {
+				heat = creatureVars.creatureHeatMaxResists;
 			}
 		} else {
 			if (heat > 100) {
 				heat = ((((heat - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (heat > 100 + globalVariables::creatureHeatMaxResists) {
-					heat = 100 + globalVariables::creatureHeatMaxResists;
+				if (heat > 100 + creatureVars.creatureHeatMaxResists) {
+					heat = 100 + creatureVars.creatureHeatMaxResists;
 				}
 			} else {
 				heat = (heat * baseCreatureResists) * levelPercentDifference;
-				if (heat > globalVariables::creatureHeatMaxResists) {
-					heat = globalVariables::creatureHeatMaxResists;
+				if (heat > creatureVars.creatureHeatMaxResists) {
+					heat = creatureVars.creatureHeatMaxResists;
 				}
 			}
 			if (heat < 0) {
@@ -364,19 +365,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		cold = res.getFloatAt(5);
 		if (creatureDifficulty >= 4 && cold < 0) {
 			cold = .09 * level;
-			if (cold > globalVariables::creatureColdMaxResists) {
-				cold = globalVariables::creatureColdMaxResists;
+			if (cold > creatureVars.creatureColdMaxResists) {
+				cold = creatureVars.creatureColdMaxResists;
 			}
 		} else {
 			if (cold > 100) {
 				cold = ((((cold - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (cold > 100 + globalVariables::creatureColdMaxResists) {
-					cold = 100 + globalVariables::creatureColdMaxResists;
+				if (cold > 100 + creatureVars.creatureColdMaxResists) {
+					cold = 100 + creatureVars.creatureColdMaxResists;
 				}
 			} else {
 				cold = (cold * baseCreatureResists) * levelPercentDifference;
-				if (cold > globalVariables::creatureColdMaxResists) {
-					cold = globalVariables::creatureColdMaxResists;
+				if (cold > creatureVars.creatureColdMaxResists) {
+					cold = creatureVars.creatureColdMaxResists;
 				}
 			}
 			if (cold < 0) {
@@ -386,19 +387,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		electricity = res.getFloatAt(6);
 		if (creatureDifficulty >= 4 && electricity < 0) {
 			electricity = .09 * level;
-			if (electricity > globalVariables::creatureAcidMaxResists) {
-				electricity = globalVariables::creatureAcidMaxResists;
+			if (electricity > creatureVars.creatureAcidMaxResists) {
+				electricity = creatureVars.creatureAcidMaxResists;
 			}
 		} else {
 			if (electricity > 100) {
 				electricity = ((((electricity - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (electricity > 100 + globalVariables::creatureElectricityMaxResists) {
-					electricity = 100 + globalVariables::creatureElectricityMaxResists;
+				if (electricity > 100 + creatureVars.creatureElectricityMaxResists) {
+					electricity = 100 + creatureVars.creatureElectricityMaxResists;
 				}
 			} else {
 				electricity = (electricity * baseCreatureResists) * levelPercentDifference;
-				if (electricity > globalVariables::creatureElectricityMaxResists) {
-					electricity = globalVariables::creatureElectricityMaxResists;
+				if (electricity > creatureVars.creatureElectricityMaxResists) {
+					electricity = creatureVars.creatureElectricityMaxResists;
 				}
 			}
 			if (electricity < 0) {
@@ -408,19 +409,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		acid = res.getFloatAt(7);
 		if (creatureDifficulty >= 4 && acid < 0) {
 			acid = .09 * level;
-			if (acid > globalVariables::creatureAcidMaxResists) {
-				acid = globalVariables::creatureAcidMaxResists;
+			if (acid > creatureVars.creatureAcidMaxResists) {
+				acid = creatureVars.creatureAcidMaxResists;
 			}
 		} else {
 			if (acid > 100) {
 				acid = ((((acid - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (acid > 100 + globalVariables::creatureAcidMaxResists) {
-					acid = 100 + globalVariables::creatureAcidMaxResists;
+				if (acid > 100 + creatureVars.creatureAcidMaxResists) {
+					acid = 100 + creatureVars.creatureAcidMaxResists;
 				}
 			} else {
 				acid = (acid * baseCreatureResists) * levelPercentDifference;
-				if (acid > globalVariables::creatureAcidMaxResists) {
-					acid = globalVariables::creatureAcidMaxResists;
+				if (acid > creatureVars.creatureAcidMaxResists) {
+					acid = creatureVars.creatureAcidMaxResists;
 				}
 			}
 			if (acid < 0) {
@@ -430,19 +431,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		stun = res.getFloatAt(8);
 		if (creatureDifficulty >= 4 && stun < 0) {
 			stun = .09 * level;
-			if (stun > globalVariables::creatureStunMaxResists) {
-				stun = globalVariables::creatureStunMaxResists;
+			if (stun > creatureVars.creatureStunMaxResists) {
+				stun = creatureVars.creatureStunMaxResists;
 			}
 		} else {
 			if (stun > 100) {
 				stun = ((((stun - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (stun > 100 + globalVariables::creatureStunMaxResists) {
-					stun = 100 + globalVariables::creatureStunMaxResists;
+				if (stun > 100 + creatureVars.creatureStunMaxResists) {
+					stun = 100 + creatureVars.creatureStunMaxResists;
 				}
 			} else {
 				stun = (stun * baseCreatureResists) * levelPercentDifference;
-				if (stun > globalVariables::creatureStunMaxResists) {
-					stun = globalVariables::creatureStunMaxResists;
+				if (stun > creatureVars.creatureStunMaxResists) {
+					stun = creatureVars.creatureStunMaxResists;
 				}
 			}
 			if (stun < 0) {
@@ -452,19 +453,19 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 		lightSaber = res.getFloatAt(9);
 		if (creatureDifficulty >= 4 && lightSaber < 0) {
 			lightSaber = .09 * level;
-			if (lightSaber > globalVariables::creatureLightsaberMaxResists) {
-				lightSaber = globalVariables::creatureLightsaberMaxResists;
+			if (lightSaber > creatureVars.creatureLightsaberMaxResists) {
+				lightSaber = creatureVars.creatureLightsaberMaxResists;
 			}
 		} else {
 			if (lightSaber > 100) {
 				lightSaber = ((((lightSaber - 100) * baseCreatureResists) * levelPercentDifference) + 100);
-				if (lightSaber > 100 + globalVariables::creatureLightsaberMaxResists) {
-					lightSaber = 100 + globalVariables::creatureLightsaberMaxResists;
+				if (lightSaber > 100 + creatureVars.creatureLightsaberMaxResists) {
+					lightSaber = 100 + creatureVars.creatureLightsaberMaxResists;
 				}
 			} else {
 				lightSaber = (lightSaber * baseCreatureResists) * levelPercentDifference;
-				if (lightSaber > globalVariables::creatureLightsaberMaxResists) {
-					lightSaber = globalVariables::creatureLightsaberMaxResists;
+				if (lightSaber > creatureVars.creatureLightsaberMaxResists) {
+					lightSaber = creatureVars.creatureLightsaberMaxResists;
 				}
 			}
 			if (lightSaber < 0) {
@@ -474,7 +475,7 @@ void CreatureTemplate::readObject(LuaObject* templateData, int creatureDiff, flo
 	}
 	res.pop();
 
-	level = std::max(1,std::min(globalVariables::creatureMaxLevel, level));
+	level = std::max(1,std::min(creatureVars.creatureMaxLevel, level));
 
 	LuaObject temps = templateData->getObjectField("templates");
 	if (temps.isValidTable()) {

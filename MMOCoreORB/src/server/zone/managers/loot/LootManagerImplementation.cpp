@@ -24,6 +24,9 @@
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
 
+#include "server/zone/managers/variables/creatureVariables.h"
+#include "server/globalVariables.h"
+
 // #define DEBUG_LOOT_MAN
 
 void LootManagerImplementation::initialize() {
@@ -719,7 +722,7 @@ TangibleObject* LootManagerImplementation::createLootResource(const String& reso
 				return nullptr;
 			}
 			
-			float scalingLevel = (float)level / globalVariables::creatureMaxLevel;
+			float scalingLevel = (float)level / creatureVars.creatureMaxLevel;
 			float adjustedCreatureDifficulty = (float)(scalingLevel * creatureDifficulty) + 1;
 
 			float min = (Math::max(1.f, valueMap.getMinValue("quantity")) + level) * adjustedCreatureDifficulty;
@@ -1281,7 +1284,7 @@ float LootManagerImplementation::getRandomModifier(const LootItemTemplate* itemT
 		modMin = 0.f;
 	}
 
-	//float scalingFactor = (float)level / globalVariables::creatureMaxLevel;
+	//float scalingFactor = (float)level / creatureVars.creatureMaxLevel;
 	//float adjustedStatsCD = (float)(scalingFactor * creatureDifficulty);
 	//float minStatCD = creatureDifficulty - (creatureDifficulty * 0.075f);
 	//float maxStatCD = creatureDifficulty + (creatureDifficulty * 0.125f);

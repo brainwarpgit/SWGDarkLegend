@@ -30,6 +30,9 @@
 #include "server/zone/objects/creature/commands/QueueCommand.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
 
+#include "server/zone/managers/variables/creatureVariables.h"
+#include "server/globalVariables.h"
+
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	if ((player->isInCombat() && globalVariables::petCallInCombatEnabled == false) || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
 		player->sendSystemMessage("@pet/pet_menu:cant_call"); // You cannot call this pet right now.
@@ -944,7 +947,7 @@ void PetControlDeviceImplementation::fillAttributeList(AttributeListMessage* alm
 	} else {
 		ManagedReference<AiAgent*> pet = cast<AiAgent*>(this->controlledObject.get().get());
 
-		if (globalVariables::creatureShowRunSpeedEnabled) {
+		if (creatureVars.creatureShowRunSpeedEnabled) {
 			alm->insertAttribute("@obj_attr_n:pet_run_speed",std::to_string(pet->getRunSpeed()));
 		}
 		
