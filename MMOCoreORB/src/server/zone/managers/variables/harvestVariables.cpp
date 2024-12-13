@@ -63,7 +63,19 @@ bool HarvestVariables::loadConfigData() {
 	}
 
 	try {
-
+		//Harvest 
+		if (lua->getGlobalInt("harvestDistance") > 0) harvestVars.harvestDistance = lua->getGlobalInt("harvestDistance");
+		if (lua->getGlobalBoolean("harvestAreaEnabled") == true || lua->getGlobalBoolean("harvestAreaEnabled") == false) harvestVars.harvestAreaEnabled = lua->getGlobalBoolean("harvestAreaEnabled");
+		if (lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == true || lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled") == false) harvestVars.harvestAreaCommandOnlyEnabled = lua->getGlobalBoolean("harvestAreaCommandOnlyEnabled");
+		if (lua->getGlobalFloat("harvestMultiplier") > 0) harvestVars.harvestMultiplier = lua->getGlobalFloat("harvestMultiplier");
+		if (lua->getGlobalFloat("harvestMilkTime") >= 0) harvestVars.harvestMilkTime = lua->getGlobalFloat("harvestMilkTime");
+		if (lua->getGlobalInt("harvestDNASampleDistance") > 0) harvestVars.harvestDNASampleDistance = lua->getGlobalInt("harvestDNASampleDistance");
+		if (lua->getGlobalBoolean("harvestInCombatEnabled") == true || lua->getGlobalBoolean("harvestInCombatEnabled") == false) harvestVars.harvestInCombatEnabled = lua->getGlobalBoolean("harvestInCombatEnabled");
+		if (lua->getGlobalInt("harvestMinimumHarvest") >= 0) harvestVars.harvestMinimumHarvest = lua->getGlobalInt("harvestMinimumHarvest");
+		if (lua->getGlobalBoolean("harvestMinimumHarvestEnabled") == true || lua->getGlobalBoolean("harvestMinimumHarvestEnabled") == false) harvestVars.harvestMinimumHarvestEnabled = lua->getGlobalBoolean("harvestMinimumHarvestEnabled");
+		if (lua->getGlobalBoolean("harvestCriticalEnabled") == true || lua->getGlobalBoolean("harvestCriticalEnabled") == false) harvestVars.harvestCriticalEnabled = lua->getGlobalBoolean("harvestCriticalEnabled");
+		if (lua->getGlobalFloat("harvestCriticalMultiplier") > 0) harvestVars.harvestCriticalMultiplier = lua->getGlobalFloat("harvestCriticalMultiplier");
+		if (lua->getGlobalFloat("harvestLegendaryCriticalMultiplier") > 0) harvestVars.harvestLegendaryCriticalMultiplier = lua->getGlobalFloat("harvestLegendaryCriticalMultiplier");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;

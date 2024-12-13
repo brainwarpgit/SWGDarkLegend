@@ -13,6 +13,8 @@
 #include "server/zone/Zone.h"
 #include "server/zone/objects/intangible/PetControlDevice.h"
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
+
+#include "server/zone/managers/variables/harvestVariables.h"
 #include "server/globalVariables.h"
 
 //#define DEBUG
@@ -64,13 +66,13 @@ int CreatureImplementation::handleObjectMenuSelect(CreatureObject* player, byte 
 		if ((selectedID == 112 || selectedID == 234 || selectedID == 235 || selectedID == 236)) {
 			zone->getCreatureManager()->harvest(_this.getReferenceUnsafeStaticCast(), player, selectedID);
 			
-			if (globalVariables::harvestAreaEnabled == true && globalVariables::harvestAreaCommandOnlyEnabled == false) {
+			if (harvestVars.harvestAreaEnabled == true && harvestVars.harvestAreaCommandOnlyEnabled == false) {
 				Zone* zone = _this.getReferenceUnsafeStaticCast()->getZone();
 
 				SortedVector<TreeEntry*> closeObjects;
 				CloseObjectsVector* closeObjectsVector = (CloseObjectsVector*) _this.getReferenceUnsafeStaticCast()->getCloseObjects();
 				if (closeObjectsVector == nullptr) {
-					zone->getInRangeObjects(_this.getReferenceUnsafeStaticCast()->getWorldPositionX(), _this.getReferenceUnsafeStaticCast()->getWorldPositionZ(), _this.getReferenceUnsafeStaticCast()->getWorldPositionY(), globalVariables::harvestDistance, &closeObjects, true);
+					zone->getInRangeObjects(_this.getReferenceUnsafeStaticCast()->getWorldPositionX(), _this.getReferenceUnsafeStaticCast()->getWorldPositionZ(), _this.getReferenceUnsafeStaticCast()->getWorldPositionY(), harvestVars.harvestDistance, &closeObjects, true);
 				} else {
 					closeObjectsVector->safeCopyReceiversTo(closeObjects, CloseObjectsVector::CREOTYPE);
 				}
@@ -89,7 +91,7 @@ int CreatureImplementation::handleObjectMenuSelect(CreatureObject* player, byte 
 					if (c == nullptr || c->isPlayerCreature() || !c->isDead() || !c->isCreature())
 						continue;
 
-					if (!_this.getReferenceUnsafeStaticCast()->isInRange(c, globalVariables::harvestDistance))//distance
+					if (!_this.getReferenceUnsafeStaticCast()->isInRange(c, harvestVars.harvestDistance))//distance
 						continue;
 
 					Creature* cr2 = cast<Creature*>( c);
@@ -270,7 +272,7 @@ void CreatureImplementation::notifyDespawn(Zone* zone) {
 
 bool CreatureImplementation::canHarvestMe(CreatureObject* player) {
 
-	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), globalVariables::harvestDistance) || (player->isInCombat() && globalVariables::harvestInCombatEnabled == false) || !player->hasSkill("outdoors_scout_novice")
+	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), harvestVars.harvestDistance) || (player->isInCombat() && harvestVars.harvestInCombatEnabled == false) || !player->hasSkill("outdoors_scout_novice")
 			|| player->isDead() || player->isIncapacitated() || isPet())
 		return false;
 
@@ -421,7 +423,7 @@ bool CreatureImplementation::canCollectDna(CreatureObject* player) {
 	if (_this.getReferenceUnsafeStaticCast()->isNonPlayerCreatureObject()) {
 		return false;
 	}
-	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), globalVariables::harvestDNASampleDistance) || player->isInCombat() || player->isDead() || player->isIncapacitated() ){
+	if(!player->isInRange(_this.getReferenceUnsafeStaticCast(), harvestVars.harvestDNASampleDistance) || player->isInCombat() || player->isDead() || player->isIncapacitated() ){
 		return false;
 	}
 

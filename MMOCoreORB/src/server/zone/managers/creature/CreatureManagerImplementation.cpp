@@ -40,6 +40,7 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 
 #include "server/zone/managers/variables/creatureVariables.h"
+#include "server/zone/managers/variables/harvestVariables.h"
 #include "server/globalVariables.h"
 
 Mutex CreatureManagerImplementation::loadMutex;
@@ -858,8 +859,8 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 	int droidBonus = DroidMechanics::determineDroidSkillBonus(ownerSkill,harvestBonus,quantityExtracted);
 
 	quantityExtracted += droidBonus;
-	if (quantityExtracted < globalVariables::harvestMinimumHarvest && globalVariables::harvestMinimumHarvestEnabled) {
-		quantityExtracted = globalVariables::harvestMinimumHarvest;
+	if (quantityExtracted < harvestVars.harvestMinimumHarvest && harvestVars.harvestMinimumHarvestEnabled) {
+		quantityExtracted = harvestVars.harvestMinimumHarvest;
 	}
 	// add to droid inventory if there is space available, otherwise to player
 	DroidObject* pet = cast<DroidObject*>(droid);
@@ -948,7 +949,7 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 	if (!creature->canHarvestMe(player))
 		return;
 
-	if (!player->isInRange(creature, globalVariables::harvestDistance))
+	if (!player->isInRange(creature, harvestVars.harvestDistance))
 		return;
 
 	ManagedReference<ResourceManager*> resourceManager = zone->getZoneServer()->getResourceManager();
@@ -1036,25 +1037,25 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 	if (creature->getParent().get() != nullptr)
 		quantityExtracted = 1;
 	
-	quantityExtracted *= globalVariables::harvestMultiplier;
-	if (quantityExtracted < globalVariables::harvestMinimumHarvest && globalVariables::harvestMinimumHarvestEnabled) {
-		quantityExtracted = globalVariables::harvestMinimumHarvest;
+	quantityExtracted *= harvestVars.harvestMultiplier;
+	if (quantityExtracted < harvestVars.harvestMinimumHarvest && harvestVars.harvestMinimumHarvestEnabled) {
+		quantityExtracted = harvestVars.harvestMinimumHarvest;
 	}
 
 	float criticalMultiplier = 1;
 	int roll = 0;
 	int rollMod = 0;
-	if (globalVariables::harvestCriticalEnabled) {
+	if (harvestVars.harvestCriticalEnabled) {
 		rollMod = player->getSkillMod("harvesting_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
 		roll = System::random(1000 + rollMod);
-		if (roll > 925) criticalMultiplier = globalVariables::harvestCriticalMultiplier;
-		if (roll > 1050) criticalMultiplier = globalVariables::harvestLegendaryCriticalMultiplier;
+		if (roll > 925) criticalMultiplier = harvestVars.harvestCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = harvestVars.harvestLegendaryCriticalMultiplier;
 	}
 
 	quantityExtracted *= criticalMultiplier;
 
-	if (criticalMultiplier == globalVariables::harvestCriticalMultiplier) creature->showFlyText("combat_effects", "critical_harvest", 0, 0xFF, 0);
-	if (criticalMultiplier == globalVariables::harvestLegendaryCriticalMultiplier) creature->showFlyText("combat_effects", "legendary_harvest", 0xFF, 0, 0);
+	if (criticalMultiplier == harvestVars.harvestCriticalMultiplier) creature->showFlyText("combat_effects", "critical_harvest", 0, 0xFF, 0);
+	if (criticalMultiplier == harvestVars.harvestLegendaryCriticalMultiplier) creature->showFlyText("combat_effects", "legendary_harvest", 0xFF, 0, 0);
 
 	TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 	resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);

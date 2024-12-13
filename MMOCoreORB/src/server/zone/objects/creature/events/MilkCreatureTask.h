@@ -9,6 +9,8 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "engine/engine.h"
 #include "server/zone/managers/player/PlayerManager.h"
+
+#include "server/zone/managers/variables/harvestVariables.h"
 #include "server/globalVariables.h"
 
 class MilkCreatureTask : public Task {
@@ -65,7 +67,7 @@ public:
 			} else {
 				currentPhase = ONEFAILURE;
 			}
-			this->reschedule(globalVariables::harvestMilkTime * 1000);
+			this->reschedule(harvestVars.harvestMilkTime * 1000);
 			break;
 		case ONESUCCESS:
 			if (success) {
@@ -74,14 +76,14 @@ public:
 			} else {
 					player->sendSystemMessage("@skl_use:milk_continue"); // You continue to milk the creature.
 					currentPhase = FINAL;
-					this->reschedule(globalVariables::harvestMilkTime * 1000);
+					this->reschedule(harvestVars.harvestMilkTime * 1000);
 			}
 			break;
 		case ONEFAILURE:
 			if (success) {
 				player->sendSystemMessage("@skl_use:milk_continue"); // You continue to milk the creature.
 				currentPhase = FINAL;
-				this->reschedule(globalVariables::harvestMilkTime * 1000);
+				this->reschedule(harvestVars.harvestMilkTime * 1000);
 			} else {
 				updateMilkState(CreatureManager::NOTMILKED);
 				clearStationary();
@@ -132,22 +134,22 @@ public:
 			quantityExtracted = int(quantityExtracted * 0.50f);
 		}
 
-		quantityExtracted *= globalVariables::harvestMultiplier;
+		quantityExtracted *= harvestVars.harvestMultiplier;
 
 		float criticalMultiplier = 1;
 		int roll = 0;
 		int rollMod = 0;
-		if (globalVariables::harvestCriticalEnabled) {
+		if (harvestVars.harvestCriticalEnabled) {
 			rollMod = player->getSkillMod("harvesting_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
 			roll = System::random(1000 + rollMod);
-			if (roll > 925) criticalMultiplier = globalVariables::harvestCriticalMultiplier;
-			if (roll > 1050) criticalMultiplier = globalVariables::harvestLegendaryCriticalMultiplier;
+			if (roll > 925) criticalMultiplier = harvestVars.harvestCriticalMultiplier;
+			if (roll > 1050) criticalMultiplier = harvestVars.harvestLegendaryCriticalMultiplier;
 		}
 
 		quantityExtracted *= criticalMultiplier;
 		
-		if (criticalMultiplier == globalVariables::harvestCriticalMultiplier) creature->showFlyText("combat_effects", "critical_harvest", 0, 0xFF, 0);
-		if (criticalMultiplier == globalVariables::harvestLegendaryCriticalMultiplier) creature->showFlyText("combat_effects", "legendary_harvest", 0xFF, 0, 0);
+		if (criticalMultiplier == harvestVars.harvestCriticalMultiplier) creature->showFlyText("combat_effects", "critical_harvest", 0, 0xFF, 0);
+		if (criticalMultiplier == harvestVars.harvestLegendaryCriticalMultiplier) creature->showFlyText("combat_effects", "legendary_harvest", 0xFF, 0, 0);
 
 		TransactionLog trx(TrxCode::HARVESTED, player, resourceSpawn);
 		resourceManager->harvestResourceToPlayer(trx, player, resourceSpawn, quantityExtracted);

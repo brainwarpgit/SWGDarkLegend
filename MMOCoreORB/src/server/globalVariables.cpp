@@ -575,7 +575,7 @@ namespace globalVariables {
 		}
 		try {
 			//Armor
-			Logger::console.info("OMGTHISSHITWORKS", true);
+//			Logger::console.info("OMGTHISSHITWORKS", true);
 			if (lua->getGlobalFloat("armorPSGDecayRateMultiplier") > 0) armorPSGDecayRateMultiplier = lua->getGlobalFloat("armorPSGDecayRateMultiplier");
 			if (lua->getGlobalFloat("armorDecayRateMultiplier") > 0) armorDecayRateMultiplier = lua->getGlobalFloat("armorDecayRateMultiplier");
 			
