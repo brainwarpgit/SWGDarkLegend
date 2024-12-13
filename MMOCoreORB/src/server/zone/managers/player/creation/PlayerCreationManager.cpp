@@ -50,7 +50,6 @@ PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager")
 }
 
 PlayerCreationManager::~PlayerCreationManager() {
-
 }
 
 void PlayerCreationManager::loadRacialCreationData() {
@@ -224,8 +223,7 @@ void PlayerCreationManager::loadDefaultCharacterItems() {
 }
 
 void PlayerCreationManager::loadHairStyleInfo() {
-	IffStream* iffStream = TemplateManager::instance()->openIffFile(
-			"creation/default_pc_hairstyles.iff");
+	IffStream* iffStream = TemplateManager::instance()->openIffFile("creation/default_pc_hairstyles.iff");
 
 	if (iffStream == nullptr) {
 		error("Couldn't load creation hair styles.");

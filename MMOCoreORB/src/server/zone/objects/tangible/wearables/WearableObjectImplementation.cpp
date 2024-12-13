@@ -59,13 +59,17 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 	if (socketsGenerated) {
 		return;
 	}
+
 	int skill = 0;
 	int luck = 0;
+
 	if (craftingValues != nullptr) {
 		ManagedReference<ManufactureSchematic*> manuSchematic = craftingValues->getManufactureSchematic();
+
 		if (manuSchematic != nullptr) {
 			ManagedReference<DraftSchematic*> draftSchematic = manuSchematic->getDraftSchematic();
 			ManagedReference<CreatureObject*> player = manuSchematic->getCrafter().get();
+
 			if (player != nullptr && draftSchematic != nullptr) {
 				ManagedReference<PlayerManager*> playerMan = player->getZoneServer()->getPlayerManager();
 				ManagedReference<CraftingStation*> station = nullptr;
@@ -91,9 +95,12 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 					skill += player->getSkillMod("private_spec_assembly");
 				}
 				String assemblySkill = draftSchematic->getAssemblySkill();
+
 				skill += player->getSkillMod(assemblySkill);
+
 				if (globalVariables::craftingMinSocketMod > skill)
 					return;
+
 				luck = System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck"));
 			}
 		}
@@ -101,11 +108,13 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 	skill -= globalVariables::craftingMinSocketMod;
 	if (skill < 0) skill = 0;
 	int bonusMod = 65 - skill;
+
 	if (bonusMod <= 0) {
 		bonusMod = 0;
 	} else {
 		bonusMod = System::random(bonusMod);
 	}
+
 	int skillAdjust = skill + System::random(luck) + bonusMod;
 	int maxMod = 0;
 	if (globalVariables::craftingNewGenerateSocketsEnabled) {
@@ -123,7 +132,9 @@ void WearableObjectImplementation::generateSockets(CraftingValues* craftingValue
 	}
 	usedSocketCount = 0;
 	socketCount = (int)generatedCount;
+
 	socketsGenerated = true;
+
 	return;
 }
 

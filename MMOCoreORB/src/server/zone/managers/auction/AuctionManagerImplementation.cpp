@@ -518,7 +518,7 @@ void AuctionManagerImplementation::doAuctionMaint(TerminalListVector* items, con
 }
 
 void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 objectid, SceneObject* vendor, const UnicodeString& description, int price, uint32 duration, bool auction, bool premium) {
-<	int bank = player->getBankCredits();
+	int bank = player->getBankCredits();
 	int cash = player->getCashCredits();
 	int totalFunds = bank + cash;
 
