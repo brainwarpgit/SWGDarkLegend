@@ -14,6 +14,8 @@
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/packets/object/CombatAction.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 #include "server/globalVariables.h"
 
 class HealDamageCommand : public QueueCommand {
@@ -313,7 +315,7 @@ public:
 
 			sendHealMessage(creature, targetCreature, healthHealed, actionHealed, mindHealed);
 
-			if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
+			if (playerXpVars.playerXpAwardPetHealingXPEnabled == true || playerXpVars.playerXpAwardSelfHealingXPEnabled == true) {
 				awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself or pets.
 			} else if (targetCreature != creature && !targetCreature->isPet()) {
 				awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself or pets.
@@ -523,7 +525,7 @@ public:
 		Locker locker(stimPack);
 		stimPack->decreaseUseCount();
 
-		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
+		if (playerXpVars.playerXpAwardPetHealingXPEnabled == true || playerXpVars.playerXpAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself.
 		} else if (targetCreature != creature && !targetCreature->isPet()) {
 			awardXp(creature, "medical", (healthHealed + actionHealed)); //No experience for healing yourself.

@@ -31,7 +31,7 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerXpVariables.h"
 
 // #define DEBUG_EXPERIMENTATION
 
@@ -1400,7 +1400,7 @@ void CraftingSessionImplementation::createPrototype(int clientCounter, bool crea
 		} else {
 			// This is for practicing
 			startCreationTasks(manufactureSchematic->getComplexity() * craftingVars.craftingToolCraftTimeMultiplier, true);
-			xp = round(xp * globalVariables::craftingPracticeXPMultiplier);
+			xp = round(xp * playerXpVars.playerXpCraftingPracticeXPMultiplier);
 		}
 
 		Reference<PlayerManager*> playerManager = crafter->getZoneServer()->getPlayerManager();

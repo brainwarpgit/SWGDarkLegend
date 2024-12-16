@@ -17,6 +17,8 @@
 #include "templates/params/creature/CreatureAttribute.h"
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/player/PlayerManager.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 #include "server/globalVariables.h"
 
 class MeditateTask: public Task {
@@ -97,14 +99,14 @@ public:
 					healParams.setTO(CreatureAttribute::getName(pool));
 					healParams.setDI(heal);
 					player->sendSystemMessage(healParams);
-					if (globalVariables::playerMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "medical", heal * 0.5f, true);
+					if (playerXpVars.playerXpMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "medical", heal * 0.5f, true);
 				}
 				if (globalVariables::playerMeditateFatigueHealingEnabled == true && player->getShockWounds() > 0) {
 						int fatigue = player->getShockWounds();
 						fatigueheal = Math::min(fatigue, fatigueheal / 2);
 						player->addShockWounds(-fatigueheal, true, false);
 						player->sendSystemMessage(" [meditate] Your Battle Fatigue recovers by " + std::to_string(fatigueheal) + " points.");
-						if (globalVariables::playerMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "entertainer_healing", fatigueheal, true);
+						if (playerXpVars.playerXpMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "entertainer_healing", fatigueheal, true);
 				}
 			}
 			

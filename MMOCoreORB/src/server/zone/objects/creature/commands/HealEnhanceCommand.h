@@ -14,6 +14,8 @@
 #include "server/zone/objects/creature/BuffAttribute.h"
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 #include "server/globalVariables.h"
 
 class HealEnhanceCommand : public QueueCommand {
@@ -425,7 +427,7 @@ public:
 			enhancePack->decreaseUseCount();
 		}
 
-		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
+		if (playerXpVars.playerXpAwardPetHealingXPEnabled == true || playerXpVars.playerXpAwardSelfHealingXPEnabled == true) {
 			awardXp(enhancer, "medical", amountEnhanced); // No experience for healing yourself.
 		} else if (patient->getObjectID() != enhancer->getObjectID()) {
 			awardXp(enhancer, "medical", amountEnhanced); // No experience for healing yourself.

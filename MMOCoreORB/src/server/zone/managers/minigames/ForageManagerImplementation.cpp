@@ -13,7 +13,8 @@
 #include "templates/params/creature/CreatureAttribute.h"
 #include "server/zone/Zone.h"
 #include "server/zone/managers/player/PlayerManager.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 
 void ForageManagerImplementation::startForaging(CreatureObject* player, int forageType) {
 	if (player == nullptr)
@@ -201,7 +202,7 @@ void ForageManagerImplementation::finishForaging(CreatureObject* player, int for
 
 		forageGiveItems(player, forageType, forageX, forageY, zoneName);
 
-		if (globalVariables::playerForagingXPEnabled == true) {
+		if (playerXpVars.playerXpForagingXPEnabled == true) {
 			// Grant Wilderness Survival XP
 			ZoneServer* zoneServer = player->getZoneServer();
 			PlayerManager* playerManager = zoneServer->getPlayerManager();

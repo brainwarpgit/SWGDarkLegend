@@ -15,7 +15,8 @@
 #include "server/zone/objects/creature/events/InjuryTreatmentTask.h"
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "QueueCommand.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 
 class CurePackCommand : public QueueCommand {
 protected:
@@ -258,7 +259,7 @@ public:
 
 		sendCureMessage(creature, creatureTarget);
 
-		if (globalVariables::playerAwardPetHealingXPEnabled == true && globalVariables::playerAwardSelfHealingXPEnabled == true) {
+		if (playerXpVars.playerXpAwardPetHealingXPEnabled == true && playerXpVars.playerXpAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", 50); //No experience for healing yourself or pets.
 		} else if (creatureTarget != creature && !creatureTarget->isPet()) {
 			awardXp(creature, "medical", 50); //No experience for healing yourself or pets.
@@ -414,7 +415,7 @@ public:
 			curePack->decreaseUseCount();
 		}
 
-		if (globalVariables::playerAwardPetHealingXPEnabled == true && globalVariables::playerAwardSelfHealingXPEnabled == true) {
+		if (playerXpVars.playerXpAwardPetHealingXPEnabled == true && playerXpVars.playerXpAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", 50); //No experience for healing yourself or pets.
 		} else if (targetCreature != creature && !targetCreature->isPet()) {
 			awardXp(creature, "medical", 50); //No experience for healing yourself or pets.

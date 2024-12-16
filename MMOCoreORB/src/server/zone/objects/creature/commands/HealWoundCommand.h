@@ -12,6 +12,8 @@
 #include "server/zone/objects/creature/events/InjuryTreatmentTask.h"
 #include "server/zone/objects/creature/buffs/DelayedBuff.h"
 #include "server/zone/managers/collision/CollisionManager.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 #include "server/globalVariables.h"
 
 class HealWoundCommand : public QueueCommand {
@@ -358,7 +360,7 @@ public:
 		Locker locker(woundPack);
 		woundPack->decreaseUseCount();
 
-		if (globalVariables::playerAwardPetHealingXPEnabled == true || globalVariables::playerAwardSelfHealingXPEnabled == true) {
+		if (playerXpVars.playerXpAwardPetHealingXPEnabled == true || playerXpVars.playerXpAwardSelfHealingXPEnabled == true) {
 			awardXp(creature, "medical", woundHealed); //No experience for healing yourself or pets.
 		} else if (creatureTarget != creature && !creatureTarget->isPet()) {
 			awardXp(creature, "medical", woundHealed); //No experience for healing yourself or pets.

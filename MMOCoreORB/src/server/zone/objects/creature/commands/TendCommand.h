@@ -12,6 +12,8 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/player/PlayerManager.h"
 #include "QueueCommand.h"
+
+#include "server/zone/managers/variables/playerXpVariables.h"
 #include "server/globalVariables.h"
 
 class TendCommand : public QueueCommand {
@@ -248,7 +250,7 @@ public:
 			int healedAction = creatureTarget->healDamage(creature, CreatureAttribute::ACTION, healPower * globalVariables::playerDamageHealingMultiplier, true, false);
 
 			sendHealMessage(creature, creatureTarget, healedHealth, healedAction);
-			if ((globalVariables::playerAwardSelfHealingXPEnabled == true || globalVariables::playerAwardPetHealingXPEnabled == true) && (healedHealth + healedAction) > 0) {
+			if ((playerXpVars.playerXpAwardSelfHealingXPEnabled == true || playerXpVars.playerXpAwardPetHealingXPEnabled == true) && (healedHealth + healedAction) > 0) {
 				awardXp(creature, "medical", round((healedHealth + healedAction) * 2.5f));
 				creature->notifyObservers(ObserverEventType::ABILITYUSED, creatureTarget, STRING_HASHCODE("tendwound"));
 			}
@@ -302,7 +304,7 @@ public:
 
 			sendWoundMessage(creature, creatureTarget, attribute, healedWounds);
 
-			if ((globalVariables::playerAwardSelfHealingXPEnabled == true || globalVariables::playerAwardPetHealingXPEnabled == true) && healedWounds > 0) {
+			if ((playerXpVars.playerXpAwardSelfHealingXPEnabled == true || playerXpVars.playerXpAwardPetHealingXPEnabled == true) && healedWounds > 0) {
 				awardXp(creature, "medical", round(healedWounds * 2.5f));
 				creature->notifyObservers(ObserverEventType::ABILITYUSED, creatureTarget, STRING_HASHCODE("tendwound"));
 			}

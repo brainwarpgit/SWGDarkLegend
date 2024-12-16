@@ -11,7 +11,7 @@
 #include "server/zone/managers/player/PlayerManager.h"
 
 #include "server/zone/managers/variables/harvestVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerXpVariables.h"
 
 class MilkCreatureTask : public Task {
 
@@ -156,7 +156,7 @@ public:
 
 		updateMilkState(CreatureManager::ALREADYMILKED);
 
-		if (globalVariables::playerMilkingXPEnabled == true) {
+		if (playerXpVars.playerXpMilkingXPEnabled == true) {
 			// Grant Wilderness Survival XP
 			const CreatureTemplate* creatureTemplate = creature->getCreatureTemplate();
 			

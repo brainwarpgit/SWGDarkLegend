@@ -28,7 +28,6 @@ entertainerBuffAnywhereEnabled = true --default false
 --Jedi
 jediForceCostToTuneEnabled = false --default true
 jediKnightRequirementNumberOfMasters = 3 --default 2 and change  points removed due to skills having no costs
-jediXPLossEnabled = false --default true
 jediForceMeditateMultiplier = 10 --default 3
 jediForceRunToggleEnabled = true --default false
 
