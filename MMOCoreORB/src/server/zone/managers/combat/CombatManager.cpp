@@ -34,7 +34,7 @@
 
 #include "server/zone/managers/variables/combatVariables.h"
 #include "server/zone/managers/variables/equipableVariables.h"
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 
 #define COMBAT_SPAM_RANGE 85 // Range at which players will see Combat Log Info
 
@@ -1504,7 +1504,7 @@ int CombatManager::applyDamage(TangibleObject* attacker, WeaponObject* weapon, C
 		xpType = "jedi_general";
 	} else if (attacker->isPet()) {
 		xpType = "creaturehandler";
-		damage *= petVars.petDamageMultiplier;
+		damage *= mountVars.mountPetDamageMultiplier;
 		CreatureObject* pet = attacker->asCreatureObject();
 		if (pet != nullptr) {
 			if (pet->hasBuff(crc)) {
@@ -1752,7 +1752,7 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 		xpType = "jedi_general";
 	} else if (attacker->isPet()) {
 		xpType = "creaturehandler";
-		damage *= petVars.petDamageMultiplier;
+		damage *= mountVars.mountPetDamageMultiplier;
 		if (attacker->hasBuff(crc)) {
 			damage *= 0.05f;
 		}

@@ -7,7 +7,7 @@
 #include "server/zone/objects/creature/ai/AiAgent.h"
 #include "server/zone/objects/intangible/tasks/StorePetTask.h"
 
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 
 class PetTransferCommand : public QueueCommand {
 public:
@@ -129,7 +129,7 @@ public:
 		controlDevice->setLastCommandTarget(nullptr);
 		controlDevice->setLastCommand(PetManager::FOLLOW);
 
-		if (petVars.petAllMountsUsedByAnyone == true) {
+		if (mountVars.mountPetAllMountsUsedByAnyone == true) {
 			Reference<StorePetTask*> task = new StorePetTask(targetPlayer, pet);
 
 			if (task == nullptr)

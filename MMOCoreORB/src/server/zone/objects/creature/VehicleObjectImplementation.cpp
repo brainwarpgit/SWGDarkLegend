@@ -18,6 +18,8 @@
 #include "server/zone/objects/creature/sui/RepairVehicleSuiCallback.h"
 #include "templates/customization/AssetCustomizationManagerTemplate.h"
 
+#include "server/zone/managers/variables/mountVariables.h"
+#include "server/globalVariables.h"
 
 void VehicleObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	if (!player->getPlayerObject()->isPrivileged() && linkedCreature != player)
@@ -32,7 +34,7 @@ void VehicleObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* men
 
 void VehicleObjectImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object){
 
-	if (globalVariables::vehicleShowVehicleSpeedEnabled) {
+	if (mountVars.mountVehicleShowVehicleSpeedEnabled) {
 		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(getRunSpeed() * globalVariables::playerSpeedMultiplier));
 	}
 	

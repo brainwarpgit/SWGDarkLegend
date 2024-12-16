@@ -7,7 +7,7 @@
 
 #include "server/zone/objects/creature/CreatureObject.h"
 
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 #include "server/globalVariables.h"
 
 class BurstRunFinishedEvent : public Task {
@@ -28,7 +28,7 @@ public:
 		Locker locker(creature);
 
 		creature->removePendingTask("burst_run_finished");
-		if (petVars.petSpeedSameAsPlayerEnabled) {
+		if (mountVars.mountPetSpeedSameAsPlayerEnabled) {
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr) {

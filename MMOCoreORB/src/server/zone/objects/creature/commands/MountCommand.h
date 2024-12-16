@@ -9,7 +9,7 @@
 #include "server/zone/managers/objectcontroller/ObjectController.h"
 #include "templates/params/creature/PlayerArrangement.h"
 
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 #include "server/globalVariables.h"
 
 class MountCommand : public QueueCommand {
@@ -175,14 +175,14 @@ public:
 	
 		creature->setRunSpeed(newSpeed);
 		creature->setTurnScale(newTurn, true);
-		if (petVars.petSpeedSameAsPlayerEnabled) {
+		if (mountVars.mountPetSpeedSameAsPlayerEnabled) {
 			if (creature->getAccelerationMultiplierMod() > 10) {
 				creature->setAccelerationMultiplierMod(newAccel, true);
 			}
 		}
 		creature->addMountedCombatSlow();
 		
-		if (petVars.petSpeedSameAsPlayerEnabled) {
+		if (mountVars.mountPetSpeedSameAsPlayerEnabled) {
 			PlayerObject* ghost = creature->getPlayerObject();
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);

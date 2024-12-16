@@ -7,7 +7,7 @@
 
 #include "server/zone/objects/scene/SceneObject.h"
 
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 #include "server/globalVariables.h"
 
 class GallopStopCommand : public QueueCommand {
@@ -20,7 +20,7 @@ public:
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
 
-		if (petVars.petGallopToggleEnabled) {
+		if (mountVars.mountPetGallopToggleEnabled) {
 			creature->sendSystemMessage("Gallop Stop is disabled!");
 			return GENERALERROR;
 		}
@@ -74,7 +74,7 @@ public:
 		mount->removeBuff(crc);
 		creature->getCooldownTimerMap()->updateToCurrentAndAddMili("gallop", cooldown * 1000);
 		creature->removePendingTask("gallop_notify");
-		if (petVars.petSpeedSameAsPlayerEnabled) {
+		if (mountVars.mountPetSpeedSameAsPlayerEnabled) {
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr && mount->getObjectID() != pet->getObjectID()) {

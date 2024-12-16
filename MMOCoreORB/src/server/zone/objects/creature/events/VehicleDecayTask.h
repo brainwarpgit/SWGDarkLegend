@@ -7,7 +7,8 @@
 
 #include "server/zone/objects/tangible/TangibleObject.h"
 #include "templates/creature/VehicleObjectTemplate.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/mountVariables.h"
 
 class VehicleDecayTask : public Task {
 	ManagedWeakReference<TangibleObject*> vehicleObj;
@@ -37,15 +38,15 @@ public:
 		int decayCycle = vehicleTemplate->getDecayCycle();
 
 		if (decayCycle == 0)
-			decayCycle = globalVariables::vehicleBaseDecayCycle;
+			decayCycle = mountVars.mountVehicleBaseDecayCycle;
 
 		int decayRate = vehicleTemplate->getDecayRate();
 
 		if (decayRate == 0)
-			decayRate = globalVariables::vehicleBaseDecayRate;
+			decayRate = mountVars.mountVehicleBaseDecayRate;
 
 		if (initialDecay) {
-			if (globalVariables::vehicleInitialDecayEnabled == true) {
+			if (mountVars.mountVehicleInitialDecayEnabled == true) {
 				vehicle->inflictDamage(vehicle, 0, decayRate / 2, true);
 			}
 			initialDecay = false;

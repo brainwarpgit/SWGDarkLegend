@@ -7,7 +7,7 @@
 #include "server/zone/managers/variables/harvestVariables.h"
 #include "server/zone/managers/variables/lootVariables.h"
 #include "server/zone/managers/variables/missionVariables.h"
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 #include "server/zone/managers/variables/playerVariables.h"
 #include "server/zone/managers/variables/playerXpVariables.h"
 #include "server/zone/managers/variables/professionVariables.h"
@@ -68,10 +68,10 @@ void VariableWatcher::startVariableWatchers() {
 		missionVariables->startMissionVariables();
 	}
 
-	PetVariables* petVariables = new PetVariables();
-	if (petVariables != nullptr) {
-		info(true) << "Starting PetVariables Watcher.";
-		petVariables->startPetVariables();
+	MountVariables* mountVariables = new MountVariables();
+	if (mountVariables != nullptr) {
+		info(true) << "Starting MountVariables Watcher.";
+		mountVariables->startMountVariables();
 	}
 
 	PlayerVariables* playerVariables = new PlayerVariables();

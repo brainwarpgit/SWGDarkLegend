@@ -31,12 +31,12 @@
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
 
 #include "server/zone/managers/variables/creatureVariables.h"
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 #include "server/globalVariables.h"
 
 
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
-	if ((player->isInCombat() && petVars.petCallInCombatEnabled == false) || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
+	if ((player->isInCombat() && mountVars.mountPetCallInCombatEnabled == false) || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
 		player->sendSystemMessage("@pet/pet_menu:cant_call"); // You cannot call this pet right now.
 		return;
 	}
@@ -194,7 +194,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 				player->sendSystemMessage("@pet/pet_menu:control_exceeded"); // Calling this pet would exceed your Control Level ability.
 			}
 		} else {
-			if (petVars.petAllMountsUsedByAnyone) {
+			if (mountVars.mountPetAllMountsUsedByAnyone) {
 				if (!creaturePet->isMount()) {
 				 	if (level > maxLevelofPets) {
 						player->sendSystemMessage("@pet/pet_menu:lack_skill"); // You lack the skill to call a pet of this type.
@@ -270,12 +270,12 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 		Reference<CallPetTask*> callPet = new CallPetTask(_this.getReferenceUnsafeStaticCast(), player, "call_pet");
 
 		StringIdChatParameter message("pet/pet_menu", "call_pet_delay"); // Calling pet in %DI seconds. Combat will terminate pet call.
-		message.setDI(petVars.petCallTime);
-		if (petVars.petCallTime > 0) {
+		message.setDI(mountVars.mountPetCallTime);
+		if (mountVars.mountPetCallTime > 0) {
 			player->sendSystemMessage(message);
 		}
 
-		player->addPendingTask("call_pet", callPet, petVars.petCallTime * 1000);
+		player->addPendingTask("call_pet", callPet, mountVars.mountPetCallTime * 1000);
 
 		if (petControlObserver == nullptr) {
 			petControlObserver = new PetControlObserver(_this.getReferenceUnsafeStaticCast());
@@ -415,7 +415,7 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		
 		if (trainedAsMount || creature->isMount()) {
 			creature->setOptionBit(0x1000);
-			if (petVars.petAllMountsUsedByAnyone == true) {
+			if (mountVars.mountPetAllMountsUsedByAnyone == true) {
 				if (!ch && creature->getLevel() > globalVariables::playerMaxLevelNonCHMount) {
 					pet->addObjectFlag(ObjectFlag::NOAIAGGRO);
 					creature->setOptionBit(OptionBitmask::INVULNERABLE);
@@ -429,7 +429,7 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 			}
 		} else if (!trainedAsMount || !creature->isMount()) {
 			creature->clearOptionBit(0x1000);
-			if (petVars.petAllMountsUsedByAnyone == true) {
+			if (mountVars.mountPetAllMountsUsedByAnyone == true) {
 				pet->removeObjectFlag(ObjectFlag::NOAIAGGRO);
 				creature->clearOptionBit(OptionBitmask::INVULNERABLE);
 			}
@@ -531,7 +531,7 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 	setLastCommandTarget(nullptr);
 	setLastCommand(PetManager::FOLLOW);
 	
-	if (petVars.petSpeedSameAsPlayerEnabled) {
+	if (mountVars.mountPetSpeedSameAsPlayerEnabled) {
 		pet->setRunSpeed(player->getFullSpeed() * 3);
 	}
 }
@@ -561,7 +561,7 @@ void PetControlDeviceImplementation::storeObject(CreatureObject* player, bool fo
 
 	if (!force) {
 		// Fail if pet or player are in combat or if the pet is dead, unless forced
-		if (petVars.petStoreInCombatEnabled == false) {
+		if (mountVars.mountPetStoreInCombatEnabled == false) {
 			if (pet->isInCombat() || player->isInCombat() || player->isDead())
 				return;
 		}
@@ -653,19 +653,19 @@ bool PetControlDeviceImplementation::growPet(CreatureObject* player, bool force,
 
 	Time currentTime;
 	uint32 timeDelta = currentTime.getTime() - lastGrowth.getTime();
-	int stagesToGrow = timeDelta / petVars.petGrowthCycleTime * 60; // 12 hour
+	int stagesToGrow = timeDelta / mountVars.mountPetGrowthCycleTime * 60; // 12 hour
 
 	if (adult)
-		stagesToGrow = petVars.petGrowthStagesToGrown;
+		stagesToGrow = mountVars.mountPetGrowthStagesToGrown;
 
 	if (stagesToGrow == 0 && !force)
 		return true;
 
 	int newStage = growthStage + stagesToGrow;
-	if (newStage > petVars.petGrowthStagesToGrown)
-		newStage = petVars.petGrowthStagesToGrown;
+	if (newStage > mountVars.mountPetGrowthStagesToGrown)
+		newStage = mountVars.mountPetGrowthStagesToGrown;
 
-	float newLevel = ((float)pet->getAdultLevel() / petVars.petGrowthStagesToGrown) * (float)newStage;
+	float newLevel = ((float)pet->getAdultLevel() / mountVars.mountPetGrowthStagesToGrown) * (float)newStage;
 	if (newLevel < 1)
 		newLevel = 1;
 
@@ -883,7 +883,7 @@ bool PetControlDeviceImplementation::canBeTradedTo(CreatureObject* player, Creat
 				return false;
 			}
  		} else {
-			if (petVars.petAllMountsUsedByAnyone) {
+			if (mountVars.mountPetAllMountsUsedByAnyone) {
 				if (!pet->isMount()) {
 				 	if (pet->getAdultLevel() > maxLevelofPets) {
 						player->sendSystemMessage("@pet/pet_menu:no_chance"); // That person has no chance of controlling this creature. Transfer failed.
@@ -1387,7 +1387,7 @@ void PetControlDeviceImplementation::trainAsMount(CreatureObject* player, bool t
 	if (trainAnswer) {
 		trainedAsMount = true;
 		
-		if (petVars.petAllMountsUsedByAnyone == true) {
+		if (mountVars.mountPetAllMountsUsedByAnyone == true) {
 			Reference<StorePetTask*> task = new StorePetTask(player, pet);
 
 			if (task == nullptr)

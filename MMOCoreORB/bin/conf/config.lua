@@ -48,7 +48,7 @@ Core3 = {
 	MakeZone = 1,
 	MakePing = 1,
 	MakeStatus = 1,
---	MakeWeb = 0,
+--	MakeWeb = 0, Could not find in Core3
 
 	------ORB Server Config------
 	ORB = "",
@@ -60,7 +60,7 @@ Core3 = {
 	DBName = "SWGDarkLegend",
 	DBUser = "swgemu",
 	DBPass = "123456",
---	DBInstances = 2,
+	DBInstances = 2,
 	DBSecret = "swgemus3cr37!", -- Change this! This value should be unique and of reasonable length.
 
 	------Login Server Config------
@@ -78,7 +78,7 @@ Core3 = {
 	MantisPrfx = "mantis_", -- The prefix for your mantis tables.
 
 	------Metrics Server Config------
-	MetricsHost = "127.0.0.1",
+	MetricsHost = "localhost",
 	MetricsPort = 8125,
 	MetricsPrefix = "",
 
@@ -91,7 +91,7 @@ Core3 = {
 	ZoneAllowedConnections = 30000,
 	ZoneGalaxyID = 2, --The actual zone server's galaxyID. Should coordinate with your login server.
 	ZonePortsBalancer = 1,
-	ZonerServerPort = 0,
+	ZoneServerPort = 0,
 
 	-------- GROUND ZONES -------
 	ZonesEnabled = {
@@ -111,7 +111,7 @@ Core3 = {
 		-------- NEW CONTENT ZONES -------
 		--"chandrila",
 		--"coruscant",
-		"dungeon2",
+		--"dungeon2",
 		--"hoth",
 		--"kaas",
 		--"kashyyyk",
@@ -145,6 +145,7 @@ Core3 = {
 		--"umbra",
 		--"watertabletest",
 	},
+
 	-------- SPACE ZONES -------
 	SpaceZonesEnabled = {
 		"space_corellia",
@@ -202,11 +203,13 @@ Core3 = {
 	StatusAllowedConnections = 500,
 	StatusInterval = 30, -- interval to check if zone is locked up (in seconds)
 
+--[[ Could not find in Core3
 	------Web Server Config------
---	WebPorts = 44460, -- Can be multiple ports 44460,44461
---	WebAccessLog = "../log/webaccess.log",
---	WebErrorLog = "../log/weberror.log",
---	WebSessionTimeout = 600, -- Length that inactive web sessions expire
+	WebPorts = 44460, -- Can be multiple ports 44460,44461
+	WebAccessLog = "../log/webaccess.log",
+	WebErrorLog = "../log/weberror.log",
+	WebSessionTimeout = 600, -- Length that inactive web sessions expire
+--]]
 
 	------Logging Config------
 	LogFile = "log/core3.log",
@@ -217,46 +220,67 @@ Core3 = {
 	PathfinderLogJSON = 0,
 	PlayerLogLevel = 4, -- -1 NONE, 0 FATAL, 1 ERROR, 2 WARNING, 3 LOG, 4 INFO, 5 DEBUG
 	MaxLogLines = 1000000, -- how often to rotate log (currently only log/player.log rotates)
-	RotateLogSizeMB = 100, -- Size to Rotate Logs in MB
-	RotateLogAtStart = 0,
+	RotateLogSizeMB = 100,
+	RotateLogAtStart = false,
 	OnlineLogSeconds = 300,
+	LogOnlineOnSessionChange = true,
 	OnlineLogSize = 100000000,
-	LogOnlineOnSessionChange = 1,
-	
+	SessionStatsSeconds = 3600,
+
 	------REST Server Config------
 	RESTServerPort = 0,
 
 	------Account Config------
 	InactiveAccountTitle = "Account Disabled",
 	InactiveAccountText = "The server administrators have disabled your account.",
-
+	RegistrationMessage = "Automatic registration is currently disabled. Please contact the administrators of the server in order to get an authorized account.",
+	
 	------Character Config------
 	CleanupMailCount = 25000,
---	DeleteCharacters = 10, -- How often in minutes to purge deleted characters
+--	DeleteCharacters = 10, -- How often in minutes to purge deleted characters -- Could not find in Core3
 	PurgeDeletedCharacters = 10,
-	SameAccountTipsAreFree = 0,
-	
+	LogOnlineCount = 3,
+	MOTD = "conf/motd.txt",
+	Revision = "conf/rev.txt",
+	SameAccountTipsAreFree = false,
+
 	------Extra Config ------
 	MaxNavMeshJobs = 6,
 	MaxAuctionSearchJobs = 1,
 	DumpObjFiles = 1,
-	ProgressMonitors = "false",
+	ProgressMonitors = "true",
 	UnloadContainers = 1, -- Whether to unload container contents from RAM after the container hasn't been accessed for a time
-	UseMetrics = 0,
-	PvpMode = 0,
-	MOTD = "Welcome to SWGEmu!",
-	Revision = "",
-	SessionStatsSeconds = 3600,
-	
+	PvpMode = false,
+	UseMetrics = false,
 
 	------Server Config------
 	CharacterBuilderEnabled = "true",
 	AutoReg = 1,
-	RegistrationMessage = "Automatic registration is currently disabled.  Please contact the administrators of the server in order to get an authorized account.",
 
 	------TOS Config------
 	TermsOfServiceVersion = 0,
 	TermsOfService = "",
+	
+	------Auction Config------
+	MaxAuctionSearchJobs = 1,
+
+	------Command Config------
+	--CommandCooldown. + name, cooldownMili ????
+	
+	------Test------
+	TestInt = 12345,
+	TestBool = true,
+	TestFloat = 12345.6,
+	TestString = "This is a test",
+	--Test = "",
+	--TestArray = "" ,
+}
+
+--Start Hidden SWG Core3 Variables
+Core3.AccountFlags = {
+	--%accountID% = {
+		--name = %%,
+	--}
 }
 
 Core3.AccountManager = {
@@ -269,6 +293,9 @@ Core3.AiAgent = {
 	ConsoleThrottle = 100,
 	LogLevel = 2,
 	Verbose = false,
+	--%TemplateName% {
+	--	LogLevel = -1,
+	--}
 }
 
 Core3.AuctionItem = {
@@ -277,8 +304,9 @@ Core3.AuctionItem = {
 
 Core3.AuctionManager = {
 	LogLevel = -1,
+	RotateLogSizeMB = 100,
 	Startup = {
-	ExpireInvalid = false,
+		ExpireInvalid = false,
 	}
 }
 
@@ -291,7 +319,7 @@ Core3.CombatManager = {
 }
 
 Core3.CommandConfigManager = {
-	DumpAdminCommand = false,
+	DumpAdminCommands = false,
 }
 
 Core3.DirectorManager = {
@@ -309,6 +337,14 @@ Core3.GCWManager = {
 Core3.Login = {
 	EnableSessionId = false,
 	SessionDuration = "00:15",
+	API = {
+		BaseURL = "",
+		RotateLogSizeMB = 100,
+		DebugLevel = 0,
+		DryRun = false,
+		APIToken = "",
+		FailOpen = false,
+	}
 }
 
 Core3.LootManager = {
@@ -322,16 +358,21 @@ Core3.LuaEngine = {
 
 Core3.MissionManager = {
 	AnonymousBountyTerminals = false,
+	BountyExpirationTime = 172800000,
 	IncludeFactionPets = true,
 	ListRequestCooldown = 1400,
 	MaxBountiesPerJedi = 5,
 	PlayerBountyCooldown = true,
-	PlayerBountyCooldownTime = 86400000, -- 24 hour default
-	PrivateStructureJediMissions = false,
+	PlayerBountyCooldownTime = 86400000,
+	PrivateStructureJediMissions = true,
 }
 
 Core3.NameManager = {
 	FilterTable = oldFilterWords,
+}
+
+Core3.NavMeshManager = {
+	LogLevel = 4,
 }
 
 Core3.PlanetManager = { -- Only for Debugging Used Defaults, can be changed.
@@ -349,6 +390,7 @@ Core3.PlayerCreationManager = {
 }
 
 Core3.PlayerManager = {
+	accountVictimList = false,
 	AdvancedWaypoints = true,
 	DisableGroupVisibility = true,
 	GalaxyWideGrouping = true,
@@ -363,12 +405,17 @@ Core3.PlayerObject = {
 
 Core3.Regions = {
 	minimumLairSpawnInterval = 5000,
+	minimumSpaceSpawnInterval = 5000,
+	DisableWorldSpawns = false,
+	DisableSpaceSpawns = false, 
 	spawnCheckRange = 64,
+	spaceSpawnCheckRange = 1024,
 }
 
 Core3.RESTServer = {
 	APIToken = "",
 	LogLevel = 4,
+	RotateLogSizeMB = 100,
 	exportDir = "log/exports/api/%Y-%m-%d/%H/",
 	SSLCertFile = "",
 	SSLKeyFile = "",
@@ -389,15 +436,18 @@ Core3.ShuttleZoneComponent = {
 
 Core3.SpaceZone = {
 	ThreadsDefault = 1,
+	--Threads + capName = numThreads, ??
 }
 
 Core3.StructureMaintenanceTask = {
 	AllowBankPayments = true,
 }
 
-
 Core3.StructureManager = {
 	EnhancedFurnitureRotate = true,
+	CreateNavMesh = {
+		--objectName = getFullPath(), ??
+	}
 }
 
 Core3.StructureObject = {
@@ -412,12 +462,13 @@ Core3.TangibleObject = {
 
 Core3.TransactionLog = {
 	LogLevel = 5,
+	RotateLogSizeMB = 100,
 	WorkerThreads = 4,
 }	
 
 Core3.TreManager = {
-	LatestTre = "SWGDL_update_02.tre",
-	ReloadStrings = true,
+	LatestTre = "SWGDL_update_01.tre",
+	ReloadStrings = false,
 }
 
 Core3.Tweaks = {
@@ -428,5 +479,12 @@ Core3.Tweaks = {
 
 Core3.Zone = {
 	ThreadsDefault = 1,
+	--Threads + capName = 1, ???
 }
+
+Core3.ZoneServer = {
+	ClientLogLevel = -1,
+}
+--End Hidden SWG Core3 Variables
+
 -- NOTE: conf/config-local.lua is parsed after this file if it exists

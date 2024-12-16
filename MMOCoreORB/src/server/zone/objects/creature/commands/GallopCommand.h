@@ -10,7 +10,7 @@
 #include "server/zone/objects/creature/events/GallopNotifyAvailableEvent.h"
 #include "server/zone/objects/creature/events/GallopFinishedEvent.h"
 
-#include "server/zone/managers/variables/petVariables.h"
+#include "server/zone/managers/variables/mountVariables.h"
 #include "server/globalVariables.h"
 
 class GallopCommand : public QueueCommand {
@@ -64,7 +64,7 @@ public:
 		uint32 crc = STRING_HASHCODE("gallop");
 
 		if (mount->hasBuff(crc) || creature->hasBuff(crc)) {
-			if (petVars.petGallopToggleEnabled) {
+			if (mountVars.mountPetGallopToggleEnabled) {
 				creature->removeBuff(STRING_HASHCODE("gallop"));
 				creature->removePendingTask("gallop_finished");
 				creature->setRunSpeed(creature->getRunSpeed() / magnitude);
@@ -73,7 +73,7 @@ public:
 				creature->sendSystemMessage("@combat_effects:already_galloping"); // You are already galloping!
 				return GENERALERROR;
 			}
-			if (petVars.petSpeedSameAsPlayerEnabled) {
+			if (mountVars.mountPetSpeedSameAsPlayerEnabled) {
 				for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 					ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 					if (pet != nullptr && mount->getObjectID() != pet->getObjectID()) {
@@ -90,10 +90,10 @@ public:
 			return GENERALERROR;
 		}
 
-		if (petVars.petGallopToggleEnabled) {
-			float health = mount->getMaxHAM(CreatureAttribute::HEALTH) * (petVars.petGallopDamagePercent / 100);
-			float action = mount->getMaxHAM(CreatureAttribute::ACTION) * (petVars.petGallopDamagePercent / 100);
-			float mind = mount->getMaxHAM(CreatureAttribute::MIND) * (petVars.petGallopDamagePercent / 100);
+		if (mountVars.mountPetGallopToggleEnabled) {
+			float health = mount->getMaxHAM(CreatureAttribute::HEALTH) * (mountVars.mountPetGallopDamagePercent / 100);
+			float action = mount->getMaxHAM(CreatureAttribute::ACTION) * (mountVars.mountPetGallopDamagePercent / 100);
+			float mind = mount->getMaxHAM(CreatureAttribute::MIND) * (mountVars.mountPetGallopDamagePercent / 100);
 				
 			if (mount->getHAM(CreatureAttribute::HEALTH) <= health || mount->getHAM(CreatureAttribute::ACTION) <= action || mount->getHAM(CreatureAttribute::MIND) <= mind) {
 				creature->sendSystemMessage("@combat_effects:mount_tired"); // Your mount is too tired to gallop.
@@ -114,7 +114,7 @@ public:
 
 		buff->setStartMessage(startStringId);
 		buff->setEndMessage(endStringId);
-		if (!petVars.petSpeedSameAsPlayerEnabled) {
+		if (!mountVars.mountPetSpeedSameAsPlayerEnabled) {
 			creature->setRunSpeed(runSpeed * globalVariables::playerSpeedMultiplier);
 			buff->setSpeedMultiplierMod(magnitude);
 			buff->setAccelerationMultiplierMod(magnitude);
@@ -134,7 +134,7 @@ public:
 			}
 		}
 		
-		if (!petVars.petGallopToggleEnabled) {
+		if (!mountVars.mountPetGallopToggleEnabled) {
 			Reference<GallopNotifyAvailableEvent*> task = new GallopNotifyAvailableEvent(creature);
 			creature->addPendingTask("gallop_notify", task, (cooldown + duration) * 1000);
 		} else {
