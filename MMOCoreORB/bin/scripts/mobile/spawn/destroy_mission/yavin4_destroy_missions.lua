@@ -1,4 +1,4 @@
-dofile("scripts/managers/global_variables.lua")
+dofile("scripts/managers/variables/mission_variables.lua")
 
 if not yavin4LairsAlreadyAdded then
 	yavin4LairsAlreadyAdded = false

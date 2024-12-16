@@ -11,7 +11,6 @@
 #include "server/ServerCore.h"
 #include "server/zone/ZoneServer.h"
 #include "server/chat/ChatManager.h"
-#include "server/globalVariables.h"
 
 #include "server/zone/managers/watcher/variableWatcher.h"
 
@@ -47,8 +46,6 @@ public:
 
 		Logger::console.info(true) << shutdownMsg.toString();
 
-		globalVariables::stopConfigWatcher();
-		
 		varWatch.stopWatch = true;
 
 		zoneServer->getChatManager()->broadcastGalaxy(nullptr, shutdownMsg.toString());

@@ -15,6 +15,8 @@
 #include "server/zone/objects/tangible/components/droid/DroidHarvestModuleDataComponent.h"
 #include "server/zone/objects/creature/ai/DroidObject.h"
 
+#include "server/zone/managers/variables/combatVariables.h"
+
 // full template specializations need to go in cpp so they don't get
 // defined multiple times.
 
@@ -247,7 +249,7 @@ template<> bool CheckRetreat::check(AiAgent* agent) const {
 }
 
 template<> bool CheckFlee::check(AiAgent* agent) const {
-	if (!globalVariables::combatAIFleeEnabled)
+	if (!combatVars.combatAIFleeEnabled)
 		return false;
 
 	if (agent == nullptr || agent->getParent().get() != nullptr || agent->getParentID() > 0)
@@ -606,7 +608,7 @@ template<> bool CheckChatDelay::check(AiAgent* agent) const {
 }
 
 template<> bool CheckCallForHelp::check(AiAgent* agent) const {
-	if (!globalVariables::combatAICallForHelpEnabled)
+	if (!combatVars.combatAICallForHelpEnabled)
 		return false;
 
 	if (agent == nullptr || agent->isDead())

@@ -41,6 +41,8 @@ public:
 	bool combatCriticalDamageEnabled{false};
 	float combatCriticalMultiplier{1};
 	float combatLegendaryCriticalMultiplier{1};
+	bool combatAIFleeEnabled{true};
+	bool combatAICallForHelpEnabled{true};
 };
 
 extern CombatVariables combatVars;

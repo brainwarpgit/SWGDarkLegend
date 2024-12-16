@@ -47,7 +47,6 @@ import server.zone.objects.tangible.Instrument;
 include server.zone.objects.creature.CommandQueue;
 include server.zone.objects.ship.ShipObject;
 include system.lang.String;
-include server.globalVariables;
 
 @mock
 @json

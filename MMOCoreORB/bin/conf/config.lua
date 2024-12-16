@@ -274,6 +274,9 @@ Core3 = {
 	TestString = "This is a test",
 	--Test = "",
 	--TestArray = "" ,
+			
+	------Variable Watcher------
+	threadReloadTime = 10, --default 10 in seconds // the higher this is, the longer core3 takes to shutdown as it has to wait for threadReloadTime to expire.
 }
 
 --Start Hidden SWG Core3 Variables

@@ -300,7 +300,7 @@ public:
 			if (criticalMultiplier == professionVars.professionMedicHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
 			if (criticalMultiplier == professionVars.professionMedicHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
 
-			int healedWounds = creatureTarget->healWound(creature, attribute, healPower * globalVariables::playerWoundHealingMultiplier);
+			int healedWounds = creatureTarget->healWound(creature, attribute, healPower * professionVars.professionMedicWoundHealingMultiplier);
 
 			sendWoundMessage(creature, creatureTarget, attribute, healedWounds);
 

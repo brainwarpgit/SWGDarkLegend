@@ -13,6 +13,7 @@
 #include "server/zone/managers/variables/professionVariables.h"
 #include "server/zone/managers/variables/serverVariables.h"
 #include "server/zone/managers/variables/structureVariables.h"
+#include "conf/ConfigManager.h"
 
 VariableWatcher varWatch;
 
@@ -21,6 +22,12 @@ VariableWatcher::VariableWatcher() : Logger("VariableWatcher") {}
 VariableWatcher::~VariableWatcher() {}
 
 void VariableWatcher::startVariableWatchers() {
+
+	auto config = ConfigManager::instance();
+	varWatch.threadReloadTime = config->getInt("Core3.threadReloadTime",1);
+	
+	info(true) << "Variable Reload Time set to " << varWatch.threadReloadTime << " seconds.";
+
 	CDPVariables* cdpVariables = new CDPVariables();
 	if (cdpVariables != nullptr) {
 		info(true) << "Starting CDPVariables Watcher.";

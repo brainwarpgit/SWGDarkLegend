@@ -86,6 +86,8 @@ bool CombatVariables::loadConfigData() {
 		if (lua->getGlobalBoolean("combatCriticalDamageEnabled") == true || lua->getGlobalBoolean("combatCriticalDamageEnabled") == false) combatVars.combatCriticalDamageEnabled = lua->getGlobalBoolean("combatCriticalDamageEnabled");
 		if (lua->getGlobalFloat("combatCriticalMultiplier") >= 1) combatVars.combatCriticalMultiplier = lua->getGlobalFloat("combatCriticalMultiplier");
 		if (lua->getGlobalFloat("combatLegendaryCriticalMultiplier") >= 1) combatVars.combatLegendaryCriticalMultiplier = lua->getGlobalFloat("combatLegendaryCriticalMultiplier");
+		if (lua->getGlobalBoolean("combatAIFleeEnabled") == true || lua->getGlobalBoolean("combatAIFleeEnabled") == false) combatVars.combatAIFleeEnabled = lua->getGlobalBoolean("combatAIFleeEnabled");
+		if (lua->getGlobalBoolean("combatAICallForHelpEnabled") == true || lua->getGlobalBoolean("combatAICallForHelpEnabled") == false) combatVars.combatAICallForHelpEnabled = lua->getGlobalBoolean("combatAICallForHelpEnabled");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;

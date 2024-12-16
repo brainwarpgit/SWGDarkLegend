@@ -21,3 +21,6 @@ combatDamageAllMultiplier = 1 --default 1 stacks with all other multipliers
 combatCriticalDamageEnabled = true --default false
 combatCriticalMultiplier = 1.5 --default 1
 combatLegendaryCriticalMultiplier = 2.0 --default 1
+combatAIFleeEnabled = false --default true
+combatAICallForHelpEnabled = false --default true
+

@@ -83,7 +83,7 @@ if(COMPILE_TESTS)
 endif(COMPILE_TESTS)
 
 # Create core3 binary
-add_executable(core3 main.cpp server/ServerCore.cpp server/globalVariables.cpp ${core3tests_libs} ${tre3_sources} ${tre3_headers} ${zone3_sources} ${zone3_headers})
+add_executable(core3 main.cpp server/ServerCore.cpp ${core3tests_libs} ${tre3_sources} ${tre3_headers} ${zone3_sources} ${zone3_headers})
 
 if(ENABLE_ODB)
 	add_executable(odb3 server/ServerCore.cpp ${odb3_sources} ${odb3_headers} ${autogen_sources} ${autogen_headers} ${zone3_sources} ${zone3_headers}

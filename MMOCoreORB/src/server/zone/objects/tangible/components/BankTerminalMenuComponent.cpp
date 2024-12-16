@@ -15,7 +15,8 @@
 #include "server/zone/Zone.h"
 #include "server/zone/objects/region/CityRegion.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 
 void BankTerminalMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* creature) const {
 	if (creature == nullptr)
@@ -120,7 +121,7 @@ int BankTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 		return 0;
 
 	} else if (selectedID == DEPOSIT) {
-		if (planet == playerZone->getZoneName() || globalVariables::playerGlobalSafetyDepositEnabled) {
+		if (planet == playerZone->getZoneName() || playerVars.playerGlobalSafetyDepositEnabled) {
 			ManagedReference<SceneObject*> bank = creature->getSlottedObject("bank");
 			bank->openContainerTo(creature);
 		} else {

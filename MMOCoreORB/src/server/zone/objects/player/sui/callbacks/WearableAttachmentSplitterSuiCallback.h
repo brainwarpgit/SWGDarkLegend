@@ -65,7 +65,7 @@ public:
 			for (int i = 0; i < skillMods->size(); i++) {
 				auto key = skillMods->elementAt(i).getKey();
 				auto value = skillMods->elementAt(i).getValue();
-				jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+				jobCost += value * playerVars.playerAttachmentSplittingCostPerPoint;
 				sortedMods.put(ModSortingHelper(key, value));
 			}
 			if (creature->getBankCredits() < jobCost) {

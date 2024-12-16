@@ -10,7 +10,7 @@ playerWoundsonDeath = 500 --default 100
 playerInsureWeaponsEnabled = true --default false
 playerHAMRegenSittingMultiplier = 5 --default 1
 playerHAMRegenKneelingMultiplier = 5 --default 1
-playerSpeedMultiplier = 2 --default 1
+playerSpeedMultiplier = 2 --default 1 // must mount / dismount to take affect
 playerMaxLevelNonCHMount = 15 --default 10 overridden when creatureAllMountsAllowedForAllPlayersEnabled = true
 playerAttachmentSplittingEnabled = true --default false
 playerAttachmentSplittingCostPerPoint = 1000 --default 1000

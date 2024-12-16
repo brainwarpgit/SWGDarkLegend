@@ -18,7 +18,8 @@
 #include "server/zone/packets/object/SpatialChat.h"
 #include "server/zone/objects/tangible/tasks/VendorReturnToPositionTask.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 VendorDataComponent::VendorDataComponent() : AuctionTerminalDataComponent(), adBarkingMutex() {
 	ownerId = 0;
@@ -152,8 +153,8 @@ void VendorDataComponent::runVendorUpdate() {
 	}
 
 	// Aprox 24 hours of maint warnings.
-	if (globalVariables::vendorLowMaintenanceEmailEnabled == true) {
-		if (maintAmount < globalVariables::vendorLowMaintenanceEmailWarningThreshold && maintAmount > globalVariables::vendorLowMaintenanceEmailWarningThreshold * -1) {
+	if (serverVars.serverVendorLowMaintenanceEmailEnabled == true) {
+		if (maintAmount < serverVars.serverVendorLowMaintenanceEmailWarningThreshold && maintAmount > serverVars.serverVendorLowMaintenanceEmailWarningThreshold * -1) {
 			ManagedReference<ChatManager*> cman = strongParent->getZoneServer()->getChatManager();
 
 			String sender = strongParent->getDisplayedName();

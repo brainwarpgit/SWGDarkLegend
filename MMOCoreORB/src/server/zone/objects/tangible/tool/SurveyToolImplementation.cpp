@@ -16,7 +16,9 @@
 #include "server/zone/objects/tangible/tool/sui/SurveyToolSetRangeSuiCallback.h"
 #include "server/zone/objects/tangible/tool/sui/SurveyToolApproveRadioactiveSuiCallback.h"
 #include "server/zone/objects/player/sessions/survey/SurveySession.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/professionVariables.h"
+
 
 void SurveyToolImplementation::loadTemplateData(SharedObjectTemplate* templateData) {
 	TangibleObjectImplementation::loadTemplateData(templateData);
@@ -95,7 +97,7 @@ void SurveyToolImplementation::sendRangeSui(CreatureObject* player) {
 	suiToolRangeBox->setPromptTitle("@base_player:swg");
 	suiToolRangeBox->setPromptText("@survey:select_range");
 
-	if (!globalVariables::playerSurveyExtendedDistanceEnabled) {
+	if (!professionVars.professionArtisanSurveyExtendedDistanceEnabled) {
 		if (surveyMod >= 20)
 			suiToolRangeBox->addMenuItem("64m x 3pts", 0);
 
@@ -161,7 +163,7 @@ int SurveyToolImplementation::getRange(CreatureObject* player) {
 
 int SurveyToolImplementation::getSkillBasedRange(int skillLevel) {
 
-	if (!globalVariables::playerSurveyExtendedDistanceEnabled) {
+	if (!professionVars.professionArtisanSurveyExtendedDistanceEnabled) {
 		if (skillLevel >= 120)
 			return 384;
 		else if (skillLevel >= 100)
