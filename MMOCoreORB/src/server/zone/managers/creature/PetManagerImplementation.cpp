@@ -19,7 +19,7 @@
 #include "server/zone/objects/creature/commands/QueueCommand.h"
 
 #include "server/zone/managers/variables/creatureVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 void PetManagerImplementation::loadLuaConfig() {
 	info("Loading configuration file.", true);
@@ -368,7 +368,7 @@ bool PetManagerImplementation::handleCommandTraining(CreatureObject* speaker, Ai
 			int skill = speaker->getSkillMod("tame_level");
 			int level = petCreature->getAdultLevel();
 			int roll = 0;
-			if (!globalVariables::creatureTrainingAlwaysSuccessfulEnabled) {
+			if (!professionVars.professionCreatureHandlerTrainingAlwaysSuccessfulEnabled) {
 				roll = System::random(skill + level);
 			}
 			if (skill > roll)

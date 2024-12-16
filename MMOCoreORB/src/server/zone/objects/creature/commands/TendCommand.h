@@ -14,7 +14,7 @@
 #include "QueueCommand.h"
 
 #include "server/zone/managers/variables/playerXpVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class TendCommand : public QueueCommand {
 protected:
@@ -234,20 +234,20 @@ public:
 			float criticalMultiplier = 1;
 			int roll = 0;
 			int rollMod = 0;
-			if (globalVariables::playerHealingCriticalEnabled) {
+			if (professionVars.professionMedicHealingCriticalEnabled) {
 				rollMod = creature->getSkillMod("healing_crit_chance") + ((creature->getSkillMod("luck") + creature->getSkillMod("force_luck")) / 5);
 				roll = System::random(1000 + rollMod);
-				if (roll > 925) criticalMultiplier = globalVariables::playerHealingCriticalMultiplier;
-				if (roll > 1050) criticalMultiplier = globalVariables::playerHealingLegendaryCriticalMultiplier;
+				if (roll > 925) criticalMultiplier = professionVars.professionMedicHealingCriticalMultiplier;
+				if (roll > 1050) criticalMultiplier = professionVars.professionMedicHealingLegendaryCriticalMultiplier;
 			}
 
 			healPower *= criticalMultiplier;
 
-			if (criticalMultiplier == globalVariables::playerHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
-			if (criticalMultiplier == globalVariables::playerHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
+			if (criticalMultiplier == professionVars.professionMedicHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
+			if (criticalMultiplier == professionVars.professionMedicHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
 
-			int healedHealth = creatureTarget->healDamage(creature, CreatureAttribute::HEALTH, healPower * globalVariables::playerDamageHealingMultiplier);
-			int healedAction = creatureTarget->healDamage(creature, CreatureAttribute::ACTION, healPower * globalVariables::playerDamageHealingMultiplier, true, false);
+			int healedHealth = creatureTarget->healDamage(creature, CreatureAttribute::HEALTH, healPower * professionVars.professionMedicDamageHealingMultiplier);
+			int healedAction = creatureTarget->healDamage(creature, CreatureAttribute::ACTION, healPower * professionVars.professionMedicDamageHealingMultiplier, true, false);
 
 			sendHealMessage(creature, creatureTarget, healedHealth, healedAction);
 			if ((playerXpVars.playerXpAwardSelfHealingXPEnabled == true || playerXpVars.playerXpAwardPetHealingXPEnabled == true) && (healedHealth + healedAction) > 0) {
@@ -288,17 +288,17 @@ public:
 			float criticalMultiplier = 1;
 			int roll = 0;
 			int rollMod = 0;
-			if (globalVariables::playerHealingCriticalEnabled) {
+			if (professionVars.professionMedicHealingCriticalEnabled) {
 				rollMod = creature->getSkillMod("healing_crit_chance") + ((creature->getSkillMod("luck") + creature->getSkillMod("force_luck")) / 5);
 				roll = System::random(1000 + rollMod);
-				if (roll > 925) criticalMultiplier = globalVariables::playerHealingCriticalMultiplier;
-				if (roll > 1050) criticalMultiplier = globalVariables::playerHealingLegendaryCriticalMultiplier;
+				if (roll > 925) criticalMultiplier = professionVars.professionMedicHealingCriticalMultiplier;
+				if (roll > 1050) criticalMultiplier = professionVars.professionMedicHealingLegendaryCriticalMultiplier;
 			}
 
 			healPower *= criticalMultiplier;
 
-			if (criticalMultiplier == globalVariables::playerHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
-			if (criticalMultiplier == globalVariables::playerHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
+			if (criticalMultiplier == professionVars.professionMedicHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
+			if (criticalMultiplier == professionVars.professionMedicHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
 
 			int healedWounds = creatureTarget->healWound(creature, attribute, healPower * globalVariables::playerWoundHealingMultiplier);
 

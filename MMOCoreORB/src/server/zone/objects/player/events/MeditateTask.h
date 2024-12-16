@@ -19,7 +19,7 @@
 #include "server/zone/managers/player/PlayerManager.h"
 
 #include "server/zone/managers/variables/playerXpVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class MeditateTask: public Task {
 	ManagedReference<CreatureObject*> player;
@@ -53,11 +53,11 @@ public:
 			PlayerManager* playerManager = server->getPlayerManager();
 			if (player->isBleeding() || player->isPoisoned() || player->isDiseased()) {
 				if (player->isBleeding() && meditateMod >= 15)
-					player->healDot(CreatureState::BLEEDING, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
+					player->healDot(CreatureState::BLEEDING, ((15 * professionVars.professionTkaMeditateHealingMultiplier) + (meditateMod / 3)));
 				else if (player->isPoisoned() && meditateMod >= 30)
-					player->healDot(CreatureState::POISONED, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
+					player->healDot(CreatureState::POISONED, ((15 * professionVars.professionTkaMeditateHealingMultiplier) + (meditateMod / 3)));
 				else if (player->isDiseased() && meditateMod >= 45)
-					player->healDot(CreatureState::DISEASED, ((15 * globalVariables::playerMeditateHealingMultiplier) + (meditateMod / 3)));
+					player->healDot(CreatureState::DISEASED, ((15 * professionVars.professionTkaMeditateHealingMultiplier) + (meditateMod / 3)));
 
 			} else if (meditateMod >= 75) { // Meditate SkillMod +75 for wound Healing..
 
@@ -70,7 +70,7 @@ public:
 						woundedPools.add(i);
 				}
 				//Return without rescheduling because everything that can be healed has been?
-				if (globalVariables::playerMeditateFatigueHealingEnabled == true) {
+				if (professionVars.professionTkaMeditateFatigueHealingEnabled == true) {
 					if (woundedPools.size() <= 0 && player->getShockWounds() <= 0) {
 						return;
 					}
@@ -80,12 +80,12 @@ public:
 					}
 				}
 
-				heal = (20 * globalVariables::playerMeditateHealingMultiplier) + System::random(10);
+				heal = (20 * professionVars.professionTkaMeditateHealingMultiplier) + System::random(10);
 				int fatigueheal = 0;
 
 				if (meditateMod >= 100) {
-					heal = (30 * globalVariables::playerMeditateHealingMultiplier) + System::random(20);
-					fatigueheal = (globalVariables::playerMeditateFatigueHealingAmount * globalVariables::playerMeditateHealingMultiplier) + System::random(20);
+					heal = (30 * professionVars.professionTkaMeditateHealingMultiplier) + System::random(20);
+					fatigueheal = (professionVars.professionTkaMeditateFatigueHealingAmount * professionVars.professionTkaMeditateHealingMultiplier) + System::random(20);
 				}
 				if (woundedPools.size() > 0) {				
 					// Select a random Attribute that has wounds...
@@ -101,7 +101,7 @@ public:
 					player->sendSystemMessage(healParams);
 					if (playerXpVars.playerXpMeditateGrantsHealingXPEnabled == true) playerManager->awardExperience(player, "medical", heal * 0.5f, true);
 				}
-				if (globalVariables::playerMeditateFatigueHealingEnabled == true && player->getShockWounds() > 0) {
+				if (professionVars.professionTkaMeditateFatigueHealingEnabled == true && player->getShockWounds() > 0) {
 						int fatigue = player->getShockWounds();
 						fatigueheal = Math::min(fatigue, fatigueheal / 2);
 						player->addShockWounds(-fatigueheal, true, false);
@@ -111,9 +111,9 @@ public:
 			}
 			
 			if (meditateTask != nullptr) {
-				meditateTask->reschedule(globalVariables::playerMeditateTickTime * 1000);
+				meditateTask->reschedule(professionVars.professionTkaMeditateTickTime * 1000);
 			} else {
-				meditateTask->schedule(globalVariables::playerMeditateTickTime * 1000);
+				meditateTask->schedule(professionVars.professionTkaMeditateTickTime * 1000);
 			}
 		} catch ( Exception& e) {
 			player->error("unreported exception caught in MeditateTask::activate");

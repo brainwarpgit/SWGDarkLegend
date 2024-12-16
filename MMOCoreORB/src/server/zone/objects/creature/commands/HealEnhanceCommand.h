@@ -16,7 +16,7 @@
 #include "server/zone/managers/collision/CollisionManager.h"
 
 #include "server/zone/managers/variables/playerXpVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class HealEnhanceCommand : public QueueCommand {
 	float mindCost;
@@ -93,7 +93,7 @@ public:
 
 		int medicalRatingNotIncludingCityBonus = enhancer->getSkillMod("private_medical_rating") - enhancer->getSkillModOfType("private_medical_rating", SkillModManager::CITY);
 
-		if (globalVariables::playerEnhanceHealingAnywhereEnabled == false) {
+		if (professionVars.professionMedicEnhanceHealingAnywhereEnabled == false) {
 			if (medicalRatingNotIncludingCityBonus <= 0) {
 				enhancer->sendSystemMessage("@healing_response:must_be_near_droid"); // You must be in a hospital, at a campsite, or near a surgical droid to do that.
 				return false;
@@ -378,7 +378,7 @@ public:
 		uint32 currentBuff = 0;
 		uint32 buffcrc = BuffCRC::getMedicalBuff(attribute);
 
-		if (globalVariables::playerOverwriteBuffEnabled == false) {
+		if (professionVars.professionMedicOverwriteBuffEnabled == false) {
 			if (patient->hasBuff(buffcrc)) {
 				Buff* existingbuff = patient->getBuff(buffcrc);
 
@@ -389,7 +389,7 @@ public:
 		// Applies battle fatigue
 		uint32 buffPower = getEnhancePackStrength(enhancePack, enhancer, patient);
 		
-		if (globalVariables::playerOverwriteBuffEnabled == false) {
+		if (professionVars.professionMedicOverwriteBuffEnabled == false) {
 			if (buffPower < currentBuff) {
 				if (patient == enhancer)
 					enhancer->sendSystemMessage("Your current enhancements are of greater power and cannot be re-applied.");
@@ -410,7 +410,7 @@ public:
 		if (playerMan == nullptr)
 			return GENERALERROR;
 
-		uint32 amountEnhanced = playerMan->healEnhance(enhancer, patient, attribute, buffPower * globalVariables::playerEnhanceHealingMultiplier, enhancePack->getDuration() * globalVariables::playerEnhanceHealingMultiplier, enhancePack->getAbsorption() * globalVariables::playerEnhanceHealingMultiplier);
+		uint32 amountEnhanced = playerMan->healEnhance(enhancer, patient, attribute, buffPower * professionVars.professionMedicEnhanceHealingMultiplier, enhancePack->getDuration() * professionVars.professionMedicEnhanceHealingMultiplier, enhancePack->getAbsorption() * professionVars.professionMedicEnhanceHealingMultiplier);
 
 		if (enhancer->isPlayerCreature() && patient->isPlayerCreature()) {
 			playerMan->sendBattleFatigueMessage(enhancer, patient);

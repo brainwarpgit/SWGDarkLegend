@@ -85,7 +85,7 @@
 #include "server/zone/objects/ship/ShipObject.h"
 
 #include "server/zone/managers/variables/playerVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 #ifdef WITH_SESSION_API
 #include "server/login/SessionAPIClient.h"
@@ -2506,7 +2506,7 @@ void PlayerObjectImplementation::doForceRegen() {
 		Reference<ForceMeditateTask*> medTask = creature->getPendingTask("forcemeditate").castTo<ForceMeditateTask*>();
 
 		if (medTask != nullptr)
-			modifier = globalVariables::playerJediForceMeditateMultiplier;
+			modifier = professionVars.professionJediForceMeditateMultiplier;
 	}
 
 	uint32 forceTick = tick * modifier;

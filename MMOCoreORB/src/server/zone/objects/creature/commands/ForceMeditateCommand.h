@@ -10,7 +10,7 @@
 #include "server/zone/objects/player/events/ForceMeditateTask.h"
 
 #include "server/zone/managers/variables/serverVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class ForceMeditateCommand : public QueueCommand {
 public:
@@ -57,9 +57,9 @@ public:
 		Reference<MeditateTask*> meditateTask = new MeditateTask(creature);
 
 		fmeditateTask->setMoodString(creature->getMoodString());
-		creature->addPendingTask("forcemeditate", fmeditateTask, globalVariables::playerMeditateTickTime * 1000);
+		creature->addPendingTask("forcemeditate", fmeditateTask, professionVars.professionTkaMeditateTickTime * 1000);
 		if (creature->hasSkill("combat_unarmed_novice") && serverVars.serverCommandMeditateMergeEnabled == true) {
-			creature->addPendingTask("meditate", meditateTask, globalVariables::playerMeditateTickTime * 1000);
+			creature->addPendingTask("meditate", meditateTask, professionVars.professionTkaMeditateTickTime * 1000);
 		}
 		
 		creature->setMeditateState();

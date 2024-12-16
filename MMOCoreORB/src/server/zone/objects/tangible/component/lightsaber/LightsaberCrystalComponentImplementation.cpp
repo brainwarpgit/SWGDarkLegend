@@ -19,7 +19,7 @@
 #include "server/zone/ZoneServer.h"
 
 #include "server/zone/managers/variables/lootVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 void LightsaberCrystalComponentImplementation::initializeTransientMembers() {
 	ComponentImplementation::initializeTransientMembers();
@@ -456,7 +456,7 @@ void LightsaberCrystalComponentImplementation::tuneCrystal(CreatureObject* playe
 			player->sendSystemMessage("@jedi_spam:no_force_power");
 			return;
 		}
-		if (globalVariables::jediForceCostToTuneEnabled == true) {
+		if (professionVars.professionJediForceCostToTuneEnabled == true) {
 			ghost->setForcePower(ghost->getForcePower() - tuningCost);
 		}
 	}

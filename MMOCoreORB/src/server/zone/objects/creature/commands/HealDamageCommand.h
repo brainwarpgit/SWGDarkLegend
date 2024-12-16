@@ -16,7 +16,7 @@
 #include "server/zone/managers/collision/CollisionManager.h"
 
 #include "server/zone/managers/variables/playerXpVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class HealDamageCommand : public QueueCommand {
 	float range;
@@ -274,37 +274,37 @@ public:
 			float criticalMultiplier = 1;
 			int roll = 0;
 			int rollMod = 0;
-			if (globalVariables::playerHealingCriticalEnabled) {
+			if (professionVars.professionMedicHealingCriticalEnabled) {
 				rollMod = creature->getSkillMod("healing_crit_chance") + ((creature->getSkillMod("luck") + creature->getSkillMod("force_luck")) / 5);
 				roll = System::random(1000 + rollMod);
-				if (roll > 925) criticalMultiplier = globalVariables::playerHealingCriticalMultiplier;
-				if (roll > 1050) criticalMultiplier = globalVariables::playerHealingLegendaryCriticalMultiplier;
+				if (roll > 925) criticalMultiplier = professionVars.professionMedicHealingCriticalMultiplier;
+				if (roll > 1050) criticalMultiplier = professionVars.professionMedicHealingLegendaryCriticalMultiplier;
 			}
 
 			stimPower *= criticalMultiplier;
 
-			if (criticalMultiplier == globalVariables::playerHealingCriticalMultiplier) targetCreature->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
-			if (criticalMultiplier == globalVariables::playerHealingLegendaryCriticalMultiplier) targetCreature->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
+			if (criticalMultiplier == professionVars.professionMedicHealingCriticalMultiplier) targetCreature->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
+			if (criticalMultiplier == professionVars.professionMedicHealingLegendaryCriticalMultiplier) targetCreature->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
 
 			if (atts.contains(CreatureAttribute::HEALTH)) {
-				healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower * globalVariables::playerDamageHealingMultiplier);
+				healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower * professionVars.professionMedicDamageHealingMultiplier);
 				notifyObservers = false;
 			}
 
 			if (atts.contains(CreatureAttribute::ACTION)) {
 				if (notifyObservers) {
-					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier);
+					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * professionVars.professionMedicDamageHealingMultiplier);
 					notifyObservers = false;
 				} else {
-					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
+					actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * professionVars.professionMedicDamageHealingMultiplier, true, false);
 				}
 			}
 
 			if (atts.contains(CreatureAttribute::MIND)) {
 				if (notifyObservers) {
-					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier);
+					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * professionVars.professionMedicDamageHealingMultiplier);
 				} else {
-					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
+					mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * professionVars.professionMedicDamageHealingMultiplier, true, false);
 				}
 			}
 
@@ -479,37 +479,37 @@ public:
 		float criticalMultiplier = 1;
 		int roll = 0;
 		int rollMod = 0;
-		if (globalVariables::playerHealingCriticalEnabled) {
+		if (professionVars.professionMedicHealingCriticalEnabled) {
 			rollMod = creature->getSkillMod("healing_crit_chance") + ((creature->getSkillMod("luck") + creature->getSkillMod("force_luck")) / 5);
 			roll = System::random(1000 + rollMod);
-			if (roll > 925) criticalMultiplier = globalVariables::playerHealingCriticalMultiplier;
-			if (roll > 1050) criticalMultiplier = globalVariables::playerHealingLegendaryCriticalMultiplier;
+			if (roll > 925) criticalMultiplier = professionVars.professionMedicHealingCriticalMultiplier;
+			if (roll > 1050) criticalMultiplier = professionVars.professionMedicHealingLegendaryCriticalMultiplier;
 		}
 
 		stimPower *= criticalMultiplier;
 
-		if (criticalMultiplier == globalVariables::playerHealingCriticalMultiplier) targetCreature->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
-		if (criticalMultiplier == globalVariables::playerHealingLegendaryCriticalMultiplier) targetCreature->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
+		if (criticalMultiplier == professionVars.professionMedicHealingCriticalMultiplier) targetCreature->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
+		if (criticalMultiplier == professionVars.professionMedicHealingLegendaryCriticalMultiplier) targetCreature->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
 
 		if (atts.contains(CreatureAttribute::HEALTH)) {
-			healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower * globalVariables::playerDamageHealingMultiplier);
+			healthHealed = targetCreature->healDamage(creature, CreatureAttribute::HEALTH, stimPower * professionVars.professionMedicDamageHealingMultiplier);
 			notifyObservers = false;
 		}
 
 		if (atts.contains(CreatureAttribute::ACTION)) {
 			if (notifyObservers) {
-				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier);
+				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * professionVars.professionMedicDamageHealingMultiplier);
 				notifyObservers = false;
 			} else {
-				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
+				actionHealed = targetCreature->healDamage(creature, CreatureAttribute::ACTION, stimPower * professionVars.professionMedicDamageHealingMultiplier, true, false);
 			}
 		}
 
 		if (atts.contains(CreatureAttribute::MIND)) {
 			if (notifyObservers) {
-				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier);
+				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * professionVars.professionMedicDamageHealingMultiplier);
 			} else {
-				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * globalVariables::playerDamageHealingMultiplier, true, false);
+				mindHealed = targetCreature->healDamage(creature, CreatureAttribute::MIND, stimPower * professionVars.professionMedicDamageHealingMultiplier, true, false);
 			}
 		}
 

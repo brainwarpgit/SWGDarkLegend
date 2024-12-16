@@ -13,7 +13,7 @@
 #ifndef AREATRACKTASK_H_
 #define AREATRACKTASK_H_
 
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class AreaTrackTask: public Task {
 	ManagedReference<CreatureObject*> player;
@@ -71,8 +71,8 @@ public:
 			bool canGetDirection = player->hasSkill("outdoors_ranger_harvest_01");
 		    bool canGetDistance = player->hasSkill("outdoors_ranger_harvest_03");
 
-			SortedVector<ManagedReference<TreeEntry*> > objects(globalVariables::rangerAreaTrackDistance, globalVariables::rangerAreaTrackDistance);
-			zone->getInRangeObjects(player->getPositionX(), player->getPositionZ(), player->getPositionY(), globalVariables::rangerAreaTrackDistance, &objects, true);
+			SortedVector<ManagedReference<TreeEntry*> > objects(professionVars.professionRangerAreaTrackDistance, professionVars.professionRangerAreaTrackDistance);
+			zone->getInRangeObjects(player->getPositionX(), player->getPositionZ(), player->getPositionY(), professionVars.professionRangerAreaTrackDistance, &objects, true);
 
 			for (int i = 0; i < objects.size(); ++i) {
 				SceneObject* object = static_cast<SceneObject*>(objects.get(i).get());
@@ -105,7 +105,7 @@ public:
 
 				String creatureName = "";
 				
-				if (creature->getDisplayedName().contains("(baby)") && globalVariables::rangerAreaTrackHighlightBabyEnabled) {
+				if (creature->getDisplayedName().contains("(baby)") && professionVars.professionRangerAreaTrackHighlightBabyEnabled) {
 					creatureName = "\\#FFFF00" + creature->getDisplayedName();
 				} else {
 					creatureName = creature->getDisplayedName();

@@ -11,8 +11,8 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/events/AreaTrackTask.h"
 #include "server/zone/packets/object/Emote.h"
-#include "server/globalVariables.h"
 
+#include "server/zone/managers/variables/professionVariables.h"
 
 class AreaTrackSuiCallback : public SuiCallback {
 	String nodeName;
@@ -47,8 +47,8 @@ public:
 				creature->sendSystemMessage("@skl_use:sys_scan_begin"); // You begin to examine the environment for information.
 
 				Reference<AreaTrackTask*> att = new AreaTrackTask(creature, index);
-				creature->addPendingTask("areatrack", att, globalVariables::rangerAreaTrackCycleTime * 1000);
-				creature->addCooldown("areatrack", globalVariables::rangerAreaTrackCycleTime * 1000);
+				creature->addPendingTask("areatrack", att, professionVars.professionRangerAreaTrackCycleTime * 1000);
+				creature->addCooldown("areatrack", professionVars.professionRangerAreaTrackCycleTime * 1000);
 			}
 		}
 	}

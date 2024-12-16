@@ -29,7 +29,8 @@
 #include "server/chat/ChatManager.h"
 #include "server/zone/Zone.h"
 #include "server/zone/packets/scene/PlayClientEffectLocMessage.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/professionVariables.h"
 
 void EntertainingSessionImplementation::doEntertainerPatronEffects() {
 	ManagedReference<CreatureObject*> creo = entertainer.get();
@@ -127,7 +128,7 @@ void EntertainingSessionImplementation::doEntertainerPatronEffects() {
 }
 
 bool EntertainingSessionImplementation::isInEntertainingBuilding(CreatureObject* creature) {
-	if (globalVariables::playerEntertainerInstantBuffEnabled == true) {
+	if (professionVars.professionEntertainerInstantBuffEnabled == true) {
 		return true;
 	}
 	ManagedReference<SceneObject*> root = creature->getRootParent();
@@ -151,8 +152,8 @@ void EntertainingSessionImplementation::healWounds(CreatureObject* creature, flo
 
 	ManagedReference<CreatureObject*> entertainer = this->entertainer.get();
 
-	woundHeal *= globalVariables::playerEntertainerWoundHealMultiplier;
-	shockHeal *= globalVariables::playerEntertainerWoundHealMultiplier;
+	woundHeal *= professionVars.professionEntertainerWoundHealMultiplier;
+	shockHeal *= professionVars.professionEntertainerWoundHealMultiplier;
 
 	Locker clocker(creature, entertainer);
 
@@ -166,7 +167,7 @@ void EntertainingSessionImplementation::healWounds(CreatureObject* creature, flo
 		creature->addShockWounds(-shockHeal, true, false);
 		amountHealed += shockHeal;
 	}
-	if (globalVariables::playerEntertainerHealsAllWoundsEnabled == false) {	
+	if (professionVars.professionEntertainerHealsAllWoundsEnabled == false) {	
 		if (woundHeal > 0 && (creature->getWounds(CreatureAttribute::MIND) > 0
 				|| creature->getWounds(CreatureAttribute::FOCUS) > 0
 				|| creature->getWounds(CreatureAttribute::WILLPOWER) > 0)) {
@@ -358,7 +359,7 @@ void EntertainingSessionImplementation::stopPlaying() {
 
 		entertainer->dropActiveSession(SessionFacadeType::ENTERTAINING);
 	}
-	if (globalVariables::playerEntertainerBuffSelfEnabled == true) {
+	if (professionVars.professionEntertainerBuffSelfEnabled == true) {
 		playerManager->enhanceSelfMusic(entertainer);
 	}
 }
@@ -630,7 +631,7 @@ void EntertainingSessionImplementation::stopDancing() {
 		entertainer->dropActiveSession(SessionFacadeType::ENTERTAINING);
 	}
 
-	if (globalVariables::playerEntertainerBuffSelfEnabled == true) {
+	if (professionVars.professionEntertainerBuffSelfEnabled == true) {
 		playerManager->enhanceSelfDance(entertainer);
 	}
 }
@@ -732,11 +733,11 @@ void EntertainingSessionImplementation::addEntertainerBuffDuration(CreatureObjec
 
 	buffDuration += duration;
 
-	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == false) {
+	if (professionVars.professionEntertainerBuffDurationCustomEnabled == false) {
 		if (buffDuration > (120.0f + (10.0f / 60.0f))) // 2 hrs 10 seconds
 			buffDuration = ((120.0f + (10.0f / 60.0f))); // 2hrs 10 seconds
 	} else {
-		buffDuration = globalVariables::playerEnterainerBuffDuration;
+		buffDuration = professionVars.professionEntertainerBuffDuration;
 	}
 	setEntertainerBuffDuration(creature, performanceType, buffDuration);
 }
@@ -912,7 +913,7 @@ void EntertainingSessionImplementation::activateEntertainerBuff(CreatureObject* 
 			return;
 		}
 
-		if (globalVariables::playerEntertainerInstantBuffEnabled == false) {
+		if (professionVars.professionEntertainerInstantBuffEnabled == false) {
 			//1 minute minimum listen/watch time
 			int timeElapsed = time(0) - getEntertainerBuffStartTime(creature, performanceType);
 			if (timeElapsed < 60) {
@@ -931,7 +932,7 @@ void EntertainingSessionImplementation::activateEntertainerBuff(CreatureObject* 
 			return;
 
 		ManagedReference<PerformanceBuff*> oldBuff = nullptr;
-		if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == false) {
+		if (professionVars.professionEntertainerAllBuffsMusicOrDanceEnabled == false) {
 			switch (performanceType) {
 				case PerformanceType::MUSIC:
 				{

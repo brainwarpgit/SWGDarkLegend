@@ -14,7 +14,7 @@
 #include "server/zone/managers/collision/CollisionManager.h"
 
 #include "server/zone/managers/variables/playerXpVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class HealWoundCommand : public QueueCommand {
 	int mindCost;
@@ -113,7 +113,7 @@ public:
 		}
 
 		int medicalRatingNotIncludingCityBonus = creature->getSkillMod("private_medical_rating") - creature->getSkillModOfType("private_medical_rating", SkillModManager::CITY);
-		if (medicalRatingNotIncludingCityBonus <= 0 && globalVariables::playerWoundHealingAnywhereEnabled == false) {
+		if (medicalRatingNotIncludingCityBonus <= 0 && professionVars.professionMedicWoundHealingAnywhereEnabled == false) {
 			creature->sendSystemMessage("@healing_response:must_be_near_droid"); //You must be in a hospital, at a campsite, or near a surgical droid to do that.
 			return false;
 		} else {
@@ -121,7 +121,7 @@ public:
 			ManagedReference<SceneObject*> root = creature->getRootParent();
 
 			if (root != nullptr && root->isClientObject()) {
-				if (creature->getSkillModOfType("private_medical_rating", SkillModManager::STRUCTURE) == 0 && globalVariables::playerWoundHealingAnywhereEnabled == false) {
+				if (creature->getSkillModOfType("private_medical_rating", SkillModManager::STRUCTURE) == 0 && professionVars.professionMedicWoundHealingAnywhereEnabled == false) {
 					creature->sendSystemMessage("@healing_response:must_be_in_hospital"); // You must be in a hospital or at a campsite to do that.
 					return false;
 				}
@@ -330,19 +330,19 @@ public:
 		float criticalMultiplier = 1;
 		int roll = 0;
 		int rollMod = 0;
-		if (globalVariables::playerHealingCriticalEnabled) {
+		if (professionVars.professionMedicHealingCriticalEnabled) {
 			rollMod = creature->getSkillMod("healing_crit_chance") + ((creature->getSkillMod("luck") + creature->getSkillMod("force_luck")) / 5);
 			roll = System::random(1000 + rollMod);
-			if (roll > 925) criticalMultiplier = globalVariables::playerHealingCriticalMultiplier;
-			if (roll > 1050) criticalMultiplier = globalVariables::playerHealingLegendaryCriticalMultiplier;
+			if (roll > 925) criticalMultiplier = professionVars.professionMedicHealingCriticalMultiplier;
+			if (roll > 1050) criticalMultiplier = professionVars.professionMedicHealingLegendaryCriticalMultiplier;
 		}
 
 		woundPower *= criticalMultiplier;
 
-		if (criticalMultiplier == globalVariables::playerHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
-		if (criticalMultiplier == globalVariables::playerHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
+		if (criticalMultiplier == professionVars.professionMedicHealingCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "critical_heal", 0, 0xFF, 0);
+		if (criticalMultiplier == professionVars.professionMedicHealingLegendaryCriticalMultiplier) creatureTarget->showFlyText("combat_effects", "legendary_heal", 0xFF, 0, 0);
 
-		int woundHealed = creatureTarget->healWound(creature, attribute, woundPower * globalVariables::playerWoundHealingMultiplier);
+		int woundHealed = creatureTarget->healWound(creature, attribute, woundPower * professionVars.professionMedicWoundHealingMultiplier);
 
 		woundHealed = abs(woundHealed);
 

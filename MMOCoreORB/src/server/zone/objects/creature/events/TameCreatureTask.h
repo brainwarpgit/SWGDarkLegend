@@ -10,7 +10,7 @@
 #include "server/zone/objects/creature/events/SpawnCreatureTask.h"
 #include "engine/engine.h"
 
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class TameCreatureTask : public Task {
 
@@ -50,7 +50,7 @@ public:
 			return;
 		}
 
-		if (!creature->isInRange(player, globalVariables::creatureTamingMaxDistance)) {
+		if (!creature->isInRange(player, professionVars.professionCreatureHandlerTamingMaxDistance)) {
 			player->sendSystemMessage("@hireling/hireling:taming_toofar"); // You are too far away to continue taming.
 			creature->showFlyText("npc_reaction/flytext","toofar", 204, 0, 0);  // You are too far away to tame the creature.
 			resetStatus();
@@ -74,12 +74,12 @@ public:
 			chatManager->broadcastChatMessage(player, "@hireling/hireling:taming_" + String::valueOf(System::random(4) + 1), 0, 0, player->getMoodID(), 0, ghost->getLanguageID());
 			player->doAnimation("");
 			currentPhase = SECOND;
-			player->addPendingTask("tame_pet", this, globalVariables::creatureTamingCycleTime * 1000);
+			player->addPendingTask("tame_pet", this, professionVars.professionCreatureHandlerTamingCycleTime * 1000);
 			break;
 		case SECOND:
 			chatManager->broadcastChatMessage(player, "@hireling/hireling:taming_" + String::valueOf(System::random(4) + 1), 0, 0, player->getMoodID(), 0, ghost->getLanguageID());
 			currentPhase = FINAL;
-			player->addPendingTask("tame_pet", this, globalVariables::creatureTamingCycleTime * 1000);
+			player->addPendingTask("tame_pet", this, professionVars.professionCreatureHandlerTamingCycleTime * 1000);
 			break;
 		case FINAL:
 			float tamingChance = creature->getChanceToTame(player);

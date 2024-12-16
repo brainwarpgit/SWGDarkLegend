@@ -27,7 +27,7 @@
 #include "server/zone/managers/player/creation/SendJtlRecruitment.h"
 
 #include "server/zone/managers/variables/playerVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager") {
 	setLogging(false);
@@ -556,7 +556,7 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	// Welcome Mail
 	chatManager->sendMail("SWG-DarkLegend", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
 	
-	String mailBody = "You can now visit any Force Shrine to start your Jedi path.\n\nBecoming One with the Force, you will be visited by a mysterious character.  You will eventually be pointed to an even more mysterious village.\n\nThere are villagers that need your help.  Some may need help multiple times.  Fear not, soon to be Jedi, you are not required to help these people to continue on your path.  You will, however, need to attain all 16 trees in Force Sensitivity.  Paemos will help you take your current knowledge and give you force knowledge that you can use to train your skills.\n\nPeamos converts at a high cost if you have not explored the galaxy.   Mastering professions and visiting famous places can heighten your sense of the Force and allow for better conversions.\n\nOnce you have completed this task, you will be be visited again and will need to dispatch Mellichae and his band of thugs.  At this point, you will begin your Padawan Trials.   Complete these tasks to continue your Jedi journey.\n\nYou can also unlock the old way if you like, but it is a perilous journey as well.\n\nOnce you have mastered " + std::to_string(globalVariables::jediKnightRequirementNumberOfMasters) + " disciplines of Jedi Knowledge, you will be eligible for the Jedi Knight Trials.";
+	String mailBody = "You can now visit any Force Shrine to start your Jedi path.\n\nBecoming One with the Force, you will be visited by a mysterious character.  You will eventually be pointed to an even more mysterious village.\n\nThere are villagers that need your help.  Some may need help multiple times.  Fear not, soon to be Jedi, you are not required to help these people to continue on your path.  You will, however, need to attain all 16 trees in Force Sensitivity.  Paemos will help you take your current knowledge and give you force knowledge that you can use to train your skills.\n\nPeamos converts at a high cost if you have not explored the galaxy.   Mastering professions and visiting famous places can heighten your sense of the Force and allow for better conversions.\n\nOnce you have completed this task, you will be be visited again and will need to dispatch Mellichae and his band of thugs.  At this point, you will begin your Padawan Trials.   Complete these tasks to continue your Jedi journey.\n\nYou can also unlock the old way if you like, but it is a perilous journey as well.\n\nOnce you have mastered " + std::to_string(professionVars.professionJediKnightRequirementNumberOfMasters) + " disciplines of Jedi Knowledge, you will be eligible for the Jedi Knight Trials.";
 	chatManager->sendMail("SWG-DarkLegend", "Jedi Unlock Path", mailBody , playerCreature->getFirstName());
 
 	// Schedule Task to send out JTL Recruitment Mail

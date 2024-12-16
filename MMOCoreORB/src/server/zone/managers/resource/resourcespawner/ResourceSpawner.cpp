@@ -20,7 +20,7 @@
 #include "server/zone/managers/stringid/StringIdManager.h"
 
 #include "server/zone/managers/variables/serverVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 ResourceSpawner::ResourceSpawner(ManagedReference<ZoneServer*> serv,
 		ZoneProcessServer* impl) {
@@ -1002,10 +1002,10 @@ void ResourceSpawner::sendSampleResults(TransactionLog& trx, CreatureObject* pla
 
 	float cityMultiplier = 1.f + player->getSkillMod("private_spec_samplesize") / 100.f;
 
-	int unitsExtracted = maxUnitsExtracted * (float(surveySkill) / 100.0f) * globalVariables::playerSamplingMultiplier * cityMultiplier;
+	int unitsExtracted = maxUnitsExtracted * (float(surveySkill) / 100.0f) * professionVars.professionArtisanSamplingMultiplier * cityMultiplier;
 	int xpcap = 40;
 
-	if (globalVariables::playerSamplingMiniGameEnabled == true) {
+	if (professionVars.professionArtisanSamplingMiniGameEnabled == true) {
 		if (session->tryGamble()) {
 			if (System::random(2) == 1) {
 				player->sendSystemMessage("@survey:gamble_success");
@@ -1034,17 +1034,17 @@ void ResourceSpawner::sendSampleResults(TransactionLog& trx, CreatureObject* pla
 	float criticalMultiplier = 1;
 	int roll = 0;
 	int rollMod = 0;
-	if (globalVariables::playerSamplingCriticalEnabled) {
+	if (professionVars.professionArtisanSamplingCriticalEnabled) {
 		rollMod = player->getSkillMod("sampling_crit_chance") + ((player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 5);
 		roll = System::random(1000 + rollMod);
-		if (roll > 925) criticalMultiplier = globalVariables::playerSamplingCriticalMultiplier;
-		if (roll > 1050) criticalMultiplier = globalVariables::playerSamplingLegendaryCriticalMultiplier;
+		if (roll > 925) criticalMultiplier = professionVars.professionArtisanSamplingCriticalMultiplier;
+		if (roll > 1050) criticalMultiplier = professionVars.professionArtisanSamplingLegendaryCriticalMultiplier;
 	}
 	
 	unitsExtracted *= criticalMultiplier;
 	
-	if (criticalMultiplier == globalVariables::playerSamplingCriticalMultiplier) player->showFlyText("combat_effects", "critical_sample", 0, 0xFF, 0);
-	if (criticalMultiplier == globalVariables::playerSamplingLegendaryCriticalMultiplier) player->showFlyText("combat_effects", "legendary_sample", 0xFF, 0, 0);
+	if (criticalMultiplier == professionVars.professionArtisanSamplingCriticalMultiplier) player->showFlyText("combat_effects", "critical_sample", 0, 0xFF, 0);
+	if (criticalMultiplier == professionVars.professionArtisanSamplingLegendaryCriticalMultiplier) player->showFlyText("combat_effects", "legendary_sample", 0xFF, 0, 0);
 
 	if (unitsExtracted < 2) {
 		// Send message to player about trace amounts
@@ -1081,7 +1081,7 @@ void ResourceSpawner::sendSampleResults(TransactionLog& trx, CreatureObject* pla
 	player->notifyObservers(ObserverEventType::SAMPLE, resourceSpawn, density * 100);
 	player->notifyObservers(ObserverEventType::SAMPLETAKEN, resourceSpawn, unitsExtracted);
 
-	if (globalVariables::playerSamplingRadioactiveWarningEnabled == true) {
+	if (professionVars.professionArtisanSamplingRadioactiveWarningEnabled == true) {
 		if (resourceSpawn->isType("radioactive")) {
 			int wound = int((sampleRate / 30) - System::random(7));
 

@@ -10,7 +10,7 @@
 #include "server/zone/objects/player/events/ForceMeditateTask.h"
 
 #include "server/zone/managers/variables/serverVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class MeditateCommand : public QueueCommand {
 public:
@@ -55,9 +55,9 @@ public:
 		meditateTask->setMoodString(player->getMoodString());
 		player->sendSystemMessage("@teraskasi:med_begin");
 
-		player->addPendingTask("meditate", meditateTask, globalVariables::playerMeditateTickTime * 1000);
+		player->addPendingTask("meditate", meditateTask, professionVars.professionTkaMeditateTickTime * 1000);
 		if (player->hasSkill("force_discipline_enhancements_synergy_04") && serverVars.serverCommandMeditateMergeEnabled == true) {
-			player->addPendingTask("forcemeditate", fmeditateTask, globalVariables::playerMeditateTickTime * 1000);
+			player->addPendingTask("forcemeditate", fmeditateTask, professionVars.professionTkaMeditateTickTime * 1000);
 			player->playEffect("clienteffect/pl_force_meditate_self.cef", "");
 		}
 		

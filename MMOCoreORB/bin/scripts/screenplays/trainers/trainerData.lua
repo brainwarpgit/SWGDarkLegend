@@ -1,4 +1,4 @@
-dofile("scripts/managers/global_variables.lua")
+dofile("scripts/managers/variables/profession_variables.lua")
 
 if not skillsAlreadyAdded then
 	skillsAlreadyAdded = false

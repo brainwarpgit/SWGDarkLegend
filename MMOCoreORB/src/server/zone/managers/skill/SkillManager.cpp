@@ -23,7 +23,8 @@
 #include "server/zone/objects/player/sui/messagebox/SuiMessageBox.h"
 #include "server/zone/objects/player/sui/callbacks/SurrenderPilotSuiCallback.h"
 #include "templates/faction/Factions.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/professionVariables.h"
 
 SkillManager::SkillManager()
 	: Logger("SkillManager") {
@@ -396,10 +397,10 @@ bool SkillManager::awardSkill(const String& skillName, CreatureObject* creature,
 
 	SkillModManager::instance()->verifySkillBoxSkillMods(creature);
 
-	if (skill->getSkillName() == "social_politician_novice" && globalVariables::skillsInstantMasterPoliticianEnabled == true) { 
+	if (skill->getSkillName() == "social_politician_novice" && professionVars.professionSkillsInstantMasterPoliticianEnabled == true) { 
 		awardSkill("social_politician_master", creature, true, true, true);
 	}
-	if (skill->getSkillName() == "crafting_merchant_novice" && globalVariables::skillsInstantMasterMerchantEnabled == true) { 
+	if (skill->getSkillName() == "crafting_merchant_novice" && professionVars.professionSkillsInstantMasterMerchantEnabled == true) { 
 		awardSkill("crafting_merchant_master", creature, true, true, true);
 	}
 	if (skill->getSkillName() == "force_rank_dark_rank_05" || creature->hasSkill("force_rank_dark_rank_05")) {
@@ -926,5 +927,5 @@ bool SkillManager::villageKnightPrereqsMet(CreatureObject* creature, const Strin
 		totalJediPoints -= skillBeingDropped->getSkillPointsRequired();
 	}
 
-	return fullTrees >= 2 && totalJediPoints >= 206;
+	return fullTrees >= professionVars.professionJediKnightRequirementNumberOfMasters && totalJediPoints >= 206;
 }

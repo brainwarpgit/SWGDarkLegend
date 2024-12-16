@@ -10,7 +10,7 @@
 #include "JediQueueCommand.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 class ForceRun3Command : public JediQueueCommand {
 public:
@@ -32,7 +32,7 @@ public:
 		uint32 crc = STRING_HASHCODE("pet_damage_divisor");
 
 		if (res == NOSTACKJEDIBUFF) {
-			if (globalVariables::playerJediForceRunToggleEnabled == false) {
+			if (professionVars.professionJediForceRunToggleEnabled == false) {
 				creature->sendSystemMessage("@jedi_spam:already_force_running"); // You are already force running.
 				return GENERALERROR;
 			} else {

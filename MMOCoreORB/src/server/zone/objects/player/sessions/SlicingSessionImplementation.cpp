@@ -30,7 +30,7 @@
 #include "server/zone/objects/scene/SceneObjectType.h"
 
 #include "server/zone/managers/variables/craftingVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 int SlicingSessionImplementation::initializeSession() {
 	firstCable = System::random(1);
@@ -141,7 +141,7 @@ void SlicingSessionImplementation::generateSliceMenu(SuiListBox* suiBox) {
 		else
 			prompt << progress;
 
-		if (globalVariables::slicingNewSliceEnabled == false) {	
+		if (professionVars.professionSmugglerNewSliceEnabled == false) {	
 			suiBox->addMenuItem("@slicing/slicing:blue_cable", 0);
 				suiBox->addMenuItem("@slicing/slicing:red_cable", 1);
 
@@ -178,14 +178,14 @@ void SlicingSessionImplementation::generateSliceMenu(SuiListBox* suiBox) {
 					if(tangibleObject->isArmorObject()){
 						suiBox->addMenuItem("Slice For Base Effectiveness.", 4);
 						suiBox->addMenuItem("Slice For Encumbrance.", 5);
-						if (globalVariables::slicingArmorPierceSliceEnabled == true) {						
+						if (professionVars.professionSmugglerArmorPierceSliceEnabled == true) {						
 							suiBox->addMenuItem("Slice For Armor Piercing.", 10);
 						}
 						suiBox->addMenuItem("Random Slice.", 8);				
 					} else if(tangibleObject->isWeaponObject()){
 						suiBox->addMenuItem("Slice For Speed.", 6);
 						suiBox->addMenuItem("Slice For Damage.", 7);
-						if (globalVariables::slicingWeaponPierceSliceEnabled == true) {						
+						if (professionVars.professionSmugglerWeaponPierceSliceEnabled == true) {						
 							suiBox->addMenuItem("Slice For Weapon Armor Piercing.", 9);
 						}
 						suiBox->addMenuItem("Random Slice.", 8);				
@@ -325,7 +325,7 @@ void SlicingSessionImplementation::endSlicing() {
 	}
 
 	if (tangibleObject->isMissionTerminal())
-		player->addCooldown("slicing.terminal", (globalVariables::slicingTerminalSliceCooldown * (60 * 1000))); // 2min Cooldown
+		player->addCooldown("slicing.terminal", (professionVars.professionSmugglerTerminalSliceCooldown * (60 * 1000))); // 2min Cooldown
 
 	cancelSession();
 
@@ -333,7 +333,7 @@ void SlicingSessionImplementation::endSlicing() {
 
 int SlicingSessionImplementation::getSlicingSkill(CreatureObject* slicer) {
 
-	if (globalVariables::slicingNewSliceEnabled == false) {	
+	if (professionVars.professionSmugglerNewSliceEnabled == false) {	
 		String skill0 = "combat_smuggler_novice";
 		String skill1 = "combat_smuggler_slicing_01";
 		String skill2 = "combat_smuggler_slicing_02";
@@ -624,7 +624,7 @@ void SlicingSessionImplementation::handleWeaponSlice() {
 	uint8 min = 0;
 	uint8 max = 0;
 
-	if (globalVariables::slicingNewSliceEnabled == false) {
+	if (professionVars.professionSmugglerNewSliceEnabled == false) {
 		switch (sliceSkill) {
 			case 5:
 				min += 5;
@@ -816,7 +816,7 @@ void SlicingSessionImplementation::handleArmorSlice() {
 	int sockets = round(System::random(player->getSkillMod("luck") + player->getSkillMod("force_luck")) / 10);
 
 
-	if (globalVariables::slicingNewSliceEnabled == false) {
+	if (professionVars.professionSmugglerNewSliceEnabled == false) {
 		switch (sliceSkill) {
 		case 5:
 			min += (sliceType == 0) ? 6 : 5;
@@ -906,7 +906,7 @@ void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent, int soc
 
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 
-	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+	if (professionVars.professionSmugglerArmorSliceSocketsEnabled == true) {
 		if (armor->getMaxSockets() + sockets > craftingVars.craftingMaxSockets) {
 			sockets = craftingVars.craftingMaxSockets;
 		}
@@ -914,7 +914,7 @@ void SlicingSessionImplementation::handleSliceEncumbrance(uint8 percent, int soc
 	Locker locker(armor);
 
 	armor->setEncumbranceSlice(percent / 100.f);
-	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+	if (professionVars.professionSmugglerArmorSliceSocketsEnabled == true) {
 		armor->setMaxSockets(sockets);
 	}
 	armor->setSliced(true);
@@ -935,7 +935,7 @@ void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent, int s
 
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
 
-	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+	if (professionVars.professionSmugglerArmorSliceSocketsEnabled == true) {
 		if (armor->getMaxSockets() + sockets > craftingVars.craftingMaxSockets) {
 			sockets = craftingVars.craftingMaxSockets;
 		}
@@ -943,7 +943,7 @@ void SlicingSessionImplementation::handleSliceEffectiveness(uint8 percent, int s
 	Locker locker(armor);
 
 	armor->setEffectivenessSlice(percent / 100.f);
-	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+	if (professionVars.professionSmugglerArmorSliceSocketsEnabled == true) {
 		armor->setMaxSockets(sockets);
 	}
 	armor->setSliced(true);
@@ -968,7 +968,7 @@ void SlicingSessionImplementation::handleSliceArmorAp(int sockets) {
 		return;
 
 	ArmorObject* armor = cast<ArmorObject*>(tangibleObject.get());
-	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+	if (professionVars.professionSmugglerArmorSliceSocketsEnabled == true) {
 		if (armor->getMaxSockets() + sockets > craftingVars.craftingMaxSockets) {
 			sockets = craftingVars.craftingMaxSockets;
 		}
@@ -977,7 +977,7 @@ void SlicingSessionImplementation::handleSliceArmorAp(int sockets) {
 
 	Locker locker(armor);
 	
-	if (globalVariables::slicingArmorSliceSocketsEnabled == true) {
+	if (professionVars.professionSmugglerArmorSliceSocketsEnabled == true) {
 		armor->setMaxSockets(sockets);
 	}
 	if (apslice <= armorrating) {

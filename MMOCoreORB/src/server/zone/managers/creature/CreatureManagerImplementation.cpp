@@ -42,7 +42,7 @@
 #include "server/zone/managers/variables/creatureVariables.h"
 #include "server/zone/managers/variables/harvestVariables.h"
 #include "server/zone/managers/variables/serverVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 Mutex CreatureManagerImplementation::loadMutex;
 
@@ -1257,7 +1257,7 @@ void CreatureManagerImplementation::tame(Creature* creature, CreatureObject* pla
 
 	Reference<TameCreatureTask*> task = new TameCreatureTask(creature, player, mask, force, adult);
 
-	player->addPendingTask("tame_pet", task, globalVariables::creatureTamingCycleTime * 1000);
+	player->addPendingTask("tame_pet", task, professionVars.professionCreatureHandlerTamingCycleTime * 1000);
 }
 
 void CreatureManagerImplementation::milk(Creature* creature, CreatureObject* player) {

@@ -18,7 +18,8 @@
 #include "server/zone/managers/resource/resourcespawner/SampleTask.h"
 #include "server/zone/managers/resource/resourcespawner/SurveyTask.h"
 #include "server/zone/managers/resource/resourcespawner/SampleResultsTask.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/professionVariables.h"
 
 int SurveySessionImplementation::initializeSession(SurveyTool* tool) {
 	activeSurveyTool = tool;
@@ -208,7 +209,7 @@ void SurveySessionImplementation::startSample(const String& resname) {
 		return;
 	}
 
-	if (globalVariables::playerSamplingRadioactiveWarningEnabled == true) {
+	if (professionVars.professionArtisanSamplingRadioactiveWarningEnabled == true) {
 		if (!lastResourceSampleName.isEmpty() && !activeSurveyTool->canSampleRadioactive()) {
 			if (resourceSpawn->isType("radioactive") && !activeSurveyTool->canSampleRadioactive()) {
 				activeSurveyTool->sendRadioactiveWarning(surveyer);
@@ -230,7 +231,7 @@ void SurveySessionImplementation::startSample(const String& resname) {
 	message.setTO(lastResourceSampleName);
 	surveyer->sendSystemMessage(message);
 
-	if (globalVariables::playerSamplingMiniGameEnabled == true) {
+	if (professionVars.professionArtisanSamplingMiniGameEnabled == true) {
 		if (!doGamble && richSampleLocation.getPosition() == Vector3(0, 0, 0) && System::random(50) == 7) {
 
 			if (ghost->hasSuiBoxWindowType(SuiWindowType::SURVEY_TOOL_CONCENTRATED_MINIGAME)) {
@@ -385,7 +386,7 @@ void SurveySessionImplementation::rescheduleSample() {
 		sampleTask = new SampleTask(surveyer, activeSurveyTool.get());
 
 	if (surveyer->getPendingTask("sample") == nullptr)
-		surveyer->addPendingTask("sample", sampleTask, globalVariables::playerSamplingTime * 1000);
+		surveyer->addPendingTask("sample", sampleTask, professionVars.professionArtisanSamplingTime * 1000);
 }
 
 void SurveySessionImplementation::rescheduleSampleResults(const ResourceSpawner* resourceSpawner, float density, const String& resname) {

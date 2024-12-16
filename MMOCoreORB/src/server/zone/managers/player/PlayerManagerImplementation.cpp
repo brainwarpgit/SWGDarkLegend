@@ -121,8 +121,8 @@
 
 #include "server/zone/managers/variables/mountVariables.h"
 #include "server/zone/managers/variables/playerVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 #include "server/zone/managers/variables/serverVariables.h"
-#include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl, bool trackOnlineUsers) : Logger("PlayerManager") {
 	playerLoggerFilename = "log/player.log";
@@ -3320,7 +3320,7 @@ int PlayerManagerImplementation::healEnhance(CreatureObject* enhancer, CreatureO
 	uint32 buffdiff = buffvalue;
 
 	//If a stronger buff already exists, then we don't buff the patient.
-	if (patient->hasBuff(buffcrc) && globalVariables::playerOverwriteBuffEnabled == false) {
+	if (patient->hasBuff(buffcrc) && professionVars.professionMedicOverwriteBuffEnabled == false) {
 		Buff* buff = patient->getBuff(buffcrc);
 
 		if (buff != nullptr) {
@@ -6606,12 +6606,12 @@ void PlayerManagerImplementation::enhanceSelfDance(CreatureObject* player) {
 	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
 
 	int selfDuration = (120.0f + (10.0f / 60.0f));
-	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
-		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	if (professionVars.professionEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = professionVars.professionEntertainerBuffDuration * 60;
 	}
 	
 	message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
-	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+	if (professionVars.professionEntertainerAllBuffsMusicOrDanceEnabled == true) {
 		message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
 		message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
 	}
@@ -6634,13 +6634,13 @@ void PlayerManagerImplementation::enhanceSelfMusic(CreatureObject* player) {
 	int selfStrengthWill = (player->getBaseHAM(CreatureAttribute::WILLPOWER) * skillmod);
 
 	int selfDuration = (120.0f + (10.0f / 60.0f));
-	if (globalVariables::playerEntertainerBuffDurationCustomEnabled == true) {
-		selfDuration = globalVariables::playerEnterainerBuffDuration * 60;
+	if (professionVars.professionEntertainerBuffDurationCustomEnabled == true) {
+		selfDuration = professionVars.professionEntertainerBuffDuration * 60;
 	}
 	
 	message = message && doEnhanceCharacter(0x2E77F586, player, selfStrengthFocus, selfDuration, BuffType::PERFORMANCE, 7); // performance_enhance_music_focus
 	message = message && doEnhanceCharacter(0x3EC6FCB6, player, selfStrengthWill, selfDuration, BuffType::PERFORMANCE, 8); // performance_enhance_music_willpower
-	if (globalVariables::playerEntertainerAllBuffsMusicOrDanceEnabled == true) {
+	if (professionVars.professionEntertainerAllBuffsMusicOrDanceEnabled == true) {
 		message = message && doEnhanceCharacter(0x11C1772E, player, selfStrength, selfDuration, BuffType::PERFORMANCE, 6); // performance_enhance_dance_mind
 	}
 

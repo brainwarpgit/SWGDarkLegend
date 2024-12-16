@@ -9,7 +9,7 @@
 #include "server/zone/managers/creature/PetManager.h"
 #include "server/zone/objects/intangible/tasks/PetControlDeviceStoreTask.h"
 
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/professionVariables.h"
 
 void PetMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	if (!sceneObject->isPet())
@@ -190,12 +190,12 @@ void PetMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMe
 		if( player->hasSkill( "outdoors_creaturehandler_support_04") && !controlDevice->isTrainedAsMount() && petManager->checkMountEligibility(controlDevice) == PetManager::CANBEMOUNTTRAINED){
 			menuResponse->addRadialMenuItemToRadialID(141, 207, 3, "@pet/pet_menu:menu_train_mount" ); // Train Pet As A Mount
 		} else {
-			if (globalVariables::creatureUntrainCreatureMountEnabled && player->hasSkill( "outdoors_creaturehandler_master") && controlDevice->isTrainedAsMount()) {
+			if (professionVars.professionCreatureHandlerUntrainCreatureMountEnabled && player->hasSkill( "outdoors_creaturehandler_master") && controlDevice->isTrainedAsMount()) {
 				menuResponse->addRadialMenuItemToRadialID(141, 208, 3, "Untrain Pet As A Mount");
 			}
 		}
 
-		if( player->hasSkill("outdoors_creaturehandler_master") && globalVariables::creatureSetDefaultPetCommandsEnabled) {
+		if( player->hasSkill("outdoors_creaturehandler_master") && professionVars.professionCreatureHandlerSetDefaultPetCommandsEnabled) {
 			menuResponse->addRadialMenuItemToRadialID(141, 209, 3, "Set Default Pet Commands" ); // Set Default Pet Commands
 		}
 		
