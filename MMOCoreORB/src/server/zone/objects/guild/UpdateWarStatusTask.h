@@ -14,6 +14,8 @@
 #include "server/zone/managers/player/PlayerManager.h"
 #include "server/chat/ChatManager.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
+
 class UpdateWarStatusTask : public Task {
 	ZoneServer* server;
 
@@ -68,7 +70,7 @@ public:
 			for (int j = 0; j < onlineMembers2.size(); ++j) {
 				CreatureObject* creo2 = onlineMembers2.get(j);
 
-				if (creo->isInRange(creo2, globalVariables::serverDrawDistance)) {
+				if (creo->isInRange(creo2, serverVars.serverDrawDistance)) {
 					creo->sendPvpStatusTo(creo2);
 					creo2->sendPvpStatusTo(creo);
 				}

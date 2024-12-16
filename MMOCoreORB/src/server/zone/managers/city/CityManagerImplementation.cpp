@@ -38,7 +38,8 @@
 #include "templates/tangible/SharedStructureObjectTemplate.h"
 #include "server/zone/objects/player/sui/callbacks/RenameCitySuiCallback.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 #ifndef CITY_DEBUG
 #define CITY_DEBUG
@@ -608,7 +609,7 @@ void CityManagerImplementation::promptDepositCityTreasury(CityRegion* city, Crea
 	ManagedReference<SuiTransferBox*> transfer = new SuiTransferBox(creature, SuiWindowType::CITY_TREASURY_DEPOSIT);
 	transfer->setPromptTitle("@city/city:treasury_deposit"); //Treasury Deposit
 	transfer->setPromptText("@city/city:treasury_deposit_d"); //Enter the amount you would like to transfer to the city treasury.
-	if (globalVariables::playerPaymentCashAndBankEnabled == false){	
+	if (serverVars.serverPaymentCashAndBankEnabled == false){	
 		transfer->addFrom("@city/city:funds", String::valueOf(creature->getCashCredits()), String::valueOf(creature->getCashCredits()), "1");
 	} else {
 		transfer->addFrom("@city/city:funds", String::valueOf(totalPlayerCredits), String::valueOf(totalPlayerCredits), "1");
@@ -627,7 +628,7 @@ void CityManagerImplementation::depositToCityTreasury(CityRegion* city, Creature
 	int bank = creature->getBankCredits();
 	int totalPlayerCredits = bank + cash;
 	int total;
-	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+	if (serverVars.serverPaymentCashAndBankEnabled == false) {
 		total = cash - amount;
 
 		if (total < 1 || total > cash) {
@@ -651,7 +652,7 @@ void CityManagerImplementation::depositToCityTreasury(CityRegion* city, Creature
 	}
 
 	{
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
 			TransactionLog trx(creature, TrxCode::CITYTREASURY, total, true);
 			trx.addState("treasury", city->getCityTreasury());
 			creature->subtractCashCredits(total);

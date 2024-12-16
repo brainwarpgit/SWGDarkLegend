@@ -27,7 +27,8 @@
 #include "server/zone/packets/object/OpenLotteryWindow.h"
 #include "server/zone/objects/player/sessions/LootLotterySession.h"
 #include "server/zone/packets/group/GroupObjectDeltaMessage6.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 // #define DEBUG_GROUPS
 
@@ -65,7 +66,7 @@ void GroupManager::inviteToGroup(CreatureObject* inviter, CreatureObject* target
 		}
 
 		// can't invite if the group is full
-		if (group->getGroupSize() >= globalVariables::groupMaxSize) {
+		if (group->getGroupSize() >= serverVars.serverGroupMaxSize) {
 			inviter->sendSystemMessage("@group:full");
 			return;
 		}

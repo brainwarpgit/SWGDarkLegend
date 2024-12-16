@@ -9,7 +9,8 @@
 #include "FactionMap.h"
 #include "server/zone/objects/player/PlayerObject.h"
 #include "templates/manager/TemplateManager.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 FactionManager::FactionManager() {
 	setLoggingName("FactionManager");
@@ -288,7 +289,7 @@ int FactionManager::getFactionPointsCap(int rank) {
 	if (rank >= factionRanks.getCount())
 		return -1;
 
-	return Math::max(1000, getRankCost(rank) * 20) * globalVariables::factionCapMultiplier;
+	return Math::max(1000, getRankCost(rank) * 20) * serverVars.serverFactionCapMultiplier;
 }
 
 bool FactionManager::isFaction(const String& faction) {

@@ -41,6 +41,7 @@
 
 #include "server/zone/managers/variables/creatureVariables.h"
 #include "server/zone/managers/variables/harvestVariables.h"
+#include "server/zone/managers/variables/serverVariables.h"
 #include "server/globalVariables.h"
 
 Mutex CreatureManagerImplementation::loadMutex;
@@ -888,7 +889,7 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 	StringIdChatParameter harvestMessage("skl_use", creatureHealth);
 
 	harvestMessage.setDI(quantityExtracted);
-	if (globalVariables::resourcesAddNameEnabled) {
+	if (serverVars.serverResourcesAddNameEnabled) {
 		harvestMessage.setTU(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
 	} else {
 		harvestMessage.setTU(resourceSpawn->getFinalClass());
@@ -909,7 +910,7 @@ void CreatureManagerImplementation::droidHarvest(Creature* creature, CreatureObj
 
 		bonusMessage.setTU(droid->getDisplayedName());
 		bonusMessage.setDI(quantityExtracted);
-		if (globalVariables::resourcesAddNameEnabled) {
+		if (serverVars.serverResourcesAddNameEnabled) {
 			bonusMessage.setTO(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
 		} else {
 			bonusMessage.setTO(resourceSpawn->getFinalClass());
@@ -1065,7 +1066,7 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 	StringIdChatParameter harvestMessage("skl_use", creatureHealth);
 
 	harvestMessage.setDI(quantityExtracted);
-	if (globalVariables::resourcesAddNameEnabled) {
+	if (serverVars.serverResourcesAddNameEnabled) {
 		harvestMessage.setTU(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
 	} else {
 		harvestMessage.setTU(resourceSpawn->getFinalClass());
@@ -1086,7 +1087,7 @@ void CreatureManagerImplementation::harvest(Creature* creature, CreatureObject* 
 
 		bonusMessage.setTU(player->getFirstName());
 		bonusMessage.setDI(quantityExtracted);
-		if (globalVariables::resourcesAddNameEnabled) {
+		if (serverVars.serverResourcesAddNameEnabled) {
 			bonusMessage.setTO(resourceSpawn->getFinalClass() + " [" + resourceSpawn->getName() + "]");
 		} else {
 			bonusMessage.setTO(resourceSpawn->getFinalClass());

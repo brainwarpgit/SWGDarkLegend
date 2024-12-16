@@ -8,6 +8,8 @@
 #include "server/zone/managers/director/DirectorManager.h"
 #include "server/zone/managers/jedi/JediManager.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
+
 class FsVillageCommand : public QueueCommand {
 public:
 
@@ -17,7 +19,7 @@ public:
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
-		if (!globalVariables::commandfsVillageEnabled) {
+		if (!serverVars.serverCommandfsVillageEnabled) {
 			creature->sendSystemMessage("fsVillage is disabled.");
 			return GENERALERROR;
 		}

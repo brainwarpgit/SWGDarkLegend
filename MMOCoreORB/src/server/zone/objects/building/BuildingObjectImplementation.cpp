@@ -40,7 +40,7 @@
 #include "server/zone/objects/player/FactionStatus.h"
 
 #include "server/zone/managers/variables/structureVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/serverVariables.h"
 
 // #define DEBUG_COV
 
@@ -2006,9 +2006,9 @@ bool BuildingObjectImplementation::isBuildingObject() {
 
 float BuildingObjectImplementation::getOutOfRangeDistance() const {
 #ifdef COV_BUILDING_QUAD_RANGE
-	return globalVariables::serverDrawDistance * 4;
+	return serverVars.serverDrawDistance * 4;
 #else // COV_BUILDING_QUAD_RANGE
-	return globalVariables::serverDrawDistance;
+	return serverVars.serverDrawDistance;
 #endif // COV_BUILDING_QUAD_RANGE
 }
 

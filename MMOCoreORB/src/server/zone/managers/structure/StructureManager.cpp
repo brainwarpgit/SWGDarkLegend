@@ -52,7 +52,7 @@
 #include "templates/customization/CustomizationIdManager.h"
 
 #include "server/zone/managers/variables/structureVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/serverVariables.h"
 
 namespace StorageManagerNamespace {
 int indexCallback(DB* secondary, const DBT* key, const DBT* data, DBT* result) {
@@ -1207,7 +1207,7 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	int bank = creature->getBankCredits();
 	int cash = creature->getCashCredits();
 	int availableCredits;
-	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+	if (serverVars.serverPaymentCashAndBankEnabled == false) {
 		availableCredits = creature->getCashCredits();
 	} else {
 		availableCredits = bank + cash;
@@ -1371,7 +1371,7 @@ void StructureManager::payMaintenance(StructureObject* structure, CreatureObject
 	int bank = creature->getBankCredits();
 	int cash = creature->getCashCredits();
 
-	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+	if (serverVars.serverPaymentCashAndBankEnabled == false) {
 		if (cash < amount) {
 			creature->sendSystemMessage("@player_structure:insufficient_funds"); // You have insufficient funds to make this deposit.
 			return;
@@ -1385,7 +1385,7 @@ void StructureManager::payMaintenance(StructureObject* structure, CreatureObject
 	creature->sendSystemMessage(params);
 
 	{
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
 			TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
 			creature->subtractCashCredits(amount);
 		} else {

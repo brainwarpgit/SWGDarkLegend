@@ -23,6 +23,8 @@
 #include "terrain/ProceduralTerrainAppearance.h"
 #include "server/zone/managers/collision/NavMeshManager.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
+
 ZoneImplementation::ZoneImplementation(ZoneProcessServer* serv, const String& name) {
 	setZoneProcessServer(serv);
 	setZoneServer(processor->getZoneServer());
@@ -249,5 +251,5 @@ float ZoneImplementation::getBoundingRadius() {
 }
 
 float ZoneImplementation::getZoneObjectRange() {
-	return globalVariables::serverDrawDistance;
+	return serverVars.serverDrawDistance;
 }

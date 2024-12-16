@@ -35,7 +35,8 @@
 #include "AuctionSearchTask.h"
 #include "server/zone/objects/factorycrate/FactoryCrate.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 void AuctionManagerImplementation::initialize() {
 	Locker locker(_this.getReferenceUnsafeStaticCast());
@@ -123,8 +124,8 @@ void AuctionManagerImplementation::initialize() {
 			continue;
 		}
 
-		uint64 vendorExpire = time(0) + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
-		uint64 commodityExpire = time(0) + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+		uint64 vendorExpire = time(0) + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
+		uint64 commodityExpire = time(0) + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 
 		if (auctionItem->getStatus() == AuctionItem::FORSALE && auctionItem->getExpireTime() > vendorExpire) {
 			auto oldExpire = auctionItem->getExpireTime();
@@ -397,8 +398,8 @@ void AuctionManagerImplementation::doAuctionMaint(TerminalListVector* items, con
 				continue;
 			}
 
-			uint64 vendorExpire = time(0) + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
-			uint64 commodityExpire = time(0) + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+			uint64 vendorExpire = time(0) + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
+			uint64 commodityExpire = time(0) + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 			bool updatedExpire = false;
 			uint64 oldExpire = 0;
 
@@ -756,12 +757,12 @@ void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 ob
 		}
 
 		if (item->isPremiumAuction()) {
-			if (globalVariables::playerPaymentCashAndBankEnabled == false) {
-				TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * (globalVariables::auctionMaxSalesFee * 5), false);
-				player->subtractBankCredits(costReduction * (globalVariables::auctionMaxSalesFee * 5));
-				str.setDI(costReduction * (globalVariables::auctionMaxSalesFee * 5));
+			if (serverVars.serverPaymentCashAndBankEnabled == false) {
+				TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * (serverVars.serverAuctionMaxSalesFee * 5), false);
+				player->subtractBankCredits(costReduction * (serverVars.serverAuctionMaxSalesFee * 5));
+				str.setDI(costReduction * (serverVars.serverAuctionMaxSalesFee * 5));
 			} else {
-				int listCost = costReduction * (globalVariables::auctionMaxSalesFee * 5);
+				int listCost = costReduction * (serverVars.serverAuctionMaxSalesFee * 5);
 				if (bank < listCost) {
 					int diff = listCost - bank;
 
@@ -782,12 +783,12 @@ void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 ob
 				}
 			}
 		} else {
-			if (globalVariables::playerPaymentCashAndBankEnabled == false) {
-				TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * globalVariables::auctionMaxSalesFee, false);
-				player->subtractBankCredits(costReduction * globalVariables::auctionMaxSalesFee);
-				str.setDI(costReduction * globalVariables::auctionMaxSalesFee);
+			if (serverVars.serverPaymentCashAndBankEnabled == false) {
+				TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * serverVars.serverAuctionMaxSalesFee, false);
+				player->subtractBankCredits(costReduction * serverVars.serverAuctionMaxSalesFee);
+				str.setDI(costReduction * serverVars.serverAuctionMaxSalesFee);
 			} else {
-				int listCost = costReduction * (globalVariables::auctionMaxSalesFee * 5);
+				int listCost = costReduction * (serverVars.serverAuctionMaxSalesFee * 5);
 				if (bank < listCost) {
 					int diff = listCost - bank;
 
@@ -910,7 +911,7 @@ int AuctionManagerImplementation::checkSaleItem(CreatureObject* player, SceneObj
 					return ItemSoldMessage::TOOMANYITEMS;
 			}
 		} else {
-			if (auctionMap->getCommodityCount(player) >= globalVariables::auctionMaxSales)
+			if (auctionMap->getCommodityCount(player) >= serverVars.serverAuctionMaxSales)
 				return ItemSoldMessage::TOOMANYITEMS;
 		}
 
@@ -919,27 +920,27 @@ int AuctionManagerImplementation::checkSaleItem(CreatureObject* player, SceneObj
 	}
 
 	if (vendor->isBazaarTerminal()) {
-		if (auctionMap->getCommodityCount(player) >= globalVariables::auctionMaxSales)
+		if (auctionMap->getCommodityCount(player) >= serverVars.serverAuctionMaxSales)
 			return ItemSoldMessage::TOOMANYITEMS;
 
-		if (price > globalVariables::auctionMaxBazaarPrice)
+		if (price > serverVars.serverAuctionMaxBazaarPrice)
 			return ItemSoldMessage::INVALIDSALEPRICE;
 
 		int bank = player->getBankCredits();
 		int cash = player->getCashCredits();
 		int availableCredits = bank + cash;
 
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
-			if (player->getBankCredits() < globalVariables::auctionMaxSalesFee) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
+			if (player->getBankCredits() < serverVars.serverAuctionMaxSalesFee) {
 				return ItemSoldMessage::NOTENOUGHCREDITS;
 			}
 		} else {
-			if (availableCredits < globalVariables::auctionMaxSalesFee) {
+			if (availableCredits < serverVars.serverAuctionMaxSalesFee) {
 				return ItemSoldMessage::NOTENOUGHCREDITS;
 			}
 		}
 
-		if (premium && player->getBankCredits() < globalVariables::auctionMaxSalesFee * 5)
+		if (premium && player->getBankCredits() < serverVars.serverAuctionMaxSalesFee * 5)
 			return ItemSoldMessage::NOTENOUGHCREDITS;
 	}
 
@@ -968,8 +969,8 @@ AuctionItem* AuctionManagerImplementation::createVendorItem(CreatureObject* play
 	if (zone == nullptr)
 		return nullptr;
 
-	uint64 vendorExpire = time(0) + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
-	uint64 commodityExpire = time(0) + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+	uint64 vendorExpire = time(0) + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
+	uint64 commodityExpire = time(0) + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 
 	String playername = player->getFirstName().toLowerCase();
 	String descr = description.toString();
@@ -1050,7 +1051,7 @@ AuctionItem* AuctionManagerImplementation::createVendorItem(CreatureObject* play
 }
 
 int AuctionManagerImplementation::checkBidAuction(CreatureObject* player, AuctionItem* item, int price1, int price2) {
-	if ((price1 > globalVariables::auctionMaxBazaarPrice || price2 > globalVariables::auctionMaxBazaarPrice) && item->isOnBazaar()) {
+	if ((price1 > serverVars.serverAuctionMaxBazaarPrice || price2 > serverVars.serverAuctionMaxBazaarPrice) && item->isOnBazaar()) {
 		return BidAuctionResponseMessage::PRICEOVERFLOW;
 	}
 
@@ -1062,7 +1063,7 @@ int AuctionManagerImplementation::checkBidAuction(CreatureObject* player, Auctio
 	int cash = player->getCashCredits();
 	int availableCredits = bank + cash;
 
-	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+	if (serverVars.serverPaymentCashAndBankEnabled == false) {
 		if (player->getBankCredits() < price1) { // Credit Check
 			return BidAuctionResponseMessage::NOTENOUGHCREDITS;
 		}
@@ -1113,9 +1114,9 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 	Locker locker(item);
 
 	if(item->isOnBazaar() || item->getStatus() == AuctionItem::OFFERED)
-		availableTime = currentTime + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 	else
-		availableTime = currentTime + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
 
 	updateAuctionOwner(item, player);
 
@@ -1129,7 +1130,7 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 	trx.setAutoCommit(false);
 	trx.addRelatedObject(item->getAuctionedItemObjectID(), true);
 	trx.setExportRelatedObjects(true);
-	if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+	if (serverVars.serverPaymentCashAndBankEnabled == false) {
 		player->subtractBankCredits(item->getPrice());
 	} else {
 		int itemPrice = item->getPrice();
@@ -1175,8 +1176,8 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 		sellerBodySale.setTU(vendor->getDisplayedName());
 		sellerBodySale.setTO(itemName);
 		sellerBodySale.setTT(item->getBidderName());
-		if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
-			sellerBodySale.setDI(item->getPrice() - (item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100)));
+		if (serverVars.serverVendorSkimSalesForMaintenanceEnabled == true) {
+			sellerBodySale.setDI(item->getPrice() - (item->getPrice() * (serverVars.serverVendorSkimSalesForMaintenancePercent / 100)));
 		} else {
 			sellerBodySale.setDI(item->getPrice());
 		}
@@ -1217,8 +1218,8 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 		locker.release();
 		UnicodeString blankBody;
 		int skimprice = 0;
-		if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
-			skimprice = item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100);
+		if (serverVars.serverVendorSkimSalesForMaintenanceEnabled == true) {
+			skimprice = item->getPrice() * (serverVars.serverVendorSkimSalesForMaintenancePercent / 100);
 			StringBuffer body;
 			body << skimprice << " was deducted from the total sale of " << item->getPrice() << " and added to vendor maintenance.";
 			cman->sendMail(sender, sellerSubject, body.toString(), sellerName, &sellerBodyVector, &sellerWaypointVector);
@@ -1293,7 +1294,7 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 	locker.release();
 	// Skim % of vendor sale into vendor maint
 	int skim = 0;
-	if (globalVariables::vendorSkimSalesForMaintenanceEnabled == true) {
+	if (serverVars.serverVendorSkimSalesForMaintenanceEnabled == true) {
 		if (!item->isOnBazaar() && item->getPrice() > 10){
 			VendorDataComponent* vendorData = NULL;
 			DataObjectComponentReference* data = vendor->getDataObjectComponent();
@@ -1301,7 +1302,7 @@ void AuctionManagerImplementation::doInstantBuy(CreatureObject* player, AuctionI
 				vendorData = cast<VendorDataComponent*>(data->get());
 			}
 			if(vendorData != NULL){
-				skim = item->getPrice() * (globalVariables::vendorSkimSalesForMaintenancePercent / 100);
+				skim = item->getPrice() * (serverVars.serverVendorSkimSalesForMaintenancePercent / 100);
 				if(skim > 100000) {// Respecting hard cap in VendorData handlePayMaintanence()
 					skim = 100000;
 				}
@@ -1363,7 +1364,7 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 		int priorAvailableCredits = priorBank + priorCash;
 
 		//TODO: prior didnt have enough money -> assert.. fix properly
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
 			if (priorBidder->getBankCredits() < fullPrice) {
 				BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
 				player->sendMessage(msg);
@@ -1415,7 +1416,7 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 	int playerCash = player->getCashCredits();
 	int playerAvailableCredits = playerBank + playerCash;
 
-	if (globalVariables::playerPaymentCashAndBankEnabled == false){
+	if (serverVars.serverPaymentCashAndBankEnabled == false){
 		if (player->getBankCredits() < price1 ||
 			player->getBankCredits() < item->getPrice()) {
 			BaseMessage* msg = new BidAuctionResponseMessage(item->getAuctionedItemObjectID(), BidAuctionResponseMessage::NOTENOUGHCREDITS);
@@ -1450,7 +1451,7 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 		item->setBidderName(playername);
 
 		// take money from high bidder
-		if (globalVariables::playerPaymentCashAndBankEnabled == false){
+		if (serverVars.serverPaymentCashAndBankEnabled == false){
 			TransactionLog trx(player, TrxCode::AUCTIONBID, item->getPrice(), false);
 			player->subtractBankCredits(item->getPrice());
 		} else {
@@ -1491,7 +1492,7 @@ void AuctionManagerImplementation::doAuctionBid(CreatureObject* player, AuctionI
 		item->setBuyerID(player->getObjectID());
 		item->setBidderName(playername);
 
-		if (globalVariables::playerPaymentCashAndBankEnabled == false){
+		if (serverVars.serverPaymentCashAndBankEnabled == false){
 			TransactionLog trx(player, TrxCode::AUCTIONBID, item->getPrice(), false);
 			player->subtractBankCredits(item->getPrice());
 		} else {
@@ -2176,9 +2177,9 @@ void AuctionManagerImplementation::cancelItem(CreatureObject* player, uint64 obj
 		}
 
 		if(item->isOnBazaar())
-			availableTime = currentTime + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+			availableTime = currentTime + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 		else {
-			availableTime = currentTime + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
+			availableTime = currentTime + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
 			forSaleOnVendor = true;
 		}
 
@@ -2191,7 +2192,7 @@ void AuctionManagerImplementation::cancelItem(CreatureObject* player, uint64 obj
 			return;
 		}
 		/// 7 Days
-		availableTime = currentTime + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 
 	} else {
 		BaseMessage* msg = new CancelLiveAuctionResponseMessage(objectID, CancelLiveAuctionResponseMessage::ALREADYCOMPLETED);
@@ -2293,9 +2294,9 @@ void AuctionManagerImplementation::expireSale(AuctionItem* item) {
 	uint64 availableTime = 0;
 
 	if(item->isOnBazaar())
-		availableTime = currentTime + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 	else
-		availableTime = currentTime + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
 
 	item->setStatus(AuctionItem::EXPIRED);
 	item->setExpireTime(availableTime);
@@ -2334,9 +2335,9 @@ void AuctionManagerImplementation::expireBidAuction(AuctionItem* item) {
 	uint64 availableTime = 0;
 
 	if(item->isOnBazaar())
-		availableTime = currentTime + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 	else
-		availableTime = currentTime + (globalVariables::auctionVendorExpirePeriod * 24 * 60 * 60);
+		availableTime = currentTime + (serverVars.serverAuctionVendorExpirePeriod * 24 * 60 * 60);
 
 	item->setStatus(AuctionItem::EXPIRED);
 	item->setExpireTime(availableTime);
@@ -2373,7 +2374,7 @@ void AuctionManagerImplementation::expireAuction(AuctionItem* item) {
 
 	Time expireTime;
 	uint64 currentTime = expireTime.getMiliTime() / 1000;
-	uint64 availableTime = currentTime + (globalVariables::auctionCommodityExpirePeriod * 24 * 60 * 60);
+	uint64 availableTime = currentTime + (serverVars.serverAuctionCommodityExpirePeriod * 24 * 60 * 60);
 
 	Locker locker(item);
 	item->setExpireTime(availableTime);

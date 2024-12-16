@@ -22,6 +22,8 @@
 #include "server/zone/managers/collision/IntersectionResults.h"
 #include "server/zone/managers/objectcontroller/ObjectController.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
+
 class DataTransformWithParent : public ObjectControllerMessage {
 public:
 	DataTransformWithParent(SceneObject* sceneO) : ObjectControllerMessage(sceneO->getObjectID(), 0x1B, 0xF1) {
@@ -354,7 +356,7 @@ public:
 					}
 				}
 			} else {
-				const float covDist = globalVariables::serverDrawDistance;
+				const float covDist = serverVars.serverDrawDistance;
 				const float sqrCovDist = covDist * covDist;
 
 				// Use the object out of range distance

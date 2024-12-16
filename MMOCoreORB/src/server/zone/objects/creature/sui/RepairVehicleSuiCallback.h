@@ -11,7 +11,8 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/creature/VehicleObject.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 class RepairVehicleSuiCallback : public SuiCallback {
 public:
@@ -48,7 +49,7 @@ public:
 		int bank = player->getBankCredits();
 		int cash = player->getCashCredits();
 		int totalFunds;
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
 			totalFunds = player->getBankCredits();
 		} else {
 			totalFunds = bank + cash;
@@ -61,7 +62,7 @@ public:
 			repairCost += tax;
 		}
 
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
 			if (repairCost > totalFunds) {
 				player->sendSystemMessage("@pet/pet_menu:lacking_funds_prefix " + String::valueOf(repairCost - totalFunds) + " @pet/pet_menu:lacking_funds_suffix"); //You lack the additional  credits required to repair your vehicle.
 				return;

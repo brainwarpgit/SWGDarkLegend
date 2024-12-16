@@ -18,7 +18,7 @@
 #include "server/zone/objects/area/events/RemoveNoSpawnAreaTask.h"
 
 #include "server/zone/managers/variables/creatureVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/serverVariables.h"
 
 // #define DEBUG_SPAWNING
 // #define DEBUG_LAIR_DIFFICULTY
@@ -126,7 +126,7 @@ Vector3 SpawnAreaImplementation::getRandomPosition(SceneObject* player) {
 
 	const auto worldPosition = player->getWorldPosition();
 
-	position = areaShape->getRandomPosition(worldPosition, creatureVars.creatureWildSpawnDensity, globalVariables::serverDrawDistance);
+	position = areaShape->getRandomPosition(worldPosition, creatureVars.creatureWildSpawnDensity, serverVars.serverDrawDistance);
 
 	return position;
 }

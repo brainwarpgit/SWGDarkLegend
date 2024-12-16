@@ -8,6 +8,8 @@
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/managers/skill/SkillManager.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
+
 class RegrantSkillsCommand : public QueueCommand {
 public:
 
@@ -16,7 +18,7 @@ public:
 	}
 
 	int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
-		if (!globalVariables::commandRegrantSkillsEnabled) {
+		if (!serverVars.serverCommandRegrantSkillsEnabled) {
 			creature->sendSystemMessage("RegrantSkills is disabled.");
 			return GENERALERROR;
 		}

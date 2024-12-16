@@ -121,6 +121,7 @@
 
 #include "server/zone/managers/variables/mountVariables.h"
 #include "server/zone/managers/variables/playerVariables.h"
+#include "server/zone/managers/variables/serverVariables.h"
 #include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl, bool trackOnlineUsers) : Logger("PlayerManager") {
@@ -2686,7 +2687,7 @@ void PlayerManagerImplementation::sendLoginMessage(CreatureObject* creature) {
 	ChatSystemMessage* csm = new ChatSystemMessage(UnicodeString(motd), ChatSystemMessage::DISPLAY_CHATONLY);
 	creature->sendMessage(csm);
 		
-	if (globalVariables::playerPlayersOnlineAtLoginEnabled) {
+	if (serverVars.serverPlayersOnlineAtLoginEnabled) {
 		ChatSystemMessage* strOnline = new ChatSystemMessage(UnicodeString("There are currently " + std::to_string(creature->getZoneServer()->getConnectionCount()) + " player(s) online."), ChatSystemMessage::DISPLAY_CHATONLY);
 		creature->sendMessage(strOnline);
 	}

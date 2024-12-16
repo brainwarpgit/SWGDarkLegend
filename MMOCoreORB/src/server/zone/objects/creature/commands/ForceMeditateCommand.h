@@ -8,6 +8,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/player/events/MeditateTask.h"
 #include "server/zone/objects/player/events/ForceMeditateTask.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 #include "server/globalVariables.h"
 
 class ForceMeditateCommand : public QueueCommand {
@@ -56,7 +58,7 @@ public:
 
 		fmeditateTask->setMoodString(creature->getMoodString());
 		creature->addPendingTask("forcemeditate", fmeditateTask, globalVariables::playerMeditateTickTime * 1000);
-		if (creature->hasSkill("combat_unarmed_novice") && globalVariables::commandMeditateMergeEnabled == true) {
+		if (creature->hasSkill("combat_unarmed_novice") && serverVars.serverCommandMeditateMergeEnabled == true) {
 			creature->addPendingTask("meditate", meditateTask, globalVariables::playerMeditateTickTime * 1000);
 		}
 		

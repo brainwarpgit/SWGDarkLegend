@@ -8,7 +8,8 @@ Distribution of this file for usage outside of Core3 is prohibited.
 #include "server/zone/TreeNode.h"
 #include "server/zone/objects/scene/SceneObject.h"
 #include "server/zone/objects/tangible/TangibleObject.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 //#define DEBUG_TREE_ENTRY
 
@@ -366,7 +367,7 @@ uint64 TreeEntryImplementation::getDirtyObjectID() {
 }
 
 float TreeEntryImplementation::getOutOfRangeDistance() const {
-	float closeRange = globalVariables::serverDrawDistance;
+	float closeRange = serverVars.serverDrawDistance;
 
 	if (radius > (closeRange * 0.5f)) {
 		return closeRange + radius;

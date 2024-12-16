@@ -6,7 +6,8 @@
 #define PAYMAINTENANCECOMMAND_H_
 
 #include "server/zone/objects/scene/SceneObject.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 
 class PaymaintenanceCommand : public QueueCommand {
 public:
@@ -29,7 +30,7 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
-		if (globalVariables::playerPaymentCashAndBankEnabled == false) {
+		if (serverVars.serverPaymentCashAndBankEnabled == false) {
 			if (creature->getCashCredits() <= 0) {
 				creature->sendSystemMessage("@player_structure:no_money"); //You do not have any money to pay maintenance.
 				return GENERALERROR;

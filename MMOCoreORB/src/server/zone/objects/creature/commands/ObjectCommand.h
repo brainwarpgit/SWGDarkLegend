@@ -10,8 +10,8 @@
 #include "server/zone/managers/crafting/CraftingManager.h"
 #include "server/zone/managers/crafting/ComponentMap.h"
 #include "server/zone/objects/tangible/terminal/characterbuilder/CharacterBuilderTerminal.h"
-#include "server/globalVariables.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
 
 class ObjectCommand : public QueueCommand {
 public:
@@ -141,7 +141,7 @@ public:
 				} else {
 					trx.abort() << "createLoot failed for lootGroup " << lootGroup << " level " << level;
 				}
-			} else if (commandType.beginsWith("createattachment") && globalVariables::commandObjectCreateAttachmentEnabled == true) {
+			} else if (commandType.beginsWith("createattachment") && serverVars.serverCommandObjectCreateAttachmentEnabled == true) {
 				//Syntax exmaple /object createattachment clothing mindblast_accuracy 25
 				String attachmentType;
 				String skillMod;

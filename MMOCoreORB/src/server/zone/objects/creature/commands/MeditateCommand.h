@@ -8,6 +8,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/player/events/MeditateTask.h"
 #include "server/zone/objects/player/events/ForceMeditateTask.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 #include "server/globalVariables.h"
 
 class MeditateCommand : public QueueCommand {
@@ -54,7 +56,7 @@ public:
 		player->sendSystemMessage("@teraskasi:med_begin");
 
 		player->addPendingTask("meditate", meditateTask, globalVariables::playerMeditateTickTime * 1000);
-		if (player->hasSkill("force_discipline_enhancements_synergy_04") && globalVariables::commandMeditateMergeEnabled == true) {
+		if (player->hasSkill("force_discipline_enhancements_synergy_04") && serverVars.serverCommandMeditateMergeEnabled == true) {
 			player->addPendingTask("forcemeditate", fmeditateTask, globalVariables::playerMeditateTickTime * 1000);
 			player->playEffect("clienteffect/pl_force_meditate_self.cef", "");
 		}

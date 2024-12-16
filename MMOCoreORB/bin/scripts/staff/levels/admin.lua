@@ -1,10 +1,10 @@
 --local lfs = require("lfs")
 --print("Current Directory: ", lfs.currentdir())
-dofile("scripts/managers/global_variables.lua")
+dofile("scripts/managers/variables/server_variables.lua")
 local admin_tag
 
-if adminTag ~= nil or adminTag ~= "" then
-	admin_tag = adminTag
+if serverAdminTag ~= nil or serverAdminTag ~= "" then
+	admin_tag = serverAdminTag
 else
 	admin_tag = "SWGEmu-Admin"
 end

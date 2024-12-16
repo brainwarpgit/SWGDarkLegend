@@ -18,6 +18,8 @@
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/player/sessions/survey/SurveySession.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
+
+#include "server/zone/managers/variables/serverVariables.h"
 #include "server/globalVariables.h"
 
 ResourceSpawner::ResourceSpawner(ManagedReference<ZoneServer*> serv,
@@ -596,8 +598,8 @@ String ResourceSpawner::makeResourceName(const String& randomNameClass) {
 }
 
 int ResourceSpawner::randomizeValue(int min, int max) {
-	min = globalVariables::resourcesMinimumQuality;
-	max = globalVariables::resourcesMaximumQuality;
+	min = serverVars.serverResourcesMinimumQuality;
+	max = serverVars.serverResourcesMaximumQuality;
 	
 	if (min == 0 && max == 0)
 		return 0;
@@ -1106,8 +1108,8 @@ bool ResourceSpawner::addResourceToPlayerInventory(TransactionLog& trx, Creature
 					cast<ResourceContainer*>( object.get());
 
 			if (resource->getSpawnName() == resourceSpawn->getName() &&
-					resource->getQuantity() < globalVariables::resourcesContainerSize) {
-				if  ((resource->getQuantity() + unitsExtracted) <= globalVariables::resourcesContainerSize){
+					resource->getQuantity() < serverVars.serverResourcesContainerSize) {
+				if  ((resource->getQuantity() + unitsExtracted) <= serverVars.serverResourcesContainerSize){
 					trx.addRelatedObject(resource);
 					trx.addState("resourceType", resourceSpawn->getType());
 					trx.addState("resourceID", resourceSpawn->getObjectID());
@@ -1118,8 +1120,8 @@ bool ResourceSpawner::addResourceToPlayerInventory(TransactionLog& trx, Creature
 					resource->setQuantity(newStackSize);
 					return true;
 				}else{
-					unitsExtracted = unitsExtracted - (globalVariables::resourcesContainerSize - resource->getQuantity());
-					resource->setQuantity(globalVariables::resourcesContainerSize);
+					unitsExtracted = unitsExtracted - (serverVars.serverResourcesContainerSize - resource->getQuantity());
+					resource->setQuantity(serverVars.serverResourcesContainerSize);
 				}
 			}
 		}

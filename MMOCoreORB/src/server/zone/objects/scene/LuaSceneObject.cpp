@@ -16,6 +16,8 @@
 #include "engine/lua/LuaPanicException.h"
 #include "server/zone/objects/tangible/Container.h"
 
+#include "server/zone/managers/variables/serverVariables.h"
+
 const char LuaSceneObject::className[] = "LuaSceneObject";
 
 Luna<LuaSceneObject>::RegType LuaSceneObject::Register[] = {
@@ -867,7 +869,7 @@ int LuaSceneObject::setObjectName(lua_State* L) {
 int LuaSceneObject::setRadius(lua_State* L) {
 	float radius = lua_tonumber(L, -1);
 
-	float radiusCheck = globalVariables::serverDrawDistance;
+	float radiusCheck = serverVars.serverDrawDistance;
 	auto zone = realObject->getZone();
 
 	if (zone != nullptr)
