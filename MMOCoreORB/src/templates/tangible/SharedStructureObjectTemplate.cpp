@@ -7,19 +7,19 @@
 
 
 #include "SharedStructureObjectTemplate.h"
-#include "server/globalVariables.h"
 
+#include "server/zone/managers/variables/structureVariables.h"
 
 void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 	SharedTangibleObjectTemplate::readObject(templateData);
 
 	lotSize = templateData->getByteField("lotSize");
 
-	baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate") * globalVariables::structureBaseMaintenanceRateMultiplier;
+	baseMaintenanceRate = templateData->getIntField("baseMaintenanceRate") * structureVars.structureBaseMaintenanceRateMultiplier;
 
-	basePowerRate = templateData->getIntField("basePowerRate") * globalVariables::structureBasePowerRateMultiplier;
+	basePowerRate = templateData->getIntField("basePowerRate") * structureVars.structureBasePowerRateMultiplier;
 	
-	if (globalVariables::structureAllowAllZonesEnabled == true) {
+	if (structureVars.structureAllowAllZonesEnabled == true) {
 		allowedZones = {"corellia", "talus", "dathomir", "endor", "lok", "naboo", "rori", "tatooine", "yavin4", "dantooine"};
 	} else {
 		LuaObject allowzones = templateData->getObjectField("allowedZones");
@@ -40,8 +40,8 @@ void SharedStructureObjectTemplate::readObject(LuaObject* templateData) {
 
 	uniqueStructure = templateData->getBooleanField("uniqueStructure");
 
-	cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase") * globalVariables::cityMaintenanceBaseMultiplier;
+	cityMaintenanceBase = templateData->getIntField("cityMaintenanceBase") * structureVars.structureCityMaintenanceBaseMultiplier;
 
-	cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate") * globalVariables::cityMaintenanceRateMultiplier;
+	cityMaintenanceRate = templateData->getIntField("cityMaintenanceRate") * structureVars.structureCityMaintenanceRateMultiplier;
 
 }

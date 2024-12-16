@@ -63,7 +63,24 @@ bool StructureVariables::loadConfigData() {
 	}
 
 	try {
-
+		//Structure 
+		if (lua->getGlobalInt("structureMaxItemsPerLot") > 0) structureVars.structureMaxItemsPerLot = lua->getGlobalInt("structureMaxItemsPerLot");
+		if (lua->getGlobalInt("structureMaxCivicBuildingItems") >= 0) structureVars.structureMaxCivicBuildingItems = lua->getGlobalInt("structureMaxCivicBuildingItems");
+		if (lua->getGlobalInt("structureMaxZeroLotBuildingItems") >= 0) structureVars.structureMaxZeroLotBuildingItems = lua->getGlobalInt("structureMaxZeroLotBuildingItems");
+		if (lua->getGlobalInt("structureMaxItemsPerStructure") > 0) structureVars.structureMaxItemsPerStructure = lua->getGlobalInt("structureMaxItemsPerStructure");
+		if (lua->getGlobalBoolean("structureMaxItemsEnabled") == true || lua->getGlobalBoolean("structureMaxItemsEnabled") == false) structureVars.structureMaxItemsEnabled = lua->getGlobalBoolean("structureMaxItemsEnabled");
+		if (lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == true || lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled") == false) structureVars.structureShowHouseMaxItemsEnabled = lua->getGlobalBoolean("structureShowHouseMaxItemsEnabled");
+		if (lua->getGlobalFloat("structureBaseMaintenanceRateMultiplier") >= 0) structureVars.structureBaseMaintenanceRateMultiplier = lua->getGlobalFloat("structureBaseMaintenanceRateMultiplier");
+		if (lua->getGlobalFloat("structureBasePowerRateMultiplier") >= 0) structureVars.structureBasePowerRateMultiplier = lua->getGlobalFloat("structureBasePowerRateMultiplier");
+		if (lua->getGlobalFloat("structureCityMaintenanceBaseMultiplier") >= 0) structureVars.structureCityMaintenanceBaseMultiplier = lua->getGlobalFloat("structureCityMaintenanceBaseMultiplier");
+		if (lua->getGlobalFloat("structureCityMaintenanceRateMultiplier") >= 0) structureVars.structureCityMaintenanceRateMultiplier = lua->getGlobalFloat("structureCityMaintenanceRateMultiplier");
+		if (lua->getGlobalBoolean("structureAllowAllZonesEnabled") == true || lua->getGlobalBoolean("structureAllowAllZonesEnabled") == false) structureVars.structureAllowAllZonesEnabled = lua->getGlobalBoolean("structureAllowAllZonesEnabled");
+		if (lua->getGlobalBoolean("structureInstallationQuickAddMaintenanceEnabled") == true || lua->getGlobalBoolean("structureInstallationQuickAddMaintenanceEnabled") == false) structureVars.structureInstallationQuickAddMaintenanceEnabled = lua->getGlobalBoolean("structureInstallationQuickAddMaintenanceEnabled");
+		if (lua->getGlobalInt("structureInstallationQuickAddMaintenanceAmount") > 0 && lua->getGlobalInt("structureInstallationQuickAddMaintenanceAmount") <= 100) structureVars.structureInstallationQuickAddMaintenanceAmount = lua->getGlobalInt("structureInstallationQuickAddMaintenanceAmount");
+		if (lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled") == true || lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled") == false) structureVars.structureInstallationQuickAddPowerEnabled = lua->getGlobalBoolean("structureInstallationQuickAddPowerEnabled");
+		if (lua->getGlobalInt("structureInstallationQuickAddPowerAmount") > 0 && lua->getGlobalInt("structureInstallationQuickAddPowerAmount") <= 100) structureVars.structureInstallationQuickAddPowerAmount = lua->getGlobalInt("structureInstallationQuickAddPowerAmount");
+		if (lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == true || lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled") == false) structureVars.structureInstallationResourcesRetrieveAllEnabled = lua->getGlobalBoolean("structureInstallationResourcesRetrieveAllEnabled");
+		if (lua->getGlobalBoolean("structureRemoveDestroyCodeEnabled") == true || lua->getGlobalBoolean("structureRemoveDestroyCodeEnabled") == false) structureVars.structureRemoveDestroyCodeEnabled = lua->getGlobalBoolean("structureRemoveDestroyCodeEnabled");
 	} catch (const Exception& e) {
 		info(true) << "Error retrieving LUA varaibles: " << e.what();
 		return false;

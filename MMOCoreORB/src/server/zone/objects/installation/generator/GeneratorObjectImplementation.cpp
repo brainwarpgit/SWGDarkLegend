@@ -9,7 +9,8 @@
 #include "server/zone/packets/harvester/HarvesterObjectMessage7.h"
 #include "server/zone/packets/object/ObjectMenuResponse.h"
 #include "server/zone/packets/harvester/ResourceHarvesterActivatePageMessage.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/structureVariables.h"
 
 void GeneratorObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	if (!isOnAdminList(player))
@@ -17,11 +18,11 @@ void GeneratorObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 
 	InstallationObjectImplementation::fillObjectMenuResponse(menuResponse, player);
 
-	if (globalVariables::structureInstallationResourcesRetrieveAllEnabled == true) {
+	if (structureVars.structureInstallationResourcesRetrieveAllEnabled == true) {
 		menuResponse->addRadialMenuItemToRadialID(118, 79, 3, "Retreive all resources"); //Empty Harvester
 	}
-	if (globalVariables::structureInstallationQuickAddMaintenanceEnabled == true) {
-		menuResponse->addRadialMenuItemToRadialID(118, 80, 3, UnicodeString("+ " + std::to_string(globalVariables::structureInstallationQuickAddMaintenanceAmount) + "k Maintenance")); //k maint
+	if (structureVars.structureInstallationQuickAddMaintenanceEnabled == true) {
+		menuResponse->addRadialMenuItemToRadialID(118, 80, 3, UnicodeString("+ " + std::to_string(structureVars.structureInstallationQuickAddMaintenanceAmount) + "k Maintenance")); //k maint
 	}
 	menuResponse->addRadialMenuItemToRadialID(118, 78, 3, "@harvester:manage"); //Operate Machinery
 }
@@ -54,7 +55,7 @@ int GeneratorObjectImplementation::handleObjectMenuSelect(CreatureObject* player
 	switch (selectedID) {
 		// Stack adding in harvester empty/power/maint quick addd
 	case 80: { // k maint
-		quickAddMaint(player, globalVariables::structureInstallationQuickAddMaintenanceAmount * 1000);
+		quickAddMaint(player, structureVars.structureInstallationQuickAddMaintenanceAmount * 1000);
 		break;
 	}
 	case 79: { // Retrieve all from Harvester

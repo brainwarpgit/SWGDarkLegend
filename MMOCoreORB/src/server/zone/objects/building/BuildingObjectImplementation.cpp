@@ -38,6 +38,8 @@
 #include "server/zone/objects/building/components/DestructibleBuildingDataComponent.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/objects/player/FactionStatus.h"
+
+#include "server/zone/managers/variables/structureVariables.h"
 #include "server/globalVariables.h"
 
 // #define DEBUG_COV
@@ -1053,7 +1055,7 @@ void BuildingObjectImplementation::onExit(CreatureObject* player, uint64 parenti
 
 uint32 BuildingObjectImplementation::getMaximumNumberOfPlayerItems() {
 	if (isCivicStructure() )
-		return globalVariables::structureMaxCivicBuildingItems;
+		return structureVars.structureMaxCivicBuildingItems;
 
 	SharedStructureObjectTemplate* ssot = dynamic_cast<SharedStructureObjectTemplate*> (templateObject.get());
 
@@ -1065,13 +1067,13 @@ uint32 BuildingObjectImplementation::getMaximumNumberOfPlayerItems() {
 
 	//Buildings that don't cost lots have MAXPLAYERITEMS storage space.
 	if (lots == 0)
-		return globalVariables::structureMaxZeroLotBuildingItems;
+		return structureVars.structureMaxZeroLotBuildingItems;
 
-	if (globalVariables::structureMaxItemsEnabled == true) {
-		auto maxItems = globalVariables::structureMaxItemsPerStructure;
-		return Math::min(maxItems, lots * globalVariables::structureMaxItemsPerLot);
+	if (structureVars.structureMaxItemsEnabled == true) {
+		auto maxItems = structureVars.structureMaxItemsPerStructure;
+		return Math::min(maxItems, lots * structureVars.structureMaxItemsPerLot);
 	} else {
-		return lots * globalVariables::structureMaxItemsPerLot;
+		return lots * structureVars.structureMaxItemsPerLot;
 	}	
 }
 

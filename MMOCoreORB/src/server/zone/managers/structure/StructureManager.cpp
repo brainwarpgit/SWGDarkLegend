@@ -50,6 +50,8 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "templates/building/CampStructureTemplate.h"
 #include "templates/customization/CustomizationIdManager.h"
+
+#include "server/zone/managers/variables/structureVariables.h"
 #include "server/globalVariables.h"
 
 namespace StorageManagerNamespace {
@@ -1064,7 +1066,7 @@ void StructureManager::reportStructureStatus(CreatureObject* creature, Structure
 
 		status->addMenuItem("@player_structure:items_in_building_prompt " + String::valueOf(building->getCurrentNumberOfPlayerItems())); // Number of Items in Building:
 
-		if (globalVariables::structureShowHouseMaxItemsEnabled == true) {
+		if (structureVars.structureShowHouseMaxItemsEnabled == true) {
 			status->addMenuItem("Maximum Items for Building:  " + String::valueOf(building->getMaximumNumberOfPlayerItems())); // Number of Items in Building:
 		}
 		

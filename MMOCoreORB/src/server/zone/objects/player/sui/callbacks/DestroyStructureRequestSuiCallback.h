@@ -11,6 +11,8 @@
 #include "server/zone/objects/player/sui/SuiCallback.h"
 #include "server/zone/objects/player/sessions/DestroyStructureSession.h"
 
+#include "server/zone/managers/variables/structureVariables.h"
+
 class DestroyStructureRequestSuiCallback : public SuiCallback {
 public:
 	DestroyStructureRequestSuiCallback(ZoneServer* serv) : SuiCallback(serv) {
@@ -29,7 +31,7 @@ public:
 			return;
 		}
 
-		if(!globalVariables::structureRemoveDestroyCodeEnabled){
+		if(!structureVars.structureRemoveDestroyCodeEnabled){
 			session->sendDestroyCode();
 		} else {
 			session->destroyStructure();
