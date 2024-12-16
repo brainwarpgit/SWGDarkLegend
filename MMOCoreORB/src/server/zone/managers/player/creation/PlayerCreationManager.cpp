@@ -25,6 +25,8 @@
 #include "server/zone/managers/jedi/JediManager.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/managers/player/creation/SendJtlRecruitment.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 #include "server/globalVariables.h"
 
 PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager") {
@@ -463,8 +465,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 							Time timeVal(sec);
 
-							if (timeVal.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
-								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
+							if (timeVal.miliDifference() < playerVars.playerCreationNewCreationTime * 60 * 1000) {
+								ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(playerVars.playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(playerVars.playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
 								client->sendMessage(errMsg);
 
 								playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -480,8 +482,8 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 					if (lastCreatedCharacter.containsKey(accID)) {
 						Time lastCreatedTime = lastCreatedCharacter.get(accID);
 
-						if (lastCreatedTime.miliDifference() < globalVariables::playerCreationNewCreationTime * 60 * 1000) {
-							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
+						if (lastCreatedTime.miliDifference() < playerVars.playerCreationNewCreationTime * 60 * 1000) {
+							ErrorMessage* errMsg = new ErrorMessage("Create Error", "You are only permitted to create one character per " + std::to_string(playerVars.playerCreationNewCreationTime) + " minutes. Repeat attempts prior to " + std::to_string(playerVars.playerCreationNewCreationTime) + " minutes elapsing will reset the timer.", 0x0);
 							client->sendMessage(errMsg);
 
 							playerCreature->destroyPlayerCreatureFromDatabase(true);
@@ -566,12 +568,12 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	//Join auction chat room
 	ghost->addChatRoom(chatManager->getAuctionRoom()->getRoomID());
-	if (globalVariables::playerCreationJoinGalaxyChatEnabled == true) {	
+	if (playerVars.playerCreationJoinGalaxyChatEnabled == true) {	
 		ghost->addChatRoom(chatManager->getGalaxyRoom()->getRoomID());
 	}
 	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(playerCreature, SuiWindowType::NONE);
 	box->setPromptTitle("PLEASE NOTE");
-	box->setPromptText("You are limited to creating one character per " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minutes. Attempting to create another character or deleting your character before the " + std::to_string(globalVariables::playerCreationNewCreationTime) + " minute timer expires will reset the timer.");
+	box->setPromptText("You are limited to creating one character per " + std::to_string(playerVars.playerCreationNewCreationTime) + " minutes. Attempting to create another character or deleting your character before the " + std::to_string(playerVars.playerCreationNewCreationTime) + " minute timer expires will reset the timer.");
 
 	ghost->addSuiBox(box);
 	playerCreature->sendMessage(box->generateMessage());
@@ -696,7 +698,7 @@ void PlayerCreationManager::addProfessionStartingItems(CreatureObject* creature,
 	//Reference<Skill*> startingSkill = SkillManager::instance()->getSkill("crafting_artisan_novice");
 
 	//Starting skill.
-	if (globalVariables::playerCreationGrantAllNoviceSkillsEnabled == false) {
+	if (playerVars.playerCreationGrantAllNoviceSkillsEnabled == false) {
 		SkillManager::instance()->awardSkill(startingSkill->getSkillName(), creature, false, true, true);
 	} else {
 		SkillManager::instance()->awardSkill("crafting_artisan_novice", creature, false, true, true);
@@ -707,7 +709,7 @@ void PlayerCreationManager::addProfessionStartingItems(CreatureObject* creature,
 		SkillManager::instance()->awardSkill("science_medic_novice", creature, false, true, true);
 	}			
 
-	if (globalVariables::playerCreationAllLanguagesEnabled == true) {
+	if (playerVars.playerCreationAllLanguagesEnabled == true) {
 		SkillManager::instance()->awardSkill("social_language_basic_speak", creature, true, true, true);
 		SkillManager::instance()->awardSkill("social_language_basic_comprehend", creature, true, true, true);
 		SkillManager::instance()->awardSkill("social_language_rodian_speak", creature, true, true, true);

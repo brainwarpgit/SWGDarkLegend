@@ -10,7 +10,7 @@
 #include "templates/params/creature/PlayerArrangement.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 class MountCommand : public QueueCommand {
 	Vector<uint32> restrictedBuffCRCs;
@@ -159,11 +159,11 @@ public:
 
 		// add speed multiplier mod for existing buffs
 		if(vehicle->getSpeedMultiplierMod() != 0)
-			newSpeed *= vehicle->getSpeedMultiplierMod() * globalVariables::playerSpeedMultiplier;
+			newSpeed *= vehicle->getSpeedMultiplierMod() * playerVars.playerSpeedMultiplier;
 		
 		// Force Sensitive SkillMods
 		if (vehicle->isVehicleObject()) {
-			creature->setSpeedMultiplierMod(globalVariables::playerSpeedMultiplier);
+			creature->setSpeedMultiplierMod(playerVars.playerSpeedMultiplier);
 			newAccel += creature->getSkillMod("force_vehicle_speed");
 			newTurn += creature->getSkillMod("force_vehicle_control");
 		}

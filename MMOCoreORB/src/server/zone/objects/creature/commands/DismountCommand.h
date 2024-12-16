@@ -11,7 +11,7 @@
 #include "server/zone/packets/object/DataTransform.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 class DismountCommand : public QueueCommand {
 	Vector<uint32> restrictedBuffCRCs;
@@ -96,7 +96,7 @@ public:
 		Vector<FloatParam> mountSpeedTempl = mountTemplate->getSpeed();
 
 		// Reset Run Speed from template
-		creature->setRunSpeed(globalVariables::playerDefaultRunSpeed * globalVariables::playerSpeedMultiplier);
+		creature->setRunSpeed(playerVars.playerDefaultRunSpeed * playerVars.playerSpeedMultiplier);
 		creatureMount->setRunSpeed(mountSpeedTempl.get(0));
 
  		// Reset Force Sensitive control mods to default.

@@ -84,6 +84,9 @@
 #include "server/zone/managers/gcw/GCWManager.h"
 #include "server/zone/objects/ship/ShipObject.h"
 
+#include "server/zone/managers/variables/playerVariables.h"
+#include "server/globalVariables.h"
+
 #ifdef WITH_SESSION_API
 #include "server/login/SessionAPIClient.h"
 #endif // WITH_SESSION_API
@@ -1527,11 +1530,11 @@ void PlayerObjectImplementation::notifyOnline() {
 		if (playerTemplate != nullptr) {
 			auto speedTempl = playerTemplate->getSpeed();
 
-			playerCreature->setRunSpeed(globalVariables::playerDefaultRunSpeed * globalVariables::playerSpeedMultiplier);
+			playerCreature->setRunSpeed(playerVars.playerDefaultRunSpeed * playerVars.playerSpeedMultiplier);
 		}
 	}
 	PlayerObject* ghost = playerCreature->getPlayerObject();
-	if (ghost != nullptr && globalVariables::playerCreationJoinGalaxyChatEnabled == true) {	
+	if (ghost != nullptr && playerVars.playerCreationJoinGalaxyChatEnabled == true) {	
 		ghost->addChatRoom(chatManager->getGalaxyRoom()->getRoomID());
 	}
 	if (playerCreature->isInGuild()) {
@@ -2859,11 +2862,11 @@ void PlayerObjectImplementation::deleteAllWaypoints() {
 int PlayerObjectImplementation::getLotsRemaining() {
 	Locker locker(asPlayerObject());
 
-	int lotsRemaining = globalVariables::playerMaxLots;
+	int lotsRemaining = playerVars.playerMaxLots;
 	
-	if(lotsRemaining != globalVariables::playerMaxLots) {
-		setMaximumLots(globalVariables::playerMaxLots);
-		lotsRemaining = globalVariables::playerMaxLots;
+	if(lotsRemaining != playerVars.playerMaxLots) {
+		setMaximumLots(playerVars.playerMaxLots);
+		lotsRemaining = playerVars.playerMaxLots;
 	}
 	
 	for (int i = 0; i < ownedStructures.size(); ++i) {

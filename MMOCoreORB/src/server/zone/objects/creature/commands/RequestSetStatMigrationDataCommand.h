@@ -8,7 +8,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/player/sessions/MigrateStatsSession.h"
 #include "server/zone/managers/player/creation/PlayerCreationManager.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 
 class RequestSetStatMigrationDataCommand : public QueueCommand {
 public:
@@ -89,25 +90,25 @@ public:
 
 		ManagedReference<SceneObject*> obj = creature->getParentRecursively(SceneObjectType::SALONBUILDING);
 
-		if (globalVariables::playerStatMigrationClearBuffsEnabled == true) {
+		if (playerVars.playerStatMigrationClearBuffsEnabled == true) {
 			creature->clearBuffs(true, false);//remove buffs to prevent min/maxxing HAMs
 		}
-		if ((zone != nullptr && zone->getZoneName() == globalVariables::playerStatMigrationLocation && globalVariables::playerStatMigrationSalonOnlyEnabled == false && globalVariables::playerStatMigrationAnyLocationEnabled == false) || privilegedPlayer) {
+		if ((zone != nullptr && zone->getZoneName() == playerVars.playerStatMigrationLocation && playerVars.playerStatMigrationSalonOnlyEnabled == false && playerVars.playerStatMigrationAnyLocationEnabled == false) || privilegedPlayer) {
 			session->migrateStats();
 			if (privilegedPlayer) {
 				creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");
 			}
-		} else if ((zone != nullptr && zone->getZoneName() == globalVariables::playerStatMigrationLocation && globalVariables::playerStatMigrationSalonOnlyEnabled == true && globalVariables::playerStatMigrationAnyLocationEnabled == false && obj != nullptr) || privilegedPlayer) {
+		} else if ((zone != nullptr && zone->getZoneName() == playerVars.playerStatMigrationLocation && playerVars.playerStatMigrationSalonOnlyEnabled == true && playerVars.playerStatMigrationAnyLocationEnabled == false && obj != nullptr) || privilegedPlayer) {
 			session->migrateStats();
 			if (privilegedPlayer) {
 				creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");
 			}
-		} else if ((zone != nullptr && globalVariables::playerStatMigrationSalonOnlyEnabled == false && globalVariables::playerStatMigrationAnyLocationEnabled == true) || privilegedPlayer) {
+		} else if ((zone != nullptr && playerVars.playerStatMigrationSalonOnlyEnabled == false && playerVars.playerStatMigrationAnyLocationEnabled == true) || privilegedPlayer) {
 			session->migrateStats();
 			if (privilegedPlayer) {
 				creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");
 			}
-		} else if ((zone != nullptr && globalVariables::playerStatMigrationSalonOnlyEnabled == true && globalVariables::playerStatMigrationAnyLocationEnabled == true && obj != nullptr) || privilegedPlayer) {
+		} else if ((zone != nullptr && playerVars.playerStatMigrationSalonOnlyEnabled == true && playerVars.playerStatMigrationAnyLocationEnabled == true && obj != nullptr) || privilegedPlayer) {
 			session->migrateStats();
 			if (privilegedPlayer) {
 				creature->sendSystemMessage("Stat Migration Permitted due to Staff Privileges.");

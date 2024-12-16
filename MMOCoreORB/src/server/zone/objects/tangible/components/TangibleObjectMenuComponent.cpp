@@ -12,7 +12,8 @@
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/player/sui/callbacks/AttachmentSplitterSuiCallback.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 
 void TangibleObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	ObjectMenuComponent::fillObjectMenuResponse(sceneObject, menuResponse, player);
@@ -64,7 +65,7 @@ void TangibleObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	}
 	
 	PlayerObject* ghost = player->getPlayerObject();
-	if (((tano->isAttachment() && !player->isInCombat() && player->hasSkill("crafting_tailor_master") && globalVariables::playerAttachmentSplittingEnabled)) || (ghost != nullptr && ghost->isAdmin() && !player->isInCombat())) {
+	if (((tano->isAttachment() && !player->isInCombat() && player->hasSkill("crafting_tailor_master") && playerVars.playerAttachmentSplittingEnabled)) || (ghost != nullptr && ghost->isAdmin() && !player->isInCombat())) {
 		Attachment* sea = cast<Attachment*>( sceneObject);
 		if (sea != nullptr) {
 			VectorMap<String, int>* skillMods = sea->getSkillMods();
@@ -135,7 +136,7 @@ int TangibleObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject
 				for (int i = 0; i < skillMods->size(); i++) {
 					auto key = skillMods->elementAt(i).getKey();
 					auto value = skillMods->elementAt(i).getValue();
-					jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+					jobCost += value * playerVars.playerAttachmentSplittingCostPerPoint;
 					sortedMods.put(ModSortingHelper(key, value));
 				}
 				sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in your BANK account.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.  The original item will be lost.");

@@ -17,7 +17,8 @@
 #include "server/zone/objects/tangible/attachment/Attachment.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootGroupMap.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 
 class WeaponAttachmentSplitterSuiCallback : public SuiCallback {
 	ManagedWeakReference<WeaponObject*> weaponObject;
@@ -59,7 +60,7 @@ public:
 			for (int i = 0; i < skillMods->size(); i++) {
 				auto key = skillMods->elementAt(i).getKey();
 				auto value = skillMods->elementAt(i).getValue();
-				jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+				jobCost += value * playerVars.playerAttachmentSplittingCostPerPoint;
 				sortedMods.put(ModSortingHelper(key, value));
 			}
 			if (creature->getBankCredits() < jobCost) {

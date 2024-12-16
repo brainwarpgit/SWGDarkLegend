@@ -8,7 +8,7 @@
 #include "server/zone/objects/scene/SceneObject.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 class GallopStopCommand : public QueueCommand {
 public:
@@ -68,8 +68,8 @@ public:
 		auto mountTemplateData = mount->getObjectTemplate();
 		auto mountTemplate = dynamic_cast<SharedCreatureObjectTemplate*>(mountTemplateData);
 		Vector<FloatParam> mountSpeedTempl = mountTemplate->getSpeed();		
-		creature->setRunSpeed(mountSpeedData->getRunSpeed() * globalVariables::playerSpeedMultiplier);
-		mount->setRunSpeed(mountSpeedData->getRunSpeed() * globalVariables::playerSpeedMultiplier);
+		creature->setRunSpeed(mountSpeedData->getRunSpeed() * playerVars.playerSpeedMultiplier);
+		mount->setRunSpeed(mountSpeedData->getRunSpeed() * playerVars.playerSpeedMultiplier);
 		creature->removeBuff(crc);
 		mount->removeBuff(crc);
 		creature->getCooldownTimerMap()->updateToCurrentAndAddMili("gallop", cooldown * 1000);

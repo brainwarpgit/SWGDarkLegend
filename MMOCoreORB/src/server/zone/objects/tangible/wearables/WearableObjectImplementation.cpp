@@ -20,7 +20,7 @@
 
 #include "server/zone/managers/variables/craftingVariables.h"
 #include "server/zone/managers/variables/lootVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 void WearableObjectImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
@@ -170,7 +170,7 @@ void WearableObjectImplementation::applyAttachment(CreatureObject* player, Attac
 	// wearable, with higher or equal value, don't apply and continue. Break once one mod
 	// is applied.
 	
-	if (globalVariables::playerAttachmentApplicationModEnabled) {
+	if (playerVars.playerAttachmentApplicationModEnabled) {
 		int modValue = 0;
 		int existingValue = 0;
 		for (int i = 0; i < sortedMods.size(); i++) {

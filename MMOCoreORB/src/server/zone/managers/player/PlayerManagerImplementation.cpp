@@ -120,6 +120,7 @@
 #include "server/zone/managers/statistics/StatisticsManager.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 #include "server/globalVariables.h"
 
 PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer, ZoneProcessServer* impl, bool trackOnlineUsers) : Logger("PlayerManager") {
@@ -1784,10 +1785,10 @@ void PlayerManagerImplementation::sendPlayerToCloner(CreatureObject* player, uin
 	ManagedReference<SceneObject*> preDesignatedFacility = server->getObject(preDesignatedFacilityOid);
 
 	if (preDesignatedFacility == nullptr || preDesignatedFacility != cloner) {
-		player->addWounds(CreatureAttribute::HEALTH, globalVariables::playerWoundsonDeath, true, false);
-		player->addWounds(CreatureAttribute::ACTION, globalVariables::playerWoundsonDeath, true, false);
-		player->addWounds(CreatureAttribute::MIND, globalVariables::playerWoundsonDeath, true, false);
-		player->addShockWounds(globalVariables::playerWoundsonDeath, true);
+		player->addWounds(CreatureAttribute::HEALTH, playerVars.playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::ACTION, playerVars.playerWoundsonDeath, true, false);
+		player->addWounds(CreatureAttribute::MIND, playerVars.playerWoundsonDeath, true, false);
+		player->addShockWounds(playerVars.playerWoundsonDeath, true);
 	}
 
 	if (ConfigManager::instance()->useCovertOvertSystem()) {
@@ -4357,7 +4358,7 @@ void PlayerManagerImplementation::addInsurableItemsRecursive(SceneObject* obj, S
 		if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 			continue;
 
-		if (globalVariables::playerInsureWeaponsEnabled == false) {		
+		if (playerVars.playerInsureWeaponsEnabled == false) {		
 			if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
 				items->put(item);
 			} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
@@ -4399,7 +4400,7 @@ SortedVector<ManagedReference<SceneObject*> > PlayerManagerImplementation::getIn
 			if (item == nullptr || item->hasAntiDecayKit() || item->isJediRobe() || item->isUnionRing() || !item->isInsurable())
 				continue;
 
-			if (globalVariables::playerInsureWeaponsEnabled == false) {		
+			if (playerVars.playerInsureWeaponsEnabled == false) {		
 				if (!(item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject())) {
 					insurableItems.put(item);
 				} else if ((item->getOptionsBitmask() & OptionBitmask::INSURED) && (item->isArmorObject() || item->isWearableObject()) && !onlyInsurable) {
@@ -6411,7 +6412,7 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	}
 
 	if (player->hasBuff(STRING_HASHCODE("gallop")) || player->hasBuff(STRING_HASHCODE("burstrun")) || player->hasBuff(STRING_HASHCODE("retreat"))) {
-		if (globalVariables::playerBurstRunToggleEnabled) {
+		if (playerVars.playerBurstRunToggleEnabled) {
 			player->removeBuff(STRING_HASHCODE("burstrun"));
 			player->removePendingTask("burst_run_finished");
 		} else {
@@ -6421,8 +6422,8 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr) {
-					pet->setRunSpeed(pet->getRunSpeed() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+					pet->setRunSpeed(pet->getRunSpeed() / playerVars.playerBurstRunSpeedAndAccelerationModifier);
+					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / playerVars.playerBurstRunSpeedAndAccelerationModifier);
 				}
 			}
 		}	
@@ -6449,20 +6450,20 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		return false;
 	}
 
-	if (!player->checkCooldownRecovery("burstrun") && !globalVariables::playerBurstRunToggleEnabled && !ghost->isAdmin()) {
+	if (!player->checkCooldownRecovery("burstrun") && !playerVars.playerBurstRunToggleEnabled && !ghost->isAdmin()) {
 		player->sendSystemMessage("@combat_effects:burst_run_wait"); //You are too tired to Burst Run.
 		return false;
 	}
 
 	uint32 crc = STRING_HASHCODE("burstrun");
 	float hamCost = 0;
-	if (globalVariables::playerBurstRunToggleEnabled) {
-		hamCost = globalVariables::playerBurstRunHamCostPercent / 100;
+	if (playerVars.playerBurstRunToggleEnabled) {
+		hamCost = playerVars.playerBurstRunHamCostPercent / 100;
 	} else {
-		hamCost = globalVariables::playerBurstRunHamCost;
+		hamCost = playerVars.playerBurstRunHamCost;
 	}
-	float duration = globalVariables::playerBurstRunDuration;
-	float cooldown = globalVariables::playerBurstRunCoolDownTimer;
+	float duration = playerVars.playerBurstRunDuration;
+	float cooldown = playerVars.playerBurstRunCoolDownTimer;
 
 	float burstRunMod = (float) player->getSkillMod("burst_run");
 	hamModifier += (burstRunMod / 100.f);
@@ -6477,7 +6478,7 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	float actionCost = 0;
 	float mindCost = 0;
 	
-	if (globalVariables::playerBurstRunToggleEnabled) {
+	if (playerVars.playerBurstRunToggleEnabled) {
 		healthCost = player->getMaxHAM(CreatureAttribute::HEALTH) * (mountVars.mountPetGallopDamagePercent / 100);
 		actionCost = player->getMaxHAM(CreatureAttribute::ACTION) * (mountVars.mountPetGallopDamagePercent / 100);
 		mindCost = player->getMaxHAM(CreatureAttribute::MIND) * (mountVars.mountPetGallopDamagePercent / 100);
@@ -6513,8 +6514,8 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 
 	Locker locker(buff);
 
-	buff->setSpeedMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-	buff->setAccelerationMultiplierMod(globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+	buff->setSpeedMultiplierMod(playerVars.playerBurstRunSpeedAndAccelerationModifier);
+	buff->setAccelerationMultiplierMod(playerVars.playerBurstRunSpeedAndAccelerationModifier);
 
 	if (cooldownModifier == 0.f)
 		buff->setStartMessage(startStringId);
@@ -6535,8 +6536,8 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 		for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 			ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 			if (pet != nullptr) {
-				pet->setRunSpeed(pet->getRunSpeed() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-				pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() * globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+				pet->setRunSpeed(pet->getRunSpeed() * playerVars.playerBurstRunSpeedAndAccelerationModifier);
+				pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() * playerVars.playerBurstRunSpeedAndAccelerationModifier);
 			}
 		}
 	}
@@ -6546,7 +6547,7 @@ bool PlayerManagerImplementation::doBurstRun(CreatureObject* player, float hamMo
 	Reference<BurstRunFinishedEvent*> finishTask = new BurstRunFinishedEvent(player);
 	player->addPendingTask("burst_run_finished", finishTask, (duration * 1000));
 
-	if (!globalVariables::playerBurstRunToggleEnabled) {
+	if (!playerVars.playerBurstRunToggleEnabled) {
 		Reference<BurstRunNotifyAvailableEvent*> task = new BurstRunNotifyAvailableEvent(player);
 		player->addPendingTask("burst_run_notify", task, (newCooldown + duration) * 1000);
 	}

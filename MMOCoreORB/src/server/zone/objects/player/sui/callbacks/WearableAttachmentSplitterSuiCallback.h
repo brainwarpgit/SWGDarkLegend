@@ -17,7 +17,8 @@
 #include "server/zone/objects/tangible/attachment/Attachment.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootGroupMap.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 
 class WearableAttachmentSplitterSuiCallback : public SuiCallback {
 	ManagedWeakReference<WearableObject*> wearableObject;

@@ -19,7 +19,7 @@
 #include "server/zone/managers/player/PlayerManager.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 void VehicleControlDeviceImplementation::generateObject(CreatureObject* player) {
 	if (player->isDead() || player->isIncapacitated())
@@ -319,7 +319,7 @@ void VehicleControlDeviceImplementation::fillAttributeList(AttributeListMessage*
 		return;
 
 	if (mountVars.mountVehicleShowVehicleSpeedEnabled) {
-		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(vehicle->getRunSpeed() * globalVariables::playerSpeedMultiplier));
+		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(vehicle->getRunSpeed() * playerVars.playerSpeedMultiplier));
 	}
 	if (vehicle->getPaintCount() > 0) {
 		alm->insertAttribute("customization_cnt", vehicle->getPaintCount());

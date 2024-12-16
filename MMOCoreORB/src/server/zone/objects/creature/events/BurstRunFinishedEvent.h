@@ -8,7 +8,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 class BurstRunFinishedEvent : public Task {
 	ManagedWeakReference<CreatureObject*> creo;
@@ -32,8 +32,8 @@ public:
 			for (int i = 0; i < ghost->getActivePetsSize(); i++) {
 				ManagedReference<AiAgent*> pet = ghost->getActivePet(i);
 				if (pet != nullptr) {
-					pet->setRunSpeed(pet->getRunSpeed() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
-					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / globalVariables::playerBurstRunSpeedAndAccelerationModifier);
+					pet->setRunSpeed(pet->getRunSpeed() / playerVars.playerBurstRunSpeedAndAccelerationModifier);
+					pet->setAccelerationMultiplierMod(pet->getAccelerationMultiplierMod() / playerVars.playerBurstRunSpeedAndAccelerationModifier);
 				}
 			}
 		}

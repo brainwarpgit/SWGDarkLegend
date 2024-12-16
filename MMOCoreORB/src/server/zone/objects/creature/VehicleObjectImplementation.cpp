@@ -19,7 +19,7 @@
 #include "templates/customization/AssetCustomizationManagerTemplate.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 void VehicleObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	if (!player->getPlayerObject()->isPrivileged() && linkedCreature != player)
@@ -35,7 +35,7 @@ void VehicleObjectImplementation::fillObjectMenuResponse(ObjectMenuResponse* men
 void VehicleObjectImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object){
 
 	if (mountVars.mountVehicleShowVehicleSpeedEnabled) {
-		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(getRunSpeed() * globalVariables::playerSpeedMultiplier));
+		alm->insertAttribute("@obj_attr_n:vehicle_speed", std::to_string(getRunSpeed() * playerVars.playerSpeedMultiplier));
 	}
 	
 	alm->insertAttribute("armorrating", "@obj_attr_n:armor_pierce_none"); //None

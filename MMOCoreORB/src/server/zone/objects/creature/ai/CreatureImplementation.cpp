@@ -15,7 +15,7 @@
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
 
 #include "server/zone/managers/variables/harvestVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 //#define DEBUG
 
@@ -47,7 +47,7 @@ void CreatureImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResp
 			menuResponse->addRadialMenuItemToRadialID(112, 236, 3, "@sui:harvest_bone");
 	}
 
-	if (canTameMe(player) && player->hasSkill("outdoors_creaturehandler_novice") && getChanceToTame(player) >= globalVariables::playerMaxLevelNonCHMount) {
+	if (canTameMe(player) && player->hasSkill("outdoors_creaturehandler_novice") && getChanceToTame(player) >= playerVars.playerMaxLevelNonCHMount) {
 		menuResponse->addRadialMenuItem(159, 3, "@pet/pet_menu:menu_tame");
 	}
 }

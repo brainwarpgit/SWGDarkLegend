@@ -13,7 +13,8 @@
 #include "server/zone/objects/player/sessions/SlicingSession.h"
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/zone/objects/player/sui/callbacks/WeaponAttachmentSplitterSuiCallback.h"
-#include "server/globalVariables.h"
+
+#include "server/zone/managers/variables/playerVariables.h"
 
 void WeaponObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 
@@ -36,7 +37,7 @@ void WeaponObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject,
 	}
 	
 	PlayerObject* ghost = player->getPlayerObject();
-	if ((sceneObject->isWeaponObject() && !weapon->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_weaponsmith_master") && globalVariables::playerWeaponAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !weapon->isEquipped() && !player->isInCombat())) {
+	if ((sceneObject->isWeaponObject() && !weapon->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_weaponsmith_master") && playerVars.playerWeaponAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !weapon->isEquipped() && !player->isInCombat())) {
 		if (weapon != nullptr) {
 			const VectorMap<String, int>* skillMods = weapon->getWearableSkillMods();
 			if (skillMods->size() >= 1) {
@@ -120,7 +121,7 @@ int WeaponObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject, 
 					for (int i = 0; i < skillMods->size(); i++) {
 						auto key = skillMods->elementAt(i).getKey();
 						auto value = skillMods->elementAt(i).getValue();
-						jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+						jobCost += value * playerVars.playerAttachmentSplittingCostPerPoint;
 						sortedMods.put(ModSortingHelper(key, value));
 					}
 					sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in your BANK account.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.  The original item will be lost.");

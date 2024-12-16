@@ -22,7 +22,7 @@
 #include "server/zone/objects/player/sui/callbacks/WearableAttachmentSplitterSuiCallback.h"
 
 #include "server/zone/managers/variables/equipableVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObject, ObjectMenuResponse* menuResponse, CreatureObject* player) const {
 	if (!sceneObject->isTangibleObject())
@@ -60,7 +60,7 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	
 	PlayerObject* ghost = player->getPlayerObject();
 	if (wearable != nullptr) {
-		if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && !wearable->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_tailor_master") && globalVariables::playerClothingAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !wearable->isEquipped() && !player->isInCombat())) {
+		if ((sceneObject->isWearableObject() && !sceneObject->isArmorObject() && !wearable->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_tailor_master") && playerVars.playerClothingAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !wearable->isEquipped() && !player->isInCombat())) {
 			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
 			if (skillMods->size() >= 1) {
 				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");
@@ -69,7 +69,7 @@ void WearableObjectMenuComponent::fillObjectMenuResponse(SceneObject* sceneObjec
 	}
 	
 	if (wearable != nullptr) {
-		if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && !wearable->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_armorsmith_master") && globalVariables::playerArmorAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !wearable->isEquipped() && !player->isInCombat())) {
+		if ((sceneObject->isWearableObject() && sceneObject->isArmorObject() && !wearable->isEquipped() && !player->isInCombat() && player->hasSkill("crafting_armorsmith_master") && playerVars.playerArmorAttachmentSplittingEnabled) || (ghost != nullptr && ghost->isAdmin() && !wearable->isEquipped() && !player->isInCombat())) {
 			VectorMap<String, int>* skillMods = wearable->getWearableSkillMods();
 			if (skillMods->size() >= 1) {
 				menuResponse->addRadialMenuItem(80, 3, "Split Modifiers");
@@ -156,7 +156,7 @@ int WearableObjectMenuComponent::handleObjectMenuSelect(SceneObject* sceneObject
 				for (int i = 0; i < skillMods->size(); i++) {
 					auto key = skillMods->elementAt(i).getKey();
 					auto value = skillMods->elementAt(i).getValue();
-					jobCost += value * globalVariables::playerAttachmentSplittingCostPerPoint;
+					jobCost += value * playerVars.playerAttachmentSplittingCostPerPoint;
 					sortedMods.put(ModSortingHelper(key, value));
 				}
 				sui->setPromptText("Below are the Skill Mods that will be created in your inventory.  The cost is " + std::to_string(jobCost) + " credits.  Which is 1000 credits per Skill Mod Point. Credits must be available in your BANK account.\n\nWARNING:  This action could delete the current mod whether the function is successful or not.  The original item will be lost.");

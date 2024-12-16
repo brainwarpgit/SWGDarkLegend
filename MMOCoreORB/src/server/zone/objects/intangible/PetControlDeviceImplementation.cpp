@@ -32,8 +32,7 @@
 
 #include "server/zone/managers/variables/creatureVariables.h"
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
-
+#include "server/zone/managers/variables/playerVariables.h"
 
 void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	if ((player->isInCombat() && mountVars.mountPetCallInCombatEnabled == false) || player->isDead() || player->isIncapacitated() || player->getPendingTask("tame_pet") != nullptr) {
@@ -172,7 +171,7 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player) {
 	int currentlySpawned = 0;
 	int spawnedLevel = 0;
 	int maxPets = 1;
-	int maxLevelofPets = globalVariables::playerMaxLevelNonCHMount;
+	int maxLevelofPets = playerVars.playerMaxLevelNonCHMount;
 	int level = pet->getLevel();
 
 	if (pet->getCreatureTemplate() == nullptr) {
@@ -416,7 +415,7 @@ void PetControlDeviceImplementation::spawnObject(CreatureObject* player) {
 		if (trainedAsMount || creature->isMount()) {
 			creature->setOptionBit(0x1000);
 			if (mountVars.mountPetAllMountsUsedByAnyone == true) {
-				if (!ch && creature->getLevel() > globalVariables::playerMaxLevelNonCHMount) {
+				if (!ch && creature->getLevel() > playerVars.playerMaxLevelNonCHMount) {
 					pet->addObjectFlag(ObjectFlag::NOAIAGGRO);
 					creature->setOptionBit(OptionBitmask::INVULNERABLE);
 				} else {
@@ -870,7 +869,7 @@ bool PetControlDeviceImplementation::canBeTradedTo(CreatureObject* player, Creat
 
 		int numberStored = numberInTrade;
 		int maxStoredPets = playerManager->getBaseStoredCreaturePets();
-		int maxLevelofPets = globalVariables::playerMaxLevelNonCHMount;
+		int maxLevelofPets = playerVars.playerMaxLevelNonCHMount;
 		int level = pet->getAdultLevel();
 		bool ch = receiver->hasSkill("outdoors_creaturehandler_novice");
 

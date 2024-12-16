@@ -18,7 +18,7 @@
 #include "server/zone/objects/tangible/components/EventPerkDataComponent.h"
 
 #include "server/zone/managers/variables/lootVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 class GiveItemCommand : public QueueCommand {
 public:
@@ -110,7 +110,7 @@ public:
 				return GENERALERROR;
 			}
 			
-			if (globalVariables::playerAttachmentApplicationModEnabled) {
+			if (playerVars.playerAttachmentApplicationModEnabled) {
 				VectorMap<String, int>* skillModifiers = attachment->getSkillMods();
 				VectorMap<String, int>* wearableSkillModifiers = wearable->getWearableSkillMods();
 				bool attachmentExists = false;

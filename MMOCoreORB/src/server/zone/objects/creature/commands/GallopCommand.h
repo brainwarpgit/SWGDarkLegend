@@ -11,7 +11,7 @@
 #include "server/zone/objects/creature/events/GallopFinishedEvent.h"
 
 #include "server/zone/managers/variables/mountVariables.h"
-#include "server/globalVariables.h"
+#include "server/zone/managers/variables/playerVariables.h"
 
 class GallopCommand : public QueueCommand {
 public:
@@ -115,7 +115,7 @@ public:
 		buff->setStartMessage(startStringId);
 		buff->setEndMessage(endStringId);
 		if (!mountVars.mountPetSpeedSameAsPlayerEnabled) {
-			creature->setRunSpeed(runSpeed * globalVariables::playerSpeedMultiplier);
+			creature->setRunSpeed(runSpeed * playerVars.playerSpeedMultiplier);
 			buff->setSpeedMultiplierMod(magnitude);
 			buff->setAccelerationMultiplierMod(magnitude);
 			creature->addBuff(buff);
