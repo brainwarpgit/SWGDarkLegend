@@ -1,5 +1,6 @@
 #include "server/zone/managers/watcher/variableWatcher.h"
 #include "server/zone/managers/variables/lootVariables.h"
+#include "server/zone/managers/variables/creatureVariables.h"
 #include "engine/lua/Lua.h"
 #include <sys/stat.h>
 #include <thread>
@@ -69,12 +70,12 @@ bool LootVariables::loadConfigData() {
 		if (lua->getGlobalFloat("lootCreditMultiplier") > 0) lootVars.lootCreditMultiplier = lua->getGlobalFloat("lootCreditMultiplier");
 		if (lua->getGlobalInt("lootAttachmentMax") > 0) lootVars.lootAttachmentMax = lua->getGlobalInt("lootAttachmentMax");
 		if (lua->getGlobalInt("lootAttachmentMin") > 0) lootVars.lootAttachmentMin = lua->getGlobalInt("lootAttachmentMin");
-		if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0 && lua->getGlobalInt("lootAttachmentMaxLevel") <= lua->getGlobalInt("creatureMaxLevel")) lootVars.lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
+		if (lua->getGlobalInt("lootAttachmentMaxLevel") > 0 && lua->getGlobalInt("lootAttachmentMaxLevel") <= creatureVars.creatureMaxLevel) lootVars.lootAttachmentMaxLevel = lua->getGlobalInt("lootAttachmentMaxLevel");
 		if (lua->getGlobalInt("lootAttachmentModCount") > 0) lootVars.lootAttachmentModCount = lua->getGlobalInt("lootAttachmentModCount");
 		if (lua->getGlobalInt("lootDropAttachmentModCount") > 0) lootVars.lootDropAttachmentModCount = lua->getGlobalInt("lootDropAttachmentModCount");
 		if (lua->getGlobalBoolean("lootAttachmentNameEnabled") == true || lua->getGlobalBoolean("lootAttachmentNameEnabled") == false) lootVars.lootAttachmentNameEnabled = lua->getGlobalBoolean("lootAttachmentNameEnabled");
 		if (lua->getGlobalBoolean("lootCreditLuckModifier") == true || lua->getGlobalBoolean("lootCreditLuckModifier") == false) lootVars.lootCreditLuckModifier = lua->getGlobalBoolean("lootCreditLuckModifier");
-		if (lua->getGlobalInt("lootMaxLevel") > 0 && lua->getGlobalInt("lootMaxLevel") <= lua->getGlobalInt("creatureMaxLevel")) lootVars.lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
+		if (lua->getGlobalInt("lootMaxLevel") > 0 && lua->getGlobalInt("lootMaxLevel") <= creatureVars.creatureMaxLevel) lootVars.lootMaxLevel = lua->getGlobalInt("lootMaxLevel");
 		if (lua->getGlobalInt("lootMinLevel") > 0 && lua->getGlobalInt("lootMinLevel") < lua->getGlobalInt("lootMaxLevel")) lootVars.lootMinLevel = lua->getGlobalInt("lootMinLevel");
 		if (lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == true || lua->getGlobalBoolean("lootShowForceCostDecimalEnabled") == false) lootVars.lootShowForceCostDecimalEnabled = lua->getGlobalBoolean("lootShowForceCostDecimalEnabled");
 		if (lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == true || lua->getGlobalBoolean("lootRareColorCrystalsEnabled") == false) lootVars.lootRareColorCrystalsEnabled = lua->getGlobalBoolean("lootRareColorCrystalsEnabled");

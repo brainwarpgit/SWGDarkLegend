@@ -392,7 +392,7 @@ float LootManagerImplementation::setRandomLootValues(TransactionLog& trx, Tangib
 
 	auto lootValues = LootValues(itemTemplate, level, modifier, creatureDifficulty, luckSkill, prototype);
 	prototype->updateCraftingValues(&lootValues, true);
-	prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
+	//prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
 	return modifier;
 
 #ifdef LOOTVALUES_DEBUG
@@ -482,13 +482,13 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	chance += (creatureDifficulty * 25) + (creatureDifficulty * luckSkill);
 	float excMod = baseModifier;
 
-	/*if (System::random(legendaryChance) <= chance) {
+	if (System::random(legendaryChance) <= chance) {
 		excMod = legendaryModifier;
 	} else if (System::random(exceptionalChance) <= chance) {
 		excMod = exceptionalModifier;
 	} else if (System::random(yellowChance) <= chance && lootVars.lootYellowModifierNameEnabled == true) {
 		excMod = yellowModifier;
-	}*/
+	}
 
 #ifdef DEBUG_LOOT_MAN
 	info(true) << "Exceptional Modifier (excMod) = " << excMod << "  chance = " << chance;
@@ -895,7 +895,7 @@ bool LootManagerImplementation::createLootFromCollection(TransactionLog& trx, Sc
 
 	int lootRolls = creatureDifficulty;
 
-	for (int x = 0; x < 20; ++x) {
+	for (int x = 0; x < lootRolls; ++x) {
 		for (int i = 0; i < lootCollection->count(); ++i) {
 			const LootGroupCollectionEntry* collectionEntry = lootCollection->get(i);
 			int lootChance = collectionEntry->getLootChance() * lootVars.lootChanceMultiplier;
@@ -1284,29 +1284,13 @@ float LootManagerImplementation::getRandomModifier(const LootItemTemplate* itemT
 		modMin = 0.f;
 	}
 
-	//float scalingFactor = (float)level / creatureVars.creatureMaxLevel;
-	//float adjustedStatsCD = (float)(scalingFactor * creatureDifficulty);
-	//float minStatCD = creatureDifficulty - (creatureDifficulty * 0.075f);
-	//float maxStatCD = creatureDifficulty + (creatureDifficulty * 0.125f);
-	int modCDRoll = System::random(creatureDifficulty);
-	int modCD = Math::max(1,modCDRoll);
+	float levelMod = (float)(Math::clamp(lootVars.lootMinLevel, level, lootVars.lootMaxLevel) / 100.0f);
 	
-	//float adjustedStatsMax = (float)(scalingFactor * modMax);
-	//float adjustedStatsMin = (float)(scalingFactor * modMin);
-	//float maxStatMin = (adjustedStatsMax + adjustedLuckSkill) - (adjustedStatsMax + adjustedLuckSkill) * 0.075f;
-	//float maxStatMax = (adjustedStatsMax + adjustedLuckSkill) + (adjustedStatsMax + adjustedLuckSkill) * 0.125f;
-	//float minStatLuck = (luckSkill - (luckSkill * 0.075f)) / 10;
-	//float maxStatLuck = (luckSkill + (luckSkill * 0.125f)) / 10;
-	float modLuck = System::random(luckSkill / 10);
-		
-	//modMax = System::random(maxStatMax - maxStatMin) + maxStatMin;
-	//float minStatMin = (adjustedStatsMin + adjustedLuckSkill) - (adjustedStatsMin + adjustedLuckSkill) * 0.075f;
-	//float minStatMax = (adjustedStatsMin + adjustedLuckSkill) + (adjustedStatsMin + adjustedLuckSkill) * 0.125f;
-	//modMin = System::random(minStatMax - minStatMin) + minStatMin;
-	
-	modMax += modLuck + modCD + baseModifier;
-	modMin += modLuck + modCD + baseModifier;
-	//Logger::console.info("modLuck " + std::to_string(modLuck) + " modCD " + std::to_string(modCD) + " baseModifier " + std::to_string(baseModifier) + " modMax " + std::to_string(modMax) + " modMin " + std::to_string(modMin),true);
-	//return modMax == modMin ? modMin : LootValues::getDistributedValue(modMin, modMax, level) + baseModifier;
-	return System::random(modMax - modMin) + modMin;
+	modMax += (creatureDifficulty - 1) + levelMod;
+	modMin += (creatureDifficulty - 1) + levelMod;
+
+	float rollChance = (System::random(1000)/(1000.0f - luckSkill));
+	float modifier = modMin + rollChance * (modMax-modMin);
+	//Logger::console.info("itemTemplate" + itemTemplate->getTemplateName() + " luckSkill " + std::to_string(luckSkill) + " rollChance " + std::to_string(rollChance) + " levelMod " + std::to_string(levelMod) + " CD " + std::to_string(creatureDifficulty - 1) + " excMod " + std::to_string(excMod) + " modMax " + std::to_string(modMax) + " modMin " + std::to_string(modMin) + " modifier " + std::to_string(modifier),true);
+	return modifier;
 }

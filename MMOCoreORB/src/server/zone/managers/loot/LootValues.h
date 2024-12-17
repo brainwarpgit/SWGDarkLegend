@@ -57,7 +57,8 @@ public:
 	}
 
 	void setModifier(float lootModifier) {
-		modifier = Math::clamp((float)(STATIC), lootModifier, (float)(lootVars.lootLegendaryDamageModifier + lootVars.lootBaseDamageModifier));
+		//modifier = Math::clamp((float)(STATIC), lootModifier, (float)(lootVars.lootLegendaryDamageModifier + lootVars.lootBaseDamageModifier));
+		modifier = lootModifier;
 	}
 
 	void setLevel(int lootLevel) {
