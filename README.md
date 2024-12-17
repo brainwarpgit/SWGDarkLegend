@@ -1,8 +1,8 @@
 # SWGDarkLegend is a project I have been working on for quite a while now.   I wanted to build a version of SWG that was easy for people to work with.   It was originally intended to be a solo play server, but after working on it, its really setup to be any type of server.  
 
-Before we get started I would like to give a shout out to the projects that inspired alot of the changes.   I tried not to just blatantly copy any code, but sometimes, it was already the best way to accomplish the goal.  No assets from any project were taken.  Only assets from MTG tres are used.
+Before we get started I would like to give a shout out to the projects that inspired alot of the changes.   I tried not to just blatantly copy any code, but sometimes, it was already the best way to accomplish the goal.  Most everything was pulled from suggestions just to see if I could make it work.  No assets from any project were taken.  Only assets from MTG tres are used.
 
-SWGEMU Core3 Team, Mod the Galaxy, Empire in Flames, Infinity, Attack of the Clones, Cyvster's Solo, YOURSWG(mySWG), Flurry, Tarkins Revenge, Legend of Hondo, SmashSWG, SWG Animus, and I'm sure that is more, but thats what I have in my list.
+SWGEMU Core3 Team, Mod the Galaxy, Empire in Flames, Infinity, Attack of the Clones, Cyvster's Solo, YOURSWG(mySWG), Flurry, Tarkins Revenge, Legend of Hondo, SmashSWG, SWG Animus, and I'm sure there is more, but thats what I have in my list.
 
 SWGDarkLegend is based on the current Core3 platform released by SWGEMU.   The tre files are based on ModTheGalaxy and custom tre built specifically for SWGDarkLegend.
 
@@ -10,7 +10,9 @@ My ultimate goal for this release was to just have fun!   I enjoy codings and lo
 
 Some things I have been able to accomplish that are different than other servers.  (Some of these may be child play, others took some time)
 
-1.  There is a globalVariables setup where things can be changed quickly and "only the fly".  No need for server restarts to change xp rates for example.
+There is a tre file that I have built for certain things in the game.   I will try to get it hosted somewhere with the required changes to use the features.
+
+1.  There is a VaribleWatcher setup where things can be changed quickly and "only the fly". These are setup in different variable types professions/player/creature/etc. No need for server restarts to change xp rates for example.   I tried to tie most if not all changes to these variables in some form.
 
 2.  Beginning items are no achieved during the Helper Droid quest line versus being given to you.   OR you can get a base set of items from the DL Services Terminal outside any starport.
 
@@ -22,7 +24,7 @@ Some things I have been able to accomplish that are different than other servers
 
 6.  Added Elite / Heroic spawns to all facets of the game.   These creatures have higher stats than normal creatures and reward accordingly.
 
-7.  Adjustable Cave, POI, and dungeon difficulty through the new globalVariables.  (server restart on changes)
+7.  Adjustable Cave, POI, and Dungeon difficulty through the new Variables system    cdpVariables.  (server restart on changes)
 
 8.  Added craftingCraftedItemsBetterThanLootEnabled variable to attempt to keep looted items subpar to crafted items.
 
@@ -36,15 +38,15 @@ Some things I have been able to accomplish that are different than other servers
 
 13.  Jedi Knight Trials now requires mastery of 3 Jedi Disciplines.   Not required to go overt for trials.
 
-14.  Weapon Type damage multlipliers in globalVariables
+14.  Weapon Type damage multlipliers in combatVariables
 
-15.  All XP type multipliers in globalVariables
+15.  All XP type multipliers in playerXpVariables
 
 16.  Add missionRandomAttack to Mission Terminals.   You can set the level and speed at which you will be attacked.   This is available to all players.
 
-17.  You can now craft while Entertaining.   globalVariables
+17.  You can now craft while Entertaining.   craftingVariables
 
-18.  Player / Pet / Vehicle speed modifiers in globalVariables.  (mySWG Inspiration)  BUT petSpeedSameAsPlayer in globalVariables will allow you pets to keep up with you at all times.   Including Force Run / Burst Run / Gallop / Vehicles etc..
+18.  Player / Pet / Vehicle speed modifiers in mountVariables and playerVariables.  (mySWG Inspiration)  BUT petSpeedSameAsPlayer in mountVariables will allow you pets to keep up with you at all times.   Including Force Run / Burst Run / Gallop / Vehicles etc..
 
 19.  Gallop and Burst Run are toggable.  (HAM damage)
 
@@ -53,6 +55,8 @@ Some things I have been able to accomplish that are different than other servers
 21.  Wearables/Armor/Weapon Attachment Splitting.   Allows you to split the attachments from these items at the expense of losing the item.
 
 22.  Critical Damage / Sampling / Healing / Harvesting now in game along with new CA/AA.
+
+23.  Force Crystals Renamed and Color added to name of color crystals.
 
 # SWGEmu Core3: Recreating the Classic Star Wars Galaxies Experience
 
