@@ -72,10 +72,10 @@ bool MountVariables::loadConfigData() {
 		if (lua->getGlobalBoolean("mountPetAllMountsUsedByAnyone") == true || lua->getGlobalBoolean("mountPetAllMountsUsedByAnyone") == false) mountVars.mountPetAllMountsUsedByAnyone = lua->getGlobalBoolean("mountPetAllMountsUsedByAnyone");
 		if (lua->getGlobalBoolean("mountPetCallInCombatEnabled") == true || lua->getGlobalBoolean("mountPetCallInCombatEnabled") == false) mountVars.mountPetCallInCombatEnabled = lua->getGlobalBoolean("mountPetCallInCombatEnabled");
 		if (lua->getGlobalFloat("mountPetDamageMultiplier") > 0) mountVars.mountPetDamageMultiplier = lua->getGlobalFloat("mountPetDamageMultiplier");
-		if (lua->getGlobalBoolean("mountPetSpeedSameAsmountPetEnabled") == true || lua->getGlobalBoolean("mountPetSpeedSameAsmountPetEnabled") == false) mountVars.mountPetSpeedSameAsPlayerEnabled = lua->getGlobalBoolean("mountPetSpeedSameAsmountPetEnabled");
+		if (lua->getGlobalBoolean("mountPetSpeedSameAsPlayerEnabled") == true || lua->getGlobalBoolean("mountPetSpeedSameAsPlayerEnabled") == false) mountVars.mountPetSpeedSameAsPlayerEnabled = lua->getGlobalBoolean("mountPetSpeedSameAsPlayerEnabled");
 		if (lua->getGlobalBoolean("mountPetGallopToggleEnabled") == true || lua->getGlobalBoolean("mountPetGallopToggleEnabled") == false) mountVars.mountPetGallopToggleEnabled = lua->getGlobalBoolean("mountPetGallopToggleEnabled");
 		if (lua->getGlobalFloat("mountPetGallopDamagePercent") >= 0 && lua->getGlobalFloat("mountPetGallopDamagePercent") <= 100) mountVars.mountPetGallopDamagePercent = lua->getGlobalFloat("mountPetGallopDamagePercent");
-
+		
 		//Vehicle 
 		if (lua->getGlobalInt("mountVehicleBaseDecayCycle") >= 0) mountVars.mountVehicleBaseDecayCycle = lua->getGlobalInt("mountVehicleBaseDecayCycle");
 		if (lua->getGlobalInt("mountVehicleBaseDecayRate") >= 0) mountVars.mountVehicleBaseDecayRate = lua->getGlobalInt("mountVehicleBaseDecayRate");

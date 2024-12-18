@@ -77,7 +77,7 @@ veteranRewardAdditionalMilestones = 1 --frequency, in days, of additional milest
 veteranRewards = {
 
 		-- 0 Day Rewards
-		{templateFile = "object/tangible/veteran_reward/harvester.iff", milestone=0, oneTime=false, description="@veteran_new:poweredharvester", jtlReward = false},
+		--{templateFile = "object/tangible/veteran_reward/harvester.iff", milestone=0, oneTime=false, description="@veteran_new:poweredharvester", jtlReward = false},
 		{templateFile = "object/tangible/veteran_reward/data_terminal_s1.iff", milestone=0, oneTime=false, description="@veteran_new:dataterminal1", jtlReward = false},
 		{templateFile = "object/tangible/veteran_reward/data_terminal_s2.iff", milestone=0, oneTime=false, description="@veteran_new:dataterminal2", jtlReward = false},
 		{templateFile = "object/tangible/veteran_reward/data_terminal_s3.iff", milestone=0, oneTime=false, description="@veteran_new:dataterminal3", jtlReward = false},

@@ -66,6 +66,7 @@ public:
 		if (mount->hasBuff(crc) || creature->hasBuff(crc)) {
 			if (mountVars.mountPetGallopToggleEnabled) {
 				creature->removeBuff(STRING_HASHCODE("gallop"));
+				mount->updateCooldownTimer("gallop",0);
 				creature->removePendingTask("gallop_finished");
 				creature->setRunSpeed(creature->getRunSpeed() / magnitude);
 				creature->setAccelerationMultiplierMod(creature->getAccelerationMultiplierMod() / magnitude);

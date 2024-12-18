@@ -5,6 +5,8 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/intangible/ControlDevice.h"
 
+#include "server/zone/managers/variables/mountVariables.h"
+
 class CallPetTask : public Task {
 	ManagedReference<CreatureObject*> player;
 	ManagedReference<PetControlDevice*> device;
@@ -23,7 +25,7 @@ public:
 
 		player->removePendingTask("call_pet");
 
-		if(player->isInCombat())
+		if(player->isInCombat() && !mountVars.mountPetCallInCombatEnabled)
 			return;
 
 		Locker locker2(device);

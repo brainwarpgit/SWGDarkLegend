@@ -1,6 +1,6 @@
 --Artisan
-artisanSamplingMultiplier = 10 --default 1
-artisanSamplingTime = 10 --default 25 in seconds
+professionArtisanSamplingMultiplier = 10 --default 1
+professionArtisanSamplingTime = 10 --default 25 in seconds
 professionArtisanSamplingMiniGameEnabled = false --default true
 professionArtisanSamplingRadioactiveWarningEnabled = false --default true
 professionArtisanSamplingCriticalEnabled = true --default false
@@ -19,7 +19,7 @@ professionCreatureHandlerSetDefaultPetCommandsEnabled = true --default false Mas
 professionEntertainerHealsAllWoundsEnabled = true --default false
 professionEntertainerWoundHealMultiplier = 10 --default 1
 professionEntertainerBuffDurationCustomEnabled = true --default false
-enterainerBuffDuration = 480  --default 130 in minutes
+professionEntertainerBuffDuration = 480  --default 130 in minutes
 professionEntertainerAllBuffsMusicOrDanceEnabled = true --default false
 professionEntertainerBuffSelfEnabled = true --default false
 professionEntertainerInstantBuffEnabled = true --default false
