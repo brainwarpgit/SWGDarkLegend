@@ -1,32 +1,45 @@
 # SWGDarkLegend is a project I have been working on for quite a while now.   I wanted to build a version of SWG that was easy for people to work with.   It was originally intended to be a solo play server, but after working on it, its really setup to be any type of server.  
 
+# This code is not being hosted at this time and currently there are no plans to host one.
+
 Before we get started I would like to give a shout out to the projects that inspired alot of the changes.   I tried not to just blatantly copy any code, but sometimes, it was already the best way to accomplish the goal.  Most everything was pulled from suggestions just to see if I could make it work.  No assets from any project were taken.  Only assets from MTG tres are used.
 
 SWGEMU Core3 Team, Mod the Galaxy, Empire in Flames, Infinity, Attack of the Clones, Cyvster's Solo, YOURSWG(mySWG), Flurry, Tarkins Revenge, Legend of Hondo, SmashSWG, SWG Animus, and I'm sure there is more, but thats what I have in my list.
 
 SWGDarkLegend is based on the current Core3 platform released by SWGEMU.   The tre files are based on ModTheGalaxy and custom tre built specifically for SWGDarkLegend.
 
+This build is based off of the update-wip branch on <a href="https://github.com/modthegalaxy/mtgserver">MTGServer</a>. (Thanks Hakry and the MTG Team)  You can download the tre files from this link.
+
+I have kept it up to date with SWGEMU Core3.
+
+I use the SWGEmu launcher to launch the game.
+
 My ultimate goal for this release was to just have fun!   I enjoy codings and looking through swg channel discords for recommendations and/or ideas and seeing if I can make it happen.   Some of these ideas I had on my own, which for me is honestly surprising.
+
+There is a tre file that I have built for certain things in the game.   You can download it here <a href="https://drive.google.com/file/d/1IZmZ3Vzqi8dOEc1qloD24M7UxS6bIzhv/view?usp=sharing">SWGDL_update_01.tre</a>
+
+I also have the swgemu_live.cfg available.  <a href="https://drive.google.com/file/d/12Lsg6REZ4f8kR6R8c--PXw1KvH0II0xL/view?usp=sharing">swgemu_live.cfg</a>
+
+My list of "patch notes" <a href="https://docs.google.com/document/d/15YycRalQSvf7pH6e_128wsscAuUSe9zM253E80z9BQc/edit?usp=sharing">Patch Notes</a>
 
 Some things I have been able to accomplish that are different than other servers.  (Some of these may be child play, others took some time)
 
-There is a tre file that I have built for certain things in the game.   I will try to get it hosted somewhere with the required changes to use the features.
-
 1.  There is a VaribleWatcher setup where things can be changed quickly and "only the fly". These are setup in different variable types professions/player/creature/etc. No need for server restarts to change xp rates for example.   I tried to tie most if not all changes to these variables in some form.
+    There are too many variables to list here.   You can find them in /bin/scripts/managers/variables/
 
-2.  Beginning items are no achieved during the Helper Droid quest line versus being given to you.   OR you can get a base set of items from the DL Services Terminal outside any starport.
+2.  Beginning items are now achieved during the Helper Droid quest line versus being given to you.   OR you can get a base set of items from the DL Services Terminal outside any starport.
 
 3.  Padawan Trials now grant jedi_general xp on completion.
 
 4.  The new Legendary/Exceptional modifiers system in Core3 now affects weapons and armor as well as components including Saber Crystals and Pearls.
 
-5.  Junk Dealer takes all items, but actually has a minium credit if no value is assigned during item creation.
+5.  Junk Dealer takes all items, but actually has a minimum credit if no value is assigned during item creation.
 
 6.  Added Elite / Heroic spawns to all facets of the game.   These creatures have higher stats than normal creatures and reward accordingly.
 
-7.  Adjustable Cave, POI, and Dungeon difficulty through the new Variables system    cdpVariables.  (server restart on changes)
+7.  Adjustable Cave, POI, and Dungeon difficulty through the new Variables system cdpVariables.  (server restart on changes)
 
-8.  Added craftingCraftedItemsBetterThanLootEnabled variable to attempt to keep looted items subpar to crafted items.
+8.  Added craftingCraftedItemsBetterThanLootEnabled variable to attempt to keep looted items subpar or better to crafted items. (preference)
 
 9.  Most NGE(/shudder) houses and vehicles are craftable in game and assigned to the appropriate profession.  I still work on adding anything I missed as I can.
 
