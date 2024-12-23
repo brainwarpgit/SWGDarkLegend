@@ -16,11 +16,11 @@ I use the SWGEmu launcher to launch the game.
 
 My ultimate goal for this release was to just have fun!   I enjoy codings and looking through swg channel discords for recommendations and/or ideas and seeing if I can make it happen.   Some of these ideas I had on my own, which for me is honestly surprising.
 
-There is a tre file that I have built for certain things in the game.   You can download it here <a href="https://drive.google.com/file/d/1IZmZ3Vzqi8dOEc1qloD24M7UxS6bIzhv/view?usp=sharing">SWGDL_update_01.tre</a>
+There is a tre file that I have built for certain things in the game.   You can download it here <a href="https://drive.google.com/file/d/1CGR0aHyZQ555MZDxYWvoLPvPnSYAPuOG/view?usp=sharing">SWGDL_update_01.tre</a>
 
-I also have the swgemu_live.cfg available.  <a href="https://drive.google.com/file/d/12Lsg6REZ4f8kR6R8c--PXw1KvH0II0xL/view?usp=sharing">swgemu_live.cfg</a>
+I also have the swgemu_live.cfg available.  <a href="https://drive.google.com/file/d/1yEMtPrwDug4wChCcY0Iiir7oTrEFrq6C/view?usp=sharing">swgemu_live.cfg</a>
 
-My list of "patch notes" <a href="https://docs.google.com/document/d/15YycRalQSvf7pH6e_128wsscAuUSe9zM253E80z9BQc/edit?usp=sharing">Patch Notes</a>
+My list of "patch notes" <a href="https://docs.google.com/document/d/1E8R_aI80gDDJ8Rh-KWY7JNdQYZVTu4HORhfY1USzgAw/edit?usp=sharing">Patch Notes</a>
 
 Some things I have been able to accomplish that are different than other servers.  (Some of these may be child play, others took some time)
 
