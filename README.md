@@ -8,7 +8,7 @@ SWGEMU Core3 Team, Mod the Galaxy, Empire in Flames, Infinity, Attack of the Clo
 
 SWGDarkLegend is based on the current Core3 platform released by SWGEMU.   The tre files are based on ModTheGalaxy and custom tre built specifically for SWGDarkLegend.
 
-This build is based off of the update-wip branch on <a href="https://github.com/modthegalaxy/mtgserver">MTGServer</a>. (Thanks Hakry and the MTG Team)  You can download the tre files from this link.
+This build is based off of the update-wip branch on <a href="https://github.com/ModTheGalaxy/mtgserver/tree/update-wip">MTGServer</a>. (Thanks Hakry and the MTG Team)  You can download the tre files from this <a href="https://drive.google.com/open?id=1yuJ26kdARCjXxpajgkv6EQaEEIanHD66">link</a>.
 
 I have kept it up to date with SWGEMU Core3.
 
@@ -21,6 +21,8 @@ There is a tre file that I have built for certain things in the game.   You can 
 I also have the swgemu_live.cfg available.  <a href="https://drive.google.com/file/d/1yEMtPrwDug4wChCcY0Iiir7oTrEFrq6C/view?usp=sharing">swgemu_live.cfg</a>
 
 My list of "patch notes" <a href="https://docs.google.com/document/d/1E8R_aI80gDDJ8Rh-KWY7JNdQYZVTu4HORhfY1USzgAw/edit?usp=sharing">Patch Notes</a>
+
+Join us on Discord <a href="https://discord.gg/sZvZBHJZNR">Link</a>.
 
 Some things I have been able to accomplish that are different than other servers.  (Some of these may be child play, others took some time)
 
