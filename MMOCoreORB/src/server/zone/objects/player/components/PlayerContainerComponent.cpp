@@ -15,6 +15,8 @@
 #include "server/zone/ZoneServer.h"
 #include "server/zone/managers/visibility/VisibilityManager.h"
 
+#include "server/zone/managers/variables/equipableVariables.h"
+
 int PlayerContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject* object, int containmentType, String& errorDescription) const {
 	CreatureObject* creo = dynamic_cast<CreatureObject*>(sceneObject);
 
@@ -31,7 +33,7 @@ int PlayerContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject
 			const auto races = tanoData->getPlayerRaces();
 			String race = creo->getObjectTemplate()->getFullTemplateString();
 
-			if (!races->contains(race.hashCode())) {
+			if (!races->contains(race.hashCode()) && !equipableVars.equipableWearablesAllPlayerRacesEnabled) {
 				errorDescription = "You lack the necessary requirements to wear this object";
 
 				return TransferErrorCode::PLAYERUSEMASKERROR;
@@ -39,7 +41,7 @@ int PlayerContainerComponent::canAddObject(SceneObject* sceneObject, SceneObject
 		}
 
 		if (creo->isPlayerCreature()) {
-			if (!wearable->isNeutral()) {
+			if (!wearable->isNeutral() && equipableVars.equipableWearablesFactionEnabled) {
 				if (wearable->isImperial() && (creo->getFactionStatus() == FactionStatus::ONLEAVE || !creo->isImperial())) {
 					errorDescription = "You lack the necessary requirements to wear this object";
 

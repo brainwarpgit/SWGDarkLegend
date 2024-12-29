@@ -10,8 +10,6 @@
 #include "templates/params/PaletteColorCustomizationVariables.h"
 #include "templates/params/RangedIntCustomizationVariables.h"
 
-#include "server/zone/managers/variables/equipableVariables.h"
-
 SharedTangibleObjectTemplate::SharedTangibleObjectTemplate() {
 	numberExperimentalProperties = new Vector<short>();
 	experimentalProperties = new Vector<String>();
@@ -127,10 +125,9 @@ void SharedTangibleObjectTemplate::parseVariableData(const String& varName, LuaO
 		insurable = Lua::getBooleanParameter(state);
 	} else if (varName == "jediRobe") {
 		jediRobe = Lua::getBooleanParameter(state);
-	} else if (varName == "faction" && equipableVars.equipableWearablesFactionEnabled) {
+	} else if (varName == "faction") {
 		String factionString = Lua::getStringParameter(state);
 		faction = factionString.toLowerCase().hashCode();
-		//info("FACTION: " + factionString + " " + std::to_string(faction) + " " + std::to_string(faction), true);	
 	} else if (varName == "junkDealerNeeded") {
 		junkDealerNeeded = Lua::getIntParameter(state);
 	} else if (varName == "junkValue") {
@@ -140,39 +137,19 @@ void SharedTangibleObjectTemplate::parseVariableData(const String& varName, LuaO
 	} else if (varName == "playerRaces") {
 		LuaObject races(state);
 
-		Lua* lua2 = new Lua();
-		lua2->init();			
-		lua2->runFile("scripts/managers/variables/equipable_variables.lua");
-		LuaObject luaObjectWearables = lua2->getGlobalObject("equipableWearablesAllPlayerRaces");
-		
 		// Inherited lists need to be tossed if a new list is about to be created
 		if (playerRaces->size() != 0) {
 			playerRaces->removeAll();
 		}
 
-		if (equipableVars.equipableWearablesAllPlayerRacesEnabled && luaObjectWearables.isValidTable()) {
-			if (races.getTableSize() != 0) {
-				//info("WEARABLES: Beginning Table Size = " + std::to_string(races.getTableSize()),true);
-				for (int i = 1; i <= luaObjectWearables.getTableSize(); ++i) {
-					String race = luaObjectWearables.getStringAt(i);
-					if (!playerRaces->contains(race.hashCode())) {
-						playerRaces->add(race.hashCode());
-						//info("HashCode: " + std::to_string(race.hashCode()) + " Race: " + race,true);
-					}
-				}
-				//info ("WEARABLES: Table Size after first for " + std::to_string(races.getTableSize()),true);
+		for (int i = 1; i <= races.getTableSize(); ++i) {
+			String race = races.getStringAt(i);
+
+			if (!playerRaces->contains(race.hashCode())) {
+				playerRaces->add(race.hashCode());
 			}
-		} else {
-			for (int i = 1; i <= races.getTableSize(); ++i) {
-				String race = races.getStringAt(i);
-				if (!playerRaces->contains(race.hashCode())) {
-					playerRaces->add(race.hashCode());
-					//info("WEARABLES: " + std::to_string(races.getTableSize()) + " " + std::to_string(race.hashCode()) + " " + race,true);
-				}
-			}		
-		}
+		}		
 		races.pop();
-		delete lua2;
 	} else if (varName == "skillMods") {
 		skillMods.removeAll();
 
