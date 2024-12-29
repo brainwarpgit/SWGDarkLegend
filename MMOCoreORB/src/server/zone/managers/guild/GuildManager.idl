@@ -63,7 +63,9 @@ class GuildManager extends ManagedService implements Logger {
 		chatManager = chatmanager;
 	}
 
-	public native void loadLuaConfig();
+	private native boolean loadLuaConfig();
+
+	public native void initialize();
 
 	public native void stop();
 

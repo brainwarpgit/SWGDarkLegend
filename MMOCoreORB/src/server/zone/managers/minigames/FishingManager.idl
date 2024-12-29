@@ -85,7 +85,7 @@ class FishingManager extends Observer implements Logger {
 
 	public native void initialize();
 
-	private native boolean loadConfigData();
+	public native boolean loadConfigData();
 
 	public int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2) {
 		if (eventType == ObserverEventType.POSITIONCHANGED) {

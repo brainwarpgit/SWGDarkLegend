@@ -27,32 +27,71 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "system/util/VectorMap.h"
 
-void FishingManagerImplementation::initialize() {
-	info("Loading configuration.");
+#include "server/zone/managers/watcher/managerWatcher.h"
 
-	if (!loadConfigData() && fishingEnabled) {
-		info("Failed to load configuration lua.");
-	}
+void FishingManagerImplementation::initialize() {
+	if ((!loadConfigData() && fishingEnabled) || (!loadConfigData() && !fishingEnabled)) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	} 
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadConfigData();
+			},
+		"fishing_manager");
+	});
+	reloadThread.detach();
+
 }
 
 bool FishingManagerImplementation::loadConfigData() {
+	const std::string luaFilePath = "scripts/managers/fishing_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
+
 	Lua* lua = new Lua();
 	lua->init();
 
-	if (!lua->runFile("scripts/managers/fishing_manager.lua")) {
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
 		delete lua;
+		lua = nullptr;
 		return false;
+		
 	}
 
 	fishingEnabled = lua->getGlobalBoolean("fishingEnabled");
 
 	if (!fishingEnabled) {
-		info("Fishing is disabled.");
+		info("Fishing is disabled.", true);
 		return false;
+	} else {
+		info("Fishing is enabled.", true);
 	}
 
 	LuaObject fishTypes = lua->getGlobalObject("fishTypes");
-
+	
+	fishType = Vector<String>();
+	
 	if (fishTypes.isValidTable()) {
 		for (int i = 1; i <= fishTypes.getTableSize(); ++i) {
 			String fishName = fishTypes.getStringAt(i);
@@ -62,9 +101,11 @@ bool FishingManagerImplementation::loadConfigData() {
 	}
 	fishTypes.pop();
 
-	info("Loaded a total of " + String::valueOf(fishType.size()) + " Fish Species.");
+	info("Loaded a total of " + String::valueOf(fishType.size()) + " Fish Species.", true);
 
 	LuaObject colors = lua->getGlobalObject("fishColors");
+	
+	fishColors = VectorMap<String, int>();
 
 	if (colors.isValidTable()) {
 		for (int i = 1; i <= colors.getTableSize(); ++i) {
@@ -81,9 +122,11 @@ bool FishingManagerImplementation::loadConfigData() {
 	}
 	colors.pop();
 
-	info("Loaded Fish Colors for " + String::valueOf(fishColors.size()) + " Planets.");
+	info("Loaded Fish Colors for " + String::valueOf(fishColors.size()) + " Planets.", true);
 
 	LuaObject lengths = lua->getGlobalObject("fishLengths");
+
+	fishLengths = VectorMap<String, float>();
 
 	if (lengths.isValidTable()) {
 		for (int i = 1; i <= lengths.getTableSize(); ++i) {
@@ -100,9 +143,11 @@ bool FishingManagerImplementation::loadConfigData() {
 	}
 	lengths.pop();
 
-	info("Loaded " + String::valueOf(fishLengths.size()) + " fish lengths.");
+	info("Loaded " + String::valueOf(fishLengths.size()) + " fish lengths.", true);
 
 	LuaObject actions = lua->getGlobalObject("fishingActions");
+
+	fishingActions = Vector<String>();
 
 	if (actions.isValidTable()) {
 		for (int i = 1; i <= actions.getTableSize(); ++i) {
@@ -113,9 +158,11 @@ bool FishingManagerImplementation::loadConfigData() {
 	}
 	actions.pop();
 
-	info("Loaded " + String::valueOf(fishingActions.size()) + " Fishing Actions.");
+	info("Loaded " + String::valueOf(fishingActions.size()) + " Fishing Actions.", true);
 
 	LuaObject states = lua->getGlobalObject("fishingStates");
+
+	fishingStates = Vector<String>();
 
 	if (states.isValidTable()) {
 		for (int i = 1; i <= states.getTableSize(); ++i) {
@@ -126,9 +173,11 @@ bool FishingManagerImplementation::loadConfigData() {
 	}
 	states.pop();
 
-	info("Loaded " + String::valueOf(fishingStates.size()) + " Fishing States.");
+	info("Loaded " + String::valueOf(fishingStates.size()) + " Fishing States.", true);
 
 	LuaObject baitStat = lua->getGlobalObject("baitStatus");
+
+	baitStatus = Vector<String>();
 
 	if (baitStat.isValidTable()) {
 		for (int i = 1; i <= baitStat.getTableSize(); ++i) {
@@ -139,7 +188,9 @@ bool FishingManagerImplementation::loadConfigData() {
 	}
 	baitStat.pop();
 
-	info("Loaded " + String::valueOf(baitStatus.size()) + " Bait Status Types.");
+	info("Loaded " + String::valueOf(baitStatus.size()) + " Bait Status Types.", true);
+
+	info(true) << "Initialized.";
 
 	delete lua;
 	lua = nullptr;

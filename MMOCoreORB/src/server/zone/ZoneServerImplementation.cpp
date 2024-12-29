@@ -319,7 +319,7 @@ void ZoneServerImplementation::startManagers() {
 	guildManager = new GuildManager(_this.getReferenceUnsafeStaticCast(), processor);
 	guildManager->deploy("GuildManager");
 	guildManager->setChatManager(chatManager);
-	guildManager->loadLuaConfig();
+	guildManager->initialize();
 	guildManager->loadGuilds();
 
 	chatManager->initiatePlanetRooms();

@@ -66,20 +66,67 @@
 
 #include "GuildMailTask.h"
 
-void GuildManagerImplementation::loadLuaConfig() {
-	info("Loading configuration file.", true);
+#include "server/zone/managers/watcher/managerWatcher.h"
+
+void GuildManagerImplementation::initialize() {
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+				scheduleGuildUpdates();
+			},
+		"guild_manager");
+	});
+	reloadThread.detach();
+}
+
+bool GuildManagerImplementation::loadLuaConfig() {
+	const std::string luaFilePath = "scripts/managers/guild_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
 
 	Lua* lua = new Lua();
 	lua->init();
 
-	lua->runFile("scripts/managers/guild_manager.lua");
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
+	}
 
 	guildUpdateInterval = lua->getGlobalInt("GuildUpdateInterval");
 	requiredMembers = lua->getGlobalInt("RequiredMembers");
 	maximumMembers = lua->getGlobalInt("MaximumMembers");
 
+	info(true) << "Initialized.";
+
 	delete lua;
 	lua = nullptr;
+	
+	return true;
+
 }
 
 void GuildManagerImplementation::stop() {
@@ -144,7 +191,18 @@ void GuildManagerImplementation::loadGuilds() {
 }
 
 void GuildManagerImplementation::scheduleGuildUpdates() {
-	info("Scheduling guild updates.", true);
+	const std::string luaFilePath = "scripts/managers/guild_manager.lua";
+
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return;
+	}
+
+	lastModifiedTime = modifiedTime;
+
+	info("Scheduling " + String::valueOf(guildList.size()) + " guild update(s).", true);
 
 	for (int i = 0; i < guildList.size(); ++i) {
 		GuildObject* guild = guildList.getValueAt(i);
@@ -154,17 +212,26 @@ void GuildManagerImplementation::scheduleGuildUpdates() {
 		}
 
 		Time* nextUpdateTime = guild->getNextUpdateTime();
-		int seconds = -1 * round(nextUpdateTime->miliDifference() / 1000.f);
+		
+		auto currentTime = std::chrono::system_clock::now();
+		uint64_t currentTimeInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch()).count();
+		uint64_t nextUpdateTimeInMilliseconds = nextUpdateTime->getMiliTime();
 
-		if (seconds < 0)
-			seconds = 0;
+		if (currentTimeInMilliseconds + (guildUpdateInterval * 60 * 1000) < nextUpdateTimeInMilliseconds) {
+			guild->rescheduleUpdateEvent(guildUpdateInterval * 60);
+		} else if (nextUpdateTimeInMilliseconds < currentTimeInMilliseconds) {
+			guild->rescheduleUpdateEvent(5 * 60);
+		}			
 
-		guild->rescheduleUpdateEvent(seconds);
+		info(true) << guild->getGuildName() << " <" << guild->getGuildAbbrev() + "> update is (re)scheduled for " << nextUpdateTime->getFormattedTimeFull();
 	}
+
+	info("Guild schedule updates completed", true);
+
 }
 
 void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
-	info("Processing guild update for: " + guild->getGuildName() + " <" + guild->getGuildAbbrev() + ">");
+	info("Processing guild update for: " + guild->getGuildName() + " <" + guild->getGuildAbbrev() + ">", true);
 
 	Vector<uint64> toRemove, initialMembers;
 
@@ -176,6 +243,8 @@ void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
 	}
 
 	guild->unlock();
+	
+	info(guild->getGuildName() + " <" + guild->getGuildAbbrev() + "> has " + std::to_string(initialMembers.size()) + " member(s)", true);
 
 	try {
 		for (const auto& memberID : initialMembers) {
@@ -204,6 +273,7 @@ void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
 	}
 
 	toRemove.removeAll();
+	info(guild->getGuildName() + " <" + guild->getGuildAbbrev() + "> removed " + std::to_string(toRemove.size()) + " stale member(s)", true);
 
 	// Destroy guild if there are not enough members remaining
 	if (guild->getTotalMembers() < requiredMembers) {
@@ -216,7 +286,8 @@ void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
 
 		guild->lock();
 
-		info("Guild " + guild->getGuildName() + " <" + guild->getGuildAbbrev() + "> was destroyed due to lack of members.", true);
+		info(guild->getGuildName() + " <" + guild->getGuildAbbrev() + "> was destroyed due to lack of members.", true);
+		
 		return;
 	}
 
@@ -239,6 +310,7 @@ void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
 		}
 
 	}
+	info(guild->getGuildName() + " <" + guild->getGuildAbbrev() + "> removed " + std::to_string(toRemove.size()) + " stale sponsor(s)", true);
 
 	for (int i = 0; i < toRemove.size(); i++) {
 		guild->removeSponsoredPlayer(toRemove.get(i));
@@ -286,8 +358,10 @@ void GuildManagerImplementation::processGuildUpdate(GuildObject* guild) {
 	}
 
 	guild->rescheduleUpdateEvent(guildUpdateInterval * 60);
+	Time* nextUpdateTime = guild->getNextUpdateTime();
+	info(true) << guild->getGuildName() << " <" + guild->getGuildAbbrev() << "> has an update rescheduled for " << nextUpdateTime->getFormattedTimeFull();
 
-	info("Finished guild update for: " + guild->getGuildName() + " <" + guild->getGuildAbbrev() + ">");
+	info("Finished guild update for: " + guild->getGuildName() + " <" + guild->getGuildAbbrev() + ">", true);
 }
 
 void GuildManagerImplementation::processGuildElection(GuildObject* guild) {
