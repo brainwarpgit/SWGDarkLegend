@@ -13,6 +13,7 @@
 
 #include <unordered_map>
 #include <string>
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/cdpVariables.h"
 
 AtomicInteger CreatureTemplateManager::loadedMobileTemplates;
@@ -27,6 +28,45 @@ CreatureTemplateManager::CreatureTemplateManager() : Logger("CreatureTemplateMan
 	setLoggingName("CreatureTemplateManager");
 
 	globalAttackSpeedOverride = 0.0f;
+
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+			},
+		"creature_manager");
+	});
+	reloadThread.detach();
+
+}
+
+bool CreatureTemplateManager::loadLuaConfig() {
+
+	const std::string luaFilePath = "scripts/managers/creature_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
 
 	lua = new Lua();
 	lua->init();
@@ -103,16 +143,19 @@ CreatureTemplateManager::CreatureTemplateManager() : Logger("CreatureTemplateMan
 	lua->setGlobalInt("MOB_ANDROID", AiAgent::MOB_ANDROID);
 	lua->setGlobalInt("MOB_VEHICLE", AiAgent::MOB_VEHICLE);
 
-	loadLuaConfig();
-}
-
-void CreatureTemplateManager::loadLuaConfig() {
-	lua->runFile("scripts/managers/creature_manager.lua");
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+	}
 
 	globalAttackSpeedOverride = lua->getGlobalFloat("globalAttackSpeedOverride");
 
 	LuaObject luaObject = lua->getGlobalObject("aiSpeciesData");
 
+	aiSpeciesData = Vector<Reference<AiSpeciesData*>>();
+	
 	if (luaObject.isValidTable()) {
 		for (int i = 1; i <= luaObject.getTableSize(); ++i) {
 			LuaObject speciesData = luaObject.getObjectAt(i);
@@ -131,8 +174,13 @@ void CreatureTemplateManager::loadLuaConfig() {
 			speciesData.pop();
 		}
 	}
+	info(true) << "Loaded " << aiSpeciesData.size() << " ai species data.";
 
 	luaObject.pop();
+	
+	info(true) << "Initialized.";
+
+	return true;
 }
 
 CreatureTemplateManager::~CreatureTemplateManager() {

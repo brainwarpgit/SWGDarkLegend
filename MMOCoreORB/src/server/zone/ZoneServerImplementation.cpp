@@ -160,7 +160,7 @@ void ZoneServerImplementation::initialize() {
 	SpaceAiMap::instance()->loadTemplates();
 
 	dnaManager = DnaManager::instance();
-	dnaManager->loadSampleData();
+	dnaManager->initialize();
 
 	phandler = new BasePacketHandler("ZoneServer", zoneHandler);
 	phandler->setLogging(false);

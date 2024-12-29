@@ -18,6 +18,11 @@ public:
 	void addFaction(const Faction& faction);
 
 	Faction* getFaction(const String& factionName);
+
+	size_t getFactionCount() const {
+		return this->size();
+	}
+
 };
 
 #endif /* FACTIONRELATIONSHIPMAP_H_ */

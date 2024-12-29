@@ -34,7 +34,8 @@ public:
 	DnaManager();
 	virtual ~DnaManager();
 
-	void loadSampleData();
+	void initialize();
+	bool loadSampleData();
 	int generateXp(int creatureLevel);
 	static int addQualityTemplate(lua_State* L);
 

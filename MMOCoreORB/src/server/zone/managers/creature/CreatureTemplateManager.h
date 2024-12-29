@@ -48,7 +48,7 @@ public:
 	virtual ~CreatureTemplateManager();
 
 	int loadTemplates();
-	void loadLuaConfig();
+	bool loadLuaConfig();
 	static int includeFile(lua_State* L);
 	static int addTemplate(lua_State* L);
 	static int addWeapon(lua_State* L);

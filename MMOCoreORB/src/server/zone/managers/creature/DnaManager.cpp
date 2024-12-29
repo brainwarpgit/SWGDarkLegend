@@ -14,6 +14,8 @@
 #include "server/zone/managers/crafting/labratories/Genetics.h"
 #include "server/zone/managers/crafting/CraftingManager.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
+
 // #define DEBUG_GENETIC_LAB
 // #define DEBUG_GENERATION_SAMPLE
 // #define WRITE_DNA_TABLE
@@ -21,8 +23,56 @@
 AtomicInteger DnaManager::loadedDnaData;
 
 DnaManager::DnaManager() : Logger("DnaManager") {
+}
+
+void DnaManager::initialize() {
+	if (!loadSampleData()) {
+		info(true) << "loadSampleData() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadSampleData();
+			},
+		"dna_manager");
+	});
+	reloadThread.detach();
+}
+
+DnaManager::~DnaManager() {
+	if (lua != nullptr) {
+		delete lua;
+		lua = nullptr;
+	}
+}
+
+bool DnaManager::loadSampleData() {
+	const std::string luaFilePath = "scripts/managers/dna_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
+
 	lua = new Lua();
 	lua->init();
+
 	lua->registerFunction("addQualityTemplate", addQualityTemplate);
 
 	lua->setGlobalInt("FORTITUDE", DnaManager::FORTITUDE);
@@ -35,20 +85,22 @@ DnaManager::DnaManager() : Logger("DnaManager") {
 	lua->setGlobalInt("FIERCENESS", DnaManager::FIERCENESS);
 	lua->setGlobalInt("HARDINESS", DnaManager::HARDINESS);
 	lua->setGlobalInt("INTELLIGENCE", DnaManager::INTELLIGENCE);
-}
 
-DnaManager::~DnaManager() {
-	if (lua != nullptr) {
-		delete lua;
-		lua = nullptr;
-	}
-}
-
-void DnaManager::loadSampleData() {
-	info("Loading DNA Information",true);
 	try {
-		lua->runFile("scripts/managers/dna_manager.lua");
+		if (!lua->runFile(luaFilePath.c_str())) {
+			info(true) << "Failed to load file " << luaFilePath;
+			delete lua;
+			lua = nullptr;
+			return false;
+		}
+
 		LuaObject luaObject = lua->getGlobalObject("DNACharacteristics");
+
+		dnaHit = ArrayList<float>(); //Added to clear Array on dna_manager reload
+		dnaHam = ArrayList<int>(); //Added to clear Array on dna_manager reload
+		dnaDPS = ArrayList<int>(); //Added to clear Array on dna_manager reload
+		dnaArmor = ArrayList<int>(); //Added to clear Array on dna_manager reload
+		dnaRegen = ArrayList<int>(); //Added to clear Array on dna_manager reload
 
 #ifdef WRITE_DNA_TABLE
 		FileWriter* writer = new FileWriter(new File("scripts/managers/dna_manager_new.lua"));
@@ -145,8 +197,10 @@ void DnaManager::loadSampleData() {
 		e.printStackTrace();
 	}
 	info("Loaded " + String::valueOf(dnaDPS.size()) + " dna stats.", true);
-	delete lua;
-	lua = nullptr;
+
+	info(true) << "Initialized.";
+
+	return true;
 }
 
 int DnaManager::generateXp(int creatureLevel) {

@@ -74,7 +74,7 @@ public:
 
 protected:
 	void loadFactionRanks();
-	void loadLuaConfig(String file);
+	bool loadLuaConfig(String file);
 };
 
 #endif /* FACTIONMANAGER_H_ */

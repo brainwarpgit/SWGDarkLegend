@@ -10,6 +10,7 @@
 #include "server/zone/objects/player/PlayerObject.h"
 #include "templates/manager/TemplateManager.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/serverVariables.h"
 
 FactionManager::FactionManager() {
@@ -19,7 +20,21 @@ FactionManager::FactionManager() {
 }
 
 void FactionManager::loadData() {
-	loadLuaConfig("scripts/managers/faction_manager.lua");
+	if (!loadLuaConfig("scripts/managers/faction_manager.lua")) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig("scripts/managers/faction_manager.lua");
+			},
+		"faction_manager");
+	});
+	reloadThread.detach();
+//End Add
+
+	//loadLuaConfig("scripts/managers/faction_manager.lua"); Original Line
 	loadLuaConfig("scripts/custom_scripts/managers/faction_manager.lua");
 	loadFactionRanks();
 }
@@ -42,17 +57,42 @@ void FactionManager::loadFactionRanks() {
 	info("loaded " + String::valueOf(factionRanks.getCount()) + " ranks", true);
 }
 
-void FactionManager::loadLuaConfig(String file) {
-	info("Loading config file: " + file, true);
+bool FactionManager::loadLuaConfig(String file) {
+	const std::string luaFilePath = file;
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
 
-	FactionMap* fMap = getFactionMap();
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
 
 	Lua* lua = new Lua();
 	lua->init();
 
-	//Load the faction manager lua file.
-	lua->runFile(file);
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
+	}
 
+	FactionMap* fMap = getFactionMap(); 
+	
 	LuaObject luaObject = lua->getGlobalObject("factionList");
 
 	if (luaObject.isValidTable()) {
@@ -81,8 +121,14 @@ void FactionManager::loadLuaConfig(String file) {
 
 	luaObject.pop();
 
+	info(true) << "Loaded " << fMap->getFactionCount() << " factions.";
+
+	info(true) << "Initialized.";
+
 	delete lua;
 	lua = nullptr;
+	
+	return true;
 }
 
 FactionMap* FactionManager::getFactionMap() {
