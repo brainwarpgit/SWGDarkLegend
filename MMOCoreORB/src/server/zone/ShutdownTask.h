@@ -11,7 +11,7 @@
 #include "server/ServerCore.h"
 #include "server/zone/ZoneServer.h"
 #include "server/chat/ChatManager.h"
-
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/watcher/variableWatcher.h"
 
 class ShutdownTask : public Task {
@@ -45,6 +45,8 @@ public:
 		}
 
 		Logger::console.info(true) << shutdownMsg.toString();
+
+		managerWatcher::stopWatching();
 
 		varWatch.stopWatch = true;
 

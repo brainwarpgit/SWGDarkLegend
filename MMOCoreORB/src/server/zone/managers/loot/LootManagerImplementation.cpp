@@ -42,7 +42,7 @@ void LootManagerImplementation::initialize() {
 	std::thread reloadThread([this] {
 		managerWatcher::startWatching(
 			[this] {
-				LootManagerImplementation::loadConfigData();
+				loadConfigData();
 			},
 		"loot_manager"
 		);

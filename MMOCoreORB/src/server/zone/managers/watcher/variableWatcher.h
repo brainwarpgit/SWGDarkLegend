@@ -3,8 +3,6 @@
 
 #include "engine/log/Logger.h"
 
-class ArtisanVariables;
-
 class VariableWatcher : public Logger {
 
 public:
