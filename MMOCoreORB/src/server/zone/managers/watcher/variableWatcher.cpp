@@ -24,7 +24,7 @@ VariableWatcher::~VariableWatcher() {}
 void VariableWatcher::startVariableWatchers() {
 
 	auto config = ConfigManager::instance();
-	varWatch.threadReloadTime = config->getInt("Core3.threadReloadTime",1);
+	varWatch.threadReloadTime = config->getInt("Core3.threadReloadTime", 10);
 	
 	info(true) << "Variable Reload Time set to " << varWatch.threadReloadTime << " seconds.";
 
@@ -56,8 +56,9 @@ void VariableWatcher::startVariableWatchers() {
 	if (equipableVariables != nullptr) {
 		info(true) << "Starting EquipableVariables Watcher.";
 		equipableVariables->startEquipableVariables();
-	}	HarvestVariables* harvestVariables = new HarvestVariables();
-
+	}
+	
+	HarvestVariables* harvestVariables = new HarvestVariables();
 	if (harvestVariables != nullptr) {
 		info(true) << "Starting HarvestVariables Watcher.";
 		harvestVariables->startHarvestVariables();

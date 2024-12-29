@@ -6,7 +6,7 @@
 #include "server/zone/managers/variables/craftingVariables.h"
 #include "server/zone/managers/variables/lootVariables.h"
 
-LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
+LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, float excMod, TangibleObject* prototype) : CraftingValues(lootTemplate->getAttributesMapCopy()) {
 	setLoggingName("LootValues: " + lootTemplate->getTemplateName());
 
 	staticValues = lootTemplate->getAttributesMapCopy();
@@ -33,11 +33,11 @@ LootValues::LootValues(const LootItemTemplate* lootTemplate, int lootLevel, floa
 	
 	if (useCountOnly == 0) {
 		int lootQuality = 1;
-		if (modifier >= lootVars.lootLegendaryDamageModifier) {
+		if (excMod >= lootVars.lootLegendaryDamageModifier) {
 			lootQuality = 4;
-		} else if (modifier >= lootVars.lootExceptionalDamageModifier) {
+		} else if (excMod >= lootVars.lootExceptionalDamageModifier) {
 			lootQuality = 3;
-		} else if (modifier >= lootVars.lootYellowDamageModifier) {
+		} else if (excMod >= lootVars.lootYellowDamageModifier) {
 			lootQuality = 2;
 		}
 

@@ -24,21 +24,33 @@
 #include "server/zone/objects/tangible/wearables/ModSortingHelper.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/creatureVariables.h"
 #include "server/zone/managers/variables/lootVariables.h"
 
 // #define DEBUG_LOOT_MAN
 
 void LootManagerImplementation::initialize() {
-	info(true) << "Loading configuration...";
-
 	if (!loadConfigData()) {
 
 		loadDefaultConfig();
 
 		info(true) << "Failed to load configuration values, using default.";
+		return;
 	}
 
+	std::thread reloadThread([this] {
+		managerWatcher::startWatching(
+			[this] {
+				LootManagerImplementation::loadConfigData();
+			},
+		"loot_manager"
+		);
+	});
+	reloadThread.detach();
+}
+
+void LootManagerImplementation::loadGroupMapData() {
 	lootGroupMap = LootGroupMap::instance();
 	lootGroupMap->initialize();
 
@@ -54,6 +66,8 @@ void LootManagerImplementation::initialize() {
 	info(true) << "Loaded " << lootableCarbineMods.size() << " lootable Carbine Stat Mods.";
 	info(true) << "Loaded " << lootablePolearmMods.size() << " lootable Polearm Stat Mods.";
 	info(true) << "Loaded " << lootableHeavyWeaponMods.size() << " lootable Heavy Weapon Stat Mods.";
+	info(true) << "Loaded lootable Lightsaber Module Force Crystal Mods.";
+	info(true) << "Loaded lootable Lightsaber Module Krayt Pearl Mods.";
 	info(true) << "Loaded " << lootGroupMap->countLootGroupTemplates() << " Loot Groups.";
 	info(true) << "Loaded " << lootGroupMap->countLootItemTemplates() << " Loot Items.";
 
@@ -68,11 +82,35 @@ void LootManagerImplementation::stop() {
 }
 
 bool LootManagerImplementation::loadConfigData() {
+	const std::string luaFilePath = "scripts/managers/loot_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
+
 	Lua* lua = new Lua();
 	lua->init();
 
-	if (!lua->runFile("scripts/managers/loot_manager.lua")) {
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
 		delete lua;
+		lua = nullptr;
 		return false;
 	}
 
@@ -112,7 +150,7 @@ bool LootManagerImplementation::loadConfigData() {
 	}
 
 	LuaObject dotAttributeTable = lua->getGlobalObject("randomDotAttribute");
-
+	randomDotAttribute = SortedVector<int>();
 	if (dotAttributeTable.isValidTable() && dotAttributeTable.getTableSize() > 0) {
 		for (int i = 1; i <= dotAttributeTable.getTableSize(); ++i) {
 			int value = dotAttributeTable.getIntAt(i);
@@ -120,9 +158,10 @@ bool LootManagerImplementation::loadConfigData() {
 		}
 		dotAttributeTable.pop();
 	}
+	info(true) << "Loaded " << randomDotAttribute.size() << " random DOT attributes.";
 
 	LuaObject dotStrengthTable = lua->getGlobalObject("randomDotStrength");
-
+	randomDotStrength = SortedVector<int>();
 	if (dotStrengthTable.isValidTable() && dotStrengthTable.getTableSize() > 0) {
 		for (int i = 1; i <= dotStrengthTable.getTableSize(); ++i) {
 			int value = dotStrengthTable.getIntAt(i);
@@ -130,9 +169,10 @@ bool LootManagerImplementation::loadConfigData() {
 		}
 		dotStrengthTable.pop();
 	}
+	info(true) << "Loaded " << randomDotStrength.size() << " random DOT strengths.";
 
 	LuaObject dotDurationTable = lua->getGlobalObject("randomDotDuration");
-
+	randomDotDuration = SortedVector<int>();
 	if (dotDurationTable.isValidTable() && dotDurationTable.getTableSize() > 0) {
 		for (int i = 1; i <= dotDurationTable.getTableSize(); ++i) {
 			int value = dotDurationTable.getIntAt(i);
@@ -140,9 +180,10 @@ bool LootManagerImplementation::loadConfigData() {
 		}
 		dotDurationTable.pop();
 	}
+	info(true) << "Loaded " << randomDotDuration.size() << " random DOT durations.";
 
 	LuaObject dotPotencyTable = lua->getGlobalObject("randomDotPotency");
-
+	randomDotPotency = SortedVector<int>();
 	if (dotPotencyTable.isValidTable() && dotPotencyTable.getTableSize() > 0) {
 		for (int i = 1; i <= dotPotencyTable.getTableSize(); ++i) {
 			int value = dotPotencyTable.getIntAt(i);
@@ -150,9 +191,10 @@ bool LootManagerImplementation::loadConfigData() {
 		}
 		dotPotencyTable.pop();
 	}
+	info(true) << "Loaded " << randomDotPotency.size() << " random DOT potencies.";
 
 	LuaObject dotUsesTable = lua->getGlobalObject("randomDotUses");
-
+	randomDotUses = SortedVector<int>();
 	if (dotUsesTable.isValidTable() && dotUsesTable.getTableSize() > 0) {
 		for (int i = 1; i <= dotUsesTable.getTableSize(); ++i) {
 			int value = dotUsesTable.getIntAt(i);
@@ -160,6 +202,7 @@ bool LootManagerImplementation::loadConfigData() {
 		}
 		dotUsesTable.pop();
 	}
+	info(true) << "Loaded " << randomDotUses.size() << " random DOT uses.";
 
 	LuaObject modsTable = lua->getGlobalObject("lootableArmorAttachmentStatMods");
 	loadLootableMods( &modsTable, &lootableArmorAttachmentMods );
@@ -210,14 +253,16 @@ bool LootManagerImplementation::loadConfigData() {
 	crystalData.put("lightsaber_module_krayt_dragon_pearl", crystal);
 	crystalTable.pop();
 	luaObject.pop();
+	
+	loadGroupMapData();
 
 	delete lua;
+	lua = nullptr;
 
 	return true;
 }
 
 void LootManagerImplementation::loadLootableMods(LuaObject* modsTable, SortedVector<String>* mods) {
-
 	if (!modsTable->isValidTable())
 		return;
 
@@ -227,13 +272,12 @@ void LootManagerImplementation::loadLootableMods(LuaObject* modsTable, SortedVec
 	}
 
 	modsTable->pop();
-
 }
 
 void LootManagerImplementation::loadDefaultConfig() {
+	loadGroupMapData();
 
 }
-
 void LootManagerImplementation::setCustomizationData(const LootItemTemplate* templateObject, TangibleObject* prototype) {
 #ifdef DEBUG_LOOT_MAN
 	info(true) << " ========== LootManagerImplementation::setCustomizationData -- called ==========";
@@ -390,9 +434,9 @@ float LootManagerImplementation::setRandomLootValues(TransactionLog& trx, Tangib
 
 	float modifier = getRandomModifier(itemTemplate, level, excMod, creatureDifficulty, luckSkill);
 
-	auto lootValues = LootValues(itemTemplate, level, modifier, creatureDifficulty, luckSkill, prototype);
+	auto lootValues = LootValues(itemTemplate, level, modifier, creatureDifficulty, luckSkill, excMod, prototype);
 	prototype->updateCraftingValues(&lootValues, true);
-	//prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier),false);
+	//prototype->setCustomObjectName(prototype->getDisplayedName() + " lvl: " + std::to_string(level) + " CD: " + std::to_string(creatureDifficulty) + " mod: " + std::to_string(modifier) + " excMod: " + std::to_string(excMod),false);
 	return modifier;
 
 #ifdef LOOTVALUES_DEBUG
@@ -478,8 +522,9 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	}
 
 	// Calculate level rank value chance
-	float chance = LootValues::getLevelRankValue(Math::max(level - 50, 0), 0.f, 0.35f) * levelChance;
-	chance += (creatureDifficulty * 25) + (creatureDifficulty * luckSkill);
+	float chance = LootValues::getLevelRankValue(Math::max(level, lootVars.lootMinLevel), 0.f, 0.35f) * levelChance;
+	//float chance = LootValues::getLevelRankValue(Math::max(level - 50, 0), 0.f, 0.35f) * levelChance;
+	chance += ((creatureDifficulty - 1) * 25) + ((creatureDifficulty - 1) * luckSkill);
 	float excMod = baseModifier;
 
 	if (System::random(legendaryChance) <= chance) {
@@ -496,15 +541,15 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
 	// Set loot item customization and object name
 	setCustomizationData(templateObject, prototype);
-	if (lootVars.lootNewLootQualityNamingEnabled == false) {
+	if (!lootVars.lootNewLootQualityNamingEnabled) {
 		setCustomObjectName(prototype, templateObject, excMod);
 	}
 
 	// Set the values for the random attributes to be modified if there are any
 	float modifier = setRandomLootValues(trx, prototype, templateObject, level, excMod, creatureDifficulty, luckSkill);
 
-	if (lootVars.lootNewLootQualityNamingEnabled == true) {
-		setCustomObjectNameNew(prototype, templateObject, modifier);
+	if (lootVars.lootNewLootQualityNamingEnabled) {
+		setCustomObjectNameNew(prototype, templateObject, excMod);
 	}
 	
 	// Set the value for those items that can be sold at a junk dealer
@@ -593,7 +638,7 @@ TangibleObject* LootManagerImplementation::createShipComponent(TransactionLog& t
 	setCustomizationData(itemTemplate, prototype);
 	setCustomObjectName(prototype, itemTemplate, 0.f);
 
-	auto lootValues = LootValues(itemTemplate, 0, 1.f, 1, 1, nullptr);
+	auto lootValues = LootValues(itemTemplate, 0, 1.f, 1, 1, 1, nullptr);
 	prototype->updateCraftingValues(&lootValues, true);
 
 	return prototype;
@@ -1263,7 +1308,8 @@ float LootManagerImplementation::getRandomModifier(const LootItemTemplate* itemT
 		} else if (System::random(baseChance) <= chance) {
 			excMod = baseModifier;
 		} else {
-			excMod = 0.f;
+			//excMod = 0.f;
+			excMod = baseModifier;
 		}
 	}
 
@@ -1285,12 +1331,17 @@ float LootManagerImplementation::getRandomModifier(const LootItemTemplate* itemT
 	}
 
 	float levelMod = (float)(Math::clamp(lootVars.lootMinLevel, level, lootVars.lootMaxLevel) / 100.0f);
-	
-	modMax += (creatureDifficulty - 1) + levelMod;
-	modMin += (creatureDifficulty - 1) + levelMod;
-
+	float cdMod = 0.0f;
+	if (levelMod < 1) {
+		cdMod = (float)(creatureDifficulty - 1) * levelMod;
+		modMax += cdMod + levelMod;
+		modMin += cdMod + levelMod;
+	} else {
+		modMax += (creatureDifficulty - 1) + levelMod;
+		modMin += (creatureDifficulty - 1) + levelMod;
+	}
 	float rollChance = (System::random(1000)/(1000.0f - luckSkill));
 	float modifier = modMin + rollChance * (modMax-modMin);
-	//Logger::console.info("itemTemplate" + itemTemplate->getTemplateName() + " luckSkill " + std::to_string(luckSkill) + " rollChance " + std::to_string(rollChance) + " levelMod " + std::to_string(levelMod) + " CD " + std::to_string(creatureDifficulty - 1) + " excMod " + std::to_string(excMod) + " modMax " + std::to_string(modMax) + " modMin " + std::to_string(modMin) + " modifier " + std::to_string(modifier),true);
+	//Logger::console.info("itemTemplate" + itemTemplate->getTemplateName() + " luckSkill " + std::to_string(luckSkill) + " rollChance " + std::to_string(rollChance) + " levelMod " + std::to_string(levelMod) + " CD " + std::to_string(creatureDifficulty) + " cdMod " + std::to_string(cdMod) + " excMod " + std::to_string(excMod) + " modMax " + std::to_string(modMax) + " modMin " + std::to_string(modMin) + " modifier " + std::to_string(modifier),true);
 	return modifier;
 }

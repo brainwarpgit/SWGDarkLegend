@@ -167,8 +167,10 @@ class LootManager extends ManagedService implements Logger {
 
 	public native void stop();
 
-	private native boolean loadConfigData();
+	//private native boolean loadConfigData(); Original Line
+	public native boolean loadConfigData(); //Changed to public boolean for loot_manager reload.
 	private native void loadDefaultConfig();
+	private native void loadGroupMapData(); //Added
 
 	@local
 	private native void setCustomizationData(final LootItemTemplate templateObject, TangibleObject prototype);

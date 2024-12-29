@@ -38,7 +38,7 @@ protected:
 	int level;
 
 public:
-	LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, TangibleObject* prototype);
+	LootValues(const LootItemTemplate* lootTemplate, int lootLevel, float lootModifier, int creatureDifficulty, int luckSkill, float excMod, TangibleObject* prototype);
 
 	uint32 getObjectType() const {
 		return objectType;
