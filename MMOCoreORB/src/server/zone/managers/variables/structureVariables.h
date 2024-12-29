@@ -28,8 +28,6 @@ public:
 	float structureBaseMaintenanceRateMultiplier{1};
 	float structureBasePowerRateMultiplier{1};
 	bool structureAllowAllZonesEnabled{false};
-	float structureCityMaintenanceBaseMultiplier{1};
-	float structureCityMaintenanceRateMultiplier{1};
 	bool structureInstallationQuickAddMaintenanceEnabled{false};
 	int structureInstallationQuickAddMaintenanceAmount{10};
 	bool structureInstallationQuickAddPowerEnabled{false};

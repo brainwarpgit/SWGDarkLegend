@@ -13,6 +13,9 @@
 #include "templates/manager/TemplateManager.h"
 #include "server/zone/managers/components/ComponentManager.h"
 
+#include "conf/ConfigManager.h"
+#include "server/zone/managers/variables/structureVariables.h"
+
 void StructureDeedImplementation::initializeTransientMembers() {
 	DeedImplementation::initializeTransientMembers();
 
@@ -68,13 +71,28 @@ void StructureDeedImplementation::fillAttributeList(AttributeListMessage* alm, C
 	if (extractionRate > 0)
 		alm->insertAttribute("examine_extractionrate", String::valueOf(Math::getPrecision(extractionRate, 2)));
 
-	for (int i = 0; i < structureTemplate->getTotalAllowedZones(); ++i) {
-		String zoneName = structureTemplate->getAllowedZone(i);
+	if (structureVars.structureAllowAllZonesEnabled) {
+		auto config = ConfigManager::instance();
+		if (config != nullptr) {
+			auto allowedZones = config->getEnabledZones();
+			for (int i = 0; i < allowedZones.size(); ++i) {
+				String zoneName = allowedZones.get(i);
 
-		if (zoneName.isEmpty())
-			continue;
+				if (zoneName.isEmpty() || zoneName == "dungeon1" || zoneName == "tutorial")
+					continue;
 
-		alm->insertAttribute("examine_scene", "@planet_n:" + zoneName); //Can Be Built On
+				alm->insertAttribute("examine_scene", "@planet_n:" + zoneName); //Can Be Built On
+			}
+		}
+	} else {
+		for (int i = 0; i < structureTemplate->getTotalAllowedZones(); ++i) {
+			String zoneName = structureTemplate->getAllowedZone(i);
+
+			if (zoneName.isEmpty())
+				continue;
+
+			alm->insertAttribute("examine_scene", "@planet_n:" + zoneName); //Can Be Built On
+		}
 	}
 }
 

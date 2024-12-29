@@ -26,6 +26,8 @@
 #include "server/zone/managers/stringid/StringIdManager.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 
+#include "server/zone/managers/variables/structureVariables.h"
+
 void StructureObjectImplementation::loadTemplateData(SharedObjectTemplate* templateData) {
 	TangibleObjectImplementation::loadTemplateData(templateData);
 
@@ -789,7 +791,7 @@ int StructureObjectImplementation::getBaseMaintenanceRate() const {
 	if(tmpl == nullptr)
 		return 0;
 
-	return tmpl->getBaseMaintenanceRate();
+	return tmpl->getBaseMaintenanceRate() * structureVars.structureBaseMaintenanceRateMultiplier;
 }
 
 int StructureObjectImplementation::getBasePowerRate() const {
@@ -798,7 +800,7 @@ int StructureObjectImplementation::getBasePowerRate() const {
 	if(tmpl == nullptr)
 		return 0;
 
-	return tmpl->getBasePowerRate();
+	return tmpl->getBasePowerRate() * structureVars.structureBasePowerRateMultiplier;
 }
 
 float StructureObjectImplementation::getDelayDestroyHours() const {
