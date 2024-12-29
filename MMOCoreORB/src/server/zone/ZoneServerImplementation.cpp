@@ -190,8 +190,8 @@ void ZoneServerImplementation::initialize() {
 
 	cityManager = new CityManager(_this.getReferenceUnsafeStaticCast());
 	cityManager->deploy("CityManager");
-	cityManager->loadLuaConfig();
-
+	cityManager->initialize();
+	
 	auctionManager = new AuctionManager(_this.getReferenceUnsafeStaticCast());
 	auctionManager->deploy();
 

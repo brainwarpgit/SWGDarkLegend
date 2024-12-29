@@ -39,6 +39,7 @@
 #include "server/zone/objects/player/sui/callbacks/RenameCitySuiCallback.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/serverVariables.h"
 
 #ifndef CITY_DEBUG
@@ -63,13 +64,54 @@ int CityManagerImplementation::trainersPerRank = 3;
 int CityManagerImplementation::missionTerminalsPerRank = 3;
 float CityManagerImplementation::maintenanceDiscount = 1.0f;
 
-void CityManagerImplementation::loadLuaConfig() {
-	info("Loading configuration file.", true);
+void CityManagerImplementation::initialize() {
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+			},
+		"city_manager");
+	});
+	reloadThread.detach();
+}
+
+bool CityManagerImplementation::loadLuaConfig() {
+	const std::string luaFilePath = "scripts/managers/city_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
 
 	Lua* lua = new Lua();
 	lua->init();
 
-	lua->runFile("scripts/managers/city_manager.lua");
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
+	}
 
 	LuaObject luaObject = lua->getGlobalObject("CitiesAllowed");
 
@@ -96,17 +138,20 @@ void CityManagerImplementation::loadLuaConfig() {
 
 			planetCitiesAllowed.pop();
 		}
+		info(true) << "Loaded " << String::valueOf(luaObject.getTableSize()) << " cities allowed.";
 	}
 
 	luaObject.pop();
 
 	luaObject = lua->getGlobalObject("CitySpecializations");
+	citySpecializations = CitySpecializationMap();
 	citySpecializations.readObject(&luaObject);
 	luaObject.pop();
 
 	info("Loaded " + String::valueOf(citySpecializations.size()) + " city specializations.", true);
 
 	luaObject = lua->getGlobalObject("CityTaxes");
+	cityTaxes = CityTaxMap();
 	cityTaxes.readObject(&luaObject);
 	luaObject.pop();
 
@@ -127,25 +172,98 @@ void CityManagerImplementation::loadLuaConfig() {
 	maintenanceDiscount = lua->getGlobalFloat("maintenanceDiscount");
 
 	luaObject = lua->getGlobalObject("CitizensPerRank");
+	citizensPerRank = Vector<byte>();
 
 	if (luaObject.isValidTable()) {
 		for (int i = 1; i <= luaObject.getTableSize(); ++i)
 			citizensPerRank.add(luaObject.getIntAt(i));
 	}
+	info(true) << "Loaded " << citizensPerRank.size() << " citizens per rank";
 
 	luaObject.pop();
 
 	luaObject = lua->getGlobalObject("RadiusPerRank");
+	radiusPerRank = Vector<unsigned short>();
 
 	if (luaObject.isValidTable()) {
 		for (int i = 1; i <= luaObject.getTableSize(); ++i)
 			radiusPerRank.add(luaObject.getIntAt(i));
 	}
+	info(true) << "Loaded " << radiusPerRank.size() << " radius per rank";
 
 	luaObject.pop();
 
+	info(true) << "Initialized.";
+
 	delete lua;
 	lua = nullptr;
+	
+	CityManagerImplementation::rescheduleAllCityUpdateEvent();
+	
+	return true;
+}
+
+void CityManagerImplementation::rescheduleAllCityUpdateEvent() {
+	for ( int i = 0; i < cities.size(); ++i) {
+		CityRegion* city = cities.get(i);
+		if (city == nullptr) return;
+		Zone* cityZone = city->getZone();
+		if (cityZone == nullptr) return;
+		if (zoneServer == nullptr) return;
+		ManagedReference<CreatureObject*> mayor = zoneServer->getObject(city->getMayorID()).castTo<CreatureObject*>();
+		if (mayor == nullptr) {
+			info(true) << "NO MAYOR FOR " << city->getCityRegionName() << " on " << cityZone->getZoneName();
+			return;
+		}
+
+		//City Update
+		Time* nextUpdateTime = city->getNextUpdateTime();
+		auto currentTime = std::chrono::system_clock::now();
+		uint64_t currentTimeInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime.time_since_epoch()).count();
+		uint64_t nextUpdateTimeInMilliseconds = nextUpdateTime->getMiliTime();
+
+		if (currentTimeInMilliseconds + (cityUpdateInterval * 60 * 1000) < nextUpdateTimeInMilliseconds) {
+			city->rescheduleUpdateEvent(cityUpdateInterval * 60);
+		} else if (nextUpdateTimeInMilliseconds < currentTimeInMilliseconds) {
+			city->rescheduleUpdateEvent(5 * 60);
+		}			
+		
+		info(true) << city->getCityRegionName() << " on " << cityZone->getZoneName() << " update is (re)scheduled for " << nextUpdateTime->getFormattedTimeFull(); //Added
+
+		//City Citizen Assessment
+		Time* nextAssessmentTime = city->getNextAssessmentTime();
+		uint64_t nextAssessmentUpdateTimeInMilliseconds = nextAssessmentTime->getMiliTime();
+
+		if (currentTimeInMilliseconds + (cityUpdateInterval * 60 * 1000) < nextAssessmentUpdateTimeInMilliseconds) {
+			city->scheduleCitizenAssessment(cityUpdateInterval * 60);
+		} else if (nextAssessmentUpdateTimeInMilliseconds < currentTimeInMilliseconds) {
+			city->scheduleCitizenAssessment(5 * 60);
+		}			
+		
+		info(true) << city->getCityRegionName() << " on " << cityZone->getZoneName() << " citizen update is (re)scheduled for " << nextAssessmentTime->getFormattedTimeFull(); //Added
+
+		//City Specialization Cooldown
+		const Time* citySpecializationCoolDownRemaining = mayor->getCooldownTime("city_specialization");
+		if (citySpecializationCoolDownRemaining != nullptr) {
+			if (!mayor->checkCooldownRecovery("city_specialization")) {
+				if (citySpecializationCooldown < (-1 * round(citySpecializationCoolDownRemaining->miliDifference()))) {
+					mayor->updateCooldownTimer("city_specialization", citySpecializationCooldown);
+				}
+			}
+			info(true) << city->getCityRegionName() << " on " << cityZone->getZoneName() << " next Specialization Change available on " << citySpecializationCoolDownRemaining->getFormattedTimeFull();			
+		}
+		
+		//City Treasury Withdrawal Cooldown
+		const Time* cityTreasuryCoolDownRemaining = mayor->getCooldownTime("city_withdrawal");
+		if (cityTreasuryCoolDownRemaining != nullptr) {
+			if (!mayor->checkCooldownRecovery("city_withdrawal")) {
+				if (treasuryWithdrawalCooldown < (-1 * round(cityTreasuryCoolDownRemaining->miliDifference()))) {
+					mayor->updateCooldownTimer("city_withdrawal", treasuryWithdrawalCooldown);
+				}			
+			}
+			info(true) << city->getCityRegionName() << " on " << cityZone->getZoneName() << " next Treasure Withdrawl available on " << cityTreasuryCoolDownRemaining->getFormattedTimeFull();			
+		}
+	}
 }
 
 void CityManagerImplementation::loadCityRegions() {

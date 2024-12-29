@@ -79,8 +79,13 @@ class CityManager extends ManagedService implements Logger {
 	/**
 	 * Loads configuration settings for cities from the lua for the city manager.
 	 */
-	public native void loadLuaConfig();
 
+	public native boolean loadLuaConfig();
+	
+	public native void initialize();
+
+	public native void rescheduleAllCityUpdateEvent();
+	
 	public native void loadCityRegions();
 
 	public native void stop();
