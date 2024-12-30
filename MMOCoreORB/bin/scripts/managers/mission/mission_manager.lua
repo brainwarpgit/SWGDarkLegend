@@ -82,7 +82,7 @@ playerBountyDebuffLength = 3 * 24 * 60 * 60 * 1000 -- Time before their bounty r
 --    rand(<RandomDistance>) + rand(<DifficutlyRandomDistance * <difficultyLevel>)
 destroyMissionBaseDistance = 1000
 destroyMissionDifficultyDistanceFactor = 0
-destroyMissionRandomDistance = 200
+destroyMissionRandomDistance = 200 --default 1000
 destroyMissionDifficultyRandomDistance = 0
 
 -- Mission payout calculated as: 

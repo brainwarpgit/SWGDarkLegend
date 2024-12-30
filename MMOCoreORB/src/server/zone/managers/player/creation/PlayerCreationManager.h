@@ -67,6 +67,7 @@ class PlayerCreationManager : public Singleton<PlayerCreationManager>, public Lo
 	 * Vector containing starting items common for all races and professions.
 	 */
 	Vector<String> commonStartingItems;
+	Vector<String> professions;
 
 	int startingCash;
 	int startingBank;
@@ -77,7 +78,7 @@ class PlayerCreationManager : public Singleton<PlayerCreationManager>, public Lo
 	mutable HashTable<uint32, Time> lastCreatedCharacter;
 	mutable Mutex charCountMutex;
 
-	void loadLuaConfig();
+	bool loadLuaConfig();
 	void loadRacialCreationData();
 	void loadDefaultCharacterItems();
 	void loadProfessionDefaultsInfo();

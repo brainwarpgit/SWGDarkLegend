@@ -37,35 +37,80 @@
 #include "server/zone/managers/visibility/VisibilityManager.h"
 #include "server/zone/objects/building/BuildingObject.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/missionVariables.h"
 
-void MissionManagerImplementation::loadLuaSettings() {
+void MissionManagerImplementation::initialize() {
+	if (!loadLuaSettings()) {
+		info(true) << "loadLuaSettings() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaSettings();
+			},
+		"mission_manager");
+	});
+	reloadThread.detach();
+}
+
+bool MissionManagerImplementation::loadLuaSettings() {
 	try {
+		const std::string luaFilePath = "scripts/managers/mission/mission_manager.lua";
+		
+		if (!managerWatcher::fileExists(luaFilePath)) {
+			info(true) << "File does not exist: " << luaFilePath;
+			return false;
+		}
+			
+		time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+		time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+		if (modifiedTime == lastModifiedTime) {
+			return true;
+		}
+
+		if (lastModifiedTime == 0) {
+			info(true) << "Initial Load of " << luaFilePath;
+		} else {
+			info(true) << "Reloading due to change in " << luaFilePath;
+		}
+
+		lastModifiedTime = modifiedTime;
+		
 		Lua* lua = new Lua();
 		lua->init();
 
-		lua->runFile("scripts/managers/mission/mission_manager.lua");
+		if (!lua->runFile(luaFilePath.c_str())) {
+			info(true) << "Failed to load file " << luaFilePath;
+			delete lua;
+			lua = nullptr;
+			return false;
+		}
 
 		LuaObject items = lua->getGlobalObject("crafting_mission_items");
-
+		craftingMissionItems = Vector<String>();
 		for (int i = 1; i <= items.getTableSize(); i++) {
 			craftingMissionItems.add(items.getStringAt(i));
 		}
 
 		items.pop();
+		info(true) << "Loaded " << craftingMissionItems.size() << " crafting mission items.";
 
 		LuaObject zones = lua->getGlobalObject("bh_target_zones");
-
+		bhTargetZones = Vector<String>();
 		for (int i = 1; i <= zones.getTableSize(); i++) {
 			bhTargetZones.add(zones.getStringAt(i));
 		}
 
 		zones.pop();
+		info(true) << "Loaded " << bhTargetZones.size() << " bounty hunter target zones.";
 
 		LuaObject targetsAtMissionLevel = lua->getGlobalObject("bh_targets_at_mission_level");
-
+		targets = Vector<String>();
 		for (unsigned int i = 1; i <= 3; i++) {
-			Vector<String> targets;
+
 			LuaObject level = targetsAtMissionLevel.getObjectField("level" + String::valueOf(i));
 
 			for (int j = 1; j <= level.getTableSize(); j++) {
@@ -77,6 +122,7 @@ void MissionManagerImplementation::loadLuaSettings() {
 		}
 
 		targetsAtMissionLevel.pop();
+		info(true) << "Loaded " << targets.size() << " bounty hunter targets.";
 
 		String value = lua->getGlobalString("enable_factional_crafting_missions");
 
@@ -114,11 +160,18 @@ void MissionManagerImplementation::loadLuaSettings() {
 		destroyMissionRandomReward = lua->getGlobalLong("destroyMissionRandomReward");
 		destroyMissionDifficultyRandomReward = lua->getGlobalLong("destroyMissionDifficultyRandomReward");
 
+		info(true) << "Initialized.";
+
 		delete lua;
+		lua = nullptr;
+		
 	}
 	catch (Exception& e) {
 		error(e.getMessage());
 	}
+
+	return true;
+
 }
 
 void MissionManagerImplementation::loadPlayerBounties() {

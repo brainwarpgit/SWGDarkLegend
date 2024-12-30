@@ -26,6 +26,7 @@
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/managers/player/creation/SendJtlRecruitment.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/playerVariables.h"
 #include "server/zone/managers/variables/professionVariables.h"
 
@@ -48,7 +49,19 @@ PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager")
 	loadDefaultCharacterItems();
 	loadProfessionDefaultsInfo();
 	loadHairStyleInfo();
-	loadLuaConfig();
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+			},
+		"player_creation_manager");
+	});
+	reloadThread.detach();
+
 }
 
 PlayerCreationManager::~PlayerCreationManager() {
@@ -258,14 +271,40 @@ void PlayerCreationManager::loadHairStyleInfo() {
 	info() << "Loaded " << totalHairStyles << " total creation hair styles.";
 }
 
-void PlayerCreationManager::loadLuaConfig() {
-	debug("Loading configuration script.");
+bool PlayerCreationManager::loadLuaConfig() {
+	const std::string luaFilePath = "scripts/managers/player_creation_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
 
 	Lua* lua = new Lua();
 	lua->init();
 
-	lua->runFile("scripts/managers/player_creation_manager.lua");
-
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
+	}
+	
 	startingCash = lua->getGlobalInt("startingCash");
 	startingBank = lua->getGlobalInt("startingBank");
 	skillPoints = lua->getGlobalInt("skillPoints");
@@ -275,13 +314,15 @@ void PlayerCreationManager::loadLuaConfig() {
 
 	delete lua;
 	lua = nullptr;
+	
+	return true;
 }
 
 void PlayerCreationManager::loadLuaStartingItems(Lua* lua) {
 	// Catch potential errors from loading starting items.
 	try {
 		// Read professions.
-		Vector < String > professions;
+		professions = Vector<String>();
 		LuaObject professionsLuaObject = lua->getGlobalObject("professions");
 
 		for (int professionNumber = 1; professionNumber <= professionsLuaObject.getTableSize(); professionNumber++) {
@@ -289,6 +330,7 @@ void PlayerCreationManager::loadLuaStartingItems(Lua* lua) {
 		}
 
 		professionsLuaObject.pop();
+		info(true) << "Loaded " << professions.size() << " professions.";
 
 		// Read profession specific items.
 		LuaObject professionSpecificItems = lua->getGlobalObject("professionSpecificItems");
@@ -302,18 +344,24 @@ void PlayerCreationManager::loadLuaStartingItems(Lua* lua) {
 			}
 			professionSpecificItemList.pop();
 		}
+		info(true) << "Loaded " << professionSpecificItems.getTableSize() << " profession specific items.";
 		professionSpecificItems.pop();
 
 		// Read common starting items.
 		LuaObject commonStartingItemsLuaObject = lua->getGlobalObject("commonStartingItems");
+		commonStartingItems = Vector<String>();
 		for (int itemNumber = 1; itemNumber <= commonStartingItemsLuaObject.getTableSize(); itemNumber++) {
 			commonStartingItems.add(commonStartingItemsLuaObject.getStringAt(itemNumber));
 		}
+		info(true) << "Loaded " << commonStartingItems.size() << " common starting items.";
 		commonStartingItemsLuaObject.pop();
 	} catch (Exception& e) {
 		error("Failed to load starting items.");
 		error(e.getMessage());
 	}
+	
+	info(true) << "Initialized.";
+
 }
 
 bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callback) const {

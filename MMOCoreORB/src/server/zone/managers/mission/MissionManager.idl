@@ -39,6 +39,9 @@ class MissionManager extends Observer implements Logger {
 	protected Vector<string> bhTargetZones;
 
 	@dereferenced
+	protected Vector<string> targets;
+
+	@dereferenced
 	@rawTemplate(value = "unsigned int, Vector<String>")
 	protected VectorMap bhTargetsAtMissionLevel;
 
@@ -86,11 +89,12 @@ class MissionManager extends Observer implements Logger {
 
 		missionNpcSpawnMap.loadSpawnPointsFromLua();
 
-		loadLuaSettings();
+		initialize();
 		loadPlayerBounties();
 	}
 
-	private native void loadLuaSettings();
+	private native void initialize();
+	private native boolean loadLuaSettings();
 	private native void loadPlayerBounties();
 
 	public native void handleMissionListRequest(MissionTerminal missionTerminal, CreatureObject player, int counter);
