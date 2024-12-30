@@ -71,12 +71,9 @@ class PetManager extends ManagedService implements Logger {
 		Logger.setLoggingName("PetManager");
 	}
 
-	public void initialize() {
-		loadLuaConfig();
-		loadValidMountScaleRanges();
-	}
+	public native void initialize();
 
-	public native void loadLuaConfig();
+	public native boolean loadLuaConfig();
 
 	public native void loadValidMountScaleRanges();
 

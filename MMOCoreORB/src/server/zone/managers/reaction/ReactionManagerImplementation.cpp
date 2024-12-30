@@ -10,13 +10,55 @@
 #include "server/zone/objects/tangible/weapon/WeaponObject.h"
 #include "server/zone/managers/planet/PlanetManager.h"
 
-void ReactionManagerImplementation::loadLuaConfig() {
+#include "server/zone/managers/watcher/managerWatcher.h"
+
+void ReactionManagerImplementation::initialize() {
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+			},
+		"reaction_manager");
+	});
+	reloadThread.detach();
+}
+
+bool ReactionManagerImplementation::loadLuaConfig() {
+	const std::string luaFilePath = "scripts/managers/reaction_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
+
 	Lua* lua = new Lua();
 	lua->init();
 
-	if (!lua->runFile("scripts/managers/reaction_manager.lua")) {
-		error("Cannot read reaction manager data.");
-		return;
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
 	}
 
 	LuaObject emoteReactions = lua->getGlobalObject("emoteReactionLevels");
@@ -35,12 +77,13 @@ void ReactionManagerImplementation::loadLuaConfig() {
 
 			entry.pop();
 		}
+		info(true) << "Loaded " << String::valueOf(emoteReactions.getTableSize()) << " emote reactions.";
 
 		emoteReactions.pop();
 	}
 
 	LuaObject reactionRanks = lua->getGlobalObject("imperialReactionRanks");
-
+	reactionRankData = Vector<Reference<ReactionRankData*>>();
 	if (!reactionRanks.isValidTable()) {
 		error("Invalid imperialReactionRanks table.");
 	} else {
@@ -60,9 +103,10 @@ void ReactionManagerImplementation::loadLuaConfig() {
 
 		reactionRanks.pop();
 	}
+	info(true) << "Loaded " << reactionRankData.size() << " reaction ranks.";
 
 	LuaObject luaObject = lua->getGlobalObject("emoteReactionFines");
-
+	emoteReactionFines = Vector<Reference<EmoteReactionFine*>>();
 	if (!luaObject.isValidTable()) {
 		error("Invalid emoteReactionFines table.");
 	} else {
@@ -91,11 +135,14 @@ void ReactionManagerImplementation::loadLuaConfig() {
 
 		luaObject.pop();
 	}
+	info("Loaded " + String::valueOf(emoteReactionFines.size()) + " emote reaction fines.", true);
 
-	info("Loaded " + String::valueOf(emoteReactionFines.size()) + " emote reaction records.", true);
+	info(true) << "Initialized.";
 
 	delete lua;
 	lua = nullptr;
+	
+	return true;
 }
 
 void ReactionManagerImplementation::sendChatReaction(AiAgent* npc, SceneObject* object, int type, int state, bool force) {

@@ -11,18 +11,27 @@
 #include "server/zone/objects/player/sui/listbox/SuiListBox.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
+
 void ResourceManagerImplementation::initialize() {
 	if (!loadConfigData()) {
 
 		loadDefaultConfig();
 
 		info("***** ERROR in configuration, using default values");
+		
+		return; //Added
 	}
 
-	resourceSpawner->init();
-
-	startResourceSpawner();
-	loadSurveyData();
+	std::thread reloadThread([this] {
+		managerWatcher::startWatching(
+			[this] {
+				loadConfigData();
+			},
+		"resource_manager"
+		);
+	});
+	reloadThread.detach();
 }
 
 void ResourceManagerImplementation::loadSurveyData() {
@@ -81,11 +90,35 @@ int ResourceManagerImplementation::notifyObserverEvent(uint32 eventType, Observa
 }
 
 bool ResourceManagerImplementation::loadConfigData() {
+	const std::string luaFilePath = "scripts/managers/resource_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
+
 	Lua* lua = new Lua();
 	lua->init();
 
-	if (!lua->runFile("scripts/managers/resource_manager.lua")) {
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
 		delete lua;
+		lua = nullptr;
 		return false;
 	}
 
@@ -140,8 +173,15 @@ bool ResourceManagerImplementation::loadConfigData() {
 	String natpoolexc = lua->getGlobalString("nativepoolexcludes");
 	resourceSpawner->initializeNativePool(natpoolinc, natpoolexc);
 
+	info(true) << "Initialized.";
+	
 	delete lua;
+	lua = nullptr;
 
+	resourceSpawner->init();
+	startResourceSpawner();
+	loadSurveyData();
+	
 	return true;
 }
 
@@ -160,6 +200,10 @@ void ResourceManagerImplementation::loadDefaultConfig() {
 
 	shiftInterval = 7200000;
 	resourceSpawner->setSpawningParameters(1, 86400, 90, 1000, 0);
+
+	resourceSpawner->init();
+	startResourceSpawner();
+	loadSurveyData();
 }
 
 void ResourceManagerImplementation::stop() {

@@ -119,6 +119,7 @@
 
 #include "server/zone/managers/statistics/StatisticsManager.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/mountVariables.h"
 #include "server/zone/managers/variables/playerVariables.h"
 #include "server/zone/managers/variables/professionVariables.h"
@@ -137,7 +138,19 @@ PlayerManagerImplementation::PlayerManagerImplementation(ZoneServer* zoneServer,
 
 	DirectorManager::instance()->getLuaInstance()->runFile("scripts/screenplays/checklnum.lua");
 
-	loadLuaConfig();
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+			},
+		"player_manager");
+	});
+	reloadThread.detach();
+
 	loadStartingLocations();
 	loadQuestInfo();
 	loadQuestCrcTable();
@@ -232,13 +245,39 @@ bool PlayerManagerImplementation::createPlayer(ClientCreateCharacterCallback* ca
 	return pcm->createCharacter(callback);
 }
 
-void PlayerManagerImplementation::loadLuaConfig() {
-	info("Loading configuration script.");
+bool PlayerManagerImplementation::loadLuaConfig() {
+	const std::string luaFilePath = "scripts/managers/player_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
 
 	Lua* lua = new Lua();
 	lua->init();
 
-	lua->runFile("scripts/managers/player_manager.lua");
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
+	}
 
 	allowSameAccountPvpRatingCredit = lua->getGlobalInt("allowSameAccountPvpRatingCredit");
 	onlineCharactersPerAccount = lua->getGlobalInt("onlineCharactersPerAccount");
@@ -260,15 +299,20 @@ void PlayerManagerImplementation::loadLuaConfig() {
 	veteranRewardAdditionalMilestones = lua->getGlobalInt("veteranRewardAdditionalMilestones");
 
 	LuaObject rewardMilestonesLua = lua->getGlobalObject("veteranRewardMilestones");
+	veteranRewardMilestones = SortedVector<int>();
+
 	for (int i = 1; i <= rewardMilestonesLua.getTableSize(); ++i) {
 		veteranRewardMilestones.add(rewardMilestonesLua.getIntAt(i));
 	}
 	rewardMilestonesLua.pop();
 
+	info(true) << "Loaded " << veteranRewardMilestones.size() << " veteran reward milestones.";
+
 	LuaObject rewardsListLua = lua->getGlobalObject("veteranRewards");
 	int size = rewardsListLua.getTableSize();
 
 	lua_State* L = rewardsListLua.getLuaState();
+	veteranRewards = VeteranRewardList();
 
 	for (int i = 0; i < size; ++i) {
 		lua_rawgeti(L, -1, i + 1);
@@ -286,7 +330,7 @@ void PlayerManagerImplementation::loadLuaConfig() {
 	info(true) << "Loaded " << veteranRewards.size() << " veteran rewards.";
 
 	LuaObject jboxSongs = lua->getGlobalObject("jukeboxSongs");
-
+	jukeboxSongs = Vector<Reference<JukeboxSong*>>();
 	if (jboxSongs.isValidTable()) {
 		for (int i = 1; i <= jboxSongs.getTableSize(); ++i) {
 			LuaObject songData = jboxSongs.getObjectAt(i);
@@ -307,8 +351,14 @@ void PlayerManagerImplementation::loadLuaConfig() {
 
 	jboxSongs.pop();
 
+	info(true) << "Loaded " << jukeboxSongs.size() << " juke box songs.";
+
+	info(true) << "Initialized.";
+
 	delete lua;
 	lua = nullptr;
+	
+	return true;
 }
 
 void PlayerManagerImplementation::loadStartingLocations() {

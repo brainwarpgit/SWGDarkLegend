@@ -147,7 +147,7 @@ void ZoneServerImplementation::initialize() {
 	stringIdManager = StringIdManager::instance();
 
 	reactionManager = new ReactionManager(_this.getReferenceUnsafeStaticCast());
-	reactionManager->loadLuaConfig();
+	reactionManager->initialize();
 
 	creatureTemplateManager = CreatureTemplateManager::instance();
 	creatureTemplateManager->loadTemplates();

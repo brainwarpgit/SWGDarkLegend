@@ -18,19 +18,62 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "server/zone/objects/creature/commands/QueueCommand.h"
 
+#include "server/zone/managers/watcher/managerWatcher.h"
 #include "server/zone/managers/variables/creatureVariables.h"
 #include "server/zone/managers/variables/professionVariables.h"
 
-void PetManagerImplementation::loadLuaConfig() {
-	info("Loading configuration file.", true);
+void PetManagerImplementation::initialize() {
+	if (!loadLuaConfig()) {
+		info(true) << "loadLuaConfig() FAILED";
+		return;
+	}
+	std::thread reloadThread([this] { 
+		managerWatcher::startWatching(
+			[this] {
+				loadLuaConfig();
+			},
+		"pet_manager");
+	});
+	reloadThread.detach();
+	loadValidMountScaleRanges();
+}
+
+bool PetManagerImplementation::loadLuaConfig() { //Changed to boolean for city_manager reload.
+	const std::string luaFilePath = "scripts/managers/pet_manager.lua";
+	
+	if (!managerWatcher::fileExists(luaFilePath)) {
+		info(true) << "File does not exist: " << luaFilePath;
+		return false;
+	}
+		
+	time_t modifiedTime = managerWatcher::getFileModifiedTime(luaFilePath);
+	time_t& lastModifiedTime = managerWatcher::fileModifiedTimes[luaFilePath];
+
+	if (modifiedTime == lastModifiedTime) {
+		return true;
+	}
+
+	if (lastModifiedTime == 0) {
+		info(true) << "Initial Load of " << luaFilePath;
+	} else {
+		info(true) << "Reloading due to change in " << luaFilePath;
+	}
+
+	lastModifiedTime = modifiedTime;
 
 	Lua* lua = new Lua();
 	lua->init();
 
-	lua->runFile("scripts/managers/pet_manager.lua");
+	if (!lua->runFile(luaFilePath.c_str())) {
+		info(true) << "Failed to load file " << luaFilePath;
+		delete lua;
+		lua = nullptr;
+		return false;
+		
+	}
 
 	LuaObject luaObject = lua->getGlobalObject("mountSpeedData");
-
+	mountSpeedData = Vector<Reference<MountSpeedData*>>();
 	if (luaObject.isValidTable()) {
 		for (int i = 1; i <= luaObject.getTableSize(); ++i) {
 			LuaObject speedData = luaObject.getObjectAt(i);
@@ -55,8 +98,12 @@ void PetManagerImplementation::loadLuaConfig() {
 
 	info("Loaded " + String::valueOf(mountSpeedData.size()) + " mount speeds.", true);
 
+	info(true) << "Initialized.";
+
 	delete lua;
 	lua = nullptr;
+	
+	return true;
 }
 
 void PetManagerImplementation::loadValidMountScaleRanges() {

@@ -144,7 +144,7 @@ class PlayerManager extends Observer implements Logger {
 	public native PlayerManager(ZoneServer zoneServer, ZoneProcessServer impl, boolean trackOnlineUsers);
 	public native void loadNameMap();
 
-	private native void loadLuaConfig();
+	public native boolean loadLuaConfig();
 	private native void loadStartingLocations();
 	private native void loadPermissionLevels();
 	private native void loadQuestInfo();

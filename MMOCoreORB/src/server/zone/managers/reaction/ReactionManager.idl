@@ -64,7 +64,9 @@ class ReactionManager extends ManagedService implements Logger {
 		return 0;
 	}
 
-	public native void loadLuaConfig();
+	private native boolean loadLuaConfig();
+	
+	public native void initialize();
 
 	/**
 	 * Sends a chat message
