@@ -265,7 +265,7 @@ void StructureObjectImplementation::destroyOrphanCivicStructure() {
 
 	auto playerManager = zoneServer->getPlayerManager();
 
-	if (playerManager == nullptr) {
+	if (playerManager != nullptr) {
 		auto name = playerManager->getPlayerName(getOwnerObjectID());
 
 		if (!name.isEmpty()) {
